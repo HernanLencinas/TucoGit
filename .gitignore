@@ -1,0 +1,19 @@
+node_modules/
+build/
+dist/
+dist-renderer/
+.vite-cache/
+*.log
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.code-workspace
+.env
+.env.local
+
+
+# Snyk Security Extension - AI Rules (auto-generated)
+.cursor/rules/snyk_rules.mdc
