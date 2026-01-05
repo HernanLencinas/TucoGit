@@ -2219,6 +2219,69 @@ ipcMain.handle('git-checkout', async (event, { repoPath, branchName }) => {
   }
 });
 
+// Handler para crear un tag
+ipcMain.handle('git-create-tag', async (event, { repoPath, tagName, message, commitHash, pushToAllRemotes }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Validar nombre del tag
+    if (!tagName || !tagName.trim()) {
+      return { success: false, error: 'El nombre del tag no puede estar vacío' };
+    }
+
+    // Crear el tag
+    // Si hay mensaje, crear un tag anotado, si no, crear un tag ligero
+    let tagCommand;
+    if (message && message.trim()) {
+      // Tag anotado con mensaje
+      const escapedMessage = message.replace(/"/g, '\\"');
+      tagCommand = commitHash 
+        ? `git tag -a "${tagName.trim()}" -m "${escapedMessage}" ${commitHash}`
+        : `git tag -a "${tagName.trim()}" -m "${escapedMessage}"`;
+    } else {
+      // Tag ligero
+      tagCommand = commitHash 
+        ? `git tag "${tagName.trim()}" ${commitHash}`
+        : `git tag "${tagName.trim()}"`;
+    }
+
+    await execPromise(tagCommand, { cwd: repoPath });
+
+    // Si se debe hacer push a todos los remotes
+    if (pushToAllRemotes) {
+      try {
+        // Obtener lista de remotes
+        const { stdout: remotesOutput } = await execPromise('git remote', { cwd: repoPath });
+        const remotes = remotesOutput.trim().split('\n').filter(Boolean);
+
+        // Hacer push del tag a cada remote
+        for (const remote of remotes) {
+          try {
+            await execPromise(`git push ${remote} "${tagName.trim()}"`, { cwd: repoPath });
+          } catch (pushError) {
+            console.error(`Error al hacer push del tag a ${remote}:`, pushError);
+            // Continuar con los demás remotes aunque uno falle
+          }
+        }
+      } catch (remoteError) {
+        console.error('Error al obtener remotes o hacer push:', remoteError);
+        // No fallar la creación del tag si el push falla
+      }
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error al crear tag:', error);
+    return { success: false, error: error.message };
+  }
+});
+
 // Handler para hacer stash de archivos
 ipcMain.handle('git-stash', async (event, { repoPath, includeUntracked = false, message = '' }) => {
   const { exec } = require('child_process');
