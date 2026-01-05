@@ -1,4 +1,4 @@
-# Tuco3
+# TucoGit
 
 Aplicación de escritorio multiplataforma para gestionar y organizar tus repositorios Git. Construida con Electron, React, Vite y shadcn/ui.
 
@@ -94,7 +94,7 @@ Los archivos construidos se encontrarán en la carpeta `dist/`.
 ## 📁 Estructura del Proyecto
 
 ```
-Tuco3/
+TucoGit/
 ├── src/
 │   ├── main/
 │   │   └── main.js          # Proceso principal de Electron (IPC handlers, configuración)
