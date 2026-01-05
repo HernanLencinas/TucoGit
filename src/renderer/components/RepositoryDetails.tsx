@@ -31,6 +31,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const scrollContainerRef = React.useRef<HTMLDivElement>(null);
     const [branches, setBranches] = useState<{ local: string[], remote: string[], current: string, headHash?: string | null }>({ local: [], remote: [], current: '' });
     const [branchesOpen, setBranchesOpen] = useState(false);
+    const [canCherryPick, setCanCherryPick] = useState(false);
     const branchesDropdownRef = React.useRef<HTMLDivElement>(null);
     const [newBranchMenuOpen, setNewBranchMenuOpen] = useState(false);
     const newBranchMenuRef = React.useRef<HTMLDivElement>(null);
@@ -366,6 +367,31 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             };
         }
     }, [cherryPickMenuOpen]);
+
+    // Verificar si el commit seleccionado puede ser cherry-picked
+    useEffect(() => {
+        const checkCherryPick = async () => {
+            if (!selectedCommit?.hash) {
+                setCanCherryPick(false);
+                return;
+            }
+
+            const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+            try {
+                const result = await (window as any).electronAPI.canCherryPickCommit?.(repoPath, selectedCommit.hash);
+                if (result?.success) {
+                    setCanCherryPick(result.canCherryPick || false);
+                } else {
+                    setCanCherryPick(false);
+                }
+            } catch (err: any) {
+                console.error('Error al verificar cherry-pick:', err);
+                setCanCherryPick(false);
+            }
+        };
+
+        checkCherryPick();
+    }, [selectedCommit?.hash, branches.current, branches.headHash, configPath, repository]);
 
     // Cerrar menú de stash cuando se hace click fuera
     useEffect(() => {
@@ -1358,7 +1384,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             setCherryPickMenuOpen(false);
                                             // TODO: Implementar funcionalidad de cherry-pick
                                         }}
-                                        className="w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-600 dark:text-slate-400"
+                                        disabled={!canCherryPick}
+                                        className={cn(
+                                            "w-full text-left px-3 py-2 text-xs rounded-sm flex items-center gap-2",
+                                            canCherryPick
+                                                ? "hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400"
+                                                : "text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50"
+                                        )}
                                     >
                                         <GitBranch className="h-3.5 w-3.5" />
                                         <span>Cherry-pick</span>

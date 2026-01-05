@@ -175,6 +175,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return ipcRenderer.invoke('git-checkout', { repoPath, branchName });
   },
 
+  // Verificar si un commit puede ser cherry-picked
+  canCherryPickCommit: (repoPath, commitHash) => {
+    return ipcRenderer.invoke('can-cherry-pick-commit', { repoPath, commitHash });
+  },
+
   // Crear un tag
   gitCreateTag: (repoPath, tagName, message, commitHash, pushToAllRemotes) => {
     return ipcRenderer.invoke('git-create-tag', { repoPath, tagName, message, commitHash, pushToAllRemotes });
