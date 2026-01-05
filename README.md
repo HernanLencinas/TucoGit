@@ -12,11 +12,14 @@ Aplicación de escritorio multiplataforma para gestionar y organizar tus reposit
 - 🔄 **Clonación de repositorios**: Clona repositorios directamente desde la aplicación con barra de progreso
 
 ### Integración con Git
-- 🌿 **Información de branches**: Visualiza la rama actual de cada repositorio
+- 🌿 **Gestión de branches**: Visualiza, crea y cambia entre branches locales y remotos
 - 📈 **Historial Visual (Commit Graph)**: Visualización avanzada del historial con líneas de ramas y resaltado de selección
-- 📝 **Cambios locales**: Detecta cambios sin commitear
+- 📝 **Gestión de cambios**: Detecta cambios sin commitear, stage/unstage de archivos, y commits
 - 👤 **Detalles de Commit**: Vista detallada de cambios por archivo con resaltado de sintaxis
 - 🔐 **Configuración SSL**: Controla la verificación SSL de Git
+- 🏷️ **Gestión de tags**: Crea y gestiona tags de Git
+- 📦 **Stash**: Guarda temporalmente cambios con stash y gestiona múltiples stashes
+- 🔄 **Operaciones Git**: Fetch, pull, push y otras operaciones Git comunes
 
 ### Persistencia y Multitarea
 - 🔄 **Persistencia de Pestañas**: Cambia entre Inicio, Repositorios y Conexiones sin perder el estado de tu trabajo
@@ -25,9 +28,10 @@ Aplicación de escritorio multiplataforma para gestionar y organizar tus reposit
 
 ### Conexiones con Proveedores
 - 🔌 **Múltiples proveedores**: Soporte para GitHub, GitLab, Codeberg, Gitea, Gogs y servidores Git personalizados
-- 🔑 **Gestión de tokens**: Almacenamiento seguro de tokens de acceso
+- 🔑 **Gestión de tokens**: Almacenamiento seguro de tokens de acceso con encriptación
 - 🔄 **Sincronización**: Refresca y sincroniza tus repositorios desde los proveedores
 - ✏️ **Edición de conexiones**: Edita y gestiona tus conexiones guardadas
+- 📊 **Detalles de conexión**: Visualiza información detallada de tus cuentas (usuario, organizaciones, repositorios)
 
 ### Integración con IDEs
 - 💻 **Apertura en IDEs**: Abre repositorios directamente en tu IDE favorito
@@ -108,6 +112,7 @@ TucoGit/
 │   │   ├── components/
 │   │   │   ├── CommitDetails.tsx    # Vista de cambios en commits
 │   │   │   ├── CommitGraph.tsx      # Visualización gráfica del historial
+│   │   │   ├── GitStatusPanel.tsx    # Panel de estado de Git
 │   │   │   ├── RepositoryDetails.tsx # Cliente Git principal (Vista detalle)
 │   │   │   ├── Inicio/              # Vista de inicio
 │   │   │   │   └── InicioView.tsx
@@ -122,6 +127,8 @@ TucoGit/
 │   │   ├── types/           # Definiciones de tipos TypeScript
 │   │   │   └── index.ts
 │   │   └── utils/           # Utilidades
+│   │       ├── avatar.ts
+│   │       ├── date.ts
 │   │       ├── repositories.ts
 │   │       └── themes.ts
 │   ├── components/
@@ -133,12 +140,18 @@ TucoGit/
 │   └── lib/
 │       ├── utils.ts         # Utilidades (cn function)
 │       └── use-toast.ts     # Hook para toasts
-├── build/                   # Iconos y recursos (crear manualmente)
+├── icons/                   # Iconos de la aplicación
+│   ├── icon.icns            # Icono para macOS
+│   ├── icon.ico             # Icono para Windows
+│   └── icon.png             # Icono para Linux
 ├── vite.config.js           # Configuración de Vite
 ├── tailwind.config.js       # Configuración de Tailwind CSS
 ├── postcss.config.js        # Configuración de PostCSS
+├── tsconfig.json            # Configuración de TypeScript
+├── tsconfig.node.json       # Configuración de TypeScript para Node
 ├── components.json          # Configuración de shadcn/ui
 ├── package.json             # Configuración del proyecto
+├── build-all.sh             # Script para construir todas las plataformas
 └── README.md                # Documentación
 ```
 
@@ -168,8 +181,8 @@ Este proyecto implementa las mejores prácticas de seguridad de Electron:
 2. **Agregar conexiones**: 
    - Ve a la pestaña "Conexiones"
    - Haz clic en "Nueva Conexión"
-   - Selecciona tu proveedor (GitHub, GitLab, Bitbucket, etc.)
-   - Ingresa tu token de acceso
+   - Selecciona tu proveedor (GitHub, GitLab, Codeberg, Gitea, Gogs, etc.)
+   - Ingresa tu token de acceso y URL del servidor (si aplica)
    - Valida la conexión
 
 3. **Agregar repositorios**:
@@ -205,7 +218,7 @@ Este proyecto implementa las mejores prácticas de seguridad de Electron:
 
 ### Iconos para Build
 
-Asegúrate de tener los iconos en la carpeta `build/` antes de construir:
+Los iconos ya están incluidos en la carpeta `icons/`:
 - `icon.png` (para Linux)
 - `icon.ico` (para Windows)
 - `icon.icns` (para macOS)
@@ -218,10 +231,11 @@ La configuración de la aplicación se guarda en:
 
 Este archivo contiene:
 - Estructura de repositorios y colecciones
-- Conexiones a proveedores Git
+- Conexiones a proveedores Git (tokens encriptados)
 - Preferencias de tema y zoom
 - Configuración de IDE predeterminado
-- Configuración de Git SSL
+- Configuración de Git SSL, usuario y email
+- Posición y tamaño de la ventana
 
 ### Seguridad
 
