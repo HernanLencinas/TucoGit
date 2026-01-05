@@ -2220,7 +2220,7 @@ ipcMain.handle('git-checkout', async (event, { repoPath, branchName }) => {
 });
 
 // Handler para hacer stash de archivos
-ipcMain.handle('git-stash', async (event, { repoPath, includeUntracked = false }) => {
+ipcMain.handle('git-stash', async (event, { repoPath, includeUntracked = false, message = '' }) => {
   const { exec } = require('child_process');
   const util = require('util');
   const execPromise = util.promisify(exec);
@@ -2230,14 +2230,133 @@ ipcMain.handle('git-stash', async (event, { repoPath, includeUntracked = false }
       return { success: false, error: 'La ruta no existe' };
     }
 
-    const command = includeUntracked 
-      ? 'git stash push --include-untracked -m "Stash automático antes de cambiar de rama"'
-      : 'git stash push -m "Stash automático antes de cambiar de rama"';
+    // Normalizar el mensaje: si es undefined, null o string vacío después de trim, usar el por defecto
+    const normalizedMessage = (message && typeof message === 'string') ? message.trim() : '';
+    const userMessage = normalizedMessage || 'Stash automático antes de cambiar de rama';
     
+    // Agregar solo el prefijo "WIP: " al mensaje (Git ya agrega "On <branch>:" automáticamente)
+    const stashMessage = `WIP: ${userMessage}`;
+    
+    // Escapar comillas dobles y caracteres especiales en el mensaje para evitar problemas con el shell
+    // Usar comillas simples para evitar problemas con caracteres especiales
+    const escapedMessage = stashMessage.replace(/'/g, "'\\''");
+    
+    const command = includeUntracked 
+      ? `git stash push --include-untracked -m '${escapedMessage}'`
+      : `git stash push -m '${escapedMessage}'`;
+    
+    console.log('Ejecutando stash con mensaje:', stashMessage);
     await execPromise(command, { cwd: repoPath });
     return { success: true };
   } catch (error) {
     console.error('Error al hacer stash:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Handler para obtener la lista de stashes
+ipcMain.handle('get-git-stash-list', async (event, repoPath) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Obtener la lista de stashes
+    // Usar --format para obtener información estructurada
+    const { stdout } = await execPromise('git stash list --format="%gd|%gs|%ci"', { cwd: repoPath });
+    
+    const stashes = [];
+    if (stdout.trim()) {
+      const lines = stdout.trim().split('\n');
+      lines.forEach((line, index) => {
+        // El formato es: stash@{0}|mensaje|fecha
+        const parts = line.split('|');
+        if (parts.length >= 2) {
+          const ref = parts[0].trim();
+          const message = parts.slice(1, -1).join('|').trim(); // El mensaje puede contener |
+          const date = parts[parts.length - 1].trim();
+          
+          stashes.push({
+            index: index,
+            ref: ref, // stash@{0}, stash@{1}, etc.
+            message: message, // El mensaje del stash
+            date: date // Fecha de creación
+          });
+        }
+      });
+    }
+
+    return { success: true, stashes };
+  } catch (error) {
+    // Si no hay stashes, git stash list devuelve error, pero eso es normal
+    if (error.message.includes('No stash entries')) {
+      return { success: true, stashes: [] };
+    }
+    console.error('Error al obtener lista de stashes:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Handler para aplicar (pop) un stash específico
+ipcMain.handle('git-stash-pop', async (event, { repoPath, stashRef }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Aplicar el stash específico (pop lo aplica y lo elimina)
+    await execPromise(`git stash pop ${stashRef}`, { cwd: repoPath });
+    return { success: true };
+  } catch (error) {
+    console.error('Error al aplicar stash:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Handler para eliminar (drop) un stash específico
+ipcMain.handle('git-stash-drop', async (event, { repoPath, stashRef }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Eliminar el stash específico sin aplicarlo
+    await execPromise(`git stash drop ${stashRef}`, { cwd: repoPath });
+    return { success: true };
+  } catch (error) {
+    console.error('Error al eliminar stash:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Handler para limpiar todos los stashes
+ipcMain.handle('git-stash-clear', async (event, repoPath) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Eliminar todos los stashes
+    await execPromise('git stash clear', { cwd: repoPath });
+    return { success: true };
+  } catch (error) {
+    console.error('Error al limpiar stashes:', error);
     return { success: false, error: error.message };
   }
 });
