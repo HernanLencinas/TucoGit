@@ -1122,7 +1122,6 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </svg>
                                 <span>Stash</span>
                             </Button>
-                            <div className="h-5 w-px bg-slate-300 dark:bg-slate-600"></div>
                             <Button
                                 variant="outline"
                                 size="sm"
