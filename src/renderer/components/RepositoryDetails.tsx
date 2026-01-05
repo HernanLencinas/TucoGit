@@ -29,7 +29,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const [searchTerm, setSearchTerm] = useState("");
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
     const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-    const [branches, setBranches] = useState<{ local: string[], remote: string[], current: string }>({ local: [], remote: [], current: '' });
+    const [branches, setBranches] = useState<{ local: string[], remote: string[], current: string, headHash?: string | null }>({ local: [], remote: [], current: '' });
     const [branchesOpen, setBranchesOpen] = useState(false);
     const branchesDropdownRef = React.useRef<HTMLDivElement>(null);
     const [newBranchMenuOpen, setNewBranchMenuOpen] = useState(false);
@@ -872,11 +872,71 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm"
                             >
                                 <GitBranch className="h-3.5 w-3.5" />
-                                <span className="max-w-[100px] truncate">{branches.current || 'Branch'}</span>
+                                <span className="max-w-[100px] truncate">
+                                    {branches.current || (branches.headHash ? branches.headHash.substring(0, 7) : 'Branch')}
+                                </span>
                                 <ChevronDown className="h-3 w-3" />
                             </Button>
                             {branchesOpen && (
                                 <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50 max-h-96 overflow-auto">
+                                    {/* Commit Seleccionado */}
+                                    {selectedCommit && (
+                                        <div className="p-2 border-b border-slate-200 dark:border-slate-700">
+                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">Commit seleccionado</div>
+                                            <button
+                                                onClick={async () => {
+                                                    const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+                                                    try {
+                                                        const result = await (window as any).electronAPI.gitCheckout?.(repoPath, selectedCommit.hash);
+                                                        if (result?.success) {
+                                                            loadBranches();
+                                                            loadCommits(true);
+                                                            setBranchesOpen(false);
+                                                            toast({
+                                                                title: "Checkout completado",
+                                                                description: `Cambiaste al commit ${selectedCommit.hash.substring(0, 7)}`,
+                                                                variant: "success",
+                                                            });
+                                                        } else {
+                                                            const errorMessage = result?.error || '';
+                                                            if (errorMessage.includes('untracked working tree files would be overwritten') ||
+                                                                errorMessage.includes('Your local changes to the following files would be overwritten')) {
+                                                                const files = extractConflictFiles(errorMessage);
+                                                                setConflictFiles(files);
+                                                                setPendingCheckoutBranch(selectedCommit.hash);
+                                                                setPendingCheckoutRepoPath(repoPath);
+                                                                setIsUntrackedConflict(errorMessage.includes('untracked working tree files'));
+                                                                setShowCheckoutConflictModal(true);
+                                                            } else {
+                                                                toast({
+                                                                    title: "Error al hacer checkout",
+                                                                    description: errorMessage,
+                                                                    variant: "destructive",
+                                                                });
+                                                            }
+                                                        }
+                                                    } catch (err: any) {
+                                                        console.error('Error al hacer checkout:', err);
+                                                        toast({
+                                                            title: "Error al hacer checkout",
+                                                            description: err?.message || "Ocurrió un error inesperado",
+                                                            variant: "destructive",
+                                                        });
+                                                    }
+                                                }}
+                                                className={cn(
+                                                    "w-full text-left px-3 py-1.5 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2",
+                                                    branches.headHash === selectedCommit.hash && "bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 font-medium"
+                                                )}
+                                            >
+                                                <GitBranch className="h-3 w-3" />
+                                                <span className="truncate">Checkout Hash... {selectedCommit.hash.substring(0, 7)}</span>
+                                                {branches.headHash === selectedCommit.hash && (
+                                                    <span className="ml-auto text-[10px] text-cyan-600 dark:text-cyan-400">●</span>
+                                                )}
+                                            </button>
+                                        </div>
+                                    )}
                                     {/* Branches Locales */}
                                     {branches.local.length > 0 && (
                                         <div className="p-2">
@@ -915,7 +975,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             ))}
                                         </div>
                                     )}
-                                    {branches.local.length === 0 && branches.remote.length === 0 && (
+                                    {branches.local.length === 0 && branches.remote.length === 0 && !selectedCommit && (
                                         <div className="p-4 text-center text-xs text-slate-500 dark:text-slate-400">
                                             No hay branches disponibles
                                         </div>
