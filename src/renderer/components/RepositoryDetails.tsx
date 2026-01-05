@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
+import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -1695,11 +1695,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </label>
                             </div>
 
-                            <div className="flex gap-2 pt-2">
+                            <div className="flex gap-2 pt-2 justify-end">
                                 <Button
                                     variant="outline"
                                     size="sm"
-                                    className="flex-1"
                                     onClick={() => {
                                         setShowStashModal(false);
                                         setStashMessage('');
@@ -1711,11 +1710,11 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </Button>
                                 <Button
                                     size="sm"
-                                    className="flex-1 bg-cyan-600 hover:bg-cyan-700 text-white"
+                                    className="bg-cyan-600 hover:bg-cyan-700 text-white"
                                     onClick={handleStash}
                                     disabled={stashing}
                                 >
-                                    {stashing ? 'Guardando...' : 'Crear Stash'}
+                                    {stashing ? 'Guardando...' : 'Crear'}
                                 </Button>
                             </div>
                         </CardContent>
@@ -1749,8 +1748,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     <span className="ml-2 text-sm text-slate-600 dark:text-slate-400">Cargando stashes...</span>
                                 </div>
                             ) : stashList.length === 0 ? (
-                                <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-                                    <p className="text-sm">No hay stashes disponibles</p>
+                                <div className="flex flex-col items-center justify-center py-12 px-4">
+                                    <div className="rounded-full bg-slate-100 dark:bg-slate-800 p-4 mb-4">
+                                        <Archive className="h-8 w-8 text-slate-400 dark:text-slate-500" />
+                                    </div>
+                                    <p className="text-base font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                        No hay stashes disponibles
+                                    </p>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 text-center max-w-sm">
+                                        Los stashes te permiten guardar temporalmente cambios sin hacer commit. Crea uno desde el menú de stashes.
+                                    </p>
                                 </div>
                             ) : (
                                 <div className="overflow-x-auto">
@@ -1824,11 +1831,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </div>
                             )}
 
-                            <div className="flex gap-2 pt-4 mt-4 border-t border-slate-200 dark:border-slate-700">
+                            <div className="flex gap-2 pt-4 mt-4 justify-end">
                                 <Button
                                     variant="outline"
                                     size="sm"
-                                    className="flex-1"
                                     onClick={() => {
                                         setShowStashListModal(false);
                                         setStashList([]);
@@ -1852,7 +1858,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 )}
                                 <Button
                                     size="sm"
-                                    className="flex-1 bg-cyan-600 hover:bg-cyan-700 text-white"
+                                    className="bg-cyan-600 hover:bg-cyan-700 text-white"
                                     onClick={handleStashPop}
                                     disabled={applyingStash !== null || deletingStash || clearingAllStashes || !selectedStash}
                                 >
@@ -1862,7 +1868,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             Aplicando...
                                         </>
                                     ) : (
-                                        'Aplicar Stash'
+                                        'Aplicar'
                                     )}
                                 </Button>
                             </div>
