@@ -180,6 +180,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return ipcRenderer.invoke('can-cherry-pick-commit', { repoPath, commitHash });
   },
 
+  // Hacer revert de un commit
+  gitRevert: (repoPath, commitHash) => {
+    return ipcRenderer.invoke('git-revert', { repoPath, commitHash });
+  },
+
   // Crear un tag
   gitCreateTag: (repoPath, tagName, message, commitHash, pushToAllRemotes) => {
     return ipcRenderer.invoke('git-create-tag', { repoPath, tagName, message, commitHash, pushToAllRemotes });

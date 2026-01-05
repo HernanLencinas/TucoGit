@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag, Settings } from 'lucide-react';
+import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag, Settings, Undo2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -77,6 +77,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const [tagMessage, setTagMessage] = useState("");
     const [pushToAllRemotes, setPushToAllRemotes] = useState(false);
     const [creatingTag, setCreatingTag] = useState(false);
+    const [showRevertModal, setShowRevertModal] = useState(false);
+    const [reverting, setReverting] = useState(false);
 
     // Debounce search term
     useEffect(() => {
@@ -335,15 +337,20 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     setSelectedStash(null);
                 }
             }
+            if (e.key === 'Escape' && showRevertModal) {
+                if (!reverting) {
+                    setShowRevertModal(false);
+                }
+            }
         };
 
-        if (showPullStrategyModal || showCheckoutConflictModal || showStashModal || showStashListModal) {
+        if (showPullStrategyModal || showCheckoutConflictModal || showStashModal || showStashListModal || showRevertModal) {
             window.addEventListener('keydown', handleEscape);
             return () => {
                 window.removeEventListener('keydown', handleEscape);
             };
         }
-    }, [showPullStrategyModal, showCheckoutConflictModal, showStashModal, showStashListModal, stashing, applyingStash]);
+    }, [showPullStrategyModal, showCheckoutConflictModal, showStashModal, showStashListModal, showRevertModal, stashing, applyingStash, reverting]);
 
     // Inicializar el branch base cuando se abre el modal (solo si no viene de un branch remoto)
     useEffect(() => {
@@ -596,6 +603,42 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             alert('Error al crear el branch');
         } finally {
             setCreatingBranch(false);
+        }
+    };
+
+    const handleRevert = async () => {
+        if (!selectedCommit?.hash) return;
+        
+        setReverting(true);
+        const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+        
+        try {
+            const result = await (window as any).electronAPI.gitRevert?.(repoPath, selectedCommit.hash);
+            if (result?.success) {
+                toast({
+                    title: "Revert completado",
+                    description: "El commit ha sido revertido exitosamente",
+                    variant: "success",
+                });
+                setShowRevertModal(false);
+                loadCommits(true);
+                loadBranches();
+            } else {
+                toast({
+                    title: "Error al hacer revert",
+                    description: result?.error || "No se pudo completar la operación",
+                    variant: "destructive",
+                });
+            }
+        } catch (err: any) {
+            console.error('Error al hacer revert:', err);
+            toast({
+                title: "Error al hacer revert",
+                description: err?.message || "Ocurrió un error inesperado",
+                variant: "destructive",
+            });
+        } finally {
+            setReverting(false);
         }
     };
 
@@ -1379,6 +1422,24 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             </Button>
                             {cherryPickMenuOpen && (
                                 <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
+                                    <button
+                                        onClick={() => {
+                                            setCherryPickMenuOpen(false);
+                                            if (selectedCommit) {
+                                                setShowRevertModal(true);
+                                            }
+                                        }}
+                                        disabled={!selectedCommit}
+                                        className={cn(
+                                            "w-full text-left px-3 py-2 text-xs rounded-sm flex items-center gap-2",
+                                            selectedCommit
+                                                ? "hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400"
+                                                : "text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50"
+                                        )}
+                                    >
+                                        <Undo2 className="h-3.5 w-3.5" />
+                                        <span>Revert commit</span>
+                                    </button>
                                     <button
                                         onClick={() => {
                                             setCherryPickMenuOpen(false);
@@ -2304,6 +2365,63 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     ) : (
                                         'Eliminar Todos'
                                     )}
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
+            {/* Modal para Revert */}
+            {showRevertModal && selectedCommit && (
+                <div
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    onClick={() => {
+                        if (!reverting) {
+                            setShowRevertModal(false);
+                        }
+                    }}
+                >
+                    <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
+                        <CardHeader className="p-4">
+                            <CardTitle className="text-lg">Revert Commit</CardTitle>
+                            <CardDescription className="text-sm">
+                                Create a new commit that undoes the changes from this commit
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4 pt-0 space-y-4">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Commit to revert:</label>
+                                <div className="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-md bg-slate-50 dark:bg-slate-800/50">
+                                    <span className="text-slate-500 dark:text-slate-400 font-mono">{selectedCommit.hash.substring(0, 7)}</span>
+                                    <span className="text-slate-700 dark:text-slate-300 ml-2">{selectedCommit.message}</span>
+                                </div>
+                            </div>
+                            
+                            <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md">
+                                <p className="text-xs text-amber-800 dark:text-amber-200">
+                                    This will create a new commit that reverses the changes made in the selected commit. The original commit will remain in the history.
+                                </p>
+                            </div>
+
+                            <div className="flex gap-2 pt-2 justify-end">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setShowRevertModal(false);
+                                    }}
+                                    disabled={reverting}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    className="bg-orange-600 hover:bg-orange-700"
+                                    onClick={handleRevert}
+                                    disabled={reverting}
+                                >
+                                    {reverting ? 'Reverting...' : 'Revert'}
                                 </Button>
                             </div>
                         </CardContent>

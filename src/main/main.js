@@ -2299,6 +2299,26 @@ ipcMain.handle('can-cherry-pick-commit', async (event, { repoPath, commitHash })
   }
 });
 
+// Handler para hacer revert de un commit
+ipcMain.handle('git-revert', async (event, { repoPath, commitHash }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Ejecutar git revert
+    await execPromise(`git revert --no-edit ${commitHash}`, { cwd: repoPath });
+    return { success: true };
+  } catch (error) {
+    console.error('Error al hacer revert:', error);
+    return { success: false, error: error.message };
+  }
+});
+
 // Handler para crear un tag
 ipcMain.handle('git-create-tag', async (event, { repoPath, tagName, message, commitHash, pushToAllRemotes }) => {
   const { exec } = require('child_process');
