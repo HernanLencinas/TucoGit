@@ -175,6 +175,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return ipcRenderer.invoke('git-checkout', { repoPath, branchName });
   },
 
+  // Crear un tag
+  gitCreateTag: (repoPath, tagName, message, commitHash, pushToAllRemotes) => {
+    return ipcRenderer.invoke('git-create-tag', { repoPath, tagName, message, commitHash, pushToAllRemotes });
+  },
+
   // Git stash
   gitStash: (repoPath, includeUntracked = false, message = '') => {
     // Asegurarse de que el mensaje sea un string válido

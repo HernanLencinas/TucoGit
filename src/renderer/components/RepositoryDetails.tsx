@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive } from 'lucide-react';
+import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -69,6 +69,11 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const [resolvingConflict, setResolvingConflict] = useState(false);
     const [selectedCheckoutOption, setSelectedCheckoutOption] = useState<'save' | 'stash' | 'discard'>('save');
     const [isUntrackedConflict, setIsUntrackedConflict] = useState(false);
+    const [showNewTagModal, setShowNewTagModal] = useState(false);
+    const [tagName, setTagName] = useState("");
+    const [tagMessage, setTagMessage] = useState("");
+    const [pushToAllRemotes, setPushToAllRemotes] = useState(false);
+    const [creatingTag, setCreatingTag] = useState(false);
 
     // Debounce search term
     useEffect(() => {
@@ -550,6 +555,43 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         }
     };
 
+    const handleCreateTag = async () => {
+        if (!tagName.trim() || !selectedCommit) return;
+        
+        setCreatingTag(true);
+        const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+        
+        try {
+            const result = await (window as any).electronAPI.gitCreateTag?.(repoPath, tagName.trim(), tagMessage.trim(), selectedCommit.hash, pushToAllRemotes);
+            if (result?.success) {
+                setShowNewTagModal(false);
+                setTagName("");
+                setTagMessage("");
+                setPushToAllRemotes(false);
+                loadCommits(true);
+                toast({
+                    title: "Tag creado exitosamente",
+                    description: `El tag "${tagName.trim()}" ha sido creado${pushToAllRemotes ? ' y enviado a todos los remotes' : ''}`,
+                });
+            } else {
+                toast({
+                    title: "Error al crear tag",
+                    description: result?.error || 'Error desconocido',
+                    variant: "destructive",
+                });
+            }
+        } catch (err: any) {
+            console.error('Error al crear tag:', err);
+            toast({
+                title: "Error al crear tag",
+                description: err.message || 'Error desconocido',
+                variant: "destructive",
+            });
+        } finally {
+            setCreatingTag(false);
+        }
+    };
+
     const extractConflictFiles = (errorMessage: string): string[] => {
         // Buscar archivos en el mensaje de error
         // Formato 1: "error: The following untracked working tree files would be overwritten by checkout:\nfile1.txt\nfile2.txt"
@@ -906,6 +948,22 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     >
                                         <GitBranch className="h-3.5 w-3.5" />
                                         <span>Nuevo Branch</span>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setNewBranchMenuOpen(false);
+                                            setShowNewTagModal(true);
+                                        }}
+                                        disabled={!selectedCommit}
+                                        className={cn(
+                                            "w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2",
+                                            selectedCommit 
+                                                ? "text-slate-600 dark:text-slate-400" 
+                                                : "text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50"
+                                        )}
+                                    >
+                                        <Tag className="h-3.5 w-3.5" />
+                                        <span>Nuevo Tag</span>
                                     </button>
                                 </div>
                             )}
@@ -1374,6 +1432,112 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     disabled={!newBranchName.trim() || creatingBranch}
                                 >
                                     {creatingBranch ? 'Creando...' : 'Crear Branch'}
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
+            {/* Modal para crear nuevo tag */}
+            {showNewTagModal && (
+                <div
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    onClick={() => {
+                        if (!creatingTag) {
+                            setShowNewTagModal(false);
+                            setTagName("");
+                            setTagMessage("");
+                            setPushToAllRemotes(false);
+                        }
+                    }}
+                >
+                    <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
+                        <CardHeader className="p-4">
+                            <CardTitle className="text-lg">Nuevo Tag</CardTitle>
+                            <CardDescription className="text-sm">
+                                Crea un nuevo tag en el commit seleccionado
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4 pt-0 space-y-4">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Nombre del tag</label>
+                                <input
+                                    type="text"
+                                    value={tagName}
+                                    onChange={(e) => setTagName(e.target.value)}
+                                    placeholder="v1.0.0"
+                                    className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                                    disabled={creatingTag}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && tagName.trim() && !creatingTag) {
+                                            handleCreateTag();
+                                        }
+                                    }}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Mensaje (opcional)</label>
+                                <textarea
+                                    value={tagMessage}
+                                    onChange={(e) => setTagMessage(e.target.value)}
+                                    placeholder="Descripción del tag..."
+                                    rows={3}
+                                    className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-none"
+                                    disabled={creatingTag}
+                                />
+                            </div>
+                            <div className="space-y-2 py-2">
+                                <div className="flex items-center justify-between">
+                                    <label className="text-sm font-medium cursor-pointer" htmlFor="push-to-remotes">
+                                        Push to all remotes
+                                    </label>
+                                    <button
+                                        type="button"
+                                        id="push-to-remotes"
+                                        role="switch"
+                                        aria-checked={pushToAllRemotes}
+                                        onClick={() => setPushToAllRemotes(!pushToAllRemotes)}
+                                        disabled={creatingTag}
+                                        className={cn(
+                                            "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2",
+                                            pushToAllRemotes ? "bg-cyan-600" : "bg-slate-300 dark:bg-slate-600",
+                                            creatingTag && "opacity-50 cursor-not-allowed"
+                                        )}
+                                    >
+                                        <span
+                                            className={cn(
+                                                "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                                                pushToAllRemotes ? "translate-x-6" : "translate-x-1"
+                                            )}
+                                        />
+                                    </button>
+                                </div>
+                                <p className="text-xs text-slate-500 dark:text-slate-400">
+                                    Si está activado, el tag se enviará automáticamente a todos los remotes configurados del repositorio.
+                                </p>
+                            </div>
+                            <div className="flex gap-2 pt-2 justify-end">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setShowNewTagModal(false);
+                                        setTagName("");
+                                        setTagMessage("");
+                                        setPushToAllRemotes(false);
+                                    }}
+                                    disabled={creatingTag}
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    className="bg-cyan-600 hover:bg-cyan-700"
+                                    onClick={handleCreateTag}
+                                    disabled={!tagName.trim() || !selectedCommit || creatingTag}
+                                >
+                                    {creatingTag ? 'Creando...' : 'Crear'}
                                 </Button>
                             </div>
                         </CardContent>
