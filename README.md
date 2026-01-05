@@ -2,64 +2,64 @@
 
 Aplicación de escritorio multiplataforma para gestionar y organizar tus repositorios Git. Construida con Electron, React, Vite y shadcn/ui.
 
-## 🚀 Características Principales
+## Características Principales
 
 ### Gestión de Repositorios
-- 📁 **Organización en colecciones**: Organiza tus repositorios en colecciones personalizadas
-- 🔍 **Búsqueda avanzada**: Busca repositorios por nombre o descripción
-- ⭐ **Sistema de favoritos**: Marca tus repositorios más importantes
-- 📊 **Vista de tarjetas**: Visualiza tus repositorios en tarjetas con información detallada
-- 🔄 **Clonación de repositorios**: Clona repositorios directamente desde la aplicación con barra de progreso
+- **Organización en colecciones**: Organiza tus repositorios en colecciones personalizadas
+- **Búsqueda avanzada**: Busca repositorios por nombre o descripción
+- **Sistema de favoritos**: Marca tus repositorios más importantes
+- **Vista de tarjetas**: Visualiza tus repositorios en tarjetas con información detallada
+- **Clonación de repositorios**: Clona repositorios directamente desde la aplicación con barra de progreso
 
 ### Integración con Git
-- 🌿 **Gestión de branches**: Visualiza, crea y cambia entre branches locales y remotos
-- 📈 **Historial Visual (Commit Graph)**: Visualización avanzada del historial con líneas de ramas y resaltado de selección
-- 📝 **Gestión de cambios**: Detecta cambios sin commitear, stage/unstage de archivos, y commits
-- 👤 **Detalles de Commit**: Vista detallada de cambios por archivo con resaltado de sintaxis
-- 🔐 **Configuración SSL**: Controla la verificación SSL de Git
-- 🏷️ **Gestión de tags**: Crea y gestiona tags de Git
-- 📦 **Stash**: Guarda temporalmente cambios con stash y gestiona múltiples stashes
-- 🔄 **Operaciones Git**: Fetch, pull, push y otras operaciones Git comunes
+- **Gestión de branches**: Visualiza, crea y cambia entre branches locales y remotos
+- **Historial Visual (Commit Graph)**: Visualización avanzada del historial con líneas de ramas y resaltado de selección
+- **Gestión de cambios**: Detecta cambios sin commitear, stage/unstage de archivos, y commits
+- **Detalles de Commit**: Vista detallada de cambios por archivo con resaltado de sintaxis
+- **Configuración SSL**: Controla la verificación SSL de Git
+- **Gestión de tags**: Crea y gestiona tags de Git
+- **Stash**: Guarda temporalmente cambios con stash y gestiona múltiples stashes
+- **Operaciones Git**: Fetch, pull, push y otras operaciones Git comunes
 
 ### Persistencia y Multitarea
-- 🔄 **Persistencia de Pestañas**: Cambia entre Inicio, Repositorios y Conexiones sin perder el estado de tu trabajo
-- 🗂️ **Cliente Multi-repositorio**: Mantén varios repositorios abiertos simultáneamente y cambia entre ellos mediante chips persistentes
-- 💾 **Estado Independiente**: Cada repositorio mantiene su propia posición de scroll y commit seleccionado
+- **Persistencia de Pestañas**: Cambia entre Inicio, Repositorios y Conexiones sin perder el estado de tu trabajo
+- **Cliente Multi-repositorio**: Mantén varios repositorios abiertos simultáneamente y cambia entre ellos mediante chips persistentes
+- **Estado Independiente**: Cada repositorio mantiene su propia posición de scroll y commit seleccionado
 
 ### Conexiones con Proveedores
-- 🔌 **Múltiples proveedores**: Soporte para GitHub, GitLab, Codeberg, Gitea, Gogs y servidores Git personalizados
-- 🔑 **Gestión de tokens**: Almacenamiento seguro de tokens de acceso con encriptación
-- 🔄 **Sincronización**: Refresca y sincroniza tus repositorios desde los proveedores
-- ✏️ **Edición de conexiones**: Edita y gestiona tus conexiones guardadas
-- 📊 **Detalles de conexión**: Visualiza información detallada de tus cuentas (usuario, organizaciones, repositorios)
+- **Múltiples proveedores**: Soporte para GitHub, GitLab, Codeberg, Gitea, Gogs y servidores Git personalizados
+- **Gestión de tokens**: Almacenamiento seguro de tokens de acceso con encriptación
+- **Sincronización**: Refresca y sincroniza tus repositorios desde los proveedores
+- **Edición de conexiones**: Edita y gestiona tus conexiones guardadas
+- **Detalles de conexión**: Visualiza información detallada de tus cuentas (usuario, organizaciones, repositorios)
 
 ### Integración con IDEs
-- 💻 **Apertura en IDEs**: Abre repositorios directamente en tu IDE favorito
-- 🎨 **Soporte múltiple**: Visual Studio Code, IntelliJ IDEA, PyCharm, Android Studio, Xcode, y más
-- ⚙️ **Configuración personalizada**: Selecciona tu IDE predeterminado
+- **Apertura en IDEs**: Abre repositorios directamente en tu IDE favorito
+- **Soporte múltiple**: Visual Studio Code, IntelliJ IDEA, PyCharm, Android Studio, Xcode, y más
+- **Configuración personalizada**: Selecciona tu IDE predeterminado
 
 ### Personalización
-- 🎨 **Temas personalizables**: Múltiples temas claros y oscuros
-- 🌓 **Modo claro/oscuro**: Cambia entre temas según tu preferencia
-- 🔍 **Zoom configurable**: Ajusta el nivel de zoom de la interfaz
-- 📱 **Interfaz responsiva**: Diseño adaptable a diferentes tamaños de ventana
+- **Temas personalizables**: Múltiples temas claros y oscuros
+- **Modo claro/oscuro**: Cambia entre temas según tu preferencia
+- **Zoom configurable**: Ajusta el nivel de zoom de la interfaz
+- **Interfaz responsiva**: Diseño adaptable a diferentes tamaños de ventana
 
 ### Características Técnicas
-- ✅ Compatible con Linux, Windows y macOS
-- ✅ React 18 con Vite para desarrollo rápido
-- ✅ shadcn/ui como framework UI por defecto
-- ✅ Tailwind CSS para estilos
-- ✅ Configuración de seguridad (Context Isolation)
-- ✅ Build automatizado para todas las plataformas
-- ✅ Hot Module Replacement (HMR) en desarrollo
+- Compatible con Linux, Windows y macOS
+- React 18 con Vite para desarrollo rápido
+- shadcn/ui como framework UI por defecto
+- Tailwind CSS para estilos
+- Configuración de seguridad (Context Isolation)
+- Build automatizado para todas las plataformas
+- Hot Module Replacement (HMR) en desarrollo
 
-## 📦 Instalación
+## Instalación
 
 ```bash
 npm install
 ```
 
-## 🏃 Desarrollo
+## Desarrollo
 
 Para ejecutar la aplicación en modo desarrollo (con HMR):
 
@@ -69,7 +69,7 @@ npm start
 
 Esto iniciará el servidor de desarrollo de Vite y Electron automáticamente.
 
-## 🔨 Construcción
+## Construcción
 
 ### Construir para todas las plataformas:
 ```bash
@@ -95,7 +95,7 @@ npm run build:mac
 
 Los archivos construidos se encontrarán en la carpeta `dist/`.
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 TucoGit/
@@ -155,7 +155,7 @@ TucoGit/
 └── README.md                # Documentación
 ```
 
-## 🎨 Componentes UI
+## Componentes UI
 
 Este proyecto usa **shadcn/ui** como framework UI por defecto. Los componentes están en `src/components/ui/`.
 
@@ -164,7 +164,7 @@ Para agregar más componentes de shadcn/ui, puedes usar:
 npx shadcn-ui@latest add [component-name]
 ```
 
-## 🔒 Seguridad
+## Seguridad
 
 Este proyecto implementa las mejores prácticas de seguridad de Electron:
 - Context Isolation habilitado
@@ -172,7 +172,7 @@ Este proyecto implementa las mejores prácticas de seguridad de Electron:
 - Preload script para comunicación segura
 - Content Security Policy configurado
 
-## 💡 Uso
+## Uso
 
 ### Primera Configuración
 
@@ -208,7 +208,7 @@ Este proyecto implementa las mejores prácticas de seguridad de Electron:
 - `Ctrl/Cmd + ,`: Abrir configuración
 - `Ctrl/Cmd + 1-4`: Cambiar entre pestañas
 
-## 📝 Notas
+## Notas
 
 ### Requisitos Previos
 
