@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -34,6 +34,21 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const branchesDropdownRef = React.useRef<HTMLDivElement>(null);
     const [newBranchMenuOpen, setNewBranchMenuOpen] = useState(false);
     const newBranchMenuRef = React.useRef<HTMLDivElement>(null);
+    const [stashMenuOpen, setStashMenuOpen] = useState(false);
+    const stashMenuRef = React.useRef<HTMLDivElement>(null);
+    const [showStashModal, setShowStashModal] = useState(false);
+    const [stashMessage, setStashMessage] = useState('');
+    const [stashIncludeUntracked, setStashIncludeUntracked] = useState(true);
+    const [stashing, setStashing] = useState(false);
+    const [showStashListModal, setShowStashListModal] = useState(false);
+    const [stashList, setStashList] = useState<Array<{ index: number; ref: string; message: string; date: string }>>([]);
+    const [loadingStashList, setLoadingStashList] = useState(false);
+    const [applyingStash, setApplyingStash] = useState<string | null>(null);
+    const [selectedStash, setSelectedStash] = useState<string | null>(null);
+    const [stashToDelete, setStashToDelete] = useState<{ ref: string; message: string } | null>(null);
+    const [deletingStash, setDeletingStash] = useState(false);
+    const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
+    const [clearingAllStashes, setClearingAllStashes] = useState(false);
     const [showNewBranchModal, setShowNewBranchModal] = useState(false);
     const [newBranchName, setNewBranchName] = useState("");
     const [newBranchFrom, setNewBranchFrom] = useState("");
@@ -298,15 +313,29 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setSelectedCheckoutOption('save');
                 setIsUntrackedConflict(false);
             }
+            if (e.key === 'Escape' && showStashModal) {
+                if (!stashing) {
+                    setShowStashModal(false);
+                    setStashMessage('');
+                    setStashIncludeUntracked(true);
+                }
+            }
+            if (e.key === 'Escape' && showStashListModal) {
+                if (!applyingStash) {
+                    setShowStashListModal(false);
+                    setStashList([]);
+                    setSelectedStash(null);
+                }
+            }
         };
 
-        if (showPullStrategyModal || showCheckoutConflictModal) {
+        if (showPullStrategyModal || showCheckoutConflictModal || showStashModal || showStashListModal) {
             window.addEventListener('keydown', handleEscape);
             return () => {
                 window.removeEventListener('keydown', handleEscape);
             };
         }
-    }, [showPullStrategyModal, showCheckoutConflictModal]);
+    }, [showPullStrategyModal, showCheckoutConflictModal, showStashModal, showStashListModal, stashing, applyingStash]);
 
     // Inicializar el branch base cuando se abre el modal (solo si no viene de un branch remoto)
     useEffect(() => {
@@ -314,6 +343,186 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             setNewBranchFrom(branches.current);
         }
     }, [showNewBranchModal, branches.current, isCreatingFromRemote]);
+
+    // Cerrar menú de stash cuando se hace click fuera
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (stashMenuRef.current && !stashMenuRef.current.contains(event.target as Node)) {
+                setStashMenuOpen(false);
+            }
+        };
+
+        if (stashMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }
+    }, [stashMenuOpen]);
+
+    // Handler para aplicar (pop) el stash seleccionado
+    const handleStashPop = async () => {
+        if (!selectedStash) {
+            toast({
+                title: "Selecciona un stash",
+                description: "Por favor selecciona un stash para aplicar",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+        setApplyingStash(selectedStash);
+        try {
+            const result = await (window as any).electronAPI.gitStashPop?.(repoPath, selectedStash);
+            if (result?.success) {
+                toast({
+                    title: "Stash aplicado",
+                    description: "El stash ha sido aplicado y eliminado exitosamente",
+                    variant: "success",
+                });
+                // Recargar la lista de stashes
+                const listResult = await (window as any).electronAPI.getGitStashList?.(repoPath);
+                if (listResult?.success) {
+                    setStashList(listResult.stashes || []);
+                    setSelectedStash(null);
+                }
+                loadCommits(true);
+            } else {
+                toast({
+                    title: "Error al aplicar stash",
+                    description: result?.error || "No se pudo aplicar el stash",
+                    variant: "destructive",
+                });
+            }
+        } catch (err: any) {
+            console.error('Error al aplicar stash:', err);
+            toast({
+                title: "Error al aplicar stash",
+                description: err?.message || "Ocurrió un error inesperado",
+                variant: "destructive",
+            });
+        } finally {
+            setApplyingStash(null);
+        }
+    };
+
+    // Handler para eliminar un stash
+    const handleStashDelete = async () => {
+        if (!stashToDelete) return;
+
+        const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+        setDeletingStash(true);
+        try {
+            const result = await (window as any).electronAPI.gitStashDrop?.(repoPath, stashToDelete.ref);
+            if (result?.success) {
+                toast({
+                    title: "Stash eliminado",
+                    description: "El stash ha sido eliminado exitosamente",
+                    variant: "success",
+                });
+                // Recargar la lista de stashes
+                const listResult = await (window as any).electronAPI.getGitStashList?.(repoPath);
+                if (listResult?.success) {
+                    setStashList(listResult.stashes || []);
+                    if (selectedStash === stashToDelete.ref) {
+                        setSelectedStash(null);
+                    }
+                }
+                setStashToDelete(null);
+            } else {
+                toast({
+                    title: "Error al eliminar stash",
+                    description: result?.error || "No se pudo eliminar el stash",
+                    variant: "destructive",
+                });
+            }
+        } catch (err: any) {
+            console.error('Error al eliminar stash:', err);
+            toast({
+                title: "Error al eliminar stash",
+                description: err?.message || "Ocurrió un error inesperado",
+                variant: "destructive",
+            });
+        } finally {
+            setDeletingStash(false);
+        }
+    };
+
+    // Handler para limpiar todos los stashes
+    const handleClearAllStashes = async () => {
+        const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+        setClearingAllStashes(true);
+        try {
+            const result = await (window as any).electronAPI.gitStashClear?.(repoPath);
+            if (result?.success) {
+                toast({
+                    title: "Stashes eliminados",
+                    description: "Todos los stashes han sido eliminados exitosamente",
+                    variant: "success",
+                });
+                // Recargar la lista de stashes (debería estar vacía)
+                const listResult = await (window as any).electronAPI.getGitStashList?.(repoPath);
+                if (listResult?.success) {
+                    setStashList(listResult.stashes || []);
+                    setSelectedStash(null);
+                }
+                setShowClearAllConfirm(false);
+            } else {
+                toast({
+                    title: "Error al limpiar stashes",
+                    description: result?.error || "No se pudieron eliminar los stashes",
+                    variant: "destructive",
+                });
+            }
+        } catch (err: any) {
+            console.error('Error al limpiar stashes:', err);
+            toast({
+                title: "Error al limpiar stashes",
+                description: err?.message || "Ocurrió un error inesperado",
+                variant: "destructive",
+            });
+        } finally {
+            setClearingAllStashes(false);
+        }
+    };
+
+    // Handler para ejecutar stash desde el modal
+    const handleStash = async () => {
+        const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+        setStashing(true);
+        try {
+            console.log('Enviando stash con mensaje:', stashMessage, 'includeUntracked:', stashIncludeUntracked);
+            const result = await (window as any).electronAPI.gitStash?.(repoPath, stashIncludeUntracked, stashMessage || '');
+            if (result?.success) {
+                toast({
+                    title: "Stash completado",
+                    description: stashIncludeUntracked 
+                        ? "Los cambios y archivos sin trackear han sido guardados en el stash"
+                        : "Los cambios han sido guardados en el stash",
+                    variant: "success",
+                });
+                setShowStashModal(false);
+                setStashMessage('');
+                loadCommits(true);
+            } else {
+                toast({
+                    title: "Error al hacer stash",
+                    description: result?.error || "No se pudo completar la operación",
+                    variant: "destructive",
+                });
+            }
+        } catch (err: any) {
+            console.error('Error al hacer stash:', err);
+            toast({
+                title: "Error al hacer stash",
+                description: err?.message || "Ocurrió un error inesperado",
+                variant: "destructive",
+            });
+        } finally {
+            setStashing(false);
+        }
+    };
 
     const handleCreateBranch = async () => {
         if (!newBranchName.trim()) return;
@@ -885,27 +1094,98 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         </Button>
                         {/* Separador */}
                         <div className="h-5 w-px bg-slate-300 dark:bg-slate-600"></div>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm"
-                            title="Stash"
-                        >
-                            <svg
-                                className="h-3.5 w-3.5"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
+                        {/* Botón de Stash dividido: acción principal + menú desplegable */}
+                        <div className="relative flex items-center" ref={stashMenuRef}>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    setStashMessage('');
+                                    setStashIncludeUntracked(true);
+                                    setShowStashModal(true);
+                                }}
+                                className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm rounded-r-none"
+                                title="Stash"
                             >
-                                <path
-                                    fillRule="evenodd"
-                                    clipRule="evenodd"
-                                    d="M3.95526 2.25C3.97013 2.25001 3.98505 2.25001 4.00001 2.25001L20.0448 2.25C20.4776 2.24995 20.8744 2.24991 21.1972 2.29331C21.5527 2.3411 21.9284 2.45355 22.2374 2.76257C22.5465 3.07159 22.6589 3.44732 22.7067 3.8028C22.7501 4.12561 22.7501 4.52245 22.75 4.95526V5.04475C22.7501 5.47757 22.7501 5.8744 22.7067 6.19721C22.6589 6.55269 22.5465 6.92842 22.2374 7.23744C21.9437 7.53121 21.5896 7.64733 21.25 7.69914V13.0564C21.25 14.8942 21.25 16.3498 21.0969 17.489C20.9392 18.6615 20.6071 19.6104 19.8588 20.3588C19.1104 21.1071 18.1615 21.4392 16.989 21.5969C15.8498 21.75 14.3942 21.75 12.5564 21.75H11.4436C9.60583 21.75 8.1502 21.75 7.01098 21.5969C5.83856 21.4392 4.88961 21.1071 4.14125 20.3588C3.39289 19.6104 3.06077 18.6615 2.90314 17.489C2.74998 16.3498 2.74999 14.8942 2.75001 13.0564L2.75001 7.69914C2.41038 7.64733 2.05634 7.53121 1.76257 7.23744C1.45355 6.92842 1.3411 6.55269 1.29331 6.19721C1.24991 5.8744 1.24995 5.47757 1.25 5.04476C1.25001 5.02988 1.25001 5.01496 1.25001 5.00001C1.25001 4.98505 1.25001 4.97013 1.25 4.95526C1.24995 4.52244 1.24991 4.12561 1.29331 3.8028C1.3411 3.44732 1.45355 3.07159 1.76257 2.76257C2.07159 2.45355 2.44732 2.3411 2.8028 2.29331C3.12561 2.24991 3.52244 2.24995 3.95526 2.25ZM4.25001 7.75001V13C4.25001 14.9068 4.2516 16.2615 4.38977 17.2892C4.52503 18.2952 4.7787 18.8749 5.20191 19.2981C5.62512 19.7213 6.20477 19.975 7.21086 20.1102C8.23852 20.2484 9.59319 20.25 11.5 20.25H12.5C14.4068 20.25 15.7615 20.2484 16.7892 20.1102C17.7952 19.975 18.3749 19.7213 18.7981 19.2981C19.2213 18.8749 19.475 18.2952 19.6102 17.2892C19.7484 16.2615 19.75 14.9068 19.75 13V7.75001H4.25001ZM2.82324 3.82324L2.82568 3.82187C2.82761 3.82086 2.83093 3.81924 2.83597 3.81717C2.85775 3.80821 2.90611 3.79291 3.00267 3.77993C3.21339 3.7516 3.5074 3.75001 4.00001 3.75001H20C20.4926 3.75001 20.7866 3.7516 20.9973 3.77993C21.0939 3.79291 21.1423 3.80821 21.164 3.81717C21.1691 3.81924 21.1724 3.82086 21.1743 3.82187L21.1768 3.82323L21.1781 3.82568C21.1792 3.82761 21.1808 3.83093 21.1828 3.83597C21.1918 3.85775 21.2071 3.90611 21.2201 4.00267C21.2484 4.21339 21.25 4.5074 21.25 5.00001C21.25 5.49261 21.2484 5.78662 21.2201 5.99734C21.2071 6.0939 21.1918 6.14226 21.1828 6.16404C21.1808 6.16909 21.1792 6.1724 21.1781 6.17434L21.1768 6.17678L21.1743 6.17815C21.1724 6.17916 21.1691 6.18077 21.164 6.18285C21.1423 6.19181 21.0939 6.2071 20.9973 6.22008C20.7866 6.24841 20.4926 6.25001 20 6.25001H4.00001C3.5074 6.25001 3.21339 6.24841 3.00267 6.22008C2.90611 6.2071 2.85775 6.19181 2.83597 6.18285C2.83093 6.18077 2.82761 6.17916 2.82568 6.17815L2.82324 6.17677L2.82187 6.17434C2.82086 6.1724 2.81924 6.16909 2.81717 6.16404C2.80821 6.14226 2.79291 6.0939 2.77993 5.99734C2.7516 5.78662 2.75001 5.49261 2.75001 5.00001C2.75001 4.5074 2.7516 4.21339 2.77993 4.00267C2.79291 3.90611 2.80821 3.85775 2.81717 3.83597C2.81924 3.83093 2.82086 3.82761 2.82187 3.82568L2.82324 3.82324ZM2.82324 6.17677C2.82284 6.17636 2.82297 6.17644 2.82324 6.17677V6.17677ZM10.4782 9.75001H13.5218C13.736 9.74999 13.9329 9.74998 14.0982 9.76126C14.2759 9.77338 14.4712 9.80099 14.6697 9.88322C15.0985 10.0608 15.4392 10.4015 15.6168 10.8303C15.699 11.0288 15.7266 11.2242 15.7388 11.4018C15.75 11.5671 15.75 11.764 15.75 11.9782V12.0218C15.75 12.236 15.75 12.4329 15.7388 12.5982C15.7266 12.7759 15.699 12.9712 15.6168 13.1697C15.4392 13.5985 15.0985 13.9392 14.6697 14.1168C14.4712 14.199 14.2759 14.2266 14.0982 14.2388C13.9329 14.25 13.736 14.25 13.5218 14.25H10.4782C10.264 14.25 10.0671 14.25 9.9018 14.2388C9.72416 14.2266 9.52881 14.199 9.33031 14.1168C8.90151 13.9392 8.56083 13.5985 8.38322 13.1697C8.30099 12.9712 8.27338 12.7759 8.26126 12.5982C8.24998 12.4329 8.24999 12.236 8.25001 12.0218V11.9782C8.24999 11.764 8.24998 11.5671 8.26126 11.4018C8.27338 11.2242 8.30099 11.0288 8.38322 10.8303C8.56083 10.4015 8.90151 10.0608 9.33031 9.88322C9.52881 9.80099 9.72416 9.77338 9.9018 9.76126C10.0671 9.74998 10.264 9.74999 10.4782 9.75001ZM9.90131 11.2703C9.84248 11.2956 9.79559 11.3425 9.77031 11.4013C9.76844 11.4087 9.76234 11.4371 9.75778 11.5039C9.75041 11.6119 9.75001 11.7568 9.75001 12C9.75001 12.2432 9.75041 12.3881 9.75778 12.4961C9.76234 12.5629 9.76844 12.5913 9.77031 12.5987C9.79559 12.6575 9.84248 12.7044 9.90131 12.7297C9.90867 12.7316 9.93707 12.7377 10.0039 12.7422C10.1119 12.7496 10.2568 12.75 10.5 12.75H13.5C13.7432 12.75 13.8881 12.7496 13.9961 12.7422C14.0629 12.7377 14.0913 12.7316 14.0987 12.7297C14.1575 12.7044 14.2044 12.6575 14.2297 12.5987C14.2316 12.5913 14.2377 12.5629 14.2422 12.4961C14.2496 12.3881 14.25 12.2432 14.25 12C14.25 11.7568 14.2496 11.6119 14.2422 11.5039C14.2377 11.4371 14.2316 11.4087 14.2297 11.4013C14.2044 11.3425 14.1575 11.2956 14.0987 11.2703C14.0913 11.2684 14.0629 11.2623 13.9961 11.2578C13.8881 11.2504 13.7432 11.25 13.5 11.25H10.5C10.2568 11.25 10.1119 11.2504 10.0039 11.2578C9.93707 11.2623 9.90866 11.2684 9.90131 11.2703Z"
-                                    fill="currentColor"
-                                />
-                            </svg>
-                            <span>Stash</span>
-                        </Button>
+                                <svg
+                                    className="h-3.5 w-3.5"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        clipRule="evenodd"
+                                        d="M3.95526 2.25C3.97013 2.25001 3.98505 2.25001 4.00001 2.25001L20.0448 2.25C20.4776 2.24995 20.8744 2.24991 21.1972 2.29331C21.5527 2.3411 21.9284 2.45355 22.2374 2.76257C22.5465 3.07159 22.6589 3.44732 22.7067 3.8028C22.7501 4.12561 22.7501 4.52245 22.75 4.95526V5.04475C22.7501 5.47757 22.7501 5.8744 22.7067 6.19721C22.6589 6.55269 22.5465 6.92842 22.2374 7.23744C21.9437 7.53121 21.5896 7.64733 21.25 7.69914V13.0564C21.25 14.8942 21.25 16.3498 21.0969 17.489C20.9392 18.6615 20.6071 19.6104 19.8588 20.3588C19.1104 21.1071 18.1615 21.4392 16.989 21.5969C15.8498 21.75 14.3942 21.75 12.5564 21.75H11.4436C9.60583 21.75 8.1502 21.75 7.01098 21.5969C5.83856 21.4392 4.88961 21.1071 4.14125 20.3588C3.39289 19.6104 3.06077 18.6615 2.90314 17.489C2.74998 16.3498 2.74999 14.8942 2.75001 13.0564L2.75001 7.69914C2.41038 7.64733 2.05634 7.53121 1.76257 7.23744C1.45355 6.92842 1.3411 6.55269 1.29331 6.19721C1.24991 5.8744 1.24995 5.47757 1.25 5.04476C1.25001 5.02988 1.25001 5.01496 1.25001 5.00001C1.25001 4.98505 1.25001 4.97013 1.25 4.95526C1.24995 4.52244 1.24991 4.12561 1.29331 3.8028C1.3411 3.44732 1.45355 3.07159 1.76257 2.76257C2.07159 2.45355 2.44732 2.3411 2.8028 2.29331C3.12561 2.24991 3.52244 2.24995 3.95526 2.25ZM4.25001 7.75001V13C4.25001 14.9068 4.2516 16.2615 4.38977 17.2892C4.52503 18.2952 4.7787 18.8749 5.20191 19.2981C5.62512 19.7213 6.20477 19.975 7.21086 20.1102C8.23852 20.2484 9.59319 20.25 11.5 20.25H12.5C14.4068 20.25 15.7615 20.2484 16.7892 20.1102C17.7952 19.975 18.3749 19.7213 18.7981 19.2981C19.2213 18.8749 19.475 18.2952 19.6102 17.2892C19.7484 16.2615 19.75 14.9068 19.75 13V7.75001H4.25001ZM2.82324 3.82324L2.82568 3.82187C2.82761 3.82086 2.83093 3.81924 2.83597 3.81717C2.85775 3.80821 2.90611 3.79291 3.00267 3.77993C3.21339 3.7516 3.5074 3.75001 4.00001 3.75001H20C20.4926 3.75001 20.7866 3.7516 20.9973 3.77993C21.0939 3.79291 21.1423 3.80821 21.164 3.81717C21.1691 3.81924 21.1724 3.82086 21.1743 3.82187L21.1768 3.82323L21.1781 3.82568C21.1792 3.82761 21.1808 3.83093 21.1828 3.83597C21.1918 3.85775 21.2071 3.90611 21.2201 4.00267C21.2484 4.21339 21.25 4.5074 21.25 5.00001C21.25 5.49261 21.2484 5.78662 21.2201 5.99734C21.2071 6.0939 21.1918 6.14226 21.1828 6.16404C21.1808 6.16909 21.1792 6.1724 21.1781 6.17434L21.1768 6.17678L21.1743 6.17815C21.1724 6.17916 21.1691 6.18077 21.164 6.18285C21.1423 6.19181 21.0939 6.2071 20.9973 6.22008C20.7866 6.24841 20.4926 6.25001 20 6.25001H4.00001C3.5074 6.25001 3.21339 6.24841 3.00267 6.22008C2.90611 6.2071 2.85775 6.19181 2.83597 6.18285C2.83093 6.18077 2.82761 6.17916 2.82568 6.17815L2.82324 6.17677L2.82187 6.17434C2.82086 6.1724 2.81924 6.16909 2.81717 6.16404C2.80821 6.14226 2.79291 6.0939 2.77993 5.99734C2.7516 5.78662 2.75001 5.49261 2.75001 5.00001C2.75001 4.5074 2.7516 4.21339 2.77993 4.00267C2.79291 3.90611 2.80821 3.85775 2.81717 3.83597C2.81924 3.83093 2.82086 3.82761 2.82187 3.82568L2.82324 3.82324ZM2.82324 6.17677C2.82284 6.17636 2.82297 6.17644 2.82324 6.17677V6.17677ZM10.4782 9.75001H13.5218C13.736 9.74999 13.9329 9.74998 14.0982 9.76126C14.2759 9.77338 14.4712 9.80099 14.6697 9.88322C15.0985 10.0608 15.4392 10.4015 15.6168 10.8303C15.699 11.0288 15.7266 11.2242 15.7388 11.4018C15.75 11.5671 15.75 11.764 15.75 11.9782V12.0218C15.75 12.236 15.75 12.4329 15.7388 12.5982C15.7266 12.7759 15.699 12.9712 15.6168 13.1697C15.4392 13.5985 15.0985 13.9392 14.6697 14.1168C14.4712 14.199 14.2759 14.2266 14.0982 14.2388C13.9329 14.25 13.736 14.25 13.5218 14.25H10.4782C10.264 14.25 10.0671 14.25 9.9018 14.2388C9.72416 14.2266 9.52881 14.199 9.33031 14.1168C8.90151 13.9392 8.56083 13.5985 8.38322 13.1697C8.30099 12.9712 8.27338 12.7759 8.26126 12.5982C8.24998 12.4329 8.24999 12.236 8.25001 12.0218V11.9782C8.24999 11.764 8.24998 11.5671 8.26126 11.4018C8.27338 11.2242 8.30099 11.0288 8.38322 10.8303C8.56083 10.4015 8.90151 10.0608 9.33031 9.88322C9.52881 9.80099 9.72416 9.77338 9.9018 9.76126C10.0671 9.74998 10.264 9.74999 10.4782 9.75001ZM9.90131 11.2703C9.84248 11.2956 9.79559 11.3425 9.77031 11.4013C9.76844 11.4087 9.76234 11.4371 9.75778 11.5039C9.75041 11.6119 9.75001 11.7568 9.75001 12C9.75001 12.2432 9.75041 12.3881 9.75778 12.4961C9.76234 12.5629 9.76844 12.5913 9.77031 12.5987C9.79559 12.6575 9.84248 12.7044 9.90131 12.7297C9.90867 12.7316 9.93707 12.7377 10.0039 12.7422C10.1119 12.7496 10.2568 12.75 10.5 12.75H13.5C13.7432 12.75 13.8881 12.7496 13.9961 12.7422C14.0629 12.7377 14.0913 12.7316 14.0987 12.7297C14.1575 12.7044 14.2044 12.6575 14.2297 12.5987C14.2316 12.5913 14.2377 12.5629 14.2422 12.4961C14.2496 12.3881 14.25 12.2432 14.25 12C14.25 11.7568 14.2496 11.6119 14.2422 11.5039C14.2377 11.4371 14.2316 11.4087 14.2297 11.4013C14.2044 11.3425 14.1575 11.2956 14.0987 11.2703C14.0913 11.2684 14.0629 11.2623 13.9961 11.2578C13.8881 11.2504 13.7432 11.25 13.5 11.25H10.5C10.2568 11.25 10.1119 11.2504 10.0039 11.2578C9.93707 11.2623 9.90866 11.2684 9.90131 11.2703Z"
+                                        fill="currentColor"
+                                    />
+                                </svg>
+                                <span>Stash</span>
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setStashMenuOpen(!stashMenuOpen);
+                                }}
+                                className="h-7 w-6 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm rounded-l-none border-l-0"
+                                title="Más opciones de stash"
+                            >
+                                <ChevronDown className="h-3 w-3" />
+                            </Button>
+                            {stashMenuOpen && (
+                                <div className="absolute top-full right-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
+                                    <button
+                                        onClick={async () => {
+                                            setStashMenuOpen(false);
+                                            const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+                                            setLoadingStashList(true);
+                                            setShowStashListModal(true);
+                                            try {
+                                                const result = await (window as any).electronAPI.getGitStashList?.(repoPath);
+                                                if (result?.success) {
+                                                    setStashList(result.stashes || []);
+                                                } else {
+                                                    toast({
+                                                        title: "Error al obtener stashes",
+                                                        description: result?.error || "No se pudo obtener la lista de stashes",
+                                                        variant: "destructive",
+                                                    });
+                                                    setShowStashListModal(false);
+                                                }
+                                            } catch (err: any) {
+                                                console.error('Error al obtener stashes:', err);
+                                                toast({
+                                                    title: "Error al obtener stashes",
+                                                    description: err?.message || "Ocurrió un error inesperado",
+                                                    variant: "destructive",
+                                                });
+                                                setShowStashListModal(false);
+                                            } finally {
+                                                setLoadingStashList(false);
+                                            }
+                                        }}
+                                        className="w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-600 dark:text-slate-400"
+                                    >
+                                        <svg
+                                            className="h-3.5 w-3.5"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M4 6h16M4 12h16M4 18h16"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                            />
+                                        </svg>
+                                        <span>Stash List</span>
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                         <div className="h-5 w-px bg-slate-300 dark:bg-slate-600"></div>
                         <Button
                             variant="outline"
@@ -1345,6 +1625,367 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     disabled={resolvingConflict}
                                 >
                                     {resolvingConflict ? 'Resolviendo...' : 'Continuar'}
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
+            {/* Modal para hacer stash */}
+            {showStashModal && (
+                <div
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    onClick={() => {
+                        if (!stashing) {
+                            setShowStashModal(false);
+                            setStashMessage('');
+                            setStashIncludeUntracked(true);
+                        }
+                    }}
+                >
+                    <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
+                        <CardHeader className="p-4">
+                            <CardTitle className="text-lg">Crear Stash</CardTitle>
+                            <CardDescription className="text-sm">
+                                Guarda temporalmente tus cambios en el stash de Git
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4 pt-0 space-y-4">
+                            {/* Campo de mensaje */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">
+                                    Mensaje (opcional)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={stashMessage}
+                                    onChange={(e) => setStashMessage(e.target.value)}
+                                    className="w-full px-3 py-2 text-sm rounded-md border border-slate-200 dark:border-slate-700 bg-background focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+                                    placeholder="Mensaje para el stash"
+                                    autoFocus
+                                    disabled={stashing}
+                                />
+                                <p className="text-xs text-slate-500 dark:text-slate-400">
+                                    Si no especificas un mensaje, se usará uno por defecto
+                                </p>
+                            </div>
+
+                            {/* Switch para incluir archivos sin trackear */}
+                            <div className="flex items-center justify-between p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+                                <div className="flex-1">
+                                    <label className="text-sm font-medium cursor-pointer" htmlFor="stash-untracked">
+                                        Incluir archivos sin trackear
+                                    </label>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                        También guarda archivos nuevos que aún no están en el repositorio
+                                    </p>
+                                </div>
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        id="stash-untracked"
+                                        checked={stashIncludeUntracked}
+                                        onChange={(e) => setStashIncludeUntracked(e.target.checked)}
+                                        disabled={stashing}
+                                        className="sr-only peer"
+                                    />
+                                    <div className="w-11 h-6 bg-slate-200 dark:bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                                </label>
+                            </div>
+
+                            <div className="flex gap-2 pt-2 justify-end">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setShowStashModal(false);
+                                        setStashMessage('');
+                                        setStashIncludeUntracked(true);
+                                    }}
+                                    disabled={stashing}
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    className="bg-cyan-600 hover:bg-cyan-700 text-white"
+                                    onClick={handleStash}
+                                    disabled={stashing}
+                                >
+                                    {stashing ? 'Guardando...' : 'Crear'}
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
+            {/* Modal para lista de stashes */}
+            {showStashListModal && (
+                <div
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    onClick={() => {
+                        if (!applyingStash) {
+                            setShowStashListModal(false);
+                            setStashList([]);
+                            setSelectedStash(null);
+                        }
+                    }}
+                >
+                    <Card className="w-full max-w-3xl mx-4 bg-background border-2 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                        <CardHeader className="p-4">
+                            <CardTitle className="text-lg">Lista de Stashes</CardTitle>
+                            <CardDescription className="text-sm">
+                                Selecciona un stash para aplicarlo (pop)
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4 pt-0">
+                            {loadingStashList ? (
+                                <div className="flex items-center justify-center py-8">
+                                    <RotateCw className="h-6 w-6 animate-spin text-slate-400" />
+                                    <span className="ml-2 text-sm text-slate-600 dark:text-slate-400">Cargando stashes...</span>
+                                </div>
+                            ) : stashList.length === 0 ? (
+                                <div className="flex flex-col items-center justify-center py-12 px-4">
+                                    <div className="rounded-full bg-slate-100 dark:bg-slate-800 p-4 mb-4">
+                                        <Archive className="h-8 w-8 text-slate-400 dark:text-slate-500" />
+                                    </div>
+                                    <p className="text-base font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                        No hay stashes disponibles
+                                    </p>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 text-center max-w-sm">
+                                        Los stashes te permiten guardar temporalmente cambios sin hacer commit. Crea uno desde el menú de stashes.
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full border-collapse">
+                                        <thead>
+                                            <tr className="border-b border-slate-200 dark:border-slate-700">
+                                                <th className="text-left p-3 text-xs font-semibold text-slate-600 dark:text-slate-400 w-12"></th>
+                                                <th className="text-left p-3 text-xs font-semibold text-slate-600 dark:text-slate-400">Referencia</th>
+                                                <th className="text-left p-3 text-xs font-semibold text-slate-600 dark:text-slate-400">Mensaje</th>
+                                                <th className="text-left p-3 text-xs font-semibold text-slate-600 dark:text-slate-400">Fecha</th>
+                                                <th className="text-center p-3 text-xs font-semibold text-slate-600 dark:text-slate-400 w-20">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {stashList.map((stash) => (
+                                                <tr
+                                                    key={stash.ref}
+                                                    className={`border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer ${
+                                                        selectedStash === stash.ref ? 'bg-cyan-50 dark:bg-cyan-950/20' : ''
+                                                    }`}
+                                                    onClick={() => setSelectedStash(stash.ref)}
+                                                >
+                                                    <td className="p-3">
+                                                        <div className="relative flex items-center justify-center">
+                                                            <input
+                                                                type="radio"
+                                                                name="stash-select"
+                                                                checked={selectedStash === stash.ref}
+                                                                onChange={() => setSelectedStash(stash.ref)}
+                                                                className="h-4 w-4 appearance-none border-2 border-slate-300 dark:border-slate-600 rounded-full bg-transparent checked:border-cyan-600 focus:ring-2 focus:ring-cyan-500 focus:ring-offset-0"
+                                                            />
+                                                            {selectedStash === stash.ref && (
+                                                                <div className="absolute top-[6px] left-[4px] h-2 w-2 bg-cyan-600 rounded-full" />
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                    <td className="p-3">
+                                                        <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
+                                                            {stash.ref}
+                                                        </span>
+                                                    </td>
+                                                    <td className="p-3">
+                                                        <p className="text-sm text-slate-700 dark:text-slate-300 break-words">
+                                                            {stash.message}
+                                                        </p>
+                                                    </td>
+                                                    <td className="p-3">
+                                                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                                                            {new Date(stash.date).toLocaleString()}
+                                                        </p>
+                                                    </td>
+                                                    <td className="p-3">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-7 w-7 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setStashToDelete({ ref: stash.ref, message: stash.message });
+                                                            }}
+                                                            disabled={applyingStash !== null || deletingStash || clearingAllStashes}
+                                                            title="Eliminar stash"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+
+                            <div className="flex gap-2 pt-4 mt-4 justify-end">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setShowStashListModal(false);
+                                        setStashList([]);
+                                        setSelectedStash(null);
+                                    }}
+                                    disabled={applyingStash !== null || deletingStash || clearingAllStashes}
+                                >
+                                    Cerrar
+                                </Button>
+                                {stashList.length > 0 && (
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="text-red-600 dark:text-red-400 border-red-300 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                        onClick={() => setShowClearAllConfirm(true)}
+                                        disabled={applyingStash !== null || deletingStash || clearingAllStashes}
+                                    >
+                                        <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                                        Limpiar Todos
+                                    </Button>
+                                )}
+                                <Button
+                                    size="sm"
+                                    className="bg-cyan-600 hover:bg-cyan-700 text-white"
+                                    onClick={handleStashPop}
+                                    disabled={applyingStash !== null || deletingStash || clearingAllStashes || !selectedStash}
+                                >
+                                    {applyingStash ? (
+                                        <>
+                                            <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                                            Aplicando...
+                                        </>
+                                    ) : (
+                                        'Aplicar'
+                                    )}
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
+            {/* Modal de confirmación para eliminar stash */}
+            {stashToDelete && (
+                <div
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]"
+                    onClick={() => {
+                        if (!deletingStash) {
+                            setStashToDelete(null);
+                        }
+                    }}
+                >
+                    <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
+                        <CardHeader className="p-4">
+                            <CardTitle className="text-lg">Confirmar Eliminación</CardTitle>
+                            <CardDescription className="text-sm">
+                                ¿Estás seguro de que deseas eliminar este stash?
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4 pt-0 space-y-4">
+                            <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                                <p className="text-xs font-mono text-slate-600 dark:text-slate-400 mb-2">
+                                    {stashToDelete.ref}
+                                </p>
+                                <p className="text-sm text-slate-700 dark:text-slate-300">
+                                    {stashToDelete.message}
+                                </p>
+                            </div>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                                Esta acción no se puede deshacer. El stash será eliminado permanentemente.
+                            </p>
+                            <div className="flex gap-2 pt-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1"
+                                    onClick={() => setStashToDelete(null)}
+                                    disabled={deletingStash}
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                                    onClick={handleStashDelete}
+                                    disabled={deletingStash}
+                                >
+                                    {deletingStash ? (
+                                        <>
+                                            <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                                            Eliminando...
+                                        </>
+                                    ) : (
+                                        'Eliminar'
+                                    )}
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
+            {/* Modal de confirmación para limpiar todos los stashes */}
+            {showClearAllConfirm && (
+                <div
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]"
+                    onClick={() => {
+                        if (!clearingAllStashes) {
+                            setShowClearAllConfirm(false);
+                        }
+                    }}
+                >
+                    <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
+                        <CardHeader className="p-4">
+                            <CardTitle className="text-lg">Confirmar Limpieza</CardTitle>
+                            <CardDescription className="text-sm">
+                                ¿Estás seguro de que deseas eliminar todos los stashes?
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-4 pt-0 space-y-4">
+                            <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                                <p className="text-sm text-slate-700 dark:text-slate-300 mb-1">
+                                    Se eliminarán <span className="font-semibold">{stashList.length}</span> {stashList.length === 1 ? 'stash' : 'stashes'}.
+                                </p>
+                            </div>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                                Esta acción no se puede deshacer. Todos los stashes serán eliminados permanentemente.
+                            </p>
+                            <div className="flex gap-2 pt-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1"
+                                    onClick={() => setShowClearAllConfirm(false)}
+                                    disabled={clearingAllStashes}
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                                    onClick={handleClearAllStashes}
+                                    disabled={clearingAllStashes}
+                                >
+                                    {clearingAllStashes ? (
+                                        <>
+                                            <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                                            Eliminando...
+                                        </>
+                                    ) : (
+                                        'Eliminar Todos'
+                                    )}
                                 </Button>
                             </div>
                         </CardContent>

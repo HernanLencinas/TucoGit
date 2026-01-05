@@ -176,8 +176,30 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 
   // Git stash
-  gitStash: (repoPath, includeUntracked = false) => {
-    return ipcRenderer.invoke('git-stash', { repoPath, includeUntracked });
+  gitStash: (repoPath, includeUntracked = false, message = '') => {
+    // Asegurarse de que el mensaje sea un string válido
+    const normalizedMessage = (message && typeof message === 'string') ? message : '';
+    return ipcRenderer.invoke('git-stash', { repoPath, includeUntracked, message: normalizedMessage });
+  },
+
+  // Obtener lista de stashes
+  getGitStashList: (repoPath) => {
+    return ipcRenderer.invoke('get-git-stash-list', repoPath);
+  },
+
+  // Aplicar (pop) un stash específico
+  gitStashPop: (repoPath, stashRef) => {
+    return ipcRenderer.invoke('git-stash-pop', { repoPath, stashRef });
+  },
+
+  // Eliminar (drop) un stash específico
+  gitStashDrop: (repoPath, stashRef) => {
+    return ipcRenderer.invoke('git-stash-drop', { repoPath, stashRef });
+  },
+
+  // Limpiar todos los stashes
+  gitStashClear: (repoPath) => {
+    return ipcRenderer.invoke('git-stash-clear', repoPath);
   },
 
   // Git clean
