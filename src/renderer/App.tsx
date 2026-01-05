@@ -4442,7 +4442,7 @@ function App() {
                           <Star className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                          <div className="text-sm font-semibold text-foreground">Tuco3</div>
+                          <div className="text-sm font-semibold text-foreground">TucoGit</div>
                           <div className="text-xs text-muted-foreground">Versión de la aplicación</div>
                         </div>
                       </div>
@@ -4561,7 +4561,7 @@ function App() {
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                        Tuco3
+                        TucoGit
                       </h2>
                       <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20">
                         <span className="text-sm font-semibold text-primary">v1.0.0</span>

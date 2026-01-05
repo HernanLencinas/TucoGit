@@ -1,5 +1,5 @@
 {
-  "name": "tuco3",
+  "name": "tucogit",
   "version": "1.0.0",
   "description": "Aplicación Electron multiplataforma",
   "main": "src/main/main.js",
@@ -49,8 +49,8 @@
     "wait-on": "^7.2.0"
   },
   "build": {
-    "appId": "com.tuco3.app",
-    "productName": "Tuco3",
+    "appId": "com.tucogit.app",
+    "productName": "TucoGit",
     "directories": {
       "output": "dist"
     },

@@ -820,7 +820,7 @@ function makeRequest(url, options) {
       method: options.method || 'GET',
       headers: {
         ...options.headers,
-        'User-Agent': options.headers['User-Agent'] || 'Tuco3',
+        'User-Agent': options.headers['User-Agent'] || 'TucoGit',
         'Accept': options.headers['Accept'] || 'application/json'
       },
       timeout: 10000 // 10 segundos de timeout
@@ -884,7 +884,7 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
 
     let apiUrl = '';
     const headers = {
-      'User-Agent': 'Tuco3',
+      'User-Agent': 'TucoGit',
       'Accept': 'application/json'
     };
 
@@ -1184,7 +1184,7 @@ ipcMain.handle('validate-git-token', async (event, { proveedor, token, urlServid
 
     let apiUrl = '';
     const headers = {
-      'User-Agent': 'Tuco3',
+      'User-Agent': 'TucoGit',
       'Accept': 'application/json'
     };
 
@@ -1305,7 +1305,7 @@ ipcMain.handle('get-connection-details', async (event, { proveedor, token, urlSe
     }
 
     const headers = {
-      'User-Agent': 'Tuco3',
+      'User-Agent': 'TucoGit',
       'Accept': 'application/json'
     };
 
