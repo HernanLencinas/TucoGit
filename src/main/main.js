@@ -2157,14 +2157,25 @@ ipcMain.handle('get-git-branches', async (event, repoPath) => {
 
     // Obtener branch actual
     let current = '';
+    let headHash = null;
     try {
       const { stdout: currentBranch } = await execPromise('git branch --show-current', { cwd: repoPath });
       current = currentBranch.trim();
+      
+      // Si no hay branch actual (detached HEAD), obtener el hash del HEAD
+      if (!current || current === '') {
+        try {
+          const { stdout: hash } = await execPromise('git rev-parse HEAD', { cwd: repoPath });
+          headHash = hash.trim();
+        } catch (e) {
+          // Ignorar error
+        }
+      }
     } catch (e) {
       // Ignorar error
     }
 
-    return { success: true, local, remote, current };
+    return { success: true, local, remote, current, headHash };
   } catch (error) {
     console.error('Error al obtener branches:', error);
     return { success: false, error: error.message };
