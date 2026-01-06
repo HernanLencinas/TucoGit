@@ -995,27 +995,28 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 <div className="flex-1 flex flex-col min-w-0 min-h-0">
                     {/* Toolbar - Restricted to Graph width */}
                     <div className="h-11 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-[#0b253a]/30 flex items-center px-4 justify-end gap-2">
-                        {/* Dropdown de Branches */}
-                        <div className="relative" ref={branchesDropdownRef}>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                    const wasOpen = branchesOpen;
-                                    setBranchesOpen(!wasOpen);
-                                    if (!wasOpen) {
-                                        // Hacer fetch antes de cargar branches para actualizar remotos
-                                        loadBranches(true);
-                                    }
-                                }}
-                                className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm"
-                            >
-                                <GitBranch className="h-3.5 w-3.5" />
-                                <span className="max-w-[100px] truncate">
-                                    {branches.current || (branches.headHash ? branches.headHash.substring(0, 7) : 'Branch')}
-                                </span>
-                                <ChevronDown className="h-3 w-3" />
-                            </Button>
+                        {/* Dropdown de Branches y Botón Nuevo unificados */}
+                        <div className="flex items-center">
+                            <div className="relative" ref={branchesDropdownRef}>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        const wasOpen = branchesOpen;
+                                        setBranchesOpen(!wasOpen);
+                                        if (!wasOpen) {
+                                            // Hacer fetch antes de cargar branches para actualizar remotos
+                                            loadBranches(true);
+                                        }
+                                    }}
+                                    className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm rounded-r-none border-r-0"
+                                >
+                                    <GitBranch className="h-3.5 w-3.5" />
+                                    <span className="max-w-[100px] truncate">
+                                        {branches.current || (branches.headHash ? branches.headHash.substring(0, 7) : 'Branch')}
+                                    </span>
+                                    <ChevronDown className="h-3 w-3" />
+                                </Button>
                             {branchesOpen && (
                                 <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50 max-h-96 overflow-auto">
                                     {/* Commit Seleccionado */}
@@ -1120,21 +1121,21 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         </div>
                                     )}
                                 </div>
-                            )}
-                        </div>
-                        {/* Botón de acciones con menú desplegable */}
-                        <div className="relative" ref={newBranchMenuRef}>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                    setNewBranchMenuOpen(!newBranchMenuOpen);
-                                }}
-                                className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm"
-                                title="Nuevo"
-                            >
-                                <Plus className="h-4 w-4" />
-                            </Button>
+                                )}
+                            </div>
+                            {/* Botón de acciones con menú desplegable */}
+                            <div className="relative" ref={newBranchMenuRef}>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setNewBranchMenuOpen(!newBranchMenuOpen);
+                                    }}
+                                    className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm rounded-l-none"
+                                    title="Nuevo"
+                                >
+                                    <Plus className="h-4 w-4" />
+                                </Button>
                             {newBranchMenuOpen && (
                                 <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
                                     <button
@@ -1166,6 +1167,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     </button>
                                 </div>
                             )}
+                        </div>
                         </div>
                         {/* Separador */}
                         <div className="h-5 w-px bg-slate-300 dark:bg-slate-600"></div>
