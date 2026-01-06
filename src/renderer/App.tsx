@@ -1464,7 +1464,7 @@ function App() {
     setBusquedaRepositorio("");
   };
 
-  const cargarRepositorios = async (conexion: Connection) => {
+  const cargarRepositorios = async (conexion: Connection, mostrarError: boolean = true) => {
     setCargandoRepositorios(true);
     setRepositoriosDisponibles([]);
     setRepositorioSeleccionado("");
@@ -1510,7 +1510,12 @@ function App() {
     } catch (error) {
       console.error("Error al cargar repositorios:", error);
       setRepositoriosDisponibles([]);
-      alert("Error al cargar repositorios: " + (error as Error).message);
+      // Solo mostrar alert si se solicita explícitamente (cuando se está creando un nuevo repositorio)
+      if (mostrarError) {
+        alert("Error al cargar repositorios: " + (error as Error).message);
+      }
+      // Re-lanzar el error para que pueda ser manejado por el llamador si es necesario
+      throw error;
     } finally {
       setCargandoRepositorios(false);
     }
@@ -2139,8 +2144,12 @@ function App() {
     const conexionEncontrada = conexionesGuardadas.find(c => c.tipo === repositorio.proveedor);
     if (conexionEncontrada) {
       setConexionSeleccionada(conexionEncontrada);
-      // Cargar repositorios para esa conexión
-      cargarRepositorios(conexionEncontrada);
+      // Intentar cargar repositorios para esa conexión, pero no es crítico si falla
+      // ya que solo estamos editando el nombre y descripción del repositorio local
+      cargarRepositorios(conexionEncontrada, false).catch((error) => {
+        // Silenciar el error cuando se está editando, ya que no es necesario para la edición
+        console.warn("No se pudieron cargar los repositorios al editar (no es crítico):", error);
+      });
       // Establecer el repositorio seleccionado (necesitamos encontrar el ID correcto)
       // Por ahora, usaremos el nombre del repositorio como referencia
       setRepositorioSeleccionado(repositorio.nombre);
@@ -5813,15 +5822,27 @@ function App() {
 
       {/* Modal para crear nueva colección */}
       {mostrarModalNuevaCarpeta && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-md mx-4 bg-background border-2">
-            <CardHeader>
-              <CardTitle className="text-xl font-bold">Nueva Colección</CardTitle>
-              <CardDescription>Crea una nueva colección en esta ubicación</CardDescription>
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => {
+            setMostrarModalNuevaCarpeta(false);
+            setNombreNuevaCarpeta("");
+            setDescripcionNuevaCarpeta("");
+          }}
+        >
+          <Card 
+            className="w-full max-w-lg mx-4 bg-background border border-slate-200 dark:border-slate-700 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CardHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
+              <CardTitle className="text-xl font-semibold">Nueva Colección</CardTitle>
+              <CardDescription className="text-sm mt-1">
+                Crea una nueva colección en esta ubicación
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-6 space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                   Nombre ({nombreNuevaCarpeta.length}/32)
                 </label>
                 <input
@@ -5833,14 +5854,14 @@ function App() {
                       setNombreNuevaCarpeta(value);
                     }
                   }}
-                  className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                   placeholder="Nombre de la colección"
                   autoFocus
                   maxLength={32}
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                   Descripción ({descripcionNuevaCarpeta.length}/100)
                 </label>
                 <textarea
@@ -5851,14 +5872,30 @@ function App() {
                       setDescripcionNuevaCarpeta(value);
                     }
                   }}
-                  className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:border-primary min-h-[80px]"
+                  className="w-full px-4 py-2.5 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors min-h-[100px] resize-none"
                   placeholder="Descripción opcional de la colección"
                   maxLength={100}
                 />
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="flex-1" onClick={() => { setMostrarModalNuevaCarpeta(false); setNombreNuevaCarpeta(""); setDescripcionNuevaCarpeta(""); }}>Cancelar</Button>
-                <Button size="sm" className="flex-1" onClick={crearNuevaCarpeta}>Crear</Button>
+              <div className="flex gap-3 pt-4 justify-end">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => { 
+                    setMostrarModalNuevaCarpeta(false); 
+                    setNombreNuevaCarpeta(""); 
+                    setDescripcionNuevaCarpeta(""); 
+                  }}
+                >
+                  Cancelar
+                </Button>
+                <Button 
+                  size="sm" 
+                  className="bg-green-600 hover:bg-green-700 text-white shadow-sm"
+                  onClick={crearNuevaCarpeta}
+                >
+                  Crear
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -5867,15 +5904,28 @@ function App() {
 
       {/* Modal para editar colección */}
       {mostrarModalEditarColeccion && coleccionAEditar && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-md mx-4 bg-background border-2">
-            <CardHeader>
-              <CardTitle className="text-xl font-bold">Editar Colección</CardTitle>
-              <CardDescription>Modifica los datos de la colección</CardDescription>
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => {
+            setMostrarModalEditarColeccion(false);
+            setColeccionAEditar(null);
+            setNombreEditarColeccion("");
+            setDescripcionEditarColeccion("");
+          }}
+        >
+          <Card 
+            className="w-full max-w-lg mx-4 bg-background border border-slate-200 dark:border-slate-700 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CardHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
+              <CardTitle className="text-xl font-semibold">Editar Colección</CardTitle>
+              <CardDescription className="text-sm mt-1">
+                Modifica los datos de la colección
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-6 space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                   Nombre ({nombreEditarColeccion.length}/32)
                 </label>
                 <input
@@ -5887,14 +5937,14 @@ function App() {
                       setNombreEditarColeccion(value);
                     }
                   }}
-                  className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                   placeholder="Nombre de la colección"
                   autoFocus
                   maxLength={32}
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                   Descripción ({descripcionEditarColeccion.length}/100)
                 </label>
                 <textarea
@@ -5905,14 +5955,31 @@ function App() {
                       setDescripcionEditarColeccion(value);
                     }
                   }}
-                  className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:border-primary min-h-[80px]"
+                  className="w-full px-4 py-2.5 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors min-h-[100px] resize-none"
                   placeholder="Descripción opcional de la colección"
                   maxLength={100}
                 />
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="flex-1" onClick={() => { setMostrarModalEditarColeccion(false); setColeccionAEditar(null); setNombreEditarColeccion(""); setDescripcionEditarColeccion(""); }}>Cancelar</Button>
-                <Button size="sm" className="flex-1" onClick={guardarEdicionColeccion}>Guardar</Button>
+              <div className="flex gap-3 pt-4 justify-end">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => { 
+                    setMostrarModalEditarColeccion(false); 
+                    setColeccionAEditar(null); 
+                    setNombreEditarColeccion(""); 
+                    setDescripcionEditarColeccion(""); 
+                  }}
+                >
+                  Cancelar
+                </Button>
+                <Button 
+                  size="sm" 
+                  className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                  onClick={guardarEdicionColeccion}
+                >
+                  Guardar
+                </Button>
               </div>
             </CardContent>
           </Card>

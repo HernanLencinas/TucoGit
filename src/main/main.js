@@ -2230,6 +2230,147 @@ ipcMain.handle('git-checkout', async (event, { repoPath, branchName }) => {
   }
 });
 
+// Handler para verificar si un commit puede ser cherry-picked al branch actual
+ipcMain.handle('can-cherry-pick-commit', async (event, { repoPath, commitHash }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Verificar si el commit existe
+    try {
+      await execPromise(`git cat-file -e ${commitHash}`, { cwd: repoPath });
+    } catch (e) {
+      return { success: false, error: 'El commit no existe' };
+    }
+
+    // Obtener el branch actual o HEAD si estamos en detached HEAD
+    let currentBranch = '';
+    let headHash = '';
+    try {
+      const { stdout: branchOutput } = await execPromise('git branch --show-current', { cwd: repoPath });
+      currentBranch = branchOutput.trim();
+      
+      const { stdout: headOutput } = await execPromise('git rev-parse HEAD', { cwd: repoPath });
+      headHash = headOutput.trim();
+    } catch (e) {
+      return { success: false, error: 'No se pudo obtener información del branch actual' };
+    }
+
+    // Si el commit es el HEAD actual, no puede ser cherry-picked
+    if (headHash === commitHash) {
+      return { success: true, canCherryPick: false, reason: 'El commit es el HEAD actual' };
+    }
+
+    // Verificar si el commit ya está en el historial del branch actual
+    // Usamos git merge-base --is-ancestor para verificar si el commit es ancestro del HEAD
+    // Este comando devuelve código 0 si es ancestro, y código no 0 si no lo es
+    try {
+      await execPromise(`git merge-base --is-ancestor ${commitHash} HEAD`, { cwd: repoPath });
+      // Si el comando no falla (código 0), significa que el commit es ancestro del HEAD
+      // Por lo tanto, ya está en el historial y no puede ser cherry-picked
+      return { success: true, canCherryPick: false, reason: 'El commit ya está en el historial del branch actual' };
+    } catch (e) {
+      // Si el comando falla (código no 0), significa que el commit NO es ancestro del HEAD
+      // Por lo tanto, puede ser cherry-picked (continuar con la verificación)
+    }
+
+    // Verificar si el commit es un merge commit (cherry-pick de merges es más complejo)
+    // Por ahora permitimos cherry-pick de merge commits, aunque podría requerir manejo especial
+    try {
+      const { stdout: parentCount } = await execPromise(`git cat-file -p ${commitHash} | grep "^parent " | wc -l`, { cwd: repoPath });
+      const count = parseInt(parentCount.trim(), 10);
+      if (count > 1) {
+        // Es un merge commit, técnicamente puede ser cherry-picked pero es más complejo
+        // Por ahora lo permitimos
+      }
+    } catch (e) {
+      // Ignorar error
+    }
+
+    return { success: true, canCherryPick: true };
+  } catch (error) {
+    console.error('Error al verificar si el commit puede ser cherry-picked:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Handler para hacer revert de un commit
+ipcMain.handle('git-revert', async (event, { repoPath, commitHash }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Ejecutar git revert
+    await execPromise(`git revert --no-edit ${commitHash}`, { cwd: repoPath });
+    return { success: true };
+  } catch (error) {
+    console.error('Error al hacer revert:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Handler para hacer cherry-pick de un commit
+ipcMain.handle('git-cherry-pick', async (event, { repoPath, commitHash, commitChanges, appendOrigin }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Construir el comando de cherry-pick
+    let command = 'git cherry-pick';
+    
+    // Si no se debe hacer commit automático, usar --no-commit
+    if (!commitChanges) {
+      command += ' --no-commit';
+    }
+    
+    command += ` ${commitHash}`;
+    
+    await execPromise(command, { cwd: repoPath });
+    
+    // Si se debe agregar el origen al mensaje del commit y se hizo commit
+    if (appendOrigin && commitChanges) {
+      try {
+        // Obtener el hash corto del commit original
+        const { stdout: originalHash } = await execPromise(`git rev-parse --short ${commitHash}`, { cwd: repoPath });
+        const shortHash = originalHash.trim();
+        
+        // Obtener el mensaje del commit actual (el que se acaba de crear)
+        const { stdout: currentMessage } = await execPromise('git log -1 --format=%B HEAD', { cwd: repoPath });
+        
+        // Modificar el mensaje del commit para agregar la referencia
+        const newMessage = `${currentMessage.trim()}\n\n(cherry picked from commit ${shortHash})`;
+        
+        // Usar git commit --amend para modificar el mensaje
+        const escapedMessage = newMessage.replace(/"/g, '\\"');
+        await execPromise(`git commit --amend -m "${escapedMessage}"`, { cwd: repoPath });
+      } catch (e) {
+        // Si falla al modificar el mensaje, no es crítico, el cherry-pick ya se hizo
+        console.warn('No se pudo agregar la referencia al mensaje del commit:', e);
+      }
+    }
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error al hacer cherry-pick:', error);
+    return { success: false, error: error.message };
+  }
+});
+
 // Handler para crear un tag
 ipcMain.handle('git-create-tag', async (event, { repoPath, tagName, message, commitHash, pushToAllRemotes }) => {
   const { exec } = require('child_process');

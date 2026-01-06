@@ -1,7 +1,7 @@
 {
   "name": "tucogit",
   "version": "1.0.0",
-  "description": "Aplicación Electron multiplataforma",
+  "description": "TucoGit",
   "main": "src/main/main.js",
   "scripts": {
     "dev": "vite",
@@ -21,7 +21,7 @@
   ],
   "author": {
     "name": "Hernan Lencinas",
-    "email": "lencians.hernan@gmail.com"
+    "email": "lencinas.hernan@gmail.com"
   },
   "license": "MIT",
   "dependencies": {
