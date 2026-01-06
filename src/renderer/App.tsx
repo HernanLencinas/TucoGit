@@ -104,6 +104,8 @@ function App() {
   const [gitSslVerify, setGitSslVerify] = useState<boolean>(true);
   const [gitUserName, setGitUserName] = useState<string>("");
   const [gitUserEmail, setGitUserEmail] = useState<string>("");
+  const [commitButtonBehavior, setCommitButtonBehavior] = useState<"commit" | "commit-push" | "commit-sync">("commit");
+  const [mostrarMenuCommitBehavior, setMostrarMenuCommitBehavior] = useState(false);
   const [mostrarModalRestablecerConfig, setMostrarModalRestablecerConfig] = useState(false);
   const [mostrarModalConfirmarReclon, setMostrarModalConfirmarReclon] = useState(false);
   const [repoAClonar, setRepoAClonar] = useState<FolderItem | null>(null);
@@ -463,6 +465,11 @@ function App() {
               // Cargar verificación SSL de Git
               if (resultado.gitSslVerify !== undefined) {
                 setGitSslVerify(resultado.gitSslVerify);
+              }
+
+              // Cargar comportamiento del botón de commit
+              if (resultado.commitButtonBehavior !== undefined) {
+                setCommitButtonBehavior(resultado.commitButtonBehavior);
               }
 
               // Cargar configuración de usuario de Git
@@ -4169,6 +4176,140 @@ function App() {
                       <p className="text-xs text-muted-foreground">
                         Este correo se asociará con tus commits
                       </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Comportamiento del Botón de Commit */}
+              <Card className="border-2">
+                <CardHeader className="pb-3">
+                  <div>
+                    <CardTitle className="text-base">Comportamiento del Botón de Commit</CardTitle>
+                    <CardDescription className="text-xs mt-1">
+                      Selecciona qué acción realizará el botón de commit en el panel de estado de Git
+                    </CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold">
+                        Acción del botón
+                      </label>
+                      <div className="relative">
+                        <button
+                          type="button"
+                          onClick={() => setMostrarMenuCommitBehavior(!mostrarMenuCommitBehavior)}
+                          className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all hover:border-primary/50"
+                        >
+                          <span className={commitButtonBehavior ? "text-foreground" : "text-muted-foreground"}>
+                            {commitButtonBehavior === "commit" && "Commit"}
+                            {commitButtonBehavior === "commit-push" && "Commit + Push"}
+                            {commitButtonBehavior === "commit-sync" && "Commit + Sync"}
+                          </span>
+                          <ChevronRight className={`h-4 w-4 transition-transform flex-shrink-0 ${mostrarMenuCommitBehavior ? "rotate-90" : ""}`} />
+                        </button>
+                        {mostrarMenuCommitBehavior && (
+                          <>
+                            <div
+                              className="fixed inset-0 z-10"
+                              onClick={() => setMostrarMenuCommitBehavior(false)}
+                            />
+                            <div className="absolute z-20 w-full mt-1 rounded-md border bg-popover shadow-md overflow-auto">
+                              <button
+                                onClick={async () => {
+                                  const nuevoValor = "commit" as const;
+                                  setCommitButtonBehavior(nuevoValor);
+                                  setMostrarMenuCommitBehavior(false);
+                                  if (window.electronAPI?.writeConfig) {
+                                    try {
+                                      await window.electronAPI.writeConfig({ commitButtonBehavior: nuevoValor });
+                                    } catch (error) {
+                                      console.error('Error al guardar comportamiento del botón:', error);
+                                    }
+                                  }
+                                }}
+                                className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${
+                                  commitButtonBehavior === "commit" ? "bg-accent text-accent-foreground" : ""
+                                }`}
+                              >
+                                <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit" ? "opacity-100" : "opacity-0"}`} />
+                                <span>Commit</span>
+                              </button>
+                              <button
+                                onClick={async () => {
+                                  const nuevoValor = "commit-push" as const;
+                                  setCommitButtonBehavior(nuevoValor);
+                                  setMostrarMenuCommitBehavior(false);
+                                  if (window.electronAPI?.writeConfig) {
+                                    try {
+                                      await window.electronAPI.writeConfig({ commitButtonBehavior: nuevoValor });
+                                    } catch (error) {
+                                      console.error('Error al guardar comportamiento del botón:', error);
+                                    }
+                                  }
+                                }}
+                                className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${
+                                  commitButtonBehavior === "commit-push" ? "bg-accent text-accent-foreground" : ""
+                                }`}
+                              >
+                                <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit-push" ? "opacity-100" : "opacity-0"}`} />
+                                <span>Commit + Push</span>
+                              </button>
+                              <button
+                                onClick={async () => {
+                                  const nuevoValor = "commit-sync" as const;
+                                  setCommitButtonBehavior(nuevoValor);
+                                  setMostrarMenuCommitBehavior(false);
+                                  if (window.electronAPI?.writeConfig) {
+                                    try {
+                                      await window.electronAPI.writeConfig({ commitButtonBehavior: nuevoValor });
+                                    } catch (error) {
+                                      console.error('Error al guardar comportamiento del botón:', error);
+                                    }
+                                  }
+                                }}
+                                className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${
+                                  commitButtonBehavior === "commit-sync" ? "bg-accent text-accent-foreground" : ""
+                                }`}
+                              >
+                                <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit-sync" ? "opacity-100" : "opacity-0"}`} />
+                                <span>Commit + Sync</span>
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div className="space-y-3 p-4 rounded-lg bg-muted/50 border">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <div className={`h-2 w-2 rounded-full ${commitButtonBehavior === "commit" ? "bg-primary" : "bg-muted-foreground/30"}`} />
+                          <span className="text-sm font-semibold">Commit</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground ml-4">
+                          Realiza únicamente el commit de los archivos en stage. No sincroniza con el repositorio remoto.
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <div className={`h-2 w-2 rounded-full ${commitButtonBehavior === "commit-push" ? "bg-primary" : "bg-muted-foreground/30"}`} />
+                          <span className="text-sm font-semibold">Commit + Push</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground ml-4">
+                          Realiza el commit y luego envía los cambios al repositorio remoto. No descarga cambios del remoto.
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <div className={`h-2 w-2 rounded-full ${commitButtonBehavior === "commit-sync" ? "bg-primary" : "bg-muted-foreground/30"}`} />
+                          <span className="text-sm font-semibold">Commit + Sync</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground ml-4">
+                          Realiza el commit, descarga los cambios del remoto (fetch + pull) y luego envía los cambios locales (push). Sincroniza completamente con el repositorio remoto.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

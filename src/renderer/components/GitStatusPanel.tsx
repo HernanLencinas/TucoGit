@@ -37,6 +37,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [currentBranch, setCurrentBranch] = useState<string>('');
+    const [commitButtonBehavior, setCommitButtonBehavior] = useState<"commit" | "commit-push" | "commit-sync">("commit");
 
     const loadStatus = async () => {
         if (!repoPath) return;
@@ -62,6 +63,47 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
     useEffect(() => {
         loadStatus();
     }, [repoPath]);
+
+    // Función para cargar configuración del comportamiento del botón de commit
+    const loadCommitBehavior = async () => {
+        try {
+            if ((window as any).electronAPI?.readConfig) {
+                const configResult = await (window as any).electronAPI.readConfig();
+                if (configResult.success && configResult.config?.configuracion?.commitButtonBehavior) {
+                    setCommitButtonBehavior(configResult.config.configuracion.commitButtonBehavior);
+                }
+            }
+        } catch (err) {
+            console.error('Error al cargar configuración del botón de commit:', err);
+        }
+    };
+
+    // Cargar configuración del comportamiento del botón de commit al montar
+    useEffect(() => {
+        loadCommitBehavior();
+    }, []);
+
+    // Recargar configuración cuando la ventana recibe foco (para detectar cambios)
+    useEffect(() => {
+        const handleFocus = () => {
+            loadCommitBehavior();
+        };
+        
+        window.addEventListener('focus', handleFocus);
+        
+        return () => {
+            window.removeEventListener('focus', handleFocus);
+        };
+    }, []);
+
+    // También recargar periódicamente cada 2 segundos para detectar cambios
+    useEffect(() => {
+        const interval = setInterval(() => {
+            loadCommitBehavior();
+        }, 2000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     // Efecto para iniciar/detener el watcher cuando cambia el repositorio
     useEffect(() => {
@@ -111,14 +153,62 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
     const handleCommit = async () => {
         if (!commitMessage.trim()) return;
         setLoading(true);
+        setError(null);
         try {
-            const result = await (window as any).electronAPI.gitCommit(repoPath, commitMessage);
-            if (result.success) {
+            // Realizar commit
+            const commitResult = await (window as any).electronAPI.gitCommit(repoPath, commitMessage);
+            if (commitResult.success) {
                 setCommitMessage("");
                 loadStatus();
                 onRefreshGraph();
+                
+                // Ejecutar acción adicional según la configuración
+                if (commitButtonBehavior === "commit-push" || commitButtonBehavior === "commit-sync") {
+                    try {
+                        // Para commit-sync, primero hacer fetch y pull
+                        if (commitButtonBehavior === "commit-sync") {
+                            // Fetch
+                            const fetchResult = await (window as any).electronAPI.gitFetch?.(repoPath);
+                            if (!fetchResult?.success) {
+                                console.warn('Fetch falló:', fetchResult?.error);
+                            }
+                            
+                            // Pull
+                            const pullResult = await (window as any).electronAPI.gitPull?.(repoPath);
+                            if (!pullResult?.success) {
+                                const errorMessage = pullResult?.error || "";
+                                if (errorMessage.includes("conflict") || errorMessage.includes("CONFLICT")) {
+                                    setError(`Commit realizado exitosamente, pero el pull falló por conflictos: ${errorMessage}. Resuelve los conflictos manualmente.`);
+                                    loadStatus();
+                                    onRefreshGraph();
+                                    return;
+                                } else {
+                                    console.warn('Pull falló:', pullResult?.error);
+                                }
+                            }
+                        }
+                        
+                        // Push (para ambos commit-push y commit-sync)
+                        const pushResult = await (window as any).electronAPI.gitPush?.(repoPath);
+                        if (pushResult?.success) {
+                            // Actualizar el estado después del push
+                            loadStatus();
+                            onRefreshGraph();
+                        } else {
+                            // Si el push falla, mostrar el error pero el commit ya se hizo
+                            const errorMessage = pushResult?.error || "";
+                            if (errorMessage.includes("non-fast-forward") || errorMessage.includes("behind") || errorMessage.includes("Updates were rejected")) {
+                                setError(`Commit realizado exitosamente, pero el push falló: ${errorMessage}. Puede que necesites hacer pull primero.`);
+                            } else {
+                                setError(`Commit realizado exitosamente, pero el push falló: ${errorMessage}`);
+                            }
+                        }
+                    } catch (pushErr: any) {
+                        setError(`Commit realizado exitosamente, pero la operación adicional falló: ${pushErr.message}`);
+                    }
+                }
             } else {
-                setError(result.error);
+                setError(commitResult.error);
             }
         } catch (err: any) {
             setError(err.message);
@@ -415,10 +505,16 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                         {loading ? (
                             <>
                                 <RefreshCw className="h-3.5 w-3.5 animate-spin mr-2" />
-                                Committing{currentBranch ? ` to '${currentBranch}'` : ''}...
+                                {commitButtonBehavior === "commit" && <>Committing{currentBranch ? ` to '${currentBranch}'` : ''}...</>}
+                                {commitButtonBehavior === "commit-push" && <>Committing & Pushing{currentBranch ? ` to '${currentBranch}'` : ''}...</>}
+                                {commitButtonBehavior === "commit-sync" && <>Committing & Syncing{currentBranch ? ` to '${currentBranch}'` : ''}...</>}
                             </>
                         ) : (
-                            <>Commit{currentBranch ? ` to '${currentBranch}'` : ''}</>
+                            <>
+                                {commitButtonBehavior === "commit" && <>Commit{currentBranch ? ` to '${currentBranch}'` : ''}</>}
+                                {commitButtonBehavior === "commit-push" && <>Commit + Push{currentBranch ? ` to '${currentBranch}'` : ''}</>}
+                                {commitButtonBehavior === "commit-sync" && <>Commit + Sync{currentBranch ? ` to '${currentBranch}'` : ''}</>}
+                            </>
                         )}
                     </Button>
 

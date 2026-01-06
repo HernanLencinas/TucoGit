@@ -383,6 +383,7 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
       gitSslVerify: configData.configuracion?.gitSslVerify !== undefined ? configData.configuracion.gitSslVerify : true,
       gitUserName: configData.configuracion?.gitUserName || "",
       gitUserEmail: configData.configuracion?.gitUserEmail || "",
+      commitButtonBehavior: configData.configuracion?.commitButtonBehavior || "commit",
       repositorios: configData.repositorios || []
     };
   } catch (error) {
@@ -507,6 +508,13 @@ ipcMain.handle('write-config', async (event, updates) => {
         configData.configuracion = {};
       }
       configData.configuracion.gitUserEmail = updates.gitUserEmail;
+    }
+
+    if (updates.commitButtonBehavior !== undefined) {
+      if (!configData.configuracion) {
+        configData.configuracion = {};
+      }
+      configData.configuracion.commitButtonBehavior = updates.commitButtonBehavior;
     }
 
     if (updates.repositorios !== undefined) {
