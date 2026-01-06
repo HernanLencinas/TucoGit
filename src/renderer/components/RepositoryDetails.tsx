@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag, Settings, Undo2 } from 'lucide-react';
+import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag, Settings, Undo2, GitMerge } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/lib/use-toast";
 import { FolderItem } from "@/renderer/types";
@@ -79,6 +80,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const [creatingTag, setCreatingTag] = useState(false);
     const [showRevertModal, setShowRevertModal] = useState(false);
     const [reverting, setReverting] = useState(false);
+    const [showCherryPickModal, setShowCherryPickModal] = useState(false);
+    const [cherryPickCommitChanges, setCherryPickCommitChanges] = useState(true);
+    const [cherryPickAppendOrigin, setCherryPickAppendOrigin] = useState(false);
+    const [cherryPicking, setCherryPicking] = useState(false);
 
     // Debounce search term
     useEffect(() => {
@@ -342,15 +347,22 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     setShowRevertModal(false);
                 }
             }
+            if (e.key === 'Escape' && showCherryPickModal) {
+                if (!cherryPicking) {
+                    setShowCherryPickModal(false);
+                    setCherryPickCommitChanges(true);
+                    setCherryPickAppendOrigin(false);
+                }
+            }
         };
 
-        if (showPullStrategyModal || showCheckoutConflictModal || showStashModal || showStashListModal || showRevertModal) {
+        if (showPullStrategyModal || showCheckoutConflictModal || showStashModal || showStashListModal || showRevertModal || showCherryPickModal) {
             window.addEventListener('keydown', handleEscape);
             return () => {
                 window.removeEventListener('keydown', handleEscape);
             };
         }
-    }, [showPullStrategyModal, showCheckoutConflictModal, showStashModal, showStashListModal, showRevertModal, stashing, applyingStash, reverting]);
+    }, [showPullStrategyModal, showCheckoutConflictModal, showStashModal, showStashListModal, showRevertModal, showCherryPickModal, stashing, applyingStash, reverting, cherryPicking]);
 
     // Inicializar el branch base cuando se abre el modal (solo si no viene de un branch remoto)
     useEffect(() => {
@@ -639,6 +651,46 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             });
         } finally {
             setReverting(false);
+        }
+    };
+
+    const handleCherryPick = async () => {
+        if (!selectedCommit?.hash) return;
+        
+        setCherryPicking(true);
+        const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+        
+        try {
+            const result = await (window as any).electronAPI.gitCherryPick?.(repoPath, selectedCommit.hash, cherryPickCommitChanges, cherryPickAppendOrigin);
+            if (result?.success) {
+                toast({
+                    title: "Cherry-pick completado",
+                    description: cherryPickCommitChanges 
+                        ? "El commit ha sido aplicado y commiteado exitosamente"
+                        : "El commit ha sido aplicado (sin commit)",
+                    variant: "success",
+                });
+                setShowCherryPickModal(false);
+                setCherryPickCommitChanges(true);
+                setCherryPickAppendOrigin(false);
+                loadCommits(true);
+                loadBranches();
+            } else {
+                toast({
+                    title: "Error al hacer cherry-pick",
+                    description: result?.error || "No se pudo completar la operación",
+                    variant: "destructive",
+                });
+            }
+        } catch (err: any) {
+            console.error('Error al hacer cherry-pick:', err);
+            toast({
+                title: "Error al hacer cherry-pick",
+                description: err?.message || "Ocurrió un error inesperado",
+                variant: "destructive",
+            });
+        } finally {
+            setCherryPicking(false);
         }
     };
 
@@ -1443,7 +1495,9 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     <button
                                         onClick={() => {
                                             setCherryPickMenuOpen(false);
-                                            // TODO: Implementar funcionalidad de cherry-pick
+                                            if (canCherryPick && selectedCommit) {
+                                                setShowCherryPickModal(true);
+                                            }
                                         }}
                                         disabled={!canCherryPick}
                                         className={cn(
@@ -2422,6 +2476,134 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     disabled={reverting}
                                 >
                                     {reverting ? 'Reverting...' : 'Revert'}
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
+            {/* Modal para Cherry-pick */}
+            {showCherryPickModal && selectedCommit && (
+                <div
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                    onClick={() => {
+                        if (!cherryPicking) {
+                            setShowCherryPickModal(false);
+                            setCherryPickCommitChanges(true);
+                            setCherryPickAppendOrigin(false);
+                        }
+                    }}
+                >
+                    <Card className="w-full max-w-lg mx-4 bg-background border border-slate-200 dark:border-slate-700 shadow-xl" onClick={(e) => e.stopPropagation()}>
+                        <CardHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
+                            <CardTitle className="text-xl font-semibold">Cherry Pick</CardTitle>
+                            <CardDescription className="text-sm mt-1">
+                                Aplicar cambios del commit individual
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-6 space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Commit a aplicar:</label>
+                                <div className="px-4 py-3 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3 shadow-sm">
+                                    <div className="p-1.5 bg-cyan-100 dark:bg-cyan-900/30 rounded-md">
+                                        <GitBranch className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <span className="text-slate-600 dark:text-slate-400 font-mono text-xs bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded">{selectedCommit.hash.substring(0, 7)}</span>
+                                            <span className="text-slate-800 dark:text-slate-200 font-medium truncate">{selectedCommit.message}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-5">
+                                <div className="p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/30">
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div className="flex-1 space-y-1.5">
+                                            <label htmlFor="cherry-pick-commit" className="text-sm font-semibold text-slate-800 dark:text-slate-200 block cursor-pointer">
+                                                Hacer commit de los cambios
+                                            </label>
+                                            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                                Crear automáticamente un commit con los cambios cherry-picked. Si está desactivado, los cambios quedarán en staging pero no se hará commit, permitiéndote revisarlos y modificarlos antes de hacer commit.
+                                            </p>
+                                        </div>
+                                        <div className="pt-0.5">
+                                            <Switch
+                                                id="cherry-pick-commit"
+                                                checked={cherryPickCommitChanges}
+                                                onCheckedChange={setCherryPickCommitChanges}
+                                                disabled={cherryPicking}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className={cn(
+                                    "p-4 rounded-lg border transition-all",
+                                    cherryPickCommitChanges
+                                        ? "border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/30"
+                                        : "border-slate-200/50 dark:border-slate-700/50 bg-slate-50/30 dark:bg-slate-800/20 opacity-60"
+                                )}>
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div className="flex-1 space-y-1.5">
+                                            <label htmlFor="cherry-pick-append" className={cn(
+                                                "text-sm font-semibold block",
+                                                cherryPickCommitChanges 
+                                                    ? "text-slate-800 dark:text-slate-200 cursor-pointer" 
+                                                    : "text-slate-500 dark:text-slate-500 cursor-not-allowed"
+                                            )}>
+                                                Agregar origen al mensaje del commit
+                                            </label>
+                                            <p className={cn(
+                                                "text-xs leading-relaxed",
+                                                cherryPickCommitChanges 
+                                                    ? "text-slate-600 dark:text-slate-400" 
+                                                    : "text-slate-400 dark:text-slate-600"
+                                            )}>
+                                                Agregar una referencia al commit original al final del mensaje del commit (ej: "(cherry picked from commit abc1234")). Esto ayuda a rastrear de dónde vinieron los cambios en el historial de git. Solo disponible cuando "Hacer commit de los cambios" está habilitado.
+                                            </p>
+                                        </div>
+                                        <div className="pt-0.5">
+                                            <Switch
+                                                id="cherry-pick-append"
+                                                checked={cherryPickAppendOrigin}
+                                                onCheckedChange={setCherryPickAppendOrigin}
+                                                disabled={cherryPicking || !cherryPickCommitChanges}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-3 pt-4 justify-end">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setShowCherryPickModal(false);
+                                        setCherryPickCommitChanges(true);
+                                        setCherryPickAppendOrigin(false);
+                                    }}
+                                    disabled={cherryPicking}
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    className="bg-cyan-600 hover:bg-cyan-700 text-white shadow-sm"
+                                    onClick={handleCherryPick}
+                                    disabled={cherryPicking}
+                                >
+                                    {cherryPicking ? (
+                                        <>
+                                            <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                                            Aplicando...
+                                        </>
+                                    ) : (
+                                        'Aplicar'
+                                    )}
                                 </Button>
                             </div>
                         </CardContent>

@@ -2319,6 +2319,58 @@ ipcMain.handle('git-revert', async (event, { repoPath, commitHash }) => {
   }
 });
 
+// Handler para hacer cherry-pick de un commit
+ipcMain.handle('git-cherry-pick', async (event, { repoPath, commitHash, commitChanges, appendOrigin }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Construir el comando de cherry-pick
+    let command = 'git cherry-pick';
+    
+    // Si no se debe hacer commit automático, usar --no-commit
+    if (!commitChanges) {
+      command += ' --no-commit';
+    }
+    
+    command += ` ${commitHash}`;
+    
+    await execPromise(command, { cwd: repoPath });
+    
+    // Si se debe agregar el origen al mensaje del commit y se hizo commit
+    if (appendOrigin && commitChanges) {
+      try {
+        // Obtener el hash corto del commit original
+        const { stdout: originalHash } = await execPromise(`git rev-parse --short ${commitHash}`, { cwd: repoPath });
+        const shortHash = originalHash.trim();
+        
+        // Obtener el mensaje del commit actual (el que se acaba de crear)
+        const { stdout: currentMessage } = await execPromise('git log -1 --format=%B HEAD', { cwd: repoPath });
+        
+        // Modificar el mensaje del commit para agregar la referencia
+        const newMessage = `${currentMessage.trim()}\n\n(cherry picked from commit ${shortHash})`;
+        
+        // Usar git commit --amend para modificar el mensaje
+        const escapedMessage = newMessage.replace(/"/g, '\\"');
+        await execPromise(`git commit --amend -m "${escapedMessage}"`, { cwd: repoPath });
+      } catch (e) {
+        // Si falla al modificar el mensaje, no es crítico, el cherry-pick ya se hizo
+        console.warn('No se pudo agregar la referencia al mensaje del commit:', e);
+      }
+    }
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error al hacer cherry-pick:', error);
+    return { success: false, error: error.message };
+  }
+});
+
 // Handler para crear un tag
 ipcMain.handle('git-create-tag', async (event, { repoPath, tagName, message, commitHash, pushToAllRemotes }) => {
   const { exec } = require('child_process');
