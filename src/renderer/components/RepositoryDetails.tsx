@@ -2431,36 +2431,43 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             {/* Modal para Revert */}
             {showRevertModal && selectedCommit && (
                 <div
-                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
                     onClick={() => {
                         if (!reverting) {
                             setShowRevertModal(false);
                         }
                     }}
                 >
-                    <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
-                        <CardHeader className="p-4">
-                            <CardTitle className="text-lg">Revert Commit</CardTitle>
-                            <CardDescription className="text-sm">
-                                Create a new commit that undoes the changes from this commit
+                    <Card className="w-full max-w-lg mx-4 bg-background border border-slate-200 dark:border-slate-700 shadow-xl" onClick={(e) => e.stopPropagation()}>
+                        <CardHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
+                            <CardTitle className="text-xl font-semibold">Revert Commit</CardTitle>
+                            <CardDescription className="text-sm mt-1">
+                                Crear un nuevo commit que deshace los cambios de este commit
                             </CardDescription>
                         </CardHeader>
-                        <CardContent className="p-4 pt-0 space-y-4">
+                        <CardContent className="p-6 space-y-6">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Commit to revert:</label>
-                                <div className="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-md bg-slate-50 dark:bg-slate-800/50">
-                                    <span className="text-slate-500 dark:text-slate-400 font-mono">{selectedCommit.hash.substring(0, 7)}</span>
-                                    <span className="text-slate-700 dark:text-slate-300 ml-2">{selectedCommit.message}</span>
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Commit a revertir:</label>
+                                <div className="px-4 py-3 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3 shadow-sm">
+                                    <div className="p-1.5 bg-orange-100 dark:bg-orange-900/30 rounded-md">
+                                        <Undo2 className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <span className="text-slate-600 dark:text-slate-400 font-mono text-xs bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded">{selectedCommit.hash.substring(0, 7)}</span>
+                                            <span className="text-slate-800 dark:text-slate-200 font-medium truncate">{selectedCommit.message}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md">
-                                <p className="text-xs text-amber-800 dark:text-amber-200">
-                                    This will create a new commit that reverses the changes made in the selected commit. The original commit will remain in the history.
+                            <div className="p-4 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-900/20">
+                                <p className="text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
+                                    Esto creará un nuevo commit que revierte los cambios realizados en el commit seleccionado. El commit original permanecerá en el historial.
                                 </p>
                             </div>
 
-                            <div className="flex gap-2 pt-2 justify-end">
+                            <div className="flex gap-3 pt-4 justify-end">
                                 <Button
                                     variant="outline"
                                     size="sm"
@@ -2469,15 +2476,22 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={reverting}
                                 >
-                                    Cancel
+                                    Cancelar
                                 </Button>
                                 <Button
                                     size="sm"
-                                    className="bg-orange-600 hover:bg-orange-700"
+                                    className="bg-orange-600 hover:bg-orange-700 text-white shadow-sm"
                                     onClick={handleRevert}
                                     disabled={reverting}
                                 >
-                                    {reverting ? 'Reverting...' : 'Revert'}
+                                    {reverting ? (
+                                        <>
+                                            <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                                            Revirtiendo...
+                                        </>
+                                    ) : (
+                                        'Revertir'
+                                    )}
                                 </Button>
                             </div>
                         </CardContent>
