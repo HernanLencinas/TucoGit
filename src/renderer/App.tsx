@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/lib/use-toast";
+import { cn } from "@/lib/utils";
 import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, XCircle, CircleDot } from "lucide-react";
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
 import type { Connection, FolderItem } from "@/renderer/types";
@@ -4888,50 +4889,104 @@ function App() {
         </div>
       </div>
 
-      {/* Chips de Repositorios Abiertos */}
+      {/* Tabs de Repositorios Abiertos - Mejoradas */}
       {activeTab === 'repositorios' && repositoriesMinimizados.length > 0 && (
-        <div className={`px-6 pb-2 mb-1 flex flex-wrap gap-2 flex-shrink-0 ${viewMode === 'details' ? 'pt-3 border-t bg-muted/10' : ''}`}>
-          {repositoriesMinimizados.map((repo) => {
-            const esActivo = activeRepository?.id === repo.id;
-            return (
-              <div
-                key={repo.id}
-                className={`flex items-center gap-2 border px-3 py-1.5 rounded-md w-fit group transition-all shadow-sm animate-in slide-in-from-bottom-2 duration-300 ${esActivo
-                  ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-primary/10 border-primary/20 text-primary hover:bg-primary/20"
-                  }`}
-              >
-                <button
-                  onClick={() => {
-                    setActiveRepository(repo);
-                    setViewMode("details");
-                  }}
-                  className="flex items-center gap-2 text-xs font-medium"
-                >
-                  <GitBranch className="h-3.5 w-3.5" />
-                  <span><span className="font-bold">{repo.nombre}</span></span>
-                </button>
-                <div className={`w-px h-3 mx-1 ${esActivo ? "bg-primary-foreground/30" : "bg-primary/20"}`} />
-                <button
-                  onClick={() => {
-                    const nuevosMinimizados = repositoriesMinimizados.filter(r => r.id !== repo.id);
-                    setRepositoriesMinimizados(nuevosMinimizados);
-                    if (esActivo) {
-                      setActiveRepository(null);
-                      setViewMode("list");
-                    }
-                  }}
-                  className={`p-0.5 rounded-full transition-colors ${esActivo
-                    ? "hover:bg-primary-foreground/20 text-primary-foreground"
-                    : "hover:bg-primary/20 text-primary"
-                    }`}
-                  title="Cerrar vista"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            );
-          })}
+        <div className={`relative flex-shrink-0 border-b border-border bg-muted/30 ${viewMode === 'details' ? 'pt-2' : ''}`}>
+          {/* Scroll horizontal para muchas tabs */}
+          <div className="overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent hover:scrollbar-thumb-muted-foreground/30">
+            <div className="flex items-end min-w-max px-1">
+              {repositoriesMinimizados.map((repo, index) => {
+                const esActivo = activeRepository?.id === repo.id;
+                const gitInfo = gitInfoRepositorios[repo.id];
+                const tieneCambios = gitInfo?.uncommitted && gitInfo.uncommitted > 0;
+                
+                return (
+                  <div
+                    key={repo.id}
+                    className={cn(
+                      "relative flex items-center gap-1.5 px-3 py-2 mx-0.5 transition-all duration-200 group min-w-[120px] max-w-[200px]",
+                      esActivo
+                        ? "bg-background text-foreground border-t border-l border-r border-border rounded-t-md shadow-sm z-10"
+                        : "bg-transparent text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                    )}
+                    style={{
+                      marginTop: esActivo ? '0' : '1px',
+                      paddingBottom: esActivo ? '9px' : '8px',
+                    }}
+                  >
+                    {/* Icono y nombre */}
+                    <button
+                      onClick={() => {
+                        setActiveRepository(repo);
+                        setViewMode("details");
+                      }}
+                      onMouseDown={(e) => {
+                        // Cerrar con click medio (botón 1 del mouse)
+                        if (e.button === 1) {
+                          e.preventDefault();
+                          const nuevosMinimizados = repositoriesMinimizados.filter(r => r.id !== repo.id);
+                          setRepositoriesMinimizados(nuevosMinimizados);
+                          if (esActivo) {
+                            setActiveRepository(null);
+                            setViewMode("list");
+                          }
+                        }
+                      }}
+                      className={cn(
+                        "flex items-center gap-1.5 flex-1 min-w-0 text-xs transition-colors",
+                        esActivo ? "text-foreground font-medium" : "text-muted-foreground group-hover:text-foreground"
+                      )}
+                      title={`${repo.nombre}${gitInfo?.branch ? ` - ${gitInfo.branch}` : ''}${tieneCambios ? ' (cambios sin commit)' : ''}\nClick medio para cerrar`}
+                    >
+                      <GitBranch className={cn(
+                        "h-3.5 w-3.5 flex-shrink-0",
+                        esActivo ? "text-foreground" : "text-muted-foreground/60 group-hover:text-foreground/80"
+                      )} />
+                      <span className="truncate flex-1 text-left">
+                        {repo.nombre}
+                      </span>
+                    </button>
+                    
+                    {/* Botón cerrar - solo visible en hover o si está activo */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const nuevosMinimizados = repositoriesMinimizados.filter(r => r.id !== repo.id);
+                        setRepositoriesMinimizados(nuevosMinimizados);
+                        if (esActivo) {
+                          setActiveRepository(null);
+                          setViewMode("list");
+                        }
+                      }}
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        // Prevenir que el click se propague al botón principal
+                        if (e.button === 0) {
+                          e.preventDefault();
+                        }
+                      }}
+                      className={cn(
+                        "flex-shrink-0 p-0.5 rounded transition-all opacity-0 group-hover:opacity-100",
+                        esActivo && "opacity-100",
+                        esActivo
+                          ? "hover:bg-muted/80 text-foreground/70 hover:text-foreground"
+                          : "hover:bg-muted/60 text-muted-foreground/50 group-hover:text-foreground/70"
+                      )}
+                      title="Cerrar"
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
 

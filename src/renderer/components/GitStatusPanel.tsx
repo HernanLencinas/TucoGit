@@ -398,7 +398,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
             <div className="flex flex-col flex-1 min-h-0 border-b border-slate-200 dark:border-slate-700/50">
                 <div className="h-9 px-4 flex items-center justify-between bg-slate-50/80 dark:bg-[#0b253a]/30 border-b border-slate-200 dark:border-slate-700/50 sticky top-0 z-10">
                     <div className="flex items-center gap-2">
-                        <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Unstaged Changes</h3>
+                        <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Unstaged Changes</h3>
                         <span className="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded-sm font-mono">
                             {unstagedFiles.length}
                         </span>
@@ -441,7 +441,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
             <div className="flex flex-col flex-1 min-h-0">
                 <div className="h-9 px-4 flex items-center justify-between bg-slate-50/80 dark:bg-[#0b253a]/30 border-b border-slate-200 dark:border-slate-700/50 sticky top-0 z-10">
                     <div className="flex items-center gap-2">
-                        <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Staged Changes</h3>
+                        <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Staged Changes</h3>
                         <span className="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded-sm font-mono">
                             {stagedFiles.length}
                         </span>
@@ -473,7 +473,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
             <div className="flex flex-col border-t border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-[#0b253a]/20">
                 <div className="h-9 px-4 flex items-center bg-slate-50/80 dark:bg-[#0b253a]/30 border-b border-slate-200 dark:border-slate-700/50">
                     <div className="flex items-center gap-2">
-                        <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Commit Message</h3>
+                        <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Commit Message</h3>
                     </div>
                 </div>
                 <div className="p-4">
