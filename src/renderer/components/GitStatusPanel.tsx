@@ -471,19 +471,10 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
 
             {/* Commit Area */}
             <div className="flex flex-col border-t border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-[#0b253a]/20">
-                <div className="h-9 px-4 flex items-center justify-between bg-slate-50/80 dark:bg-[#0b253a]/30 border-b border-slate-200 dark:border-slate-700/50">
+                <div className="h-9 px-4 flex items-center bg-slate-50/80 dark:bg-[#0b253a]/30 border-b border-slate-200 dark:border-slate-700/50">
                     <div className="flex items-center gap-2">
                         <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Commit Message</h3>
                     </div>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 px-2 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                        onClick={() => setCommitMessage("")}
-                        disabled={!commitMessage.trim() || loading || stagedFiles.length === 0}
-                    >
-                        Limpiar
-                    </Button>
                 </div>
                 <div className="p-4">
                     <div className="mb-3">
