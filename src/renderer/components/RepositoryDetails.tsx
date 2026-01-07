@@ -1096,16 +1096,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     return (
         <div className="h-full flex flex-col bg-white dark:bg-[#011627] text-slate-600 dark:text-slate-300">
             {/* Top Bar */}
-            <div className="h-14 border-b border-slate-200 dark:border-slate-700/50 flex items-center px-4 justify-between bg-background shadow-sm z-10">
+            <div className="h-7 border-b border-slate-200 dark:border-slate-700/50 flex items-center px-4 justify-between bg-background shadow-sm z-10">
                 <div className="flex-1 flex items-center justify-center">
                     <div className="text-center">
                         <h2 className="font-bold text-lg text-slate-900 dark:text-white flex items-center justify-center gap-2 mb-0.5">
                             <GitBranch className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
                             <span>{repository.nombre}</span>
                         </h2>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
-                            {repository.nombreGit || repository.nombre}
-                        </div>
                     </div>
                 </div>
 
