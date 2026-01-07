@@ -1183,7 +1183,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     {/* Toolbar - Restricted to Graph width */}
                     <div className="min-h-[44px] py-1.5 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-[#0b253a]/30 flex items-center px-4 gap-2 flex-wrap">
                         {/* Grupo 1: Branches y Nuevo */}
-                        <div className="flex items-center gap-2 flex-shrink-0">
+                        <div className="flex items-center gap-0 flex-shrink-0">
                             <div className="relative" ref={branchesDropdownRef}>
                                 <Button
                                     variant="outline"
