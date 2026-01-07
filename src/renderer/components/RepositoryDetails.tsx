@@ -1139,7 +1139,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     }, [handleResizeMove, handleResizeEnd]);
 
     return (
-        <div className="h-full flex flex-col bg-white dark:bg-[#011627] text-slate-600 dark:text-slate-300">
+        <div className="h-full flex flex-col bg-white dark:bg-[#011627] text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
             {/* Barra de título personalizada con nombre del repositorio (solo macOS) */}
             {window.electronAPI?.platform === 'darwin' && (
                 <div 
@@ -1209,7 +1209,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             )}
 
             {/* Main Content */}
-            <div className={`flex-1 flex overflow-hidden ${window.electronAPI?.platform === 'darwin' ? 'mt-5' : ''}`}>
+            <div className={`flex-1 flex overflow-hidden ${window.electronAPI?.platform === 'darwin' ? 'mt-4' : ''}`}>
                 {/* Left Sidebar */}
                 <div className="w-80 border-r border-slate-200 dark:border-slate-700/50 flex flex-col bg-slate-50 dark:bg-[#0b253a]/50">
                     <GitStatusPanel
