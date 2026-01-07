@@ -60,9 +60,11 @@
       "src/preload/**/*",
       "build/**/*",
       "package.json",
-      "!node_modules/**/*",
       "!dist/**/*",
       "!src/renderer/**/*"
+    ],
+    "asarUnpack": [
+      "**/node_modules/chokidar/**/*"
     ],
     "linux": {
       "target": [
