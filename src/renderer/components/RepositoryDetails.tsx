@@ -88,6 +88,11 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const [checkingPendingOperation, setCheckingPendingOperation] = useState(false);
     const [resolvingPendingOperation, setResolvingPendingOperation] = useState(false);
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+    const [commitPanelHeight, setCommitPanelHeight] = useState(40); // Porcentaje inicial
+    const [isResizing, setIsResizing] = useState(false);
+    const resizeStartY = React.useRef<number>(0);
+    const resizeStartHeight = React.useRef<number>(40);
+    const isResizingRef = React.useRef<boolean>(false);
 
     // Debounce search term
     useEffect(() => {
@@ -1093,6 +1098,46 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         setSelectedCommit(commit);
     };
 
+    // Handlers para redimensionar el panel de detalles del commit
+    const handleResizeMove = React.useCallback((e: MouseEvent) => {
+        if (!isResizingRef.current) return;
+        
+        const container = scrollContainerRef.current?.parentElement;
+        if (!container) return;
+        
+        const containerHeight = container.clientHeight;
+        const deltaY = resizeStartY.current - e.clientY; // Negativo cuando arrastras hacia arriba
+        const deltaPercent = (deltaY / containerHeight) * 100;
+        const newHeight = Math.max(20, Math.min(80, resizeStartHeight.current + deltaPercent));
+        
+        setCommitPanelHeight(newHeight);
+    }, []);
+
+    const handleResizeEnd = React.useCallback(() => {
+        isResizingRef.current = false;
+        setIsResizing(false);
+        document.removeEventListener('mousemove', handleResizeMove);
+        document.removeEventListener('mouseup', handleResizeEnd);
+    }, [handleResizeMove]);
+
+    const handleResizeStart = (e: React.MouseEvent) => {
+        e.preventDefault();
+        isResizingRef.current = true;
+        setIsResizing(true);
+        resizeStartY.current = e.clientY;
+        resizeStartHeight.current = commitPanelHeight;
+        document.addEventListener('mousemove', handleResizeMove);
+        document.addEventListener('mouseup', handleResizeEnd);
+    };
+
+    // Cleanup al desmontar
+    React.useEffect(() => {
+        return () => {
+            document.removeEventListener('mousemove', handleResizeMove);
+            document.removeEventListener('mouseup', handleResizeEnd);
+        };
+    }, [handleResizeMove, handleResizeEnd]);
+
     return (
         <div className="h-full flex flex-col bg-white dark:bg-[#011627] text-slate-600 dark:text-slate-300">
             {/* Top Bar */}
@@ -1844,12 +1889,27 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
 
                     {/* Details Panel */}
                     {selectedCommit && (
-                        <div className="h-[40%] flex-shrink-0 border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.3)] z-20">
-                            <CommitDetails
-                                commit={selectedCommit}
-                                repoPath={`${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? repository.organizacion + '/' : ''}${repository.nombreGit || repository.nombre}`}
-                                onClose={() => setSelectedCommit(null)}
-                            />
+                        <div 
+                            className="flex-shrink-0 border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.3)] z-20 flex flex-col"
+                            style={{ height: `${commitPanelHeight}%` }}
+                        >
+                            {/* Resize Handle */}
+                            <div
+                                onMouseDown={handleResizeStart}
+                                className={`h-0.5 cursor-ns-resize hover:h-1 transition-all bg-slate-200 dark:bg-slate-700 hover:bg-cyan-500 dark:hover:bg-cyan-500 flex items-center justify-center group ${
+                                    isResizing ? 'bg-cyan-500 dark:bg-cyan-500' : ''
+                                }`}
+                                style={{ userSelect: 'none' }}
+                            >
+                                <div className="w-12 h-px bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-400 dark:group-hover:bg-cyan-400 rounded-full"></div>
+                            </div>
+                            <div className="flex-1 min-h-0">
+                                <CommitDetails
+                                    commit={selectedCommit}
+                                    repoPath={`${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? repository.organizacion + '/' : ''}${repository.nombreGit || repository.nombre}`}
+                                    onClose={() => setSelectedCommit(null)}
+                                />
+                            </div>
                         </div>
                     )}
                 </div>
