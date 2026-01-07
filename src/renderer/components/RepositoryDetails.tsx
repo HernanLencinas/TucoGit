@@ -87,6 +87,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const [pendingOperation, setPendingOperation] = useState<{ operation: string; commitHash?: string } | null>(null);
     const [checkingPendingOperation, setCheckingPendingOperation] = useState(false);
     const [resolvingPendingOperation, setResolvingPendingOperation] = useState(false);
+    const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
     // Debounce search term
     useEffect(() => {
@@ -1138,9 +1139,9 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 {/* Center - Graph & Details */}
                 <div className="flex-1 flex flex-col min-w-0 min-h-0">
                     {/* Toolbar - Restricted to Graph width */}
-                    <div className="h-11 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-[#0b253a]/30 flex items-center px-4 justify-end gap-2">
-                        {/* Dropdown de Branches y Botón Nuevo unificados */}
-                        <div className="flex items-center">
+                    <div className="min-h-[44px] py-1.5 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-[#0b253a]/30 flex items-center px-4 gap-2 flex-wrap">
+                        {/* Grupo 1: Branches y Nuevo */}
+                        <div className="flex items-center gap-2 flex-shrink-0">
                             <div className="relative" ref={branchesDropdownRef}>
                                 <Button
                                     variant="outline"
@@ -1314,7 +1315,9 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         </div>
                         </div>
                         {/* Separador */}
-                        <div className="h-5 w-px bg-slate-300 dark:bg-slate-600"></div>
+                        <div className="h-6 w-px bg-slate-300 dark:bg-slate-600 flex-shrink-0"></div>
+                        {/* Grupo 2: Fetch, Pull, Push */}
+                        <div className="flex items-center gap-2 flex-shrink-0">
                         <Button
                             variant="outline"
                             size="sm"
@@ -1495,10 +1498,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </span>
                             )}
                         </Button>
+                        </div>
                         {/* Separador */}
-                        <div className="h-5 w-px bg-slate-300 dark:bg-slate-600"></div>
+                        <div className="h-6 w-px bg-slate-300 dark:bg-slate-600 flex-shrink-0"></div>
+                        {/* Grupo 3: Stash y Acciones */}
+                        <div className="flex items-center gap-2 flex-shrink-0">
                         {/* Botón de Stash dividido: acción principal + menú desplegable */}
-                        <div className="relative flex items-center" ref={stashMenuRef}>
+                        <div className="relative flex items-center flex-shrink-0" ref={stashMenuRef}>
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -1590,7 +1596,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             )}
                         </div>
                         {/* Botón de Acciones con menú desplegable */}
-                        <div className="relative" ref={cherryPickMenuRef}>
+                        <div className="relative flex-shrink-0" ref={cherryPickMenuRef}>
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -1659,39 +1665,74 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </div>
                             )}
                         </div>
-                        <div className="h-5 w-px bg-slate-300 dark:bg-slate-600"></div>
+                        </div>
+                        {/* Separador */}
+                        <div className="h-6 w-px bg-slate-300 dark:bg-slate-600 flex-shrink-0"></div>
+                        {/* Grupo 4: Refresh y Búsqueda */}
+                        <div className="flex items-center gap-2 flex-1 min-w-[200px]">
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => loadCommits(true)}
-                            className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
                             disabled={loading}
                             title="Refrescar"
                         >
                             <RotateCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                         </Button>
-                        <div className="relative flex-1 max-w-md group ml-auto">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-cyan-500 transition-colors" />
-                            <input
-                                type="text"
-                                placeholder="Buscar commits (mensaje, autor, hash)..."
-                                className={cn(
-                                    "w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md py-1.5 pl-9 text-xs outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all shadow-sm",
-                                    searchTerm ? "pr-28" : "pr-24"
-                                )}
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                            {searchTerm && (
-                                <button
-                                    onClick={() => setSearchTerm("")}
-                                    className="absolute right-20 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 transition-colors z-10"
-                                >
-                                    Limpiar
-                                </button>
+                        <div 
+                            className={cn(
+                                "relative group transition-all duration-200 ease-in-out",
+                                (isSearchExpanded || searchTerm) ? "flex-1 min-w-[200px] max-w-md" : "w-auto"
                             )}
-                            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 dark:text-slate-500 font-medium pointer-events-none">
-                                {commits.length} commits
+                            onMouseEnter={() => setIsSearchExpanded(true)}
+                            onMouseLeave={() => {
+                                if (!searchTerm) {
+                                    setIsSearchExpanded(false);
+                                }
+                            }}
+                        >
+                            {(isSearchExpanded || searchTerm) ? (
+                                <>
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-cyan-500 transition-colors z-10" />
+                                    <input
+                                        type="text"
+                                        placeholder="Buscar commits (mensaje, autor, hash)..."
+                                        className={cn(
+                                            "w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md py-1.5 pl-9 text-xs outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all shadow-sm",
+                                            searchTerm ? "pr-28" : "pr-24"
+                                        )}
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        onFocus={() => setIsSearchExpanded(true)}
+                                    />
+                                    {searchTerm && (
+                                        <button
+                                            onClick={() => setSearchTerm("")}
+                                            className="absolute right-20 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 transition-colors z-10"
+                                        >
+                                            Limpiar
+                                        </button>
+                                    )}
+                                    <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
+                                        <div className="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
+                                        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">
+                                            {commits.length} commits
+                                        </span>
+                                    </div>
+                                </>
+                            ) : (
+                                <div 
+                                    className="flex items-center gap-2 px-2 py-1.5 cursor-pointer bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-sm" 
+                                    onClick={() => setIsSearchExpanded(true)}
+                                >
+                                    <Search className="h-4 w-4 text-slate-400" />
+                                    <div className="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
+                                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">
+                                        {commits.length} commits
+                                    </span>
+                                </div>
+                            )}
                         </div>
                         </div>
                     </div>
