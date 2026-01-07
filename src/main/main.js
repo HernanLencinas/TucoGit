@@ -2880,7 +2880,12 @@ ipcMain.handle('get-commit-details', async (event, { repoPath, commitHash }) => 
     // git show --first-parent --shortstat --pretty=format:"" <hash>
     const { stdout: statsOutput } = await execPromise(`git show --first-parent --shortstat --pretty=format:"" ${commitHash}`, { cwd: repoPath });
 
-    // 3. Obtener el diff completo
+    // 3. Obtener información del committer
+    // %cn = committer name, %ce = committer email, %cI = committer date (ISO format)
+    const { stdout: committerOutput } = await execPromise(`git log -1 --format="%cn|%ce|%cI" ${commitHash}`, { cwd: repoPath });
+    const [committerName, committerEmail, committerDate] = committerOutput.trim().split('|');
+
+    // 4. Obtener el diff completo
     // Warn: can be huge.
     const { stdout: diffOutput } = await execPromise(`git show --first-parent ${commitHash}`, {
       cwd: repoPath,
@@ -2891,7 +2896,12 @@ ipcMain.handle('get-commit-details', async (event, { repoPath, commitHash }) => 
       success: true,
       files,
       stats: statsOutput.trim(),
-      fullDiff: diffOutput
+      fullDiff: diffOutput,
+      committer: {
+        name: committerName || '',
+        email: committerEmail || '',
+        date: committerDate || ''
+      }
     };
 
   } catch (error) {
