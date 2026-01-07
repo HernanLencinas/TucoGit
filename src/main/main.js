@@ -383,6 +383,7 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
       gitSslVerify: configData.configuracion?.gitSslVerify !== undefined ? configData.configuracion.gitSslVerify : true,
       gitUserName: configData.configuracion?.gitUserName || "",
       gitUserEmail: configData.configuracion?.gitUserEmail || "",
+      commitButtonBehavior: configData.configuracion?.commitButtonBehavior || "commit",
       repositorios: configData.repositorios || []
     };
   } catch (error) {
@@ -507,6 +508,13 @@ ipcMain.handle('write-config', async (event, updates) => {
         configData.configuracion = {};
       }
       configData.configuracion.gitUserEmail = updates.gitUserEmail;
+    }
+
+    if (updates.commitButtonBehavior !== undefined) {
+      if (!configData.configuracion) {
+        configData.configuracion = {};
+      }
+      configData.configuracion.commitButtonBehavior = updates.commitButtonBehavior;
     }
 
     if (updates.repositorios !== undefined) {
@@ -2367,6 +2375,115 @@ ipcMain.handle('git-cherry-pick', async (event, { repoPath, commitHash, commitCh
     return { success: true };
   } catch (error) {
     console.error('Error al hacer cherry-pick:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Handler para verificar operaciones pendientes (cherry-pick, merge, rebase)
+ipcMain.handle('get-pending-operation', async (event, repoPath) => {
+  const fs = require('fs');
+  const path = require('path');
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    const gitDir = path.join(repoPath, '.git');
+    if (!fs.existsSync(gitDir)) {
+      return { success: false, error: 'No es un repositorio Git' };
+    }
+
+    // Verificar si hay cherry-pick pendiente
+    const cherryPickHead = path.join(gitDir, 'CHERRY_PICK_HEAD');
+    if (fs.existsSync(cherryPickHead)) {
+      const commitHash = fs.readFileSync(cherryPickHead, 'utf-8').trim();
+      return { 
+        success: true, 
+        hasPendingOperation: true, 
+        operation: 'cherry-pick', 
+        commitHash: commitHash.substring(0, 7) 
+      };
+    }
+
+    // Verificar si hay merge pendiente
+    const mergeHead = path.join(gitDir, 'MERGE_HEAD');
+    if (fs.existsSync(mergeHead)) {
+      const commitHash = fs.readFileSync(mergeHead, 'utf-8').trim();
+      return { 
+        success: true, 
+        hasPendingOperation: true, 
+        operation: 'merge', 
+        commitHash: commitHash.substring(0, 7) 
+      };
+    }
+
+    // Verificar si hay rebase pendiente
+    const rebaseApplyDir = path.join(gitDir, 'rebase-apply');
+    const rebaseMergeDir = path.join(gitDir, 'rebase-merge');
+    if (fs.existsSync(rebaseApplyDir) || fs.existsSync(rebaseMergeDir)) {
+      return { 
+        success: true, 
+        hasPendingOperation: true, 
+        operation: 'rebase' 
+      };
+    }
+
+    return { success: true, hasPendingOperation: false };
+  } catch (error) {
+    console.error('Error al verificar operaciones pendientes:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Handler para abortar operación pendiente
+ipcMain.handle('abort-pending-operation', async (event, { repoPath, operation }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    let command = '';
+    if (operation === 'cherry-pick') {
+      command = 'git cherry-pick --abort';
+    } else if (operation === 'merge') {
+      command = 'git merge --abort';
+    } else if (operation === 'rebase') {
+      command = 'git rebase --abort';
+    } else {
+      return { success: false, error: 'Operación no reconocida' };
+    }
+
+    await execPromise(command, { cwd: repoPath });
+    return { success: true };
+  } catch (error) {
+    console.error(`Error al abortar ${operation}:`, error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Handler para continuar operación pendiente
+ipcMain.handle('continue-pending-operation', async (event, { repoPath, operation }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+
+  try {
+    let command = '';
+    if (operation === 'cherry-pick') {
+      command = 'git cherry-pick --continue';
+    } else if (operation === 'merge') {
+      command = 'git merge --continue';
+    } else if (operation === 'rebase') {
+      command = 'git rebase --continue';
+    } else {
+      return { success: false, error: 'Operación no reconocida' };
+    }
+
+    await execPromise(command, { cwd: repoPath });
+    return { success: true };
+  } catch (error) {
+    console.error(`Error al continuar ${operation}:`, error);
     return { success: false, error: error.message };
   }
 });

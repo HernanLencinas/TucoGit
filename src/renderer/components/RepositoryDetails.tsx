@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag, Settings, Undo2, GitMerge } from 'lucide-react';
+import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag, Settings, Undo2, GitMerge, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -84,6 +84,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const [cherryPickCommitChanges, setCherryPickCommitChanges] = useState(true);
     const [cherryPickAppendOrigin, setCherryPickAppendOrigin] = useState(false);
     const [cherryPicking, setCherryPicking] = useState(false);
+    const [pendingOperation, setPendingOperation] = useState<{ operation: string; commitHash?: string } | null>(null);
+    const [checkingPendingOperation, setCheckingPendingOperation] = useState(false);
+    const [resolvingPendingOperation, setResolvingPendingOperation] = useState(false);
+    const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
     // Debounce search term
     useEffect(() => {
@@ -412,6 +416,111 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         checkCherryPick();
     }, [selectedCommit?.hash, branches.current, branches.headHash, configPath, repository]);
 
+    // Verificar operaciones pendientes al cargar y periódicamente
+    useEffect(() => {
+        const orgPath = repository.organizacion ? `${repository.organizacion}/` : "";
+        const repoName = repository.nombreGit || repository.nombre;
+        const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${orgPath}${repoName}`;
+        
+        const checkPendingOperation = async () => {
+            setCheckingPendingOperation(true);
+            try {
+                const result = await (window as any).electronAPI.getPendingOperation?.(repoPath);
+                if (result?.success && result.hasPendingOperation) {
+                    setPendingOperation({
+                        operation: result.operation,
+                        commitHash: result.commitHash
+                    });
+                } else {
+                    setPendingOperation(null);
+                }
+            } catch (err) {
+                console.error('Error al verificar operaciones pendientes:', err);
+                setPendingOperation(null);
+            } finally {
+                setCheckingPendingOperation(false);
+            }
+        };
+        
+        checkPendingOperation();
+        const interval = setInterval(checkPendingOperation, 2000);
+        return () => clearInterval(interval);
+    }, [repository, configPath]);
+
+    // Función para abortar operación pendiente
+    const handleAbortPendingOperation = async () => {
+        if (!pendingOperation) return;
+        setResolvingPendingOperation(true);
+        try {
+            const orgPath = repository.organizacion ? `${repository.organizacion}/` : "";
+            const repoName = repository.nombreGit || repository.nombre;
+            const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${orgPath}${repoName}`;
+            const result = await (window as any).electronAPI.abortPendingOperation?.(repoPath, pendingOperation.operation);
+            if (result?.success) {
+                toast({
+                    title: "Operación abortada",
+                    description: `La operación ${pendingOperation.operation} ha sido abortada exitosamente`,
+                    variant: "success",
+                });
+                setPendingOperation(null);
+                loadCommits(true);
+                loadBranches();
+            } else {
+                toast({
+                    title: "Error al abortar operación",
+                    description: result?.error || "No se pudo abortar la operación",
+                    variant: "destructive",
+                });
+            }
+        } catch (err: any) {
+            console.error('Error al abortar operación:', err);
+            toast({
+                title: "Error al abortar operación",
+                description: err?.message || "Ocurrió un error inesperado",
+                variant: "destructive",
+            });
+        } finally {
+            setResolvingPendingOperation(false);
+        }
+    };
+
+    // Función para continuar operación pendiente
+    const handleContinuePendingOperation = async () => {
+        if (!pendingOperation) return;
+        setResolvingPendingOperation(true);
+        try {
+            const orgPath = repository.organizacion ? `${repository.organizacion}/` : "";
+            const repoName = repository.nombreGit || repository.nombre;
+            const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${orgPath}${repoName}`;
+            const result = await (window as any).electronAPI.continuePendingOperation?.(repoPath, pendingOperation.operation);
+            if (result?.success) {
+                toast({
+                    title: "Operación continuada",
+                    description: `La operación ${pendingOperation.operation} ha sido continuada exitosamente`,
+                    variant: "success",
+                });
+                setPendingOperation(null);
+                loadCommits(true);
+                loadBranches();
+            } else {
+                toast({
+                    title: "Error al continuar operación",
+                    description: result?.error || "No se pudo continuar la operación. Verifica que no haya conflictos pendientes.",
+                    variant: "destructive",
+                });
+            }
+        } catch (err: any) {
+            console.error('Error al continuar operación:', err);
+            toast({
+                title: "Error al continuar operación",
+                description: err?.message || "Ocurrió un error inesperado",
+                variant: "destructive",
+            });
+        } finally {
+            setResolvingPendingOperation(false);
+        }
+    };
+
     // Cerrar menú de stash cuando se hace click fuera
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -676,19 +785,55 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadCommits(true);
                 loadBranches();
             } else {
-                toast({
-                    title: "Error al hacer cherry-pick",
-                    description: result?.error || "No se pudo completar la operación",
-                    variant: "destructive",
-                });
+                const errorMessage = result?.error || "";
+                // Detectar si hay conflictos
+                if (errorMessage.includes("conflict") || errorMessage.includes("CONFLICT") || errorMessage.includes("could not apply")) {
+                    // Cerrar el modal
+                    setShowCherryPickModal(false);
+                    setCherryPickCommitChanges(true);
+                    setCherryPickAppendOrigin(false);
+                    // Mostrar toaster informando sobre conflictos
+                    toast({
+                        title: "Cherry-pick con conflictos",
+                        description: "Hay conflictos que necesitan ser resueltos. Usa la barra de notificaciones para resolver o abortar la operación.",
+                        variant: "destructive",
+                    });
+                    // Recargar para que aparezca la barra de notificaciones
+                    loadCommits(true);
+                    loadBranches();
+                } else {
+                    toast({
+                        title: "Error al hacer cherry-pick",
+                        description: errorMessage || "No se pudo completar la operación",
+                        variant: "destructive",
+                    });
+                }
             }
         } catch (err: any) {
             console.error('Error al hacer cherry-pick:', err);
-            toast({
-                title: "Error al hacer cherry-pick",
-                description: err?.message || "Ocurrió un error inesperado",
-                variant: "destructive",
-            });
+            const errorMessage = err?.message || "";
+            // Detectar si hay conflictos en el error
+            if (errorMessage.includes("conflict") || errorMessage.includes("CONFLICT") || errorMessage.includes("could not apply")) {
+                // Cerrar el modal
+                setShowCherryPickModal(false);
+                setCherryPickCommitChanges(true);
+                setCherryPickAppendOrigin(false);
+                // Mostrar toaster informando sobre conflictos
+                toast({
+                    title: "Cherry-pick con conflictos",
+                    description: "Hay conflictos que necesitan ser resueltos. Usa la barra de notificaciones para resolver o abortar la operación.",
+                    variant: "destructive",
+                });
+                // Recargar para que aparezca la barra de notificaciones
+                loadCommits(true);
+                loadBranches();
+            } else {
+                toast({
+                    title: "Error al hacer cherry-pick",
+                    description: errorMessage || "Ocurrió un error inesperado",
+                    variant: "destructive",
+                });
+            }
         } finally {
             setCherryPicking(false);
         }
@@ -994,9 +1139,9 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 {/* Center - Graph & Details */}
                 <div className="flex-1 flex flex-col min-w-0 min-h-0">
                     {/* Toolbar - Restricted to Graph width */}
-                    <div className="h-11 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-[#0b253a]/30 flex items-center px-4 justify-end gap-2">
-                        {/* Dropdown de Branches y Botón Nuevo unificados */}
-                        <div className="flex items-center">
+                    <div className="min-h-[44px] py-1.5 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-[#0b253a]/30 flex items-center px-4 gap-2 flex-wrap">
+                        {/* Grupo 1: Branches y Nuevo */}
+                        <div className="flex items-center gap-2 flex-shrink-0">
                             <div className="relative" ref={branchesDropdownRef}>
                                 <Button
                                     variant="outline"
@@ -1170,7 +1315,9 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         </div>
                         </div>
                         {/* Separador */}
-                        <div className="h-5 w-px bg-slate-300 dark:bg-slate-600"></div>
+                        <div className="h-6 w-px bg-slate-300 dark:bg-slate-600 flex-shrink-0"></div>
+                        {/* Grupo 2: Fetch, Pull, Push */}
+                        <div className="flex items-center gap-2 flex-shrink-0">
                         <Button
                             variant="outline"
                             size="sm"
@@ -1351,10 +1498,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </span>
                             )}
                         </Button>
+                        </div>
                         {/* Separador */}
-                        <div className="h-5 w-px bg-slate-300 dark:bg-slate-600"></div>
+                        <div className="h-6 w-px bg-slate-300 dark:bg-slate-600 flex-shrink-0"></div>
+                        {/* Grupo 3: Stash y Acciones */}
+                        <div className="flex items-center gap-2 flex-shrink-0">
                         {/* Botón de Stash dividido: acción principal + menú desplegable */}
-                        <div className="relative flex items-center" ref={stashMenuRef}>
+                        <div className="relative flex items-center flex-shrink-0" ref={stashMenuRef}>
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -1446,7 +1596,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             )}
                         </div>
                         {/* Botón de Acciones con menú desplegable */}
-                        <div className="relative" ref={cherryPickMenuRef}>
+                        <div className="relative flex-shrink-0" ref={cherryPickMenuRef}>
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -1515,42 +1665,130 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </div>
                             )}
                         </div>
-                        <div className="h-5 w-px bg-slate-300 dark:bg-slate-600"></div>
+                        </div>
+                        {/* Grupo 4: Refresh y Búsqueda */}
+                        <div className="flex items-center gap-2 flex-1 min-w-[200px]">
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => loadCommits(true)}
-                            className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
                             disabled={loading}
                             title="Refrescar"
                         >
                             <RotateCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                         </Button>
-                        <div className="relative flex-1 max-w-md group ml-auto">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-cyan-500 transition-colors" />
-                            <input
-                                type="text"
-                                placeholder="Buscar commits (mensaje, autor, hash)..."
-                                className={cn(
-                                    "w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md py-1.5 pl-9 text-xs outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all shadow-sm",
-                                    searchTerm ? "pr-28" : "pr-24"
-                                )}
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                            {searchTerm && (
-                                <button
-                                    onClick={() => setSearchTerm("")}
-                                    className="absolute right-20 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 transition-colors z-10"
-                                >
-                                    Limpiar
-                                </button>
+                        <div 
+                            className={cn(
+                                "relative group transition-all duration-200 ease-in-out",
+                                (isSearchExpanded || searchTerm) ? "flex-1 min-w-[200px] max-w-md" : "w-auto"
                             )}
-                            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 dark:text-slate-500 font-medium pointer-events-none">
-                                {commits.length} commits
+                            onMouseEnter={() => setIsSearchExpanded(true)}
+                            onMouseLeave={() => {
+                                if (!searchTerm) {
+                                    setIsSearchExpanded(false);
+                                }
+                            }}
+                        >
+                            {(isSearchExpanded || searchTerm) ? (
+                                <>
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-cyan-500 transition-colors z-10" />
+                                    <input
+                                        type="text"
+                                        placeholder="Buscar commits (mensaje, autor, hash)..."
+                                        className={cn(
+                                            "w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md py-1.5 pl-9 text-xs outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all shadow-sm",
+                                            searchTerm ? "pr-28" : "pr-24"
+                                        )}
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        onFocus={() => setIsSearchExpanded(true)}
+                                    />
+                                    {searchTerm && (
+                                        <button
+                                            onClick={() => setSearchTerm("")}
+                                            className="absolute right-20 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 transition-colors z-10"
+                                        >
+                                            Limpiar
+                                        </button>
+                                    )}
+                                    <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
+                                        <div className="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
+                                        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">
+                                            {commits.length} commits
+                                        </span>
+                                    </div>
+                                </>
+                            ) : (
+                                <div 
+                                    className="flex items-center gap-2 px-2 py-1.5 cursor-pointer bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-sm" 
+                                    onClick={() => setIsSearchExpanded(true)}
+                                >
+                                    <Search className="h-4 w-4 text-slate-400" />
+                                    <div className="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
+                                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">
+                                        {commits.length} commits
+                                    </span>
+                                </div>
+                            )}
                         </div>
                         </div>
                     </div>
+
+                    {/* Barra de Notificaciones para Operaciones Pendientes */}
+                    {pendingOperation && (
+                        <div className="px-4 py-2.5 border-b border-slate-200 dark:border-slate-700/50 bg-amber-50 dark:bg-amber-950/20 flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                                <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-semibold text-amber-900 dark:text-amber-200">
+                                        {pendingOperation.operation === 'cherry-pick' && `Cherry-pick pendiente${pendingOperation.commitHash ? ` (${pendingOperation.commitHash})` : ''}`}
+                                        {pendingOperation.operation === 'merge' && `Merge pendiente${pendingOperation.commitHash ? ` (${pendingOperation.commitHash})` : ''}`}
+                                        {pendingOperation.operation === 'rebase' && 'Rebase pendiente'}
+                                    </p>
+                                    <p className="text-[10px] text-amber-700 dark:text-amber-300 mt-0.5">
+                                        {pendingOperation.operation === 'cherry-pick' && 'Hay un cherry-pick en progreso. Resuelve los conflictos y continúa o aborta la operación.'}
+                                        {pendingOperation.operation === 'merge' && 'Hay un merge en progreso. Resuelve los conflictos y continúa o aborta la operación.'}
+                                        {pendingOperation.operation === 'rebase' && 'Hay un rebase en progreso. Resuelve los conflictos y continúa o aborta la operación.'}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleContinuePendingOperation}
+                                    disabled={resolvingPendingOperation}
+                                    className="h-7 px-3 text-[10px] font-semibold text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {resolvingPendingOperation ? (
+                                        <>
+                                            <RefreshCw className="h-3 w-3 animate-spin mr-1.5" />
+                                            Resolviendo...
+                                        </>
+                                    ) : (
+                                        'Resolver'
+                                    )}
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleAbortPendingOperation}
+                                    disabled={resolvingPendingOperation}
+                                    className="h-7 px-3 text-[10px] font-semibold text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {resolvingPendingOperation ? (
+                                        <>
+                                            <RefreshCw className="h-3 w-3 animate-spin mr-1.5" />
+                                            Abortando...
+                                        </>
+                                    ) : (
+                                        'Abortar'
+                                    )}
+                                </Button>
+                            </div>
+                        </div>
+                    )}
 
                     <div
                         className="flex-1 overflow-auto bg-white dark:bg-[#011627] relative"

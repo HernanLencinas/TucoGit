@@ -190,6 +190,21 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return ipcRenderer.invoke('git-cherry-pick', { repoPath, commitHash, commitChanges, appendOrigin });
   },
 
+  // Verificar operaciones pendientes
+  getPendingOperation: (repoPath) => {
+    return ipcRenderer.invoke('get-pending-operation', repoPath);
+  },
+
+  // Abortar operación pendiente
+  abortPendingOperation: (repoPath, operation) => {
+    return ipcRenderer.invoke('abort-pending-operation', { repoPath, operation });
+  },
+
+  // Continuar operación pendiente
+  continuePendingOperation: (repoPath, operation) => {
+    return ipcRenderer.invoke('continue-pending-operation', { repoPath, operation });
+  },
+
   // Crear un tag
   gitCreateTag: (repoPath, tagName, message, commitHash, pushToAllRemotes) => {
     return ipcRenderer.invoke('git-create-tag', { repoPath, tagName, message, commitHash, pushToAllRemotes });
