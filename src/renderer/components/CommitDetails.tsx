@@ -430,7 +430,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                     className={cn(
                         "flex items-center gap-1 px-3 py-1 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors text-[11px] cursor-pointer",
                         isSelected 
-                            ? "bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white border-l-2 border-cyan-500" 
+                            ? "bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white" 
                             : "text-slate-500 dark:text-slate-400"
                     )}
                     style={{ paddingLeft: `${12 + indent}px` }}
@@ -839,29 +839,29 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                         ) : details.error ? (
                             <div className="text-center p-4 text-red-400 text-[10px]">{details.error}</div>
                         ) : (
-                            details.files.map((file, i) => (
-                                <div
-                                    key={i}
-                                    onClick={() => setSelectedFile(file.path)}
-                                    className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-[11px] border-l-2 transition-colors
-                                        ${selectedFile === file.path
-                                            ? 'bg-slate-200 dark:bg-slate-800 border-cyan-500 text-slate-900 dark:text-white'
-                                            : 'border-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
-                                        }`}
-                                >
-                                    {getStatusIcon(file.status)}
-                                    <span className="truncate flex-1">{file.path}</span>
-                                    <span className="text-[9px] font-mono opacity-50">{file.status}</span>
-                                </div>
-                            ))
+                                    details.files.map((file, i) => (
+                                        <div
+                                            key={i}
+                                            onClick={() => setSelectedFile(file.path)}
+                                            className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-[11px] transition-colors
+                                                ${selectedFile === file.path
+                                                    ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white'
+                                                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
+                                                }`}
+                                        >
+                                            {getStatusIcon(file.status)}
+                                            <span className="truncate flex-1">{file.path}</span>
+                                            <span className="text-[9px] font-mono opacity-50">{file.status}</span>
+                                        </div>
+                                    ))
                         )}
                     </div>
                 </div>
-                {/* Diff View */}
-                <div className="flex-1 flex flex-col bg-white dark:bg-[#011627] min-w-0">
-                    <div className="px-4 py-1 text-xs font-semibold text-slate-500 uppercase border-b border-slate-200 dark:border-slate-700 flex-shrink-0 bg-white dark:bg-[#011627]">
-                        {selectedFile ? `Diff: ${selectedFile}` : 'Detalle'}
-                    </div>
+                        {/* Diff View */}
+                        <div className="flex-1 flex flex-col bg-white dark:bg-[#011627] min-w-0">
+                            <div className="px-4 py-1 text-xs text-slate-500 border-b border-slate-200 dark:border-slate-700 flex-shrink-0 bg-white dark:bg-[#011627]">
+                                {selectedFile || 'Detalle'}
+                            </div>
                     <div className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
                         {details.loading ? (
                             <div className="flex items-center justify-center h-full">
