@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { FileCode, FilePlus, FileMinus, FileDiff, X, GitBranch, File, Folder, RefreshCw, FileJson, ChevronRight, ChevronDown, FolderOpen, Info, AlertCircle } from 'lucide-react';
+import { FileCode, FilePlus, FileMinus, FileDiff, X, GitBranch, File, Folder, RefreshCw, FileJson, ChevronRight, ChevronDown, FolderOpen, Info, AlertCircle, Copy, Check, TrendingUp, TrendingDown, FileText } from 'lucide-react';
 import { getAvatarUrl } from '@/renderer/utils/avatar';
 import { cn } from '@/lib/utils';
 
@@ -64,6 +64,8 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
     const [loadingFileContent, setLoadingFileContent] = useState(false);
     const [fileContentError, setFileContentError] = useState<string | null>(null);
     const [commitParents, setCommitParents] = useState<string[]>([]);
+    const [copiedHash, setCopiedHash] = useState<string | null>(null);
+    const [copiedParentHash, setCopiedParentHash] = useState<string | null>(null);
 
     // Función para construir la estructura de árbol a partir de la lista plana de archivos
     const buildTreeStructure = (files: TreeFile[]): TreeNode[] => {
@@ -236,6 +238,22 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
             loadCommitTree();
         }
     }, [activeTab, commit.hash, repoPath]);
+
+    // Función para copiar hash al portapapeles
+    const copyToClipboard = async (text: string, type: 'hash' | 'parent') => {
+        try {
+            await navigator.clipboard.writeText(text);
+            if (type === 'hash') {
+                setCopiedHash(text);
+                setTimeout(() => setCopiedHash(null), 2000);
+            } else {
+                setCopiedParentHash(text);
+                setTimeout(() => setCopiedParentHash(null), 2000);
+            }
+        } catch (err) {
+            console.error('Error al copiar al portapapeles:', err);
+        }
+    };
 
     const getStatusIcon = (status: string) => {
         switch (status.charAt(0).toUpperCase()) {
@@ -636,236 +654,202 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                     /* Tab Detalle: Solo el panel con el detalle del commit */
                     <div className="flex-1 overflow-auto bg-slate-50 dark:bg-[#0b253a]/30 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
                         <div className="p-5">
-                            {/* Mensaje del Commit */}
-                            <div className="mb-5 pb-4 border-b border-slate-200 dark:border-slate-700">
-                                <div className="text-sm font-semibold text-slate-900 dark:text-white mb-3 leading-relaxed">
-                                    {commit.message}
-                                </div>
-                                <div className="flex items-center gap-3 flex-wrap">
-                                    <div>
-                                        <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1 tracking-wider">
-                                            Hash
-                                        </div>
-                                        <div className="font-mono text-[10px] text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
-                                            {commit.hash}
-                                        </div>
-                                    </div>
-                                    {commitParents.length > 0 && (
-                                        <div>
-                                            <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1 tracking-wider">
-                                                {commitParents.length === 1 ? 'Padre' : 'Padres'}
+                            {/* Mensaje del Commit y Hashes en 2 columnas */}
+                            <div className="mb-5 pb-4">
+                                <div className="grid grid-cols-2 gap-6">
+                                    {/* Columna Izquierda: Descripción del Commit, Autor y Fecha */}
+                                    <div className="space-y-4">
+                                        <div className="pb-4 border-b border-slate-200 dark:border-slate-700">
+                                            <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
+                                                Descripción
                                             </div>
-                                            <div className="flex flex-wrap gap-2">
-                                                {commitParents.map((parent, idx) => (
-                                                    <div key={idx} className="font-mono text-[10px] text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
-                                                        {parent}
-                                                    </div>
-                                                ))}
+                                            <div className="text-sm font-semibold text-slate-900 dark:text-white leading-relaxed">
+                                                {commit.message}
                                             </div>
                                         </div>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Información en columnas */}
-                            <div className="grid grid-cols-2 gap-4">
-                                {/* Columna Izquierda */}
-                                <div className="space-y-4">
-                                    <div>
-                                        <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
-                                            Autor
-                                        </div>
-                                        <div className="space-y-1">
-                                            <div className="text-xs font-medium text-slate-700 dark:text-slate-300">
-                                                {commit.author.name}
-                                            </div>
-                                            <div className="text-[10px] text-slate-500 dark:text-slate-400">
-                                                {commit.author.email}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
-                                            Fecha
-                                        </div>
-                                        <div className="text-xs text-slate-700 dark:text-slate-300">
-                                            {new Date(commit.date).toLocaleString('es-ES', {
-                                                year: 'numeric',
-                                                month: 'long',
-                                                day: 'numeric',
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                            })}
-                                        </div>
-                                        <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
-                                            {(() => {
-                                                const now = new Date();
-                                                const commitDate = new Date(commit.date);
-                                                const diffMs = now.getTime() - commitDate.getTime();
-                                                const diffSecs = Math.floor(diffMs / 1000);
-                                                const diffMins = Math.floor(diffSecs / 60);
-                                                const diffHours = Math.floor(diffMins / 60);
-                                                const diffDays = Math.floor(diffHours / 24);
-                                                const diffWeeks = Math.floor(diffDays / 7);
-                                                const diffMonths = Math.floor(diffDays / 30);
-                                                const diffYears = Math.floor(diffDays / 365);
-
-                                                if (diffYears > 0) return `Hace ${diffYears} año${diffYears > 1 ? 's' : ''}`;
-                                                if (diffMonths > 0) return `Hace ${diffMonths} mes${diffMonths > 1 ? 'es' : ''}`;
-                                                if (diffWeeks > 0) return `Hace ${diffWeeks} semana${diffWeeks > 1 ? 's' : ''}`;
-                                                if (diffDays > 0) return `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
-                                                if (diffHours > 0) return `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
-                                                if (diffMins > 0) return `Hace ${diffMins} minuto${diffMins > 1 ? 's' : ''}`;
-                                                return 'Hace unos segundos';
-                                            })()}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Columna Derecha */}
-                                <div className="space-y-4">
-                                    {details.stats && (
+                                        
                                         <div>
                                             <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
-                                                Estadísticas
+                                                Autor
+                                            </div>
+                                            <div className="space-y-1">
+                                                <div className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                                                    {commit.author.name}
+                                                </div>
+                                                <div className="text-[10px] text-slate-500 dark:text-slate-400">
+                                                    {commit.author.email}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
+                                                Fecha
                                             </div>
                                             <div className="text-xs text-slate-700 dark:text-slate-300">
+                                                {new Date(commit.date).toLocaleString('es-ES', {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </div>
+                                            <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
                                                 {(() => {
-                                                    const statsText = details.stats;
-                                                    if (!statsText) return <span>{statsText}</span>;
+                                                    const now = new Date();
+                                                    const commitDate = new Date(commit.date);
+                                                    const diffMs = now.getTime() - commitDate.getTime();
+                                                    const diffSecs = Math.floor(diffMs / 1000);
+                                                    const diffMins = Math.floor(diffSecs / 60);
+                                                    const diffHours = Math.floor(diffMins / 60);
+                                                    const diffDays = Math.floor(diffHours / 24);
+                                                    const diffWeeks = Math.floor(diffDays / 7);
+                                                    const diffMonths = Math.floor(diffDays / 30);
+                                                    const diffYears = Math.floor(diffDays / 365);
 
-                                                    const insertionMatch = statsText.match(/(\d+)\s*insertions?/i);
-                                                    const deletionMatch = statsText.match(/(\d+)\s*deletions?/i);
-                                                    const filesMatch = statsText.match(/(\d+)\s*files?/i);
-
-                                                    if (!insertionMatch && !deletionMatch && !filesMatch) {
-                                                        return <span>{statsText}</span>;
-                                                    }
-
-                                                    const parts: JSX.Element[] = [];
-                                                    let lastIndex = 0;
-                                                    const matches: Array<{ index: number, length: number, type: 'insertion' | 'deletion' | 'files' }> = [];
-
-                                                    if (filesMatch && filesMatch.index !== undefined) {
-                                                        matches.push({
-                                                            index: filesMatch.index,
-                                                            length: filesMatch[0].length,
-                                                            type: 'files'
-                                                        });
-                                                    }
-
-                                                    if (insertionMatch && insertionMatch.index !== undefined) {
-                                                        matches.push({
-                                                            index: insertionMatch.index,
-                                                            length: insertionMatch[0].length,
-                                                            type: 'insertion'
-                                                        });
-                                                    }
-
-                                                    if (deletionMatch && deletionMatch.index !== undefined) {
-                                                        matches.push({
-                                                            index: deletionMatch.index,
-                                                            length: deletionMatch[0].length,
-                                                            type: 'deletion'
-                                                        });
-                                                    }
-
-                                                    matches.sort((a, b) => a.index - b.index);
-
-                                                    matches.forEach((match) => {
-                                                        if (match.index > lastIndex) {
-                                                            parts.push(
-                                                                <span key={`text-${lastIndex}`}>
-                                                                    {statsText.substring(lastIndex, match.index)}
-                                                                </span>
-                                                            );
-                                                        }
-
-                                                        const text = statsText.substring(match.index, match.index + match.length);
-                                                        let className = '';
-                                                        if (match.type === 'insertion') {
-                                                            className = 'text-green-600 dark:text-green-400 font-semibold';
-                                                        } else if (match.type === 'deletion') {
-                                                            className = 'text-red-600 dark:text-red-400 font-semibold';
-                                                        } else if (match.type === 'files') {
-                                                            className = 'text-blue-600 dark:text-blue-400 font-semibold';
-                                                        }
-
-                                                        parts.push(
-                                                            <span
-                                                                key={`${match.type}-${match.index}`}
-                                                                className={className}
-                                                            >
-                                                                {text}
-                                                            </span>
-                                                        );
-
-                                                        lastIndex = match.index + match.length;
-                                                    });
-
-                                                    if (lastIndex < statsText.length) {
-                                                        parts.push(
-                                                            <span key={`text-${lastIndex}`}>
-                                                                {statsText.substring(lastIndex)}
-                                                            </span>
-                                                        );
-                                                    }
-
-                                                    return <span>{parts}</span>;
+                                                    if (diffYears > 0) return `Hace ${diffYears} año${diffYears > 1 ? 's' : ''}`;
+                                                    if (diffMonths > 0) return `Hace ${diffMonths} mes${diffMonths > 1 ? 'es' : ''}`;
+                                                    if (diffWeeks > 0) return `Hace ${diffWeeks} semana${diffWeeks > 1 ? 's' : ''}`;
+                                                    if (diffDays > 0) return `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
+                                                    if (diffHours > 0) return `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
+                                                    if (diffMins > 0) return `Hace ${diffMins} minuto${diffMins > 1 ? 's' : ''}`;
+                                                    return 'Hace unos segundos';
                                                 })()}
                                             </div>
                                         </div>
-                                    )}
-
-                                    <div>
-                                        <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
-                                            Archivos
-                                        </div>
-                                        <div className="space-y-2">
-                                            <div className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                                                {details.files.length} archivo{details.files.length !== 1 ? 's' : ''}
+                                    </div>
+                                    
+                                    {/* Columna Derecha: Hashes y Estadísticas */}
+                                    <div className="space-y-4">
+                                        <div>
+                                            <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
+                                                Hash del Commit
                                             </div>
-                                            {details.files.length > 0 && (
-                                                <div className="flex flex-wrap gap-1.5">
+                                            <div className="flex items-center gap-2">
+                                                <div className="font-mono text-[10px] text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-1.5 rounded border border-slate-200 dark:border-slate-700 flex-1 overflow-hidden text-ellipsis whitespace-nowrap" title={commit.hash}>
+                                                    {commit.hash}
+                                                </div>
+                                                <button
+                                                    onClick={() => copyToClipboard(commit.hash, 'hash')}
+                                                    className="p-1.5 rounded-md bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors flex-shrink-0"
+                                                    title="Copiar hash completo"
+                                                >
+                                                    {copiedHash === commit.hash ? (
+                                                        <Check className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                                                    ) : (
+                                                        <Copy className="h-3.5 w-3.5" />
+                                                    )}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {commitParents.length > 0 && (
+                                            <div>
+                                                <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
+                                                    {commitParents.length === 1 ? 'Commit Padre' : 'Commits Padres'}
+                                                </div>
+                                                <div className="space-y-3">
+                                                    {commitParents.map((parent, idx) => (
+                                                        <div key={idx} className="flex items-center gap-2">
+                                                            <div className="font-mono text-[10px] text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-1.5 rounded border border-slate-200 dark:border-slate-700 flex-1 overflow-hidden text-ellipsis whitespace-nowrap" title={parent}>
+                                                                {parent}
+                                                            </div>
+                                                            <button
+                                                                onClick={() => copyToClipboard(parent, 'parent')}
+                                                                className="p-1.5 rounded-md bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors flex-shrink-0"
+                                                                title="Copiar hash del padre"
+                                                            >
+                                                                {copiedParentHash === parent ? (
+                                                                    <Check className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                                                                ) : (
+                                                                    <Copy className="h-3.5 w-3.5" />
+                                                                )}
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                        {details.stats && (
+                                            <div>
+                                                <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-3 tracking-wider">
+                                                    Estadísticas
+                                                </div>
+                                                <div className="flex flex-wrap gap-2">
                                                     {(() => {
-                                                        const added = details.files.filter(f => f.status.charAt(0).toUpperCase() === 'A').length;
-                                                        const modified = details.files.filter(f => f.status.charAt(0).toUpperCase() === 'M').length;
-                                                        const deleted = details.files.filter(f => f.status.charAt(0).toUpperCase() === 'D').length;
-                                                        const renamed = details.files.filter(f => f.status.charAt(0).toUpperCase() === 'R').length;
+                                                        const statsText = details.stats;
+                                                        if (!statsText) return null;
+
+                                                        const insertionMatch = statsText.match(/(\d+)\s*insertions?/i);
+                                                        const deletionMatch = statsText.match(/(\d+)\s*deletions?/i);
+                                                        const filesMatch = statsText.match(/(\d+)\s*files?/i);
+
+                                                        const filesCount = filesMatch ? parseInt(filesMatch[1], 10) : 0;
+                                                        const insertionsCount = insertionMatch ? parseInt(insertionMatch[1], 10) : 0;
+                                                        const deletionsCount = deletionMatch ? parseInt(deletionMatch[1], 10) : 0;
+
+                                                        // Si no hay matches, mostrar el texto original
+                                                        if (!insertionMatch && !deletionMatch && !filesMatch) {
+                                                            return (
+                                                                <div className="text-xs text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded border border-slate-200 dark:border-slate-700">
+                                                                    {statsText}
+                                                                </div>
+                                                            );
+                                                        }
 
                                                         return (
                                                             <>
-                                                                {added > 0 && (
-                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
-                                                                        <FilePlus className="h-3 w-3" />
-                                                                        {added}
-                                                                    </span>
+                                                                {filesCount > 0 && (
+                                                                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-2.5 py-2 rounded-md border border-blue-200 dark:border-blue-800/50 flex-1 min-w-[120px]">
+                                                                        <div className="p-1.5 rounded-md bg-blue-100 dark:bg-blue-900/40 flex-shrink-0">
+                                                                            <FileText className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                                                                        </div>
+                                                                        <div className="flex-1 min-w-0">
+                                                                            <div className="text-[10px] text-blue-600 dark:text-blue-400 font-medium uppercase tracking-wide truncate">
+                                                                                Archivos
+                                                                            </div>
+                                                                            <div className="text-sm font-bold text-blue-700 dark:text-blue-300">
+                                                                                {filesCount}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 )}
-                                                                {modified > 0 && (
-                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">
-                                                                        <FileCode className="h-3 w-3" />
-                                                                        {modified}
-                                                                    </span>
+                                                                {insertionsCount > 0 && (
+                                                                    <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/20 px-2.5 py-2 rounded-md border border-green-200 dark:border-green-800/50 flex-1 min-w-[120px]">
+                                                                        <div className="p-1.5 rounded-md bg-green-100 dark:bg-green-900/40 flex-shrink-0">
+                                                                            <TrendingUp className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                                                                        </div>
+                                                                        <div className="flex-1 min-w-0">
+                                                                            <div className="text-[10px] text-green-600 dark:text-green-400 font-medium uppercase tracking-wide truncate">
+                                                                                Inserciones
+                                                                            </div>
+                                                                            <div className="text-sm font-bold text-green-700 dark:text-green-300">
+                                                                                +{insertionsCount}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 )}
-                                                                {deleted > 0 && (
-                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">
-                                                                        <FileMinus className="h-3 w-3" />
-                                                                        {deleted}
-                                                                    </span>
-                                                                )}
-                                                                {renamed > 0 && (
-                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
-                                                                        <FileDiff className="h-3 w-3" />
-                                                                        {renamed}
-                                                                    </span>
+                                                                {deletionsCount > 0 && (
+                                                                    <div className="flex items-center gap-2 bg-red-50 dark:bg-red-900/20 px-2.5 py-2 rounded-md border border-red-200 dark:border-red-800/50 flex-1 min-w-[120px]">
+                                                                        <div className="p-1.5 rounded-md bg-red-100 dark:bg-red-900/40 flex-shrink-0">
+                                                                            <TrendingDown className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
+                                                                        </div>
+                                                                        <div className="flex-1 min-w-0">
+                                                                            <div className="text-[10px] text-red-600 dark:text-red-400 font-medium uppercase tracking-wide truncate">
+                                                                                Deleciones
+                                                                            </div>
+                                                                            <div className="text-sm font-bold text-red-700 dark:text-red-300">
+                                                                                -{deletionsCount}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 )}
                                                             </>
                                                         );
                                                     })()}
                                                 </div>
-                                            )}
-                                        </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
