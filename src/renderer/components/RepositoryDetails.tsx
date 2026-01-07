@@ -1209,7 +1209,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             )}
 
             {/* Main Content */}
-            <div className={`flex-1 flex overflow-hidden ${window.electronAPI?.platform === 'darwin' ? 'mt-4' : ''}`}>
+            <div className={`flex-1 flex overflow-hidden border-t border-slate-200 dark:border-slate-700 ${window.electronAPI?.platform === 'darwin' ? 'mt-4' : ''}`}>
                 {/* Left Sidebar */}
                 <div className="w-80 border-r border-slate-200 dark:border-slate-700/50 flex flex-col bg-slate-50 dark:bg-[#0b253a]/50">
                     <GitStatusPanel
