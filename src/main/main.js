@@ -2900,6 +2900,41 @@ ipcMain.handle('get-commit-details', async (event, { repoPath, commitHash }) => 
   }
 });
 
+// Handler para obtener el árbol de archivos de un commit
+ipcMain.handle('get-commit-tree', async (event, { repoPath, commitHash }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+  const fs = require('fs');
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Obtener el árbol de archivos del commit usando git ls-tree
+    // -r: recursivo (incluye todos los archivos en subdirectorios)
+    // --name-only: solo mostrar nombres de archivos
+    const { stdout: treeOutput } = await execPromise(`git ls-tree -r --name-only ${commitHash}`, {
+      cwd: repoPath,
+      maxBuffer: 1024 * 1024 * 10 // 10MB limit
+    });
+
+    const files = treeOutput.trim().split('\n').filter(Boolean).map(path => ({
+      path: path.trim()
+    }));
+
+    return {
+      success: true,
+      files
+    };
+
+  } catch (error) {
+    console.error('Error al obtener el árbol del commit:', error);
+    return { success: false, error: error.message };
+  }
+});
+
 // Handler para leer configuración de Git
 ipcMain.handle('get-git-config', async (event, key) => {
   const { spawn } = require('child_process');
