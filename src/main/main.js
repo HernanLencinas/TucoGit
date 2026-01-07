@@ -2935,6 +2935,36 @@ ipcMain.handle('get-commit-tree', async (event, { repoPath, commitHash }) => {
   }
 });
 
+// Handler para obtener el contenido de un archivo de un commit
+ipcMain.handle('get-commit-file-content', async (event, { repoPath, commitHash, filePath }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+  const fs = require('fs');
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Obtener el contenido del archivo usando git show
+    // git show <commit>:<filepath>
+    const { stdout: fileContent } = await execPromise(`git show ${commitHash}:${filePath}`, {
+      cwd: repoPath,
+      maxBuffer: 1024 * 1024 * 5 // 5MB limit
+    });
+
+    return {
+      success: true,
+      content: fileContent
+    };
+
+  } catch (error) {
+    console.error('Error al obtener el contenido del archivo:', error);
+    return { success: false, error: error.message };
+  }
+});
+
 // Handler para leer configuración de Git
 ipcMain.handle('get-git-config', async (event, key) => {
   const { spawn } = require('child_process');
