@@ -39,6 +39,11 @@ interface DetailsState {
     fullDiff: string;
     loading: boolean;
     error: string | null;
+    committer?: {
+        name: string;
+        email: string;
+        date: string;
+    };
 }
 
 type TabType = 'detail' | 'modified' | 'tree';
@@ -49,7 +54,8 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         stats: '',
         fullDiff: '',
         loading: true,
-        error: null
+        error: null,
+        committer: undefined
     });
 
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
@@ -209,7 +215,8 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                         stats: result.stats || '',
                         fullDiff: result.fullDiff || '',
                         loading: false,
-                        error: null
+                        error: null,
+                        committer: result.committer
                     });
                     // Auto-select first file if available
                     if (files.length > 0) {
@@ -718,6 +725,65 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                                                 })()}
                                             </div>
                                         </div>
+
+                                        {details.committer && 
+                                         (details.committer.name !== commit.author.name || 
+                                          details.committer.email !== commit.author.email) && (
+                                            <>
+                                                <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
+                                                    <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
+                                                        Committer
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <div className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                                                            {details.committer.name}
+                                                        </div>
+                                                        <div className="text-[10px] text-slate-500 dark:text-slate-400">
+                                                            {details.committer.email}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {details.committer.date && (
+                                                    <div>
+                                                        <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
+                                                            Fecha de Commit
+                                                        </div>
+                                                        <div className="text-xs text-slate-700 dark:text-slate-300">
+                                                            {new Date(details.committer.date).toLocaleString('es-ES', {
+                                                                year: 'numeric',
+                                                                month: 'long',
+                                                                day: 'numeric',
+                                                                hour: '2-digit',
+                                                                minute: '2-digit'
+                                                            })}
+                                                        </div>
+                                                        <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                                                            {(() => {
+                                                                const now = new Date();
+                                                                const commitDate = new Date(details.committer.date);
+                                                                const diffMs = now.getTime() - commitDate.getTime();
+                                                                const diffSecs = Math.floor(diffMs / 1000);
+                                                                const diffMins = Math.floor(diffSecs / 60);
+                                                                const diffHours = Math.floor(diffMins / 60);
+                                                                const diffDays = Math.floor(diffHours / 24);
+                                                                const diffWeeks = Math.floor(diffDays / 7);
+                                                                const diffMonths = Math.floor(diffDays / 30);
+                                                                const diffYears = Math.floor(diffDays / 365);
+
+                                                                if (diffYears > 0) return `Hace ${diffYears} año${diffYears > 1 ? 's' : ''}`;
+                                                                if (diffMonths > 0) return `Hace ${diffMonths} mes${diffMonths > 1 ? 'es' : ''}`;
+                                                                if (diffWeeks > 0) return `Hace ${diffWeeks} semana${diffWeeks > 1 ? 's' : ''}`;
+                                                                if (diffDays > 0) return `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
+                                                                if (diffHours > 0) return `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
+                                                                if (diffMins > 0) return `Hace ${diffMins} minuto${diffMins > 1 ? 's' : ''}`;
+                                                                return 'Hace unos segundos';
+                                                            })()}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </>
+                                        )}
                                     </div>
                                     
                                     {/* Columna Derecha: Hashes y Estadísticas */}
