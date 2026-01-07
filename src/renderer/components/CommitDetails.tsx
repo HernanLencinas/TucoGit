@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { FileCode, FilePlus, FileMinus, FileDiff, X } from 'lucide-react';
+import { FileCode, FilePlus, FileMinus, FileDiff, X, GitBranch, File, Folder, RefreshCw, FileJson, ChevronRight, ChevronDown, FolderOpen, Info, AlertCircle } from 'lucide-react';
 import { getAvatarUrl } from '@/renderer/utils/avatar';
+import { cn } from '@/lib/utils';
 
 interface CommitDetailsProps {
     commit: {
@@ -8,6 +9,7 @@ interface CommitDetailsProps {
         message: string;
         author: { name: string; email: string };
         date: string;
+        parents?: string[];
     };
     repoPath: string;
     onClose: () => void;
@@ -20,6 +22,17 @@ interface FileChange {
     status: string; // M, A, D, R, etc.
 }
 
+interface TreeFile {
+    path: string;
+}
+
+interface TreeNode {
+    name: string;
+    path: string;
+    type: 'file' | 'folder';
+    children?: TreeNode[];
+}
+
 interface DetailsState {
     files: FileChange[];
     stats: string;
@@ -27,6 +40,8 @@ interface DetailsState {
     loading: boolean;
     error: string | null;
 }
+
+type TabType = 'detail' | 'modified' | 'tree';
 
 export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, onClose, provider, host }) => {
     const [details, setDetails] = useState<DetailsState>({
@@ -38,11 +53,148 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
     });
 
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState<TabType>('detail');
+    const [treeFiles, setTreeFiles] = useState<TreeFile[]>([]);
+    const [loadingTree, setLoadingTree] = useState(false);
+    const [treeError, setTreeError] = useState<string | null>(null);
+    const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
+    const [treeStructure, setTreeStructure] = useState<TreeNode[]>([]);
+    const [selectedTreeFile, setSelectedTreeFile] = useState<string | null>(null);
+    const [fileContent, setFileContent] = useState<string | null>(null);
+    const [loadingFileContent, setLoadingFileContent] = useState(false);
+    const [fileContentError, setFileContentError] = useState<string | null>(null);
+    const [commitParents, setCommitParents] = useState<string[]>([]);
+
+    // Función para construir la estructura de árbol a partir de la lista plana de archivos
+    const buildTreeStructure = (files: TreeFile[]): TreeNode[] => {
+        const root: { [key: string]: TreeNode } = {};
+
+        files.forEach(file => {
+            const parts = file.path.split('/').filter(Boolean);
+            let current = root;
+
+            parts.forEach((part, index) => {
+                const isLast = index === parts.length - 1;
+                const path = parts.slice(0, index + 1).join('/');
+
+                if (!current[part]) {
+                    current[part] = {
+                        name: part,
+                        path: path,
+                        type: isLast ? 'file' : 'folder',
+                        children: isLast ? undefined : {}
+                    } as any;
+                }
+
+                if (!isLast && current[part].children) {
+                    current = current[part].children as any;
+                }
+            });
+        });
+
+        // Convertir el objeto anidado a array y ordenar
+        const convertToArray = (node: any): TreeNode[] => {
+            return Object.values(node)
+                .map((n: any) => ({
+                    ...n,
+                    children: n.children ? convertToArray(n.children) : undefined
+                }))
+                .sort((a, b) => {
+                    // Carpetas primero, luego archivos, ambos alfabéticamente
+                    if (a.type !== b.type) {
+                        return a.type === 'folder' ? -1 : 1;
+                    }
+                    return a.name.localeCompare(b.name);
+                });
+        };
+
+        return convertToArray(root);
+    };
+
+    // Función para cargar el árbol de archivos del commit
+    const loadCommitTree = async () => {
+        if (!repoPath || !commit.hash) return;
+        setLoadingTree(true);
+        setTreeError(null);
+        try {
+            const result = await (window as any).electronAPI.getCommitTree?.(repoPath, commit.hash);
+            if (result.success) {
+                const files = result.files || [];
+                setTreeFiles(files);
+                const tree = buildTreeStructure(files);
+                setTreeStructure(tree);
+                // Iniciar con todas las carpetas colapsadas
+                setExpandedFolders(new Set());
+            } else {
+                setTreeError(result.error || "Error al cargar el árbol");
+            }
+        } catch (err: any) {
+            setTreeError(err.message);
+        } finally {
+            setLoadingTree(false);
+        }
+    };
+
+    // Función para alternar la expansión de una carpeta
+    const toggleFolder = (path: string) => {
+        setExpandedFolders(prev => {
+            const next = new Set(prev);
+            if (next.has(path)) {
+                next.delete(path);
+            } else {
+                next.add(path);
+            }
+            return next;
+        });
+    };
+
+    // Función para cargar el contenido de un archivo del árbol
+    const loadFileContent = async (filePath: string) => {
+        if (!repoPath || !commit.hash) return;
+        setSelectedTreeFile(filePath);
+        setLoadingFileContent(true);
+        setFileContentError(null);
+        setFileContent(null);
+        try {
+            const result = await (window as any).electronAPI.getCommitFileContent?.(repoPath, commit.hash, filePath);
+            if (result.success) {
+                setFileContent(result.content || '');
+            } else {
+                setFileContentError(result.error || "Error al cargar el archivo");
+            }
+        } catch (err: any) {
+            setFileContentError(err.message);
+        } finally {
+            setLoadingFileContent(false);
+        }
+    };
 
     useEffect(() => {
         const fetchDetails = async () => {
             setDetails(prev => ({ ...prev, loading: true, error: null }));
             setSelectedFile(null); // Reset selection on new commit
+            setSelectedTreeFile(null); // Reset tree file selection
+            setFileContent(null); // Reset file content
+            setActiveTab('detail'); // Reset to detail tab
+            
+            // Establecer parents del commit si están disponibles
+            if (commit.parents && commit.parents.length > 0) {
+                setCommitParents(commit.parents);
+            } else {
+                // Si no están disponibles, intentar obtenerlos usando el handler IPC
+                try {
+                    const result = await (window as any).electronAPI?.getCommitParents?.(repoPath, commit.hash);
+                    if (result?.success && result.parents) {
+                        setCommitParents(result.parents);
+                    } else {
+                        setCommitParents([]);
+                    }
+                } catch (err) {
+                    console.error('Error al obtener los padres del commit:', err);
+                    setCommitParents([]);
+                }
+            }
+            
             try {
                 if (!window.electronAPI?.getCommitDetails) {
                     throw new Error("API not available");
@@ -78,6 +230,13 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         }
     }, [commit.hash, repoPath]);
 
+    // Cargar el árbol cuando se cambia a la tab de árbol
+    useEffect(() => {
+        if (activeTab === 'tree' && commit.hash && repoPath) {
+            loadCommitTree();
+        }
+    }, [activeTab, commit.hash, repoPath]);
+
     const getStatusIcon = (status: string) => {
         switch (status.charAt(0).toUpperCase()) {
             case 'A': return <FilePlus className="h-4 w-4 text-green-400" />;
@@ -85,6 +244,39 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
             case 'M': return <FileCode className="h-4 w-4 text-yellow-400" />;
             default: return <FileDiff className="h-4 w-4 text-slate-400" />;
         }
+    };
+
+    const getFileIcon = (filePath: string) => {
+        const isFolder = filePath.endsWith('/');
+        if (isFolder) return Folder;
+        
+        const extension = filePath.split('.').pop()?.toLowerCase() || '';
+        const fileName = filePath.split('/').pop()?.toLowerCase() || '';
+
+        // Config files
+        if (['json', 'jsonc'].includes(extension)) return FileJson;
+        if (['yml', 'yaml'].includes(extension)) return FileCode;
+        if (['toml', 'ini', 'conf', 'config'].includes(extension)) return FileCode;
+        if (fileName === 'package.json' || fileName === 'package-lock.json' || fileName === 'yarn.lock') return FileCode;
+        
+        // Code files
+        if (['js', 'jsx', 'ts', 'tsx', 'mjs', 'cjs'].includes(extension)) return FileCode;
+        if (['py', 'pyw', 'pyi'].includes(extension)) return FileCode;
+        if (['java', 'class', 'jar'].includes(extension)) return FileCode;
+        if (['cpp', 'cxx', 'cc', 'c', 'h', 'hpp'].includes(extension)) return FileCode;
+        if (['go', 'rs', 'swift', 'kt', 'scala'].includes(extension)) return FileCode;
+        if (['php', 'rb', 'pl', 'pm'].includes(extension)) return FileCode;
+        if (['sh', 'bash', 'zsh', 'fish', 'ps1'].includes(extension)) return FileCode;
+        if (['html', 'htm', 'xml', 'svg'].includes(extension)) return FileCode;
+        if (['css', 'scss', 'sass', 'less', 'styl'].includes(extension)) return FileCode;
+        if (['vue', 'svelte'].includes(extension)) return FileCode;
+        
+        // Text files
+        if (['md', 'markdown', 'txt', 'readme'].includes(extension) || fileName === 'readme' || fileName === 'license') return FileCode;
+        if (['log', 'out', 'err'].includes(extension)) return FileCode;
+        
+        // Default
+        return File;
     };
 
     // Extract diff for the selected file from the full diff
@@ -184,6 +376,92 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         });
 
         return <div>{renderedLines}</div>;
+    };
+
+    // Función para renderizar el contenido del archivo con estilo de editor
+    const renderFileContent = (content: string) => {
+        if (!content) return null;
+
+        const lines = content.split('\n');
+        
+        return (
+            <div>
+                {lines.map((line, idx) => (
+                    <div key={idx} className="flex font-mono text-[10px] leading-4 hover:bg-slate-50 dark:hover:bg-white/5">
+                        {/* Número de línea */}
+                        <div className="w-12 text-right text-slate-400 dark:text-slate-600 select-none px-2 border-r border-slate-200 dark:border-slate-700/50">
+                            {idx + 1}
+                        </div>
+                        {/* Contenido */}
+                        <div className="flex-1 px-4 whitespace-pre-wrap text-slate-600 dark:text-slate-300">
+                            {line || ' '}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
+    // Función recursiva para renderizar el treeview
+    const renderTreeNode = (node: TreeNode, level: number = 0): JSX.Element => {
+        const isExpanded = expandedFolders.has(node.path);
+        const hasChildren = node.children && node.children.length > 0;
+        const indent = level * 16;
+
+        if (node.type === 'folder') {
+            return (
+                <div key={node.path}>
+                    <div
+                        className="flex items-center gap-1 px-3 py-1 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors cursor-pointer text-[11px]"
+                        style={{ paddingLeft: `${12 + indent}px` }}
+                        onClick={() => toggleFolder(node.path)}
+                    >
+                        <div className="w-3 h-3 flex items-center justify-center flex-shrink-0">
+                            {hasChildren ? (
+                                isExpanded ? (
+                                    <ChevronDown className="h-3 w-3 text-slate-400" />
+                                ) : (
+                                    <ChevronRight className="h-3 w-3 text-slate-400" />
+                                )
+                            ) : (
+                                <div className="w-3" />
+                            )}
+                        </div>
+                        {isExpanded ? (
+                            <FolderOpen className="h-4 w-4 text-blue-500 dark:text-blue-400 flex-shrink-0" />
+                        ) : (
+                            <Folder className="h-4 w-4 text-blue-500 dark:text-blue-400 flex-shrink-0" />
+                        )}
+                        <span className="text-slate-700 dark:text-slate-300 truncate flex-1">{node.name}</span>
+                    </div>
+                    {isExpanded && hasChildren && (
+                        <div>
+                            {node.children!.map(child => renderTreeNode(child, level + 1))}
+                        </div>
+                    )}
+                </div>
+            );
+        } else {
+            const FileIcon = getFileIcon(node.path);
+            const isSelected = selectedTreeFile === node.path;
+            return (
+                <div
+                    key={node.path}
+                    onClick={() => loadFileContent(node.path)}
+                    className={cn(
+                        "flex items-center gap-1 px-3 py-1 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors text-[11px] cursor-pointer",
+                        isSelected 
+                            ? "bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white" 
+                            : "text-slate-500 dark:text-slate-400"
+                    )}
+                    style={{ paddingLeft: `${12 + indent}px` }}
+                >
+                    <div className="w-3 h-3 flex-shrink-0" />
+                    <FileIcon className="h-4 w-4 flex-shrink-0" />
+                    <span className="truncate flex-1" title={node.path}>{node.name}</span>
+                </div>
+            );
+        }
     };
 
     return (
@@ -313,11 +591,290 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
             </div>
 
             <div className="flex-1 flex overflow-hidden">
-                {/* File List */}
-                <div className="w-1/3 border-r border-slate-200 dark:border-slate-700 flex flex-col bg-slate-50 dark:bg-[#0b253a]/30">
-                    <div className="px-3 py-2 text-[10px] font-semibold text-slate-500 uppercase flex-shrink-0 bg-slate-100 dark:bg-[#0b253a]/50">
-                        Archivos Modificados ({details.files.length})
+                {/* Tabs Verticales */}
+                <div className="flex flex-col border-r border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-[#0b253a]/50">
+                    <button
+                        onClick={() => setActiveTab('detail')}
+                        className={cn(
+                            "px-3 py-3 transition-colors border-r-2 flex items-center justify-center",
+                            activeTab === 'detail'
+                                ? "text-cyan-600 dark:text-cyan-400 border-cyan-600 dark:border-cyan-400 bg-slate-50 dark:bg-[#0b253a]/30"
+                                : "text-slate-500 dark:text-slate-400 border-transparent hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#0b253a]/30"
+                        )}
+                        title="Detalle del Commit"
+                    >
+                        <Info className="h-4 w-4" />
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('modified')}
+                        className={cn(
+                            "px-3 py-3 transition-colors border-r-2 flex items-center justify-center",
+                            activeTab === 'modified'
+                                ? "text-cyan-600 dark:text-cyan-400 border-cyan-600 dark:border-cyan-400 bg-slate-50 dark:bg-[#0b253a]/30"
+                                : "text-slate-500 dark:text-slate-400 border-transparent hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#0b253a]/30"
+                        )}
+                        title={`Archivos Modificados (${details.files.length})`}
+                    >
+                        <FileDiff className="h-4 w-4" />
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('tree')}
+                        className={cn(
+                            "px-3 py-3 transition-colors border-r-2 flex items-center justify-center",
+                            activeTab === 'tree'
+                                ? "text-cyan-600 dark:text-cyan-400 border-cyan-600 dark:border-cyan-400 bg-slate-50 dark:bg-[#0b253a]/30"
+                                : "text-slate-500 dark:text-slate-400 border-transparent hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#0b253a]/30"
+                        )}
+                        title={`Árbol del Commit (${treeFiles.length})`}
+                    >
+                        <GitBranch className="h-4 w-4" />
+                    </button>
+                </div>
+
+                {/* Contenido según la tab activa */}
+                {activeTab === 'detail' ? (
+                    /* Tab Detalle: Solo el panel con el detalle del commit */
+                    <div className="flex-1 overflow-auto bg-slate-50 dark:bg-[#0b253a]/30 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+                        <div className="p-5">
+                            {/* Mensaje del Commit */}
+                            <div className="mb-5 pb-4 border-b border-slate-200 dark:border-slate-700">
+                                <div className="text-sm font-semibold text-slate-900 dark:text-white mb-3 leading-relaxed">
+                                    {commit.message}
+                                </div>
+                                <div className="flex items-center gap-3 flex-wrap">
+                                    <div>
+                                        <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1 tracking-wider">
+                                            Hash
+                                        </div>
+                                        <div className="font-mono text-[10px] text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
+                                            {commit.hash}
+                                        </div>
+                                    </div>
+                                    {commitParents.length > 0 && (
+                                        <div>
+                                            <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1 tracking-wider">
+                                                {commitParents.length === 1 ? 'Padre' : 'Padres'}
+                                            </div>
+                                            <div className="flex flex-wrap gap-2">
+                                                {commitParents.map((parent, idx) => (
+                                                    <div key={idx} className="font-mono text-[10px] text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
+                                                        {parent}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Información en columnas */}
+                            <div className="grid grid-cols-2 gap-4">
+                                {/* Columna Izquierda */}
+                                <div className="space-y-4">
+                                    <div>
+                                        <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
+                                            Autor
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                                                {commit.author.name}
+                                            </div>
+                                            <div className="text-[10px] text-slate-500 dark:text-slate-400">
+                                                {commit.author.email}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
+                                            Fecha
+                                        </div>
+                                        <div className="text-xs text-slate-700 dark:text-slate-300">
+                                            {new Date(commit.date).toLocaleString('es-ES', {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })}
+                                        </div>
+                                        <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                                            {(() => {
+                                                const now = new Date();
+                                                const commitDate = new Date(commit.date);
+                                                const diffMs = now.getTime() - commitDate.getTime();
+                                                const diffSecs = Math.floor(diffMs / 1000);
+                                                const diffMins = Math.floor(diffSecs / 60);
+                                                const diffHours = Math.floor(diffMins / 60);
+                                                const diffDays = Math.floor(diffHours / 24);
+                                                const diffWeeks = Math.floor(diffDays / 7);
+                                                const diffMonths = Math.floor(diffDays / 30);
+                                                const diffYears = Math.floor(diffDays / 365);
+
+                                                if (diffYears > 0) return `Hace ${diffYears} año${diffYears > 1 ? 's' : ''}`;
+                                                if (diffMonths > 0) return `Hace ${diffMonths} mes${diffMonths > 1 ? 'es' : ''}`;
+                                                if (diffWeeks > 0) return `Hace ${diffWeeks} semana${diffWeeks > 1 ? 's' : ''}`;
+                                                if (diffDays > 0) return `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
+                                                if (diffHours > 0) return `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
+                                                if (diffMins > 0) return `Hace ${diffMins} minuto${diffMins > 1 ? 's' : ''}`;
+                                                return 'Hace unos segundos';
+                                            })()}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Columna Derecha */}
+                                <div className="space-y-4">
+                                    {details.stats && (
+                                        <div>
+                                            <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
+                                                Estadísticas
+                                            </div>
+                                            <div className="text-xs text-slate-700 dark:text-slate-300">
+                                                {(() => {
+                                                    const statsText = details.stats;
+                                                    if (!statsText) return <span>{statsText}</span>;
+
+                                                    const insertionMatch = statsText.match(/(\d+)\s*insertions?/i);
+                                                    const deletionMatch = statsText.match(/(\d+)\s*deletions?/i);
+                                                    const filesMatch = statsText.match(/(\d+)\s*files?/i);
+
+                                                    if (!insertionMatch && !deletionMatch && !filesMatch) {
+                                                        return <span>{statsText}</span>;
+                                                    }
+
+                                                    const parts: JSX.Element[] = [];
+                                                    let lastIndex = 0;
+                                                    const matches: Array<{ index: number, length: number, type: 'insertion' | 'deletion' | 'files' }> = [];
+
+                                                    if (filesMatch && filesMatch.index !== undefined) {
+                                                        matches.push({
+                                                            index: filesMatch.index,
+                                                            length: filesMatch[0].length,
+                                                            type: 'files'
+                                                        });
+                                                    }
+
+                                                    if (insertionMatch && insertionMatch.index !== undefined) {
+                                                        matches.push({
+                                                            index: insertionMatch.index,
+                                                            length: insertionMatch[0].length,
+                                                            type: 'insertion'
+                                                        });
+                                                    }
+
+                                                    if (deletionMatch && deletionMatch.index !== undefined) {
+                                                        matches.push({
+                                                            index: deletionMatch.index,
+                                                            length: deletionMatch[0].length,
+                                                            type: 'deletion'
+                                                        });
+                                                    }
+
+                                                    matches.sort((a, b) => a.index - b.index);
+
+                                                    matches.forEach((match) => {
+                                                        if (match.index > lastIndex) {
+                                                            parts.push(
+                                                                <span key={`text-${lastIndex}`}>
+                                                                    {statsText.substring(lastIndex, match.index)}
+                                                                </span>
+                                                            );
+                                                        }
+
+                                                        const text = statsText.substring(match.index, match.index + match.length);
+                                                        let className = '';
+                                                        if (match.type === 'insertion') {
+                                                            className = 'text-green-600 dark:text-green-400 font-semibold';
+                                                        } else if (match.type === 'deletion') {
+                                                            className = 'text-red-600 dark:text-red-400 font-semibold';
+                                                        } else if (match.type === 'files') {
+                                                            className = 'text-blue-600 dark:text-blue-400 font-semibold';
+                                                        }
+
+                                                        parts.push(
+                                                            <span
+                                                                key={`${match.type}-${match.index}`}
+                                                                className={className}
+                                                            >
+                                                                {text}
+                                                            </span>
+                                                        );
+
+                                                        lastIndex = match.index + match.length;
+                                                    });
+
+                                                    if (lastIndex < statsText.length) {
+                                                        parts.push(
+                                                            <span key={`text-${lastIndex}`}>
+                                                                {statsText.substring(lastIndex)}
+                                                            </span>
+                                                        );
+                                                    }
+
+                                                    return <span>{parts}</span>;
+                                                })()}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div>
+                                        <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
+                                            Archivos
+                                        </div>
+                                        <div className="space-y-2">
+                                            <div className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                {details.files.length} archivo{details.files.length !== 1 ? 's' : ''}
+                                            </div>
+                                            {details.files.length > 0 && (
+                                                <div className="flex flex-wrap gap-1.5">
+                                                    {(() => {
+                                                        const added = details.files.filter(f => f.status.charAt(0).toUpperCase() === 'A').length;
+                                                        const modified = details.files.filter(f => f.status.charAt(0).toUpperCase() === 'M').length;
+                                                        const deleted = details.files.filter(f => f.status.charAt(0).toUpperCase() === 'D').length;
+                                                        const renamed = details.files.filter(f => f.status.charAt(0).toUpperCase() === 'R').length;
+
+                                                        return (
+                                                            <>
+                                                                {added > 0 && (
+                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
+                                                                        <FilePlus className="h-3 w-3" />
+                                                                        {added}
+                                                                    </span>
+                                                                )}
+                                                                {modified > 0 && (
+                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">
+                                                                        <FileCode className="h-3 w-3" />
+                                                                        {modified}
+                                                                    </span>
+                                                                )}
+                                                                {deleted > 0 && (
+                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">
+                                                                        <FileMinus className="h-3 w-3" />
+                                                                        {deleted}
+                                                                    </span>
+                                                                )}
+                                                                {renamed > 0 && (
+                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
+                                                                        <FileDiff className="h-3 w-3" />
+                                                                        {renamed}
+                                                                    </span>
+                                                                )}
+                                                            </>
+                                                        );
+                                                    })()}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                ) : activeTab === 'modified' ? (
+                    /* Tab Archivos Modificados: Lista de archivos + Panel de diff */
+                    <>
+                        <div className="w-1/3 border-r border-slate-200 dark:border-slate-700 flex flex-col bg-slate-50 dark:bg-[#0b253a]/30">
                     <div className="flex-1 overflow-auto p-0 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
                         {details.loading ? (
                             <div className="text-center p-4 text-slate-500 text-[10px]">Cargando...</div>
@@ -328,10 +885,10 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                                 <div
                                     key={i}
                                     onClick={() => setSelectedFile(file.path)}
-                                    className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-[11px] border-l-2 transition-colors
+                                            className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-[11px] transition-colors
                                         ${selectedFile === file.path
-                                            ? 'bg-slate-200 dark:bg-slate-800 border-cyan-500 text-slate-900 dark:text-white'
-                                            : 'border-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
+                                                    ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white'
+                                                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
                                         }`}
                                 >
                                     {getStatusIcon(file.status)}
@@ -342,11 +899,10 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                         )}
                     </div>
                 </div>
-
                 {/* Diff View */}
                 <div className="flex-1 flex flex-col bg-white dark:bg-[#011627] min-w-0">
-                    <div className="px-4 py-1 text-xs font-semibold text-slate-500 uppercase border-b border-slate-200 dark:border-slate-700 flex-shrink-0 bg-white dark:bg-[#011627]">
-                        {selectedFile ? `Diff: ${selectedFile}` : 'Detalle'}
+                            <div className="px-4 py-1 text-xs text-slate-500 border-b border-slate-200 dark:border-slate-700 flex-shrink-0 bg-white dark:bg-[#011627]">
+                                {selectedFile || 'Detalle'}
                     </div>
                     <div className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
                         {details.loading ? (
@@ -365,6 +921,64 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                         )}
                     </div>
                 </div>
+                    </>
+                ) : (
+                    /* Tab Árbol: Árbol de archivos + Panel de contenido */
+                    <>
+                        <div className="w-1/3 border-r border-slate-200 dark:border-slate-700 flex flex-col bg-slate-50 dark:bg-[#0b253a]/30">
+                            <div className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+                                {loadingTree ? (
+                                    <div className="flex flex-col items-center justify-center p-4 text-slate-500 text-[10px]">
+                                        <RefreshCw className="h-4 w-4 animate-spin mb-2" />
+                                        <span>Cargando árbol...</span>
+                                    </div>
+                                ) : treeError ? (
+                                    <div className="text-center p-4 text-red-400 text-[10px]">{treeError}</div>
+                                ) : treeStructure.length === 0 ? (
+                                    <div className="text-center p-4 text-slate-500 text-[10px]">No hay archivos</div>
+                                ) : (
+                                    <div>
+                                        {treeStructure.map(node => renderTreeNode(node))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        {/* File Content View */}
+                        <div className="flex-1 flex flex-col bg-white dark:bg-[#011627] min-w-0">
+                            <div className="px-4 py-1 text-xs text-slate-500 border-b border-slate-200 dark:border-slate-700 flex-shrink-0 bg-white dark:bg-[#011627]">
+                                {selectedTreeFile || 'Contenido'}
+                            </div>
+                            <div className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+                                {loadingFileContent ? (
+                                    <div className="flex items-center justify-center h-full">
+                                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-500"></div>
+                                    </div>
+                                ) : fileContentError ? (
+                                    <div className="flex flex-col items-center justify-center h-full text-red-400 gap-2 p-4">
+                                        <AlertCircle className="h-8 w-8 opacity-20" />
+                                        <span className="text-xs text-center">{fileContentError}</span>
+                                    </div>
+                                ) : fileContent !== null ? (
+                                    <div className="pb-4">
+                                        {renderFileContent(fileContent)}
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500 gap-3">
+                                        <FileCode className="h-12 w-12 opacity-40" />
+                                        <div className="text-center space-y-1">
+                                            <div className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                                                Sin archivo seleccionado
+                                            </div>
+                                            <div className="text-xs text-slate-400 dark:text-slate-500">
+                                                Haz clic en un archivo del árbol para ver su contenido
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

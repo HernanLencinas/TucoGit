@@ -105,6 +105,21 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return ipcRenderer.invoke('get-commit-details', { repoPath, commitHash });
   },
 
+  // Obtener el árbol de archivos de un commit
+  getCommitTree: (repoPath, commitHash) => {
+    return ipcRenderer.invoke('get-commit-tree', { repoPath, commitHash });
+  },
+
+  // Obtener el contenido de un archivo de un commit
+  getCommitFileContent: (repoPath, commitHash, filePath) => {
+    return ipcRenderer.invoke('get-commit-file-content', { repoPath, commitHash, filePath });
+  },
+
+  // Obtener los padres de un commit
+  getCommitParents: (repoPath, commitHash) => {
+    return ipcRenderer.invoke('get-commit-parents', { repoPath, commitHash });
+  },
+
   // Abrir carpeta en IDE
   openInIDE: (path, ideName) => {
     return ipcRenderer.invoke('open-in-ide', { path, ideName });
