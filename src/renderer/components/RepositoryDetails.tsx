@@ -1666,8 +1666,6 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             )}
                         </div>
                         </div>
-                        {/* Separador */}
-                        <div className="h-6 w-px bg-slate-300 dark:bg-slate-600 flex-shrink-0"></div>
                         {/* Grupo 4: Refresh y Búsqueda */}
                         <div className="flex items-center gap-2 flex-1 min-w-[200px]">
                         <Button
