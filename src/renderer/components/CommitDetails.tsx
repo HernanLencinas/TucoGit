@@ -9,6 +9,7 @@ interface CommitDetailsProps {
         message: string;
         author: { name: string; email: string };
         date: string;
+        parents?: string[];
     };
     repoPath: string;
     onClose: () => void;
@@ -62,6 +63,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
     const [fileContent, setFileContent] = useState<string | null>(null);
     const [loadingFileContent, setLoadingFileContent] = useState(false);
     const [fileContentError, setFileContentError] = useState<string | null>(null);
+    const [commitParents, setCommitParents] = useState<string[]>([]);
 
     // Función para construir la estructura de árbol a partir de la lista plana de archivos
     const buildTreeStructure = (files: TreeFile[]): TreeNode[] => {
@@ -174,6 +176,25 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
             setSelectedTreeFile(null); // Reset tree file selection
             setFileContent(null); // Reset file content
             setActiveTab('detail'); // Reset to detail tab
+            
+            // Establecer parents del commit si están disponibles
+            if (commit.parents && commit.parents.length > 0) {
+                setCommitParents(commit.parents);
+            } else {
+                // Si no están disponibles, intentar obtenerlos usando el handler IPC
+                try {
+                    const result = await (window as any).electronAPI?.getCommitParents?.(repoPath, commit.hash);
+                    if (result?.success && result.parents) {
+                        setCommitParents(result.parents);
+                    } else {
+                        setCommitParents([]);
+                    }
+                } catch (err) {
+                    console.error('Error al obtener los padres del commit:', err);
+                    setCommitParents([]);
+                }
+            }
+            
             try {
                 if (!window.electronAPI?.getCommitDetails) {
                     throw new Error("API not available");
@@ -617,11 +638,32 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                         <div className="p-5">
                             {/* Mensaje del Commit */}
                             <div className="mb-5 pb-4 border-b border-slate-200 dark:border-slate-700">
-                                <div className="text-sm font-semibold text-slate-900 dark:text-white mb-2 leading-relaxed">
+                                <div className="text-sm font-semibold text-slate-900 dark:text-white mb-3 leading-relaxed">
                                     {commit.message}
                                 </div>
-                                <div className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
-                                    {commit.hash}
+                                <div className="flex items-center gap-3 flex-wrap">
+                                    <div>
+                                        <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1 tracking-wider">
+                                            Hash
+                                        </div>
+                                        <div className="font-mono text-[10px] text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
+                                            {commit.hash}
+                                        </div>
+                                    </div>
+                                    {commitParents.length > 0 && (
+                                        <div>
+                                            <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1 tracking-wider">
+                                                {commitParents.length === 1 ? 'Padre' : 'Padres'}
+                                            </div>
+                                            <div className="flex flex-wrap gap-2">
+                                                {commitParents.map((parent, idx) => (
+                                                    <div key={idx} className="font-mono text-[10px] text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
+                                                        {parent}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
@@ -839,29 +881,29 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                         ) : details.error ? (
                             <div className="text-center p-4 text-red-400 text-[10px]">{details.error}</div>
                         ) : (
-                                    details.files.map((file, i) => (
-                                        <div
-                                            key={i}
-                                            onClick={() => setSelectedFile(file.path)}
+                            details.files.map((file, i) => (
+                                <div
+                                    key={i}
+                                    onClick={() => setSelectedFile(file.path)}
                                             className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-[11px] transition-colors
-                                                ${selectedFile === file.path
+                                        ${selectedFile === file.path
                                                     ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white'
                                                     : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
-                                                }`}
-                                        >
-                                            {getStatusIcon(file.status)}
-                                            <span className="truncate flex-1">{file.path}</span>
-                                            <span className="text-[9px] font-mono opacity-50">{file.status}</span>
-                                        </div>
-                                    ))
+                                        }`}
+                                >
+                                    {getStatusIcon(file.status)}
+                                    <span className="truncate flex-1">{file.path}</span>
+                                    <span className="text-[9px] font-mono opacity-50">{file.status}</span>
+                                </div>
+                            ))
                         )}
                     </div>
                 </div>
-                        {/* Diff View */}
-                        <div className="flex-1 flex flex-col bg-white dark:bg-[#011627] min-w-0">
+                {/* Diff View */}
+                <div className="flex-1 flex flex-col bg-white dark:bg-[#011627] min-w-0">
                             <div className="px-4 py-1 text-xs text-slate-500 border-b border-slate-200 dark:border-slate-700 flex-shrink-0 bg-white dark:bg-[#011627]">
                                 {selectedFile || 'Detalle'}
-                            </div>
+                    </div>
                     <div className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
                         {details.loading ? (
                             <div className="flex items-center justify-center h-full">

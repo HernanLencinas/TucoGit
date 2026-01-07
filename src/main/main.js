@@ -2965,6 +2965,38 @@ ipcMain.handle('get-commit-file-content', async (event, { repoPath, commitHash, 
   }
 });
 
+// Handler para obtener los padres de un commit
+ipcMain.handle('get-commit-parents', async (event, { repoPath, commitHash }) => {
+  const { exec } = require('child_process');
+  const util = require('util');
+  const execPromise = util.promisify(exec);
+  const fs = require('fs');
+
+  try {
+    if (!fs.existsSync(repoPath)) {
+      return { success: false, error: 'La ruta no existe' };
+    }
+
+    // Obtener los padres del commit usando git log
+    // %P muestra todos los padres separados por espacio
+    const { stdout: parentsOutput } = await execPromise(`git log -1 --format="%P" ${commitHash}`, {
+      cwd: repoPath,
+      maxBuffer: 1024 * 1024 // 1MB should be enough for parent hashes
+    });
+
+    const parents = parentsOutput.trim().split(' ').filter(Boolean);
+
+    return {
+      success: true,
+      parents: parents
+    };
+
+  } catch (error) {
+    console.error('Error al obtener los padres del commit:', error);
+    return { success: false, error: error.message };
+  }
+});
+
 // Handler para leer configuración de Git
 ipcMain.handle('get-git-config', async (event, key) => {
   const { spawn } = require('child_process');

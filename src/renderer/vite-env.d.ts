@@ -101,6 +101,9 @@ interface Window {
     }>;
     getGitLog: (repoPath: string, skip?: number, limit?: number, searchTerm?: string) => Promise<{ success: boolean; commits?: any[]; error?: string }>;
     getCommitDetails: (repoPath: string, commitHash: string) => Promise<{ success: boolean; files?: any[]; stats?: string; fullDiff?: string; error?: string }>;
+    getCommitTree: (repoPath: string, commitHash: string) => Promise<{ success: boolean; files?: Array<{ path: string }>; error?: string }>;
+    getCommitFileContent: (repoPath: string, commitHash: string, filePath: string) => Promise<{ success: boolean; content?: string; error?: string }>;
+    getCommitParents: (repoPath: string, commitHash: string) => Promise<{ success: boolean; parents?: string[]; error?: string }>;
     openInIDE: (path: string, ideName: string) => Promise<{
       success: boolean;
       error?: string;

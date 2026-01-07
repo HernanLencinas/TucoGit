@@ -115,6 +115,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return ipcRenderer.invoke('get-commit-file-content', { repoPath, commitHash, filePath });
   },
 
+  // Obtener los padres de un commit
+  getCommitParents: (repoPath, commitHash) => {
+    return ipcRenderer.invoke('get-commit-parents', { repoPath, commitHash });
+  },
+
   // Abrir carpeta en IDE
   openInIDE: (path, ideName) => {
     return ipcRenderer.invoke('open-in-ide', { path, ideName });
