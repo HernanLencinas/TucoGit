@@ -50,6 +50,7 @@ interface GitFile {
 interface GitStatusPanelProps {
     repoPath: string;
     onRefreshGraph: () => void;
+    connectionId?: number;
 }
 
 /**
@@ -76,7 +77,7 @@ interface GitStatusPanelProps {
  * />
  * ```
  */
-export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefreshGraph }) => {
+export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefreshGraph, connectionId }) => {
     const [stagedFiles, setStagedFiles] = useState<GitFile[]>([]);
     const [unstagedFiles, setUnstagedFiles] = useState<GitFile[]>([]);
     const [commitMessage, setCommitMessage] = useState("");
@@ -233,8 +234,34 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         setLoading(true);
         setError(null);
         try {
+            // Obtener la identidad asociada a la conexión si existe
+            let authorName: string | undefined;
+            let authorEmail: string | undefined;
+            
+            if (connectionId && (window as any).electronAPI?.readConfig) {
+                try {
+                    const configResult = await (window as any).electronAPI.readConfig();
+                    if (configResult.success && configResult.config) {
+                        const conexiones = configResult.config.conexiones || [];
+                        const conexion = conexiones.find((c: any) => c.id === connectionId);
+                        
+                        if (conexion?.identidadId) {
+                            const gitIdentities = configResult.config.configuracion?.gitIdentities || [];
+                            const identidad = gitIdentities.find((id: any) => id.id === conexion.identidadId);
+                            
+                            if (identidad) {
+                                authorName = identidad.nombre;
+                                authorEmail = identidad.email;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    // Error al obtener identidad, continuar sin autor personalizado
+                }
+            }
+            
             // Realizar commit
-            const commitResult = await (window as any).electronAPI.gitCommit(repoPath, commitMessage);
+            const commitResult = await (window as any).electronAPI.gitCommit(repoPath, commitMessage, authorName, authorEmail);
             if (commitResult.success) {
                 setCommitMessage("");
                 loadStatus();

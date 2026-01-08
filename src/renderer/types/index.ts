@@ -97,5 +97,6 @@ export type Connection = {
   tokenEncriptado: string; // Token encriptado
   fechaCreacion?: string;
   details?: ConnectionDetails; // Información adicional de la API
+  identidadId?: string; // ID de la identidad asociada
 };
 
