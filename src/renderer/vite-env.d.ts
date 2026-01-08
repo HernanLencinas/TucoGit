@@ -14,6 +14,7 @@ interface Window {
       success: boolean;
       ruta?: string;
       archivo?: string;
+      isFirstTime?: boolean;
       ultimaActualizacion?: string;
       tema?: string;
       temaNombre?: string;

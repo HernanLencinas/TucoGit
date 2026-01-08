@@ -430,12 +430,20 @@ function App() {
           const documentsPath = await window.electronAPI.getDocumentsPath();
           const rutaPorDefecto = `${documentsPath}/Tuco`;
 
-          // Inicializar configuración (crear carpeta y archivo si no existen)
+          // Inicializar configuración (verificar si existe el archivo)
           if (window.electronAPI?.initializeConfig) {
             const resultado = await window.electronAPI.initializeConfig(documentsPath);
 
             if (resultado.success) {
               setRutaConfiguracion(resultado.ruta || rutaPorDefecto);
+
+              // Si es la primera vez (archivo no existe), mostrar wizard y no cargar configuración
+              if (resultado.isFirstTime) {
+                setMostrarWizardBienvenida(true);
+                setWizardCargado(true);
+                setIsLoading(false);
+                return; // Salir temprano, el wizard creará el archivo al completarse
+              }
 
               // Aplicar tema guardado
               const temaMode = resultado.tema === 'dark' ? 'dark' : 'light';
@@ -526,11 +534,7 @@ function App() {
                 setGitIdentities([IDENTIDAD_DEFAULT]);
               }
 
-              // Verificar si el wizard de bienvenida ya fue completado
-              const wizardCompleted = resultado.wizardCompleted !== undefined ? resultado.wizardCompleted : false;
-              if (!wizardCompleted) {
-                setMostrarWizardBienvenida(true);
-              }
+              // Si llegamos aquí, el archivo ya existe, no mostrar wizard
               setWizardCargado(true);
 
               // Cargar configuración de usuario de Git
@@ -830,54 +834,70 @@ function App() {
     setMostrarWizardBienvenida(false);
     
     try {
-      // Si se proporcionaron nombre y email, guardarlos
-      if (nombre && email) {
-        // Guardar en la configuración
-        if (window.electronAPI?.writeConfig) {
+      // Crear el archivo de configuración con los datos del wizard
+      if (window.electronAPI?.getDocumentsPath && window.electronAPI?.writeConfig) {
+        const documentsPath = await window.electronAPI.getDocumentsPath();
+        
+        if (nombre && email) {
+          // Crear identidad predeterminada con los datos del wizard
+          const identidadActualizada = {
+            id: IDENTIDAD_DEFAULT_ID,
+            nombre: nombre,
+            email: email
+          };
+
+          // Guardar configuración inicial con los datos del wizard
+          // writeConfig ahora crea el archivo si no existe
           await window.electronAPI.writeConfig({ 
             wizardCompleted: true,
             gitUserName: nombre,
-            gitUserEmail: email
+            gitUserEmail: email,
+            gitIdentities: [identidadActualizada]
           });
+
+          // Aplicar a Git globalmente
+          if (window.electronAPI?.setGitConfig) {
+            await window.electronAPI.setGitConfig('user.name', nombre);
+            await window.electronAPI.setGitConfig('user.email', email);
+          }
+
+          // Actualizar el estado local
+          setGitUserName(nombre);
+          setGitUserEmail(email);
+          setGitIdentities([identidadActualizada]);
+        } else {
+          // Si no se proporcionaron valores, crear archivo con valores por defecto
+          await window.electronAPI.writeConfig({ 
+            wizardCompleted: true,
+            gitIdentities: [IDENTIDAD_DEFAULT]
+          });
+          setGitIdentities([IDENTIDAD_DEFAULT]);
         }
 
-        // Aplicar a Git globalmente
-        if (window.electronAPI?.setGitConfig) {
-          await window.electronAPI.setGitConfig('user.name', nombre);
-          await window.electronAPI.setGitConfig('user.email', email);
-        }
+        // Recargar la configuración para aplicar todos los valores
+        if (window.electronAPI?.initializeConfig) {
+          const configRecargada = await window.electronAPI.initializeConfig(documentsPath);
+          if (configRecargada.success) {
+            setRutaConfiguracion(configRecargada.ruta || `${documentsPath}/Tuco`);
+            
+            // Aplicar tema y otros valores por defecto
+            const temaMode = configRecargada.tema === 'dark' ? 'dark' : 'light';
+            const temaNombre = configRecargada.temaNombre || 'default';
+            setIsDark(temaMode === 'dark');
+            setSelectedTheme({ name: temaNombre, mode: temaMode });
+            applyTheme(temaNombre as ThemeName, temaMode);
+            
+            if (configRecargada.zoomLevel) {
+              setZoomLevel(configRecargada.zoomLevel);
+              setTempZoomLevel(configRecargada.zoomLevel);
+              document.documentElement.style.setProperty('--zoom-level', `${configRecargada.zoomLevel}%`);
+            }
 
-        // Actualizar el estado local
-        setGitUserName(nombre);
-        setGitUserEmail(email);
-
-        // Actualizar la identidad predeterminada
-        const identidadActualizada = {
-          id: IDENTIDAD_DEFAULT_ID,
-          nombre: nombre,
-          email: email
-        };
-
-        // Actualizar las identidades guardadas
-        const identidadesActualizadas = gitIdentities.map(id => 
-          id.id === IDENTIDAD_DEFAULT_ID ? identidadActualizada : id
-        );
-
-        // Si no existe la identidad predeterminada, agregarla
-        if (!identidadesActualizadas.find(id => id.id === IDENTIDAD_DEFAULT_ID)) {
-          identidadesActualizadas.unshift(identidadActualizada);
-        }
-
-        setGitIdentities(identidadesActualizadas);
-
-        // Guardar las identidades actualizadas
-        if (window.electronAPI?.writeConfig) {
-          await window.electronAPI.writeConfig({ gitIdentities: identidadesActualizadas });
-        }
-      } else {
-        // Si no se proporcionaron valores, solo marcar el wizard como completado
-        if (window.electronAPI?.writeConfig) {
-          await window.electronAPI.writeConfig({ wizardCompleted: true });
+            // Cargar repositorios si existen
+            if (configRecargada.repositorios && configRecargada.repositorios.length > 0) {
+              setEstructuraCarpetas(configRecargada.repositorios);
+            }
+          }
         }
       }
     } catch (error) {
