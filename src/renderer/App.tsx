@@ -19,6 +19,12 @@ function App() {
   const [isDark, setIsDark] = useState(true);
   const [selectedTheme, setSelectedTheme] = useState<{ name: string; mode: "light" | "dark" }>({ name: "default", mode: "dark" });
   const [zoomLevel, setZoomLevel] = useState<number>(100);
+  const [tempZoomLevel, setTempZoomLevel] = useState<number>(100);
+  
+  // Sincronizar tempZoomLevel cuando zoomLevel cambia externamente
+  useEffect(() => {
+    setTempZoomLevel(zoomLevel);
+  }, [zoomLevel]);
   const [estructuraCarpetas, setEstructuraCarpetas] = useState<FolderItem[]>([
     {
       id: "root",
@@ -213,6 +219,7 @@ function App() {
           setSelectedTheme({ name: "default", mode: "light" });
           applyTheme("default", "light");
           setZoomLevel(100);
+          setTempZoomLevel(100);
           document.documentElement.style.setProperty('--zoom-level', '100%');
           setEstructuraCarpetas([
             {
@@ -409,10 +416,12 @@ function App() {
               // Aplicar zoom guardado
               if (resultado.zoomLevel) {
                 setZoomLevel(resultado.zoomLevel);
+                setTempZoomLevel(resultado.zoomLevel);
                 document.documentElement.style.setProperty('--zoom-level', `${resultado.zoomLevel}%`);
               } else {
                 // Si no hay zoom guardado, usar el por defecto
                 setZoomLevel(100);
+                setTempZoomLevel(100);
                 document.documentElement.style.setProperty('--zoom-level', '100%');
               }
 
@@ -3806,6 +3815,7 @@ function App() {
                   // Aplicar zoom
                   if (resultado.zoomLevel) {
                     setZoomLevel(resultado.zoomLevel);
+                    setTempZoomLevel(resultado.zoomLevel);
                     document.documentElement.style.setProperty('--zoom-level', `${resultado.zoomLevel}%`);
                   }
                   
@@ -4488,7 +4498,7 @@ function App() {
                         <div className="flex items-center gap-2 mb-2">
                           <label className="text-sm font-semibold">Nivel de Zoom</label>
                           <div className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">
-                            {zoomLevel}%
+                            {tempZoomLevel}%
                           </div>
                         </div>
                         <p className="text-xs text-muted-foreground">
@@ -4496,34 +4506,63 @@ function App() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {[25, 50, 75, 100, 125, 150].map((size) => (
-                        <Button
-                          key={size}
-                          size="sm"
-                          variant={zoomLevel === size ? "default" : "outline"}
-                          onClick={async () => {
-                            setZoomLevel(size);
-                            document.documentElement.style.setProperty('--zoom-level', `${size}%`);
+                    <div className="space-y-3">
+                      <div className="px-1">
+                        <input
+                          type="range"
+                          min="50"
+                          max="150"
+                          step="10"
+                          value={Math.max(50, Math.min(150, tempZoomLevel))}
+                          onChange={(e) => {
+                            const newZoom = parseInt(e.target.value);
+                            setTempZoomLevel(newZoom);
+                          }}
+                          onMouseUp={async (e) => {
+                            const newZoom = parseInt((e.target as HTMLInputElement).value);
+                            setZoomLevel(newZoom);
+                            setTempZoomLevel(newZoom);
+                            document.documentElement.style.setProperty('--zoom-level', `${newZoom}%`);
                             if (window.electronAPI?.writeConfig) {
                               try {
-                                await window.electronAPI.writeConfig({ zoomLevel: size });
-                                showToast(`Zoom ajustado a ${size}%`, 'success');
+                                await window.electronAPI.writeConfig({ zoomLevel: newZoom });
                               } catch (error) {
                                 // Error al guardar zoom
-                                showToast('Error al guardar configuración de zoom', 'error');
                               }
                             }
                           }}
-                          className={`min-w-[60px] ${
-                            zoomLevel === size 
-                              ? 'shadow-md' 
-                              : 'hover:border-primary/50'
-                          }`}
-                        >
-                          {size}%
-                        </Button>
-                      ))}
+                          className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
+                          style={{
+                            background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${((Math.max(50, Math.min(150, tempZoomLevel)) - 50) / 100) * 100}%, hsl(var(--muted)) ${((Math.max(50, Math.min(150, tempZoomLevel)) - 50) / 100) * 100}%, hsl(var(--muted)) 100%)`
+                          }}
+                        />
+                        <style>{`
+                          .slider::-webkit-slider-thumb {
+                            appearance: none;
+                            width: 18px;
+                            height: 18px;
+                            border-radius: 50%;
+                            background: hsl(var(--primary));
+                            cursor: pointer;
+                            border: 2px solid hsl(var(--background));
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                          }
+                          .slider::-moz-range-thumb {
+                            width: 18px;
+                            height: 18px;
+                            border-radius: 50%;
+                            background: hsl(var(--primary));
+                            cursor: pointer;
+                            border: 2px solid hsl(var(--background));
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                          }
+                        `}</style>
+                      </div>
+                      <div className="flex justify-between text-xs text-muted-foreground px-1">
+                        <span>50%</span>
+                        <span>100%</span>
+                        <span>150%</span>
+                      </div>
                     </div>
                     <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
                       <Info className="h-4 w-4 text-primary flex-shrink-0" />
