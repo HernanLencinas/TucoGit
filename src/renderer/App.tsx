@@ -70,6 +70,9 @@ function App() {
   const [coleccionAEditar, setColeccionAEditar] = useState<FolderItem | null>(null);
   const [nombreEditarColeccion, setNombreEditarColeccion] = useState("");
   const [descripcionEditarColeccion, setDescripcionEditarColeccion] = useState("");
+  const [editandoColeccion, setEditandoColeccion] = useState(false);
+  const [errorNombreEditar, setErrorNombreEditar] = useState<string | null>(null);
+  const [errorDescripcionEditar, setErrorDescripcionEditar] = useState<string | null>(null);
   const [mostrarMenuNuevaConexion, setMostrarMenuNuevaConexion] = useState(false);
   const [mostrarWizardNuevaConexion, setMostrarWizardNuevaConexion] = useState(false);
   const [pasoWizard, setPasoWizard] = useState<1 | 2 | 3>(1);
@@ -2230,21 +2233,26 @@ function App() {
   const guardarEdicionColeccion = async () => {
     if (!coleccionAEditar) return;
 
+    // Limpiar errores previos
+    setErrorNombreEditar(null);
+    setErrorDescripcionEditar(null);
+
     // Validar que el nombre no esté vacío
-    if (!nombreEditarColeccion.trim()) {
+    const nombreTrimmed = nombreEditarColeccion.trim();
+    if (!nombreTrimmed) {
+      setErrorNombreEditar("El nombre es requerido");
       return;
     }
 
     // Validar límites de caracteres
-    const nombreTrimmed = nombreEditarColeccion.trim();
     if (nombreTrimmed.length > 32) {
-      alert("El nombre no puede exceder 32 caracteres");
+      setErrorNombreEditar("El nombre no puede exceder 32 caracteres");
       return;
     }
 
     const descripcionTrimmed = descripcionEditarColeccion.trim();
     if (descripcionTrimmed.length > 100) {
-      alert("La descripción no puede exceder 100 caracteres");
+      setErrorDescripcionEditar("La descripción no puede exceder 100 caracteres");
       return;
     }
 
@@ -2270,51 +2278,57 @@ function App() {
         ?.filter((h) => h.id !== coleccionAEditar.id)
         .map((h) => h.nombre.toLowerCase()) || [];
       if (nombresExistentes.includes(nombreTrimmed.toLowerCase())) {
-        alert("Ya existe una colección con ese nombre en esta ubicación");
+        setErrorNombreEditar("Ya existe una colección con ese nombre en esta ubicación");
         return;
       }
     }
 
-    // Función recursiva para actualizar la colección en la estructura
-    const actualizarEstructura = (items: FolderItem[]): FolderItem[] => {
-      return items.map((item) => {
-        if (item.id === coleccionAEditar.id) {
-          return {
-            ...item,
-            nombre: nombreTrimmed,
-            descripcion: descripcionTrimmed || undefined,
-          };
-        }
-        if (item.hijos) {
-          return {
-            ...item,
-            hijos: actualizarEstructura(item.hijos),
-          };
-        }
-        return item;
-      });
-    };
+    setEditandoColeccion(true);
 
-    const nuevaEstructura = actualizarEstructura(estructuraCarpetas);
-    setEstructuraCarpetas(nuevaEstructura);
-
-    // Guardar estructura actualizada en el archivo de configuración
     try {
-      if (window.electronAPI?.writeConfig) {
-        const resultado = await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
-        if (!resultado.success) {
-          // Error al guardar
-        }
-      }
-    } catch (error) {
-      // Error al guardar estructura después de editar
-    }
+      // Función recursiva para actualizar la colección en la estructura
+      const actualizarEstructura = (items: FolderItem[]): FolderItem[] => {
+        return items.map((item) => {
+          if (item.id === coleccionAEditar.id) {
+            return {
+              ...item,
+              nombre: nombreTrimmed,
+              descripcion: descripcionTrimmed || undefined,
+            };
+          }
+          if (item.hijos) {
+            return {
+              ...item,
+              hijos: actualizarEstructura(item.hijos),
+            };
+          }
+          return item;
+        });
+      };
 
-    // Cerrar modal y limpiar estado
-    setMostrarModalEditarColeccion(false);
-    setColeccionAEditar(null);
-    setNombreEditarColeccion("");
-    setDescripcionEditarColeccion("");
+      const nuevaEstructura = actualizarEstructura(estructuraCarpetas);
+      setEstructuraCarpetas(nuevaEstructura);
+
+      // Guardar estructura actualizada en el archivo de configuración
+      if (window.electronAPI?.writeConfig) {
+        await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
+      }
+
+      // Pequeño delay para mejor UX
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      // Cerrar modal y limpiar estado
+      setMostrarModalEditarColeccion(false);
+      setColeccionAEditar(null);
+      setNombreEditarColeccion("");
+      setDescripcionEditarColeccion("");
+      setErrorNombreEditar(null);
+      setErrorDescripcionEditar(null);
+    } catch (error) {
+      setErrorNombreEditar("Error al guardar la colección. Por favor, intenta nuevamente.");
+    } finally {
+      setEditandoColeccion(false);
+    }
   };
 
   const obtenerRutaCompleta = (): Array<{ nombre: string; id: string }> => {
@@ -5984,19 +5998,52 @@ function App() {
       {
         mostrarWizardNuevoRepositorio && (
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setMostrarWizardNuevoRepositorio(false);
+                setPasoWizardRepositorio(1);
+                setConexionSeleccionada(null);
+                setRepositorioSeleccionado("");
+                setRepositoriosDisponibles([]);
+                setNombreRepositorio("");
+                setDescripcionRepositorio("");
+                setEditandoRepositorio(false);
+                setRepositorioAEditar(null);
+                setBusquedaRepositorio("");
+              }
+            }}
+            tabIndex={-1}
           >
             <Card
-              className="w-full max-w-2xl mx-4 bg-background border-2 max-h-[90vh] overflow-y-auto"
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
               onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarWizardNuevoRepositorio(false);
+                  setPasoWizardRepositorio(1);
+                  setConexionSeleccionada(null);
+                  setRepositorioSeleccionado("");
+                  setRepositoriosDisponibles([]);
+                  setNombreRepositorio("");
+                  setDescripcionRepositorio("");
+                  setEditandoRepositorio(false);
+                  setRepositorioAEditar(null);
+                  setBusquedaRepositorio("");
+                }
+              }}
             >
-              <CardHeader className="p-6 pb-4 border-b">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-2xl mb-1">
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                    <GitBranch className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
                       {editandoRepositorio ? "Editar Repositorio" : "Nuevo Repositorio"}
                     </CardTitle>
-                    <CardDescription className="text-sm">
+                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
                       {editandoRepositorio
                         ? "Modifica los datos del repositorio"
                         : "Agrega un nuevo repositorio a tu colección en pocos pasos"}
@@ -6004,8 +6051,8 @@ function App() {
                   </div>
                   <Button
                     variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
                     onClick={() => {
                       setMostrarWizardNuevoRepositorio(false);
                       setPasoWizardRepositorio(1);
@@ -6024,33 +6071,33 @@ function App() {
                 </div>
 
                 {/* Barra de progreso */}
-                <div className="mt-6 flex items-center justify-between">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${pasoWizardRepositorio >= 1 ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-200 ${pasoWizardRepositorio >= 1 ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
                       }`}>
-                      1
+                      {pasoWizardRepositorio > 1 ? <Check className="w-4 h-4" /> : "1"}
                     </div>
-                    <span className={`text-sm font-medium ${pasoWizardRepositorio >= 1 ? "text-foreground" : "text-muted-foreground"}`}>
+                    <span className={`text-sm font-medium transition-colors ${pasoWizardRepositorio >= 1 ? "text-foreground" : "text-muted-foreground"}`}>
                       Conexión
                     </span>
                   </div>
-                  <div className={`flex-1 h-0.5 mx-2 ${pasoWizardRepositorio >= 2 ? "bg-primary" : "bg-muted"}`} />
+                  <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizardRepositorio >= 2 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
                   <div className="flex items-center gap-2">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${pasoWizardRepositorio >= 2 ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-200 ${pasoWizardRepositorio >= 2 ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
                       }`}>
-                      2
+                      {pasoWizardRepositorio > 2 ? <Check className="w-4 h-4" /> : "2"}
                     </div>
-                    <span className={`text-sm font-medium ${pasoWizardRepositorio >= 2 ? "text-foreground" : "text-muted-foreground"}`}>
+                    <span className={`text-sm font-medium transition-colors ${pasoWizardRepositorio >= 2 ? "text-foreground" : "text-muted-foreground"}`}>
                       Detalles
                     </span>
                   </div>
-                  <div className={`flex-1 h-0.5 mx-2 ${pasoWizardRepositorio >= 3 ? "bg-primary" : "bg-muted"}`} />
+                  <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizardRepositorio >= 3 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
                   <div className="flex items-center gap-2">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${pasoWizardRepositorio >= 3 ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-200 ${pasoWizardRepositorio >= 3 ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
                       }`}>
                       3
                     </div>
-                    <span className={`text-sm font-medium ${pasoWizardRepositorio >= 3 ? "text-foreground" : "text-muted-foreground"}`}>
+                    <span className={`text-sm font-medium transition-colors ${pasoWizardRepositorio >= 3 ? "text-foreground" : "text-muted-foreground"}`}>
                       Confirmación
                     </span>
                   </div>
@@ -6062,18 +6109,27 @@ function App() {
                 {pasoWizardRepositorio === 1 && !editandoRepositorio && (
                   <div className="space-y-6 min-h-[300px]">
                     {/* Seleccionar Conexión */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">
-                        Selecciona una conexión <span className="text-destructive">*</span>
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <span>Selecciona una conexión</span>
+                        <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                          (requerido)
+                        </span>
                       </label>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
                         Elige la conexión Git donde se encuentra el repositorio
                       </p>
                       <div className="relative">
                         <button
                           type="button"
                           onClick={() => setMostrarMenuConexion(!mostrarMenuConexion)}
-                          className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                          className={cn(
+                            "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 text-left flex items-center justify-between",
+                            "bg-slate-50 dark:bg-slate-800/50",
+                            "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                            "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                            "hover:bg-slate-100 dark:hover:bg-slate-800"
+                          )}
                         >
                           <div className="flex items-center gap-2 flex-1 min-w-0">
                             {conexionSeleccionada && (
@@ -6128,11 +6184,14 @@ function App() {
                     </div>
 
                     {/* Seleccionar Repositorio */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">
-                        Selecciona un repositorio <span className="text-destructive">*</span>
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <span>Selecciona un repositorio</span>
+                        <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                          (requerido)
+                        </span>
                       </label>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
                         Elige el repositorio que deseas agregar
                       </p>
                       <div className="relative">
@@ -6153,7 +6212,14 @@ function App() {
                             }
                           }}
                           disabled={!conexionSeleccionada || cargandoRepositorios}
-                          className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className={cn(
+                            "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 text-left flex items-center justify-between",
+                            "bg-slate-50 dark:bg-slate-800/50",
+                            "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                            "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                            "hover:bg-slate-100 dark:hover:bg-slate-800",
+                            "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-50 dark:disabled:hover:bg-slate-800/50"
+                          )}
                         >
                           <span className={`flex items-center gap-2 ${repositorioSeleccionado ? "text-foreground" : "text-muted-foreground"}`}>
                             {cargandoRepositorios ? (
@@ -6290,45 +6356,76 @@ function App() {
                 {pasoWizardRepositorio === 2 && (
                   <div className="space-y-6 min-h-[300px]">
                     {/* Nombre del Repositorio */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">
-                        Nombre del Repositorio <span className="text-destructive">*</span>
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <span>Nombre del Repositorio</span>
+                        <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                          (requerido)
+                        </span>
                       </label>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
                         Ingresa un nombre descriptivo para identificar este repositorio
                       </p>
-                      <input
-                        type="text"
-                        value={nombreRepositorio}
-                        onChange={(e) => setNombreRepositorio(e.target.value)}
-                        placeholder="Ej: Mi proyecto"
-                        maxLength={32}
-                        className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                      />
-                      <p className="text-xs text-muted-foreground text-right">
-                        {nombreRepositorio.length}/32
-                      </p>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={nombreRepositorio}
+                          onChange={(e) => setNombreRepositorio(e.target.value)}
+                          placeholder="Ej: Mi proyecto"
+                          maxLength={32}
+                          className={cn(
+                            "w-full px-4 py-3 pr-16 text-sm rounded-xl border transition-all duration-200",
+                            "bg-slate-50 dark:bg-slate-800/50",
+                            "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                            "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                          )}
+                        />
+                        <span className={cn(
+                          "absolute top-2.5 right-3 text-xs font-medium transition-colors pointer-events-none",
+                          nombreRepositorio.length > 28 
+                            ? "text-amber-600 dark:text-amber-500" 
+                            : "text-slate-500 dark:text-slate-400"
+                        )}>
+                          {nombreRepositorio.length}/32
+                        </span>
+                      </div>
                     </div>
 
                     {/* Descripción */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">
-                        Descripción <span className="text-muted-foreground text-xs font-normal">(opcional)</span>
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <span>Descripción</span>
+                        <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                          (opcional)
+                        </span>
                       </label>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
                         Agrega una descripción para este repositorio
                       </p>
-                      <textarea
-                        value={descripcionRepositorio}
-                        onChange={(e) => setDescripcionRepositorio(e.target.value)}
-                        placeholder="Descripción del repositorio..."
-                        rows={4}
-                        maxLength={100}
-                        className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 resize-none"
-                      />
-                      <p className="text-xs text-muted-foreground text-right">
-                        {descripcionRepositorio.length}/100
-                      </p>
+                      <div className="relative">
+                        <textarea
+                          value={descripcionRepositorio}
+                          onChange={(e) => setDescripcionRepositorio(e.target.value)}
+                          placeholder="Descripción del repositorio..."
+                          rows={4}
+                          maxLength={100}
+                          className={cn(
+                            "w-full px-4 py-3 pb-8 text-sm rounded-xl border transition-all duration-200",
+                            "bg-slate-50 dark:bg-slate-800/50",
+                            "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                            "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                            "resize-none"
+                          )}
+                        />
+                        <span className={cn(
+                          "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
+                          descripcionRepositorio.length > 85 
+                            ? "text-amber-600 dark:text-amber-500" 
+                            : "text-slate-500 dark:text-slate-400"
+                        )}>
+                          {descripcionRepositorio.length}/100
+                        </span>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -6337,44 +6434,44 @@ function App() {
                 {pasoWizardRepositorio === 3 && (
                   <div className="space-y-6 min-h-[300px]">
                     <div>
-                      <label className="text-sm font-semibold mb-2 block">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
                         {editandoRepositorio ? "Confirma los cambios del repositorio" : "Confirma los datos del repositorio"}
                       </label>
-                      <p className="text-sm text-muted-foreground mb-4">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
                         {editandoRepositorio ? "Revisa los cambios antes de guardar" : "Revisa la información antes de guardar"}
                       </p>
-                      <Card className="bg-secondary/40 border-2">
-                        <CardContent className="p-3 space-y-1.5">
-                          <div className="flex items-center justify-between py-1 border-b border-border/50">
-                            <span className="text-xs font-medium text-muted-foreground">Conexión:</span>
-                            <span className="text-xs font-semibold">{conexionSeleccionada?.nombre || "-"}</span>
+                      <Card className="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+                        <CardContent className="p-4 space-y-2">
+                          <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Conexión:</span>
+                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{conexionSeleccionada?.nombre || "-"}</span>
                           </div>
                           {conexionSeleccionada && (
                             <>
-                              <div className="flex items-center justify-between py-1 border-b border-border/50">
-                                <span className="text-xs font-medium text-muted-foreground">Proveedor:</span>
-                                <span className="text-xs font-semibold">{conexionSeleccionada.tipo || "-"}</span>
+                              <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
+                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Proveedor:</span>
+                                <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{conexionSeleccionada.tipo || "-"}</span>
                               </div>
-                              <div className="flex items-center justify-between py-1 border-b border-border/50">
-                                <span className="text-xs font-medium text-muted-foreground">URL:</span>
-                                <span className="text-xs font-semibold break-all text-right max-w-[60%]">{conexionSeleccionada.host || "-"}</span>
+                              <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
+                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">URL:</span>
+                                <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 break-all text-right max-w-[60%]">{conexionSeleccionada.host || "-"}</span>
                               </div>
                             </>
                           )}
-                          <div className="flex items-center justify-between py-1 border-b border-border/50">
-                            <span className="text-xs font-medium text-muted-foreground">Repositorio:</span>
-                            <span className="text-xs font-semibold break-all text-right max-w-[60%]">
+                          <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Repositorio:</span>
+                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 break-all text-right max-w-[60%]">
                               {repositoriosDisponibles.find(r => r.id === repositorioSeleccionado)?.full_name || repositorioAEditar?.nombre || "-"}
                             </span>
                           </div>
-                          <div className="flex items-center justify-between py-1 border-b border-border/50">
-                            <span className="text-xs font-medium text-muted-foreground">Nombre:</span>
-                            <span className="text-xs font-semibold">{nombreRepositorio || "-"}</span>
+                          <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Nombre:</span>
+                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{nombreRepositorio || "-"}</span>
                           </div>
                           {descripcionRepositorio && (
-                            <div className="flex items-start justify-between py-1">
-                              <span className="text-xs font-medium text-muted-foreground">Descripción:</span>
-                              <span className="text-xs font-semibold text-right max-w-[60%] break-words">
+                            <div className="flex items-start justify-between py-2">
+                              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Descripción:</span>
+                              <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 text-right max-w-[60%] break-words">
                                 {descripcionRepositorio}
                               </span>
                             </div>
@@ -6386,10 +6483,11 @@ function App() {
                 )}
 
                 {/* Botones de navegación */}
-                <div className="flex items-center justify-between mt-8 pt-6 border-t">
+                <div className="flex items-center justify-between mt-8 pt-6 border-t border-slate-200/60 dark:border-slate-700/60">
                   <Button
                     variant="outline"
-                    size="sm"
+                    size="default"
+                    className="min-w-[100px]"
                     onClick={() => {
                       if (pasoWizardRepositorio === 1 || (pasoWizardRepositorio === 2 && editandoRepositorio)) {
                         setMostrarWizardNuevoRepositorio(false);
@@ -6411,15 +6509,18 @@ function App() {
                   </Button>
                   {pasoWizardRepositorio === 3 ? (
                     <Button
-                      size="sm"
+                      size="default"
+                      className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 flex items-center gap-2"
                       onClick={guardarRepositorio}
                       disabled={!nombreRepositorio.trim()}
                     >
+                      <Check className="w-4 h-4" />
                       Guardar
                     </Button>
                   ) : (
                     <Button
-                      size="sm"
+                      size="default"
+                      className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 flex items-center gap-2"
                       onClick={() => {
                         if (pasoWizardRepositorio === 1) {
                           if (!conexionSeleccionada) {
@@ -6448,6 +6549,7 @@ function App() {
                       }
                     >
                       Siguiente
+                      <ChevronRight className="w-4 h-4" />
                     </Button>
                   )}
                 </div>
@@ -6722,10 +6824,7 @@ function App() {
                       Creando...
                     </span>
                   ) : (
-                    <span className="flex items-center gap-2">
-                      <Check className="w-4 h-4" />
-                      Crear Colección
-                    </span>
+                    "Crear"
                   )}
                 </Button>
               </div>
@@ -6737,98 +6836,247 @@ function App() {
       {/* Modal para editar colección */}
       {mostrarModalEditarColeccion && coleccionAEditar && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
           onClick={() => {
-            setMostrarModalEditarColeccion(false);
-            setColeccionAEditar(null);
-            setNombreEditarColeccion("");
-            setDescripcionEditarColeccion("");
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
+            if (!editandoColeccion) {
               setMostrarModalEditarColeccion(false);
               setColeccionAEditar(null);
               setNombreEditarColeccion("");
               setDescripcionEditarColeccion("");
+              setErrorNombreEditar(null);
+              setErrorDescripcionEditar(null);
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape' && !editandoColeccion) {
+              setMostrarModalEditarColeccion(false);
+              setColeccionAEditar(null);
+              setNombreEditarColeccion("");
+              setDescripcionEditarColeccion("");
+              setErrorNombreEditar(null);
+              setErrorDescripcionEditar(null);
             }
           }}
           tabIndex={-1}
         >
           <Card
-            className="w-full max-w-lg mx-4 bg-background border border-slate-200 dark:border-slate-700 shadow-xl"
+            className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => {
-              if (e.key === 'Escape') {
+              if (e.key === 'Escape' && !editandoColeccion) {
                 e.stopPropagation();
                 setMostrarModalEditarColeccion(false);
                 setColeccionAEditar(null);
                 setNombreEditarColeccion("");
                 setDescripcionEditarColeccion("");
+                setErrorNombreEditar(null);
+                setErrorDescripcionEditar(null);
               }
             }}
           >
-            <CardHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
-              <CardTitle className="text-xl font-semibold">Editar Colección</CardTitle>
-              <CardDescription className="text-sm mt-1">
-                Modifica los datos de la colección
-              </CardDescription>
+            <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                  <Pencil className="w-6 h-6 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    Editar Colección
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    Modifica los datos de la colección
+                  </CardDescription>
+                </div>
+                {!editandoColeccion && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                    onClick={() => {
+                      setMostrarModalEditarColeccion(false);
+                      setColeccionAEditar(null);
+                      setNombreEditarColeccion("");
+                      setDescripcionEditarColeccion("");
+                      setErrorNombreEditar(null);
+                      setErrorDescripcionEditar(null);
+                    }}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  Nombre ({nombreEditarColeccion.length}/32)
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <span>Nombre de la colección</span>
+                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                    (requerido)
+                  </span>
                 </label>
-                <input
-                  type="text"
-                  value={nombreEditarColeccion}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value.length <= 32) {
-                      setNombreEditarColeccion(value);
-                    }
-                  }}
-                  className="w-full px-4 py-2.5 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
-                  placeholder="Nombre de la colección"
-                  autoFocus
-                  maxLength={32}
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={nombreEditarColeccion}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 32) {
+                        setNombreEditarColeccion(value);
+                        setErrorNombreEditar(null);
+                      }
+                    }}
+                    onBlur={() => {
+                      const nombreTrimmed = nombreEditarColeccion.trim();
+                      if (!nombreTrimmed) {
+                        setErrorNombreEditar("El nombre es requerido");
+                      } else if (nombreTrimmed.length > 32) {
+                        setErrorNombreEditar("El nombre no puede exceder 32 caracteres");
+                      } else {
+                        // Validar que el nombre no se repita
+                        const encontrarPadre = (items: FolderItem[], targetId: string, parent: FolderItem | null = null): FolderItem | null => {
+                          for (const item of items) {
+                            if (item.id === targetId) {
+                              return parent;
+                            }
+                            if (item.hijos) {
+                              const found = encontrarPadre(item.hijos, targetId, item);
+                              if (found !== null) return found;
+                            }
+                          }
+                          return null;
+                        };
+                        const carpetaPadre = encontrarPadre(estructuraCarpetas, coleccionAEditar.id);
+                        if (carpetaPadre) {
+                          const nombresExistentes = carpetaPadre.hijos
+                            ?.filter((h) => h.id !== coleccionAEditar.id)
+                            .map((h) => h.nombre.toLowerCase()) || [];
+                          if (nombresExistentes.includes(nombreTrimmed.toLowerCase())) {
+                            setErrorNombreEditar("Ya existe una colección con ese nombre");
+                          } else {
+                            setErrorNombreEditar(null);
+                          }
+                        }
+                      }
+                    }}
+                    className={cn(
+                      "w-full px-4 py-3 pr-16 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      errorNombreEditar
+                        ? "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
+                        : "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                      editandoColeccion && "opacity-60 cursor-not-allowed"
+                    )}
+                    placeholder="Nombre de la colección"
+                    autoFocus
+                    maxLength={32}
+                    disabled={editandoColeccion}
+                  />
+                  <span className={cn(
+                    "absolute top-2.5 right-3 text-xs font-medium transition-colors pointer-events-none",
+                    nombreEditarColeccion.length > 28 
+                      ? "text-amber-600 dark:text-amber-500" 
+                      : "text-slate-500 dark:text-slate-400"
+                  )}>
+                    {nombreEditarColeccion.length}/32
+                  </span>
+                  {errorNombreEditar && (
+                    <div className="flex items-center gap-1.5 mt-2 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>{errorNombreEditar}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  Descripción ({descripcionEditarColeccion.length}/100)
+
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <span>Descripción</span>
+                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                    (opcional)
+                  </span>
                 </label>
-                <textarea
-                  value={descripcionEditarColeccion}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value.length <= 100) {
-                      setDescripcionEditarColeccion(value);
-                    }
-                  }}
-                  className="w-full px-4 py-2.5 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors min-h-[100px] resize-none"
-                  placeholder="Descripción opcional de la colección"
-                  maxLength={100}
-                />
+                <div className="relative">
+                  <textarea
+                    value={descripcionEditarColeccion}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 100) {
+                        setDescripcionEditarColeccion(value);
+                        setErrorDescripcionEditar(null);
+                      }
+                    }}
+                    onBlur={() => {
+                      if (descripcionEditarColeccion.trim().length > 100) {
+                        setErrorDescripcionEditar("La descripción no puede exceder 100 caracteres");
+                      } else {
+                        setErrorDescripcionEditar(null);
+                      }
+                    }}
+                    className={cn(
+                      "w-full px-4 py-3 pb-8 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      errorDescripcionEditar
+                        ? "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
+                        : "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                      "min-h-[110px] resize-none",
+                      editandoColeccion && "opacity-60 cursor-not-allowed"
+                    )}
+                    placeholder="Descripción opcional de la colección"
+                    maxLength={100}
+                    disabled={editandoColeccion}
+                  />
+                  <span className={cn(
+                    "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
+                    descripcionEditarColeccion.length > 85 
+                      ? "text-amber-600 dark:text-amber-500" 
+                      : "text-slate-500 dark:text-slate-400"
+                  )}>
+                    {descripcionEditarColeccion.length}/100
+                  </span>
+                  {errorDescripcionEditar && (
+                    <div className="flex items-center gap-1.5 mt-2 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>{errorDescripcionEditar}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="flex gap-3 pt-4 justify-end">
+
+              <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                 <Button 
                   variant="outline" 
-                  size="sm" 
+                  size="default"
+                  className="min-w-[100px]"
                   onClick={() => { 
-                    setMostrarModalEditarColeccion(false); 
-                    setColeccionAEditar(null); 
-                    setNombreEditarColeccion(""); 
-                    setDescripcionEditarColeccion(""); 
+                    if (!editandoColeccion) {
+                      setMostrarModalEditarColeccion(false); 
+                      setColeccionAEditar(null); 
+                      setNombreEditarColeccion(""); 
+                      setDescripcionEditarColeccion("");
+                      setErrorNombreEditar(null);
+                      setErrorDescripcionEditar(null);
+                    }
                   }}
+                  disabled={editandoColeccion}
                 >
                   Cancelar
                 </Button>
                 <Button 
-                  size="sm" 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                  size="default"
+                  className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={guardarEdicionColeccion}
+                  disabled={editandoColeccion || !nombreEditarColeccion.trim() || !!errorNombreEditar}
                 >
-                  Guardar
+                  {editandoColeccion ? (
+                    <span className="flex items-center gap-2">
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      Guardando...
+                    </span>
+                  ) : (
+                    "Guardar"
+                  )}
                 </Button>
               </div>
             </CardContent>
