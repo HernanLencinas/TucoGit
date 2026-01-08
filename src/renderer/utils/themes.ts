@@ -1,6 +1,44 @@
+/**
+ * @fileoverview Definiciones de temas y funciones para aplicar temas en la aplicación.
+ * 
+ * Este módulo contiene todas las definiciones de temas disponibles,
+ * sus colores para modo claro y oscuro, y la función para aplicar
+ * un tema específico al documento.
+ */
+
+/**
+ * Nombres de temas disponibles en la aplicación.
+ * 
+ * @typedef {("default"|"ocean"|"forest"|"sunset"|"midnight"|"lavender"|"coral"|"emerald"|"amber"|"rose"|"slate"|"violet"|"mint"|"sakura"|"storm")} ThemeName
+ */
 export type ThemeName = "default" | "ocean" | "forest" | "sunset" | "midnight" | "lavender" | "coral" | "emerald" | "amber" | "rose" | "slate" | "violet" | "mint" | "sakura" | "storm";
+
+/**
+ * Modos de tema disponibles.
+ * 
+ * @typedef {("light"|"dark")} ThemeMode
+ */
 export type ThemeMode = "light" | "dark";
 
+/**
+ * Definición de un tema de la aplicación.
+ * 
+ * @interface Theme
+ * @property {ThemeName} name - Identificador único del tema
+ * @property {string} displayName - Nombre para mostrar en la interfaz
+ * @property {string} description - Descripción del tema
+ * @property {Object} colors - Colores del tema para ambos modos
+ * @property {Object} colors.light - Colores para modo claro
+ * @property {string} colors.light.primary - Color primario en formato HSL
+ * @property {string} colors.light.primaryForeground - Color de texto sobre primario
+ * @property {string} colors.light.secondary - Color secundario
+ * @property {string} colors.light.accent - Color de acento
+ * @property {Object} colors.dark - Colores para modo oscuro
+ * @property {string} colors.dark.primary - Color primario en formato HSL
+ * @property {string} colors.dark.primaryForeground - Color de texto sobre primario
+ * @property {string} colors.dark.secondary - Color secundario
+ * @property {string} colors.dark.accent - Color de acento
+ */
 export interface Theme {
   name: ThemeName;
   displayName: string;
@@ -309,6 +347,24 @@ export const themes: Theme[] = [
   },
 ];
 
+/**
+ * Aplica un tema específico al documento HTML.
+ * 
+ * @description
+ * Busca el tema por su nombre y aplica sus colores al documento,
+ * estableciendo las variables CSS personalizadas y la clase 'dark'
+ * si el modo es oscuro. Si el tema no se encuentra, no hace nada.
+ * 
+ * @param {ThemeName} themeName - Nombre del tema a aplicar
+ * @param {ThemeMode} mode - Modo del tema ('light' o 'dark')
+ * @returns {void}
+ * 
+ * @example
+ * ```tsx
+ * applyTheme('ocean', 'dark');
+ * // Aplica el tema océano en modo oscuro
+ * ```
+ */
 export const applyTheme = (themeName: ThemeName, mode: ThemeMode) => {
   const theme = themes.find((t) => t.name === themeName);
   if (!theme) return;

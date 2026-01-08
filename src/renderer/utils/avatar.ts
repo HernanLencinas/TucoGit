@@ -1,8 +1,23 @@
 /**
- * Utility to generate avatar URLs using Gravatar
+ * @fileoverview Utilidades para generar URLs de avatares usando Gravatar.
+ * 
+ * Este módulo proporciona funciones para generar URLs de avatares basadas
+ * en direcciones de correo electrónico utilizando el servicio Gravatar.
+ * Incluye una implementación completa de MD5 para generar los hashes necesarios.
  */
 
-// --- MD5 Implementation (Corrected) ---
+/**
+ * Implementación de MD5 para generar hashes de correos electrónicos.
+ * 
+ * @description
+ * Función interna que calcula el hash MD5 de una cadena de texto.
+ * Utilizada para generar identificadores únicos de correos electrónicos
+ * para el servicio Gravatar.
+ * 
+ * @param {string} string - Cadena de texto a hashear
+ * @returns {string} Hash MD5 en formato hexadecimal en minúsculas
+ * @private
+ */
 const md5 = (string: string): string => {
   function md5cycle(x: number[], k: number[]) {
     let a = x[0], b = x[1], c = x[2], d = x[3];
@@ -153,6 +168,15 @@ const md5 = (string: string): string => {
 
 // --- Avatar Logic ---
 
+/**
+ * Opciones para generar la URL del avatar.
+ * 
+ * @interface AvatarOptions
+ * @property {string} email - Dirección de correo electrónico para generar el avatar
+ * @property {string} [provider] - Proveedor (mantenido por compatibilidad, no se usa)
+ * @property {string} [host] - Host (mantenido por compatibilidad, no se usa)
+ * @property {number} [size=80] - Tamaño del avatar en píxeles (por defecto 80)
+ */
 export interface AvatarOptions {
   email: string;
   provider?: string; // Kept for backward compatibility, not used
@@ -161,7 +185,26 @@ export interface AvatarOptions {
 }
 
 /**
- * Gets the avatar URL from Gravatar based on email address.
+ * Obtiene la URL del avatar desde Gravatar basado en la dirección de correo electrónico.
+ * 
+ * @description
+ * Genera una URL de avatar usando el servicio Gravatar. El correo electrónico
+ * se normaliza (trim y lowercase) antes de generar el hash MD5. Si el correo
+ * está vacío, retorna una cadena vacía.
+ * 
+ * @param {AvatarOptions} options - Opciones para generar el avatar
+ * @param {string} options.email - Dirección de correo electrónico
+ * @param {number} [options.size=80] - Tamaño del avatar en píxeles
+ * @returns {string} URL del avatar de Gravatar o cadena vacía si el email está vacío
+ * 
+ * @example
+ * ```tsx
+ * const avatarUrl = getAvatarUrl({ 
+ *   email: 'user@example.com', 
+ *   size: 120 
+ * });
+ * // Retorna: 'https://www.gravatar.com/avatar/[hash]?s=120&d=identicon'
+ * ```
  */
 export const getAvatarUrl = ({ email, size = 80 }: AvatarOptions): string => {
   if (!email) {

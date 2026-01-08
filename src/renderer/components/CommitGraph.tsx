@@ -1,7 +1,27 @@
+/**
+ * @fileoverview Componente para visualizar el grafo de commits de Git.
+ * 
+ * Este módulo proporciona un componente React que renderiza un grafo
+ * visual de commits con sus relaciones padre-hijo, colores por rama
+ * y navegación interactiva.
+ */
 
 import React, { useMemo } from 'react';
 import { formatCommitDate } from '@/renderer/utils/date';
 
+/**
+ * Interfaz que representa un commit.
+ * 
+ * @interface Commit
+ * @property {string} hash - Hash único del commit
+ * @property {string[]} parents - Array de hashes de commits padres
+ * @property {Object} author - Información del autor
+ * @property {string} author.name - Nombre del autor
+ * @property {string} author.email - Email del autor
+ * @property {string} date - Fecha del commit en formato ISO
+ * @property {string} message - Mensaje del commit
+ * @property {string} refs - Referencias (branches, tags) asociadas
+ */
 interface Commit {
     hash: string;
     parents: string[];
@@ -14,12 +34,25 @@ interface Commit {
     refs: string;
 }
 
+/**
+ * Propiedades del componente CommitGraph.
+ * 
+ * @interface CommitGraphProps
+ * @property {Commit[]} commits - Array de commits a visualizar
+ * @property {Function} [onCommitClick] - Callback opcional cuando se hace clic en un commit
+ * @property {string} [selectedHash] - Hash del commit seleccionado
+ */
 interface CommitGraphProps {
     commits: Commit[];
     onCommitClick?: (commit: Commit) => void;
     selectedHash?: string;
 }
 
+/**
+ * Colores disponibles para las ramas del grafo.
+ * 
+ * @const {string[]} COLORS
+ */
 const COLORS = [
     '#00d8ff', // cyan
     '#ff00ff', // magenta
@@ -29,7 +62,22 @@ const COLORS = [
     '#7b1fa2', // purple
 ];
 
-// Helper to calculate graph layout
+/**
+ * Calcula el layout del grafo de commits.
+ * 
+ * @description
+ * Asigna posiciones (x, y) y colores a cada commit basándose en
+ * sus relaciones padre-hijo. Los commits se organizan en canales
+ * (columnas) y se generan las conexiones entre ellos.
+ * 
+ * @param {Commit[]} commits - Array de commits a procesar
+ * @returns {Object} Objeto con el layout calculado
+ * @returns {Array} returns.nodes - Nodos procesados con coordenadas y colores
+ * @returns {Array} returns.edges - Conexiones entre commits
+ * @returns {number} returns.width - Ancho total del grafo en canales
+ * 
+ * @private
+ */
 const calculateGraph = (commits: Commit[]) => {
     // Current "active" parent hashes for each channel/column
     // null means the channel is empty/free
@@ -140,6 +188,31 @@ const calculateGraph = (commits: Commit[]) => {
 };
 
 
+/**
+ * Componente para visualizar el grafo de commits de Git.
+ * 
+ * @description
+ * Renderiza un grafo visual interactivo de commits con:
+ * - Visualización de ramas con colores distintivos
+ * - Conexiones curvas entre commits padre e hijo
+ * - Lista de commits con información detallada
+ * - Soporte para selección y navegación
+ * 
+ * @param {CommitGraphProps} props - Propiedades del componente
+ * @param {Commit[]} props.commits - Array de commits a visualizar
+ * @param {Function} [props.onCommitClick] - Callback cuando se hace clic en un commit
+ * @param {string} [props.selectedHash] - Hash del commit seleccionado
+ * @returns {JSX.Element} Componente del grafo de commits
+ * 
+ * @example
+ * ```tsx
+ * <CommitGraph
+ *   commits={commits}
+ *   onCommitClick={(commit) => console.log(commit)}
+ *   selectedHash="abc123"
+ * />
+ * ```
+ */
 export const CommitGraph: React.FC<CommitGraphProps> = ({ commits, onCommitClick, selectedHash }) => {
     const { nodes, edges, width } = useMemo(() => calculateGraph(commits), [commits]);
 

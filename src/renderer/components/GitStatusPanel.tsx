@@ -1,3 +1,11 @@
+/**
+ * @fileoverview Panel de estado de Git para gestionar cambios, staging y commits.
+ * 
+ * Este módulo proporciona un componente completo para visualizar y gestionar
+ * el estado de Git, incluyendo archivos staged/unstaged, staging de archivos
+ * y realización de commits con opciones de push y sync.
+ */
+
 import React, { useState, useEffect } from 'react';
 import {
     Plus,
@@ -20,16 +28,54 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+/**
+ * Interfaz que representa un archivo en el estado de Git.
+ * 
+ * @interface GitFile
+ * @property {string} path - Ruta del archivo
+ * @property {string} status - Estado del archivo (M, A, D, ?, etc.)
+ */
 interface GitFile {
     path: string;
     status: string;
 }
 
+/**
+ * Propiedades del componente GitStatusPanel.
+ * 
+ * @interface GitStatusPanelProps
+ * @property {string} repoPath - Ruta del repositorio Git
+ * @property {Function} onRefreshGraph - Callback para refrescar el grafo de commits
+ */
 interface GitStatusPanelProps {
     repoPath: string;
     onRefreshGraph: () => void;
 }
 
+/**
+ * Panel de estado de Git.
+ * 
+ * @description
+ * Componente que muestra y gestiona el estado de Git de un repositorio:
+ * - Archivos unstaged y staged
+ * - Operaciones de staging/unstaging
+ * - Realización de commits con opciones configurables (commit, commit+push, commit+sync)
+ * - Monitoreo automático de cambios en el repositorio
+ * - Visualización de iconos según tipo de archivo
+ * 
+ * @param {GitStatusPanelProps} props - Propiedades del componente
+ * @param {string} props.repoPath - Ruta del repositorio Git
+ * @param {Function} props.onRefreshGraph - Función para refrescar el grafo de commits
+ * @returns {JSX.Element} Componente del panel de estado de Git
+ * 
+ * @example
+ * ```tsx
+ * <GitStatusPanel
+ *   repoPath="/path/to/repo"
+ *   onRefreshGraph={() => refreshCommits()}
+ * />
+ * ```
+ */
 export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefreshGraph }) => {
     const [stagedFiles, setStagedFiles] = useState<GitFile[]>([]);
     const [unstagedFiles, setUnstagedFiles] = useState<GitFile[]>([]);
@@ -39,6 +85,16 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
     const [currentBranch, setCurrentBranch] = useState<string>('');
     const [commitButtonBehavior, setCommitButtonBehavior] = useState<"commit" | "commit-push" | "commit-sync">("commit");
 
+    /**
+     * Carga el estado actual de Git del repositorio.
+     * 
+     * @description
+     * Obtiene información sobre archivos staged, unstaged y la rama actual.
+     * Actualiza el estado del componente con la información obtenida.
+     * 
+     * @returns {Promise<void>} Promesa que se resuelve cuando se completa la carga
+     * @private
+     */
     const loadStatus = async () => {
         if (!repoPath) return;
         setLoading(true);
@@ -132,6 +188,12 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [repoPath]);
 
+    /**
+     * Agrega un archivo o todos los archivos al staging area.
+     * 
+     * @param {string} file - Ruta del archivo a agregar o '*' para todos
+     * @returns {Promise<void>} Promesa que se resuelve cuando se completa la operación
+     */
     const handleStage = async (file: string) => {
         try {
             const result = await (window as any).electronAPI.gitStage(repoPath, file);
@@ -141,6 +203,12 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         }
     };
 
+    /**
+     * Quita un archivo o todos los archivos del staging area.
+     * 
+     * @param {string} file - Ruta del archivo a quitar o '*' para todos
+     * @returns {Promise<void>} Promesa que se resuelve cuando se completa la operación
+     */
     const handleUnstage = async (file: string) => {
         try {
             const result = await (window as any).electronAPI.gitUnstage(repoPath, file);
@@ -150,6 +218,16 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         }
     };
 
+    /**
+     * Realiza un commit con el mensaje especificado.
+     * 
+     * @description
+     * Ejecuta un commit y opcionalmente push o sync según la configuración
+     * del botón de commit. Maneja errores y actualiza el estado después
+     * de operaciones exitosas.
+     * 
+     * @returns {Promise<void>} Promesa que se resuelve cuando se completa el commit
+     */
     const handleCommit = async () => {
         if (!commitMessage.trim()) return;
         setLoading(true);
@@ -217,6 +295,13 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         }
     };
 
+    /**
+     * Obtiene el color de texto según el estado del archivo.
+     * 
+     * @param {string} status - Estado del archivo (M, A, D, ?, etc.)
+     * @returns {string} Clase CSS para el color de texto
+     * @private
+     */
     const getStatusColor = (status: string) => {
         switch (status.toUpperCase()) {
             case 'M': return 'text-amber-700 dark:text-amber-400';
@@ -227,6 +312,13 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         }
     };
 
+    /**
+     * Obtiene el color de fondo según el estado del archivo.
+     * 
+     * @param {string} status - Estado del archivo (M, A, D, ?, etc.)
+     * @returns {string} Clase CSS para el color de fondo
+     * @private
+     */
     const getStatusBgColor = (status: string) => {
         switch (status.toUpperCase()) {
             case 'M': return 'bg-amber-100 dark:bg-amber-900/30';
@@ -237,6 +329,17 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         }
     };
 
+    /**
+     * Obtiene el icono apropiado según el tipo de archivo.
+     * 
+     * @description
+     * Determina el icono a mostrar basándose en la extensión del archivo
+     * o su nombre. Soporta múltiples tipos: código, configuración, datos, imágenes, etc.
+     * 
+     * @param {string} filePath - Ruta del archivo
+     * @returns {React.ComponentType} Componente de icono de Lucide React
+     * @private
+     */
     const getFileIcon = (filePath: string) => {
         // Check if it's a folder (path ends with / or has no extension and no filename)
         const isFolder = filePath.endsWith('/') || (!filePath.includes('.') && !filePath.split('/').pop());
@@ -282,6 +385,14 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         return File;
     };
 
+    /**
+     * Renderiza una fila de archivo en la lista.
+     * 
+     * @param {GitFile} file - Archivo a renderizar
+     * @param {'staged'|'unstaged'} type - Tipo de lista (staged o unstaged)
+     * @returns {JSX.Element} Elemento JSX de la fila del archivo
+     * @private
+     */
     const renderFileRow = (file: GitFile, type: 'staged' | 'unstaged') => {
         const isFolder = file.path.endsWith('/') || (!file.path.includes('.') && !file.path.split('/').pop());
         const pathParts = file.path.split('/').filter(Boolean);
