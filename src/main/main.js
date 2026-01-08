@@ -362,6 +362,7 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
       gitUserName: configData.configuracion?.gitUserName || "",
       gitUserEmail: configData.configuracion?.gitUserEmail || "",
       commitButtonBehavior: configData.configuracion?.commitButtonBehavior || "commit",
+      gitIdentities: configData.configuracion?.gitIdentities || [],
       repositorios: configData.repositorios || []
     };
   } catch (error) {
@@ -498,6 +499,13 @@ ipcMain.handle('write-config', async (event, updates) => {
 
     if (updates.conexiones !== undefined) {
       configData.conexiones = updates.conexiones;
+    }
+
+    if (updates.gitIdentities !== undefined) {
+      if (!configData.configuracion) {
+        configData.configuracion = {};
+      }
+      configData.configuracion.gitIdentities = updates.gitIdentities;
     }
 
     // Actualizar fecha de ?ltima actualizaci?n

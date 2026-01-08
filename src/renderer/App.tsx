@@ -124,6 +124,12 @@ function App() {
     nombre: string;
     email: string;
   };
+  const IDENTIDAD_DEFAULT_ID = "default-tucogit";
+  const IDENTIDAD_DEFAULT: GitIdentity = {
+    id: IDENTIDAD_DEFAULT_ID,
+    nombre: "TucoGit",
+    email: "git@tuco.com"
+  };
   const [gitIdentities, setGitIdentities] = useState<GitIdentity[]>([]);
   const [mostrarModalNuevaIdentidad, setMostrarModalNuevaIdentidad] = useState(false);
   const [mostrarModalEditarIdentidad, setMostrarModalEditarIdentidad] = useState(false);
@@ -490,7 +496,24 @@ function App() {
 
               // Cargar identidades de Git
               if (resultado.gitIdentities && Array.isArray(resultado.gitIdentities)) {
-                setGitIdentities(resultado.gitIdentities);
+                // Asegurar que la identidad por defecto existe y esté primero
+                const identidades = [...resultado.gitIdentities];
+                const defaultIndex = identidades.findIndex(id => id.id === IDENTIDAD_DEFAULT_ID);
+                
+                if (defaultIndex === -1) {
+                  // Si no existe, agregarla al inicio
+                  identidades.unshift(IDENTIDAD_DEFAULT);
+                } else {
+                  // Si existe, moverla al inicio
+                  const defaultIdentity = identidades[defaultIndex];
+                  identidades.splice(defaultIndex, 1);
+                  identidades.unshift(defaultIdentity);
+                }
+                
+                setGitIdentities(identidades);
+              } else {
+                // Si no hay identidades guardadas, crear solo la por defecto
+                setGitIdentities([IDENTIDAD_DEFAULT]);
               }
 
               // Cargar configuración de usuario de Git
@@ -4189,17 +4212,19 @@ function App() {
                                   >
                                     <Pencil className="h-3.5 w-3.5" />
                                   </Button>
-                                  <Button
-                                    onClick={() => {
-                                      setIdentidadAEliminar(identidad);
-                                      setMostrarModalEliminarIdentidad(true);
-                                    }}
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-7 px-2 text-red-600 hover:text-white hover:bg-red-600"
-                                  >
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                  </Button>
+                                  {identidad.id !== IDENTIDAD_DEFAULT_ID && (
+                                    <Button
+                                      onClick={() => {
+                                        setIdentidadAEliminar(identidad);
+                                        setMostrarModalEliminarIdentidad(true);
+                                      }}
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-7 px-2 text-red-600 hover:text-white hover:bg-red-600"
+                                    >
+                                      <Trash2 className="h-3.5 w-3.5" />
+                                    </Button>
+                                  )}
                                 </div>
                               </td>
                             </tr>
@@ -5252,7 +5277,7 @@ function App() {
       {
         mostrarWizardNuevaConexion && (
           <div
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
           >
             <Card
               className="w-full max-w-2xl mx-4 bg-background border-2 max-h-[90vh] overflow-y-auto"
@@ -5679,7 +5704,7 @@ function App() {
       {
         mostrarWizardNuevoRepositorio && (
           <div
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
           >
             <Card
               className="w-full max-w-2xl mx-4 bg-background border-2 max-h-[90vh] overflow-y-auto"
@@ -6678,10 +6703,26 @@ function App() {
             setNombreNuevaIdentidad("");
             setEmailNuevaIdentidad("");
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setMostrarModalNuevaIdentidad(false);
+              setNombreNuevaIdentidad("");
+              setEmailNuevaIdentidad("");
+            }
+          }}
+          tabIndex={-1}
         >
           <Card
             className="w-full max-w-md bg-background border-2"
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                e.stopPropagation();
+                setMostrarModalNuevaIdentidad(false);
+                setNombreNuevaIdentidad("");
+                setEmailNuevaIdentidad("");
+              }
+            }}
           >
             <CardHeader>
               <CardTitle className="text-lg">Nueva Identidad</CardTitle>
@@ -6727,6 +6768,7 @@ function App() {
                 <Button
                   size="sm"
                   className="flex-1"
+                  disabled={!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())}
                   onClick={async () => {
                     if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
                       showToast('Por favor completa todos los campos', 'error');
@@ -6739,7 +6781,10 @@ function App() {
                       email: emailNuevaIdentidad.trim()
                     };
 
-                    const nuevasIdentidades = [...gitIdentities, nuevaIdentidad];
+                    // Asegurar que la identidad por defecto siempre esté primero
+                    const otrasIdentidades = gitIdentities.filter(id => id.id !== IDENTIDAD_DEFAULT_ID);
+                    const identidadDefault = gitIdentities.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
+                    const nuevasIdentidades = [identidadDefault, ...otrasIdentidades, nuevaIdentidad];
                     setGitIdentities(nuevasIdentidades);
 
                     if (window.electronAPI?.writeConfig) {
@@ -6852,11 +6897,16 @@ function App() {
                         ? { ...identidad, nombre: nombreNuevaIdentidad.trim(), email: emailNuevaIdentidad.trim() }
                         : identidad
                     );
-                    setGitIdentities(identidadesActualizadas);
+                    
+                    // Asegurar que la identidad por defecto siempre esté primero
+                    const identidadDefault = identidadesActualizadas.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
+                    const otrasIdentidades = identidadesActualizadas.filter(id => id.id !== IDENTIDAD_DEFAULT_ID);
+                    const identidadesOrdenadas = [identidadDefault, ...otrasIdentidades];
+                    setGitIdentities(identidadesOrdenadas);
 
                     if (window.electronAPI?.writeConfig) {
                       try {
-                        await window.electronAPI.writeConfig({ gitIdentities: identidadesActualizadas });
+                        await window.electronAPI.writeConfig({ gitIdentities: identidadesOrdenadas });
                         showToast('Identidad actualizada exitosamente', 'success');
                       } catch (error) {
                         showToast('Error al actualizar identidad', 'error');
@@ -6920,15 +6970,19 @@ function App() {
                   variant="destructive"
                   className="flex-1 bg-red-600 hover:bg-red-700"
                   onClick={async () => {
+                    // Filtrar la identidad a eliminar, pero asegurar que la identidad por defecto siempre esté
                     const identidadesActualizadas = gitIdentities.filter(
-                      identidad => identidad.id !== identidadAEliminar.id
+                      identidad => identidad.id !== identidadAEliminar.id && identidad.id !== IDENTIDAD_DEFAULT_ID
                     );
-                    setGitIdentities(identidadesActualizadas);
+                    
+                    // Asegurar que la identidad por defecto siempre esté primero
+                    const identidadDefault = gitIdentities.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
+                    const identidadesOrdenadas = [identidadDefault, ...identidadesActualizadas];
+                    setGitIdentities(identidadesOrdenadas);
 
                     if (window.electronAPI?.writeConfig) {
                       try {
-                        await window.electronAPI.writeConfig({ gitIdentities: identidadesActualizadas });
-                        showToast('Identidad eliminada exitosamente', 'success');
+                        await window.electronAPI.writeConfig({ gitIdentities: identidadesOrdenadas });
                       } catch (error) {
                         showToast('Error al eliminar identidad', 'error');
                       }
