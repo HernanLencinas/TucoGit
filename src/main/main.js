@@ -1982,14 +1982,23 @@ ipcMain.handle('git-unstage', async (event, { repoPath, file }) => {
 });
 
 // Handler para realizar un commit
-ipcMain.handle('git-commit', async (event, { repoPath, message }) => {
+ipcMain.handle('git-commit', async (event, { repoPath, message, authorName, authorEmail }) => {
   const { exec } = require('child_process');
   const util = require('util');
   const execPromise = util.promisify(exec);
 
   try {
     const escapedMessage = message.replace(/"/g, '\\"');
-    await execPromise(`git commit -m "${escapedMessage}"`, { cwd: repoPath });
+    let commitCommand = `git commit -m "${escapedMessage}"`;
+    
+    // Si se proporciona nombre y email del autor, usar --author
+    if (authorName && authorEmail) {
+      const escapedName = authorName.replace(/"/g, '\\"');
+      const escapedEmail = authorEmail.replace(/"/g, '\\"');
+      commitCommand += ` --author="${escapedName} <${escapedEmail}>"`;
+    }
+    
+    await execPromise(commitCommand, { cwd: repoPath });
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };

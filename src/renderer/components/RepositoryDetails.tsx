@@ -1215,6 +1215,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     <GitStatusPanel
                         repoPath={`${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`}
                         onRefreshGraph={() => loadCommits(true)}
+                        connectionId={repository.idConexion}
                     />
                 </div>
 

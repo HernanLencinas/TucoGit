@@ -173,8 +173,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 
   // Realizar commit
-  gitCommit: (repoPath, message) => {
-    return ipcRenderer.invoke('git-commit', { repoPath, message });
+  gitCommit: (repoPath, message, authorName, authorEmail) => {
+    return ipcRenderer.invoke('git-commit', { repoPath, message, authorName, authorEmail });
   },
 
   // Git fetch
