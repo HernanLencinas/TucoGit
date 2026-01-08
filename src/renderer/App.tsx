@@ -5825,7 +5825,7 @@ function App() {
                                     <div className="font-medium truncate flex items-center gap-2">
                                       {identidad.nombre}
                                       {identidad.id === IDENTIDAD_DEFAULT_ID && (
-                                        <span className="px-0.5 py-0.5 text-[7px] font-semibold rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                                        <span className="px-0.5 py-0 text-[6px] font-semibold leading-none rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                                           Default
                                         </span>
                                       )}
