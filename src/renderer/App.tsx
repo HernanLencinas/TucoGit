@@ -57,6 +57,9 @@ function App() {
   const [mostrarModalNuevaCarpeta, setMostrarModalNuevaCarpeta] = useState(false);
   const [nombreNuevaCarpeta, setNombreNuevaCarpeta] = useState("");
   const [descripcionNuevaCarpeta, setDescripcionNuevaCarpeta] = useState("");
+  const [creandoColeccion, setCreandoColeccion] = useState(false);
+  const [errorNombre, setErrorNombre] = useState<string | null>(null);
+  const [errorDescripcion, setErrorDescripcion] = useState<string | null>(null);
   const [mostrarModalEliminarColeccion, setMostrarModalEliminarColeccion] = useState(false);
   const [coleccionAEliminar, setColeccionAEliminar] = useState<string | null>(null);
   const [mostrarModalEliminarRepositorio, setMostrarModalEliminarRepositorio] = useState(false);
@@ -1666,81 +1669,96 @@ function App() {
     const carpetaActual = obtenerCarpetaActual();
     if (!carpetaActual) return;
 
+    // Limpiar errores previos
+    setErrorNombre(null);
+    setErrorDescripcion(null);
+
     // Validar que el nombre no esté vacío
-    if (!nombreNuevaCarpeta.trim()) {
+    const nombreTrimmed = nombreNuevaCarpeta.trim();
+    if (!nombreTrimmed) {
+      setErrorNombre("El nombre es requerido");
       return;
     }
 
     // Validar límites de caracteres
-    const nombreTrimmed = nombreNuevaCarpeta.trim();
     if (nombreTrimmed.length > 32) {
-      alert("El nombre no puede exceder 32 caracteres");
+      setErrorNombre("El nombre no puede exceder 32 caracteres");
       return;
     }
 
     const descripcionTrimmed = descripcionNuevaCarpeta.trim();
     if (descripcionTrimmed.length > 100) {
-      alert("La descripción no puede exceder 100 caracteres");
+      setErrorDescripcion("La descripción no puede exceder 100 caracteres");
       return;
     }
 
     // Validar que el nombre no se repita en la misma ruta
     const nombresExistentes = carpetaActual.hijos?.map((h) => h.nombre.toLowerCase()) || [];
     if (nombresExistentes.includes(nombreTrimmed.toLowerCase())) {
-      alert("Ya existe una colección con ese nombre en esta ubicación");
+      setErrorNombre("Ya existe una colección con ese nombre en esta ubicación");
       return;
     }
 
-    const nuevoId = `coleccion-${Date.now()}`;
-    const nuevaCarpeta: FolderItem = {
-      id: nuevoId,
-      nombre: nombreTrimmed,
-      tipo: "coleccion",
-      descripcion: descripcionTrimmed || undefined,
-      hijos: [],
-    };
+    setCreandoColeccion(true);
 
-    const actualizarEstructura = (items: FolderItem[]): FolderItem[] => {
-      return items.map((item) => {
-        if (item.id === carpetaActual.id) {
-          return {
-            ...item,
-            hijos: [...(item.hijos || []), nuevaCarpeta],
-          };
-        }
-        if (item.hijos) {
-          return {
-            ...item,
-            hijos: actualizarEstructura(item.hijos),
-          };
-        }
-        return item;
-      });
-    };
-
-    const nuevaEstructura = actualizarEstructura(estructuraCarpetas);
-    setEstructuraCarpetas(nuevaEstructura);
-
-    // Guardar estructura actualizada en el archivo de configuración
     try {
-      if (window.electronAPI?.writeConfig) {
-        const resultado = await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
-        if (!resultado.success) {
-          // Error al guardar
-        }
-      } else {
-      }
-    } catch (error) {
-      // Error al guardar estructura de repositorios
-    }
+      const nuevoId = `coleccion-${Date.now()}`;
+      const nuevaCarpeta: FolderItem = {
+        id: nuevoId,
+        nombre: nombreTrimmed,
+        tipo: "coleccion",
+        descripcion: descripcionTrimmed || undefined,
+        hijos: [],
+      };
 
-    setNombreNuevaCarpeta("");
-    setDescripcionNuevaCarpeta("");
-    setMostrarModalNuevaCarpeta(false);
+      const actualizarEstructura = (items: FolderItem[]): FolderItem[] => {
+        return items.map((item) => {
+          if (item.id === carpetaActual.id) {
+            return {
+              ...item,
+              hijos: [...(item.hijos || []), nuevaCarpeta],
+            };
+          }
+          if (item.hijos) {
+            return {
+              ...item,
+              hijos: actualizarEstructura(item.hijos),
+            };
+          }
+          return item;
+        });
+      };
+
+      const nuevaEstructura = actualizarEstructura(estructuraCarpetas);
+      setEstructuraCarpetas(nuevaEstructura);
+
+      // Guardar estructura actualizada en el archivo de configuración
+      if (window.electronAPI?.writeConfig) {
+        await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
+      }
+
+      // Pequeño delay para mejor UX
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      setNombreNuevaCarpeta("");
+      setDescripcionNuevaCarpeta("");
+      setMostrarModalNuevaCarpeta(false);
+      setErrorNombre(null);
+      setErrorDescripcion(null);
+    } catch (error) {
+      setErrorNombre("Error al crear la colección. Por favor, intenta nuevamente.");
+    } finally {
+      setCreandoColeccion(false);
+    }
   };
 
   const abrirModalNuevaCarpeta = () => {
     setMostrarMenuNuevaCarpeta(false);
+    setNombreNuevaCarpeta("");
+    setDescripcionNuevaCarpeta("");
+    setErrorNombre(null);
+    setErrorDescripcion(null);
+    setCreandoColeccion(false);
     setMostrarModalNuevaCarpeta(true);
   };
 
@@ -6485,94 +6503,230 @@ function App() {
       {/* Modal para crear nueva colección */}
       {mostrarModalNuevaCarpeta && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
           onClick={() => {
-            setMostrarModalNuevaCarpeta(false);
-            setNombreNuevaCarpeta("");
-            setDescripcionNuevaCarpeta("");
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
+            if (!creandoColeccion) {
               setMostrarModalNuevaCarpeta(false);
               setNombreNuevaCarpeta("");
               setDescripcionNuevaCarpeta("");
+              setErrorNombre(null);
+              setErrorDescripcion(null);
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape' && !creandoColeccion) {
+              setMostrarModalNuevaCarpeta(false);
+              setNombreNuevaCarpeta("");
+              setDescripcionNuevaCarpeta("");
+              setErrorNombre(null);
+              setErrorDescripcion(null);
             }
           }}
           tabIndex={-1}
         >
           <Card
-            className="w-full max-w-lg mx-4 bg-background border border-slate-200 dark:border-slate-700 shadow-xl"
+            className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => {
-              if (e.key === 'Escape') {
+              if (e.key === 'Escape' && !creandoColeccion) {
                 e.stopPropagation();
                 setMostrarModalNuevaCarpeta(false);
                 setNombreNuevaCarpeta("");
                 setDescripcionNuevaCarpeta("");
+                setErrorNombre(null);
+                setErrorDescripcion(null);
               }
             }}
           >
-            <CardHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
-              <CardTitle className="text-xl font-semibold">Nueva Colección</CardTitle>
-              <CardDescription className="text-sm mt-1">
-                Crea una nueva colección en esta ubicación
-              </CardDescription>
+            <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                  <Folder className="w-6 h-6 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    Nueva Colección
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    Organiza tus repositorios en una nueva colección personalizada
+                  </CardDescription>
+                </div>
+                {!creandoColeccion && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                    onClick={() => {
+                      setMostrarModalNuevaCarpeta(false);
+                      setNombreNuevaCarpeta("");
+                      setDescripcionNuevaCarpeta("");
+                      setErrorNombre(null);
+                      setErrorDescripcion(null);
+                    }}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  Nombre ({nombreNuevaCarpeta.length}/32)
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <span>Nombre de la colección</span>
+                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                    (requerido)
+                  </span>
                 </label>
-                <input
-                  type="text"
-                  value={nombreNuevaCarpeta}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value.length <= 32) {
-                      setNombreNuevaCarpeta(value);
-                    }
-                  }}
-                  className="w-full px-4 py-2.5 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
-                  placeholder="Nombre de la colección"
-                  autoFocus
-                  maxLength={32}
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={nombreNuevaCarpeta}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 32) {
+                        setNombreNuevaCarpeta(value);
+                        setErrorNombre(null);
+                      }
+                    }}
+                    onBlur={() => {
+                      const nombreTrimmed = nombreNuevaCarpeta.trim();
+                      if (!nombreTrimmed) {
+                        setErrorNombre("El nombre es requerido");
+                      } else if (nombreTrimmed.length > 32) {
+                        setErrorNombre("El nombre no puede exceder 32 caracteres");
+                      } else {
+                        const carpetaActual = obtenerCarpetaActual();
+                        if (carpetaActual) {
+                          const nombresExistentes = carpetaActual.hijos?.map((h) => h.nombre.toLowerCase()) || [];
+                          if (nombresExistentes.includes(nombreTrimmed.toLowerCase())) {
+                            setErrorNombre("Ya existe una colección con ese nombre");
+                          } else {
+                            setErrorNombre(null);
+                          }
+                        }
+                      }
+                    }}
+                    className={cn(
+                      "w-full px-4 py-3 pr-16 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      errorNombre
+                        ? "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
+                        : "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                      creandoColeccion && "opacity-60 cursor-not-allowed"
+                    )}
+                    placeholder="Ej: Proyectos Frontend, Backend APIs, etc."
+                    autoFocus
+                    maxLength={32}
+                    disabled={creandoColeccion}
+                  />
+                  <span className={cn(
+                    "absolute top-2.5 right-3 text-xs font-medium transition-colors pointer-events-none",
+                    nombreNuevaCarpeta.length > 28 
+                      ? "text-amber-600 dark:text-amber-500" 
+                      : "text-slate-500 dark:text-slate-400"
+                  )}>
+                    {nombreNuevaCarpeta.length}/32
+                  </span>
+                  {errorNombre && (
+                    <div className="flex items-center gap-1.5 mt-2 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>{errorNombre}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  Descripción ({descripcionNuevaCarpeta.length}/100)
+
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <span>Descripción</span>
+                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                    (opcional)
+                  </span>
                 </label>
-                <textarea
-                  value={descripcionNuevaCarpeta}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value.length <= 100) {
-                      setDescripcionNuevaCarpeta(value);
-                    }
-                  }}
-                  className="w-full px-4 py-2.5 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors min-h-[100px] resize-none"
-                  placeholder="Descripción opcional de la colección"
-                  maxLength={100}
-                />
+                <div className="relative">
+                  <textarea
+                    value={descripcionNuevaCarpeta}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 100) {
+                        setDescripcionNuevaCarpeta(value);
+                        setErrorDescripcion(null);
+                      }
+                    }}
+                    onBlur={() => {
+                      if (descripcionNuevaCarpeta.trim().length > 100) {
+                        setErrorDescripcion("La descripción no puede exceder 100 caracteres");
+                      } else {
+                        setErrorDescripcion(null);
+                      }
+                    }}
+                    className={cn(
+                      "w-full px-4 py-3 pb-8 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      errorDescripcion
+                        ? "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
+                        : "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                      "min-h-[110px] resize-none",
+                      creandoColeccion && "opacity-60 cursor-not-allowed"
+                    )}
+                    placeholder="Agrega una descripción para identificar fácilmente esta colección..."
+                    maxLength={100}
+                    disabled={creandoColeccion}
+                  />
+                  <span className={cn(
+                    "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
+                    descripcionNuevaCarpeta.length > 85 
+                      ? "text-amber-600 dark:text-amber-500" 
+                      : "text-slate-500 dark:text-slate-400"
+                  )}>
+                    {descripcionNuevaCarpeta.length}/100
+                  </span>
+                  {errorDescripcion && (
+                    <div className="flex items-center gap-1.5 mt-2 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>{errorDescripcion}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="flex gap-3 pt-4 justify-end">
+
+              <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                 <Button 
                   variant="outline" 
-                  size="sm" 
+                  size="default"
+                  className="min-w-[100px]"
                   onClick={() => { 
-                    setMostrarModalNuevaCarpeta(false); 
-                    setNombreNuevaCarpeta(""); 
-                    setDescripcionNuevaCarpeta(""); 
+                    if (!creandoColeccion) {
+                      setMostrarModalNuevaCarpeta(false); 
+                      setNombreNuevaCarpeta(""); 
+                      setDescripcionNuevaCarpeta("");
+                      setErrorNombre(null);
+                      setErrorDescripcion(null);
+                    }
                   }}
+                  disabled={creandoColeccion}
                 >
                   Cancelar
                 </Button>
                 <Button 
-                  size="sm" 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                  size="default"
+                  className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={crearNuevaCarpeta}
+                  disabled={creandoColeccion || !nombreNuevaCarpeta.trim() || !!errorNombre}
                 >
-                  Crear
+                  {creandoColeccion ? (
+                    <span className="flex items-center gap-2">
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      Creando...
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <Check className="w-4 h-4" />
+                      Crear Colección
+                    </span>
+                  )}
                 </Button>
               </div>
             </CardContent>
@@ -6756,49 +6910,88 @@ function App() {
 
           return cantidadRepos > 0 ? (
             <div
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[100]"
+              className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4 animate-in fade-in duration-200"
               onClick={() => {
                 setMostrarModalClonarTodos(false);
                 setForzarReclonado(false);
               }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  setMostrarModalClonarTodos(false);
+                  setForzarReclonado(false);
+                }
+              }}
+              tabIndex={-1}
             >
-              <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
-                <CardHeader className="p-4">
-                  <CardTitle className="text-lg">
-                    Clonar todos los repositorios
-                  </CardTitle>
-                  <CardDescription className="text-sm">
-                    Se clonarán {cantidadRepos} {cantidadRepos === 1 ? 'repositorio' : 'repositorios'} de la carpeta actual.
-                  </CardDescription>
+              <Card 
+                className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    e.stopPropagation();
+                    setMostrarModalClonarTodos(false);
+                    setForzarReclonado(false);
+                  }
+                }}
+              >
+                <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                      <Download className="w-6 h-6 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                        Clonar todos los repositorios
+                      </CardTitle>
+                      <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                        Se clonarán {cantidadRepos} {cantidadRepos === 1 ? 'repositorio' : 'repositorios'} de la carpeta actual
+                      </CardDescription>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                      onClick={() => {
+                        setMostrarModalClonarTodos(false);
+                        setForzarReclonado(false);
+                      }}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </CardHeader>
-                <CardContent className="p-4 pt-0 space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md border">
-                    <div className="flex flex-col gap-1">
-                      <label htmlFor="forzar-reclonado" className="text-sm font-medium cursor-pointer">
+                <CardContent className="p-6 space-y-6">
+                  <div className="flex items-start justify-between p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-xl border border-slate-200/60 dark:border-slate-700/60 transition-all duration-200 hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                    <div className="flex flex-col gap-2 flex-1 pr-4">
+                      <label htmlFor="forzar-reclonado" className="text-sm font-semibold text-slate-700 dark:text-slate-300 cursor-pointer">
                         Forzar re-clonado
                       </label>
-                      <p className="text-xs text-muted-foreground">
-                        Si está activado, los repositorios ya clonados se eliminarán y se volverán a clonar
+                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Si está activado, los repositorios ya clonados se eliminarán y se volverán a clonar desde cero
                       </p>
                     </div>
                     <Switch
                       id="forzar-reclonado"
                       checked={forzarReclonado}
                       onCheckedChange={setForzarReclonado}
+                      className="mt-1"
                     />
                   </div>
                   {forzarReclonado && (
-                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-md p-3">
-                      <p className="text-xs text-yellow-700 dark:text-yellow-400 font-medium flex items-center gap-2">
-                        <AlertCircle className="h-4 w-4" />
-                        Atención: Se perderán todos los cambios locales no guardados en los repositorios que ya están clonados.
+                    <div className="bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 rounded-xl p-4 animate-in slide-in-from-top-1 duration-200">
+                      <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
+                        <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                        <span>
+                          <span className="font-semibold">Atención:</span> Se perderán todos los cambios locales no guardados en los repositorios que ya están clonados. Esta acción no se puede deshacer.
+                        </span>
                       </p>
                     </div>
                   )}
-                  <div className="flex gap-2 pt-2 justify-end">
+                  <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                     <Button
                       variant="outline"
-                      size="sm"
+                      size="default"
+                      className="min-w-[100px]"
                       onClick={() => {
                         setMostrarModalClonarTodos(false);
                         setForzarReclonado(false);
@@ -6807,12 +7000,13 @@ function App() {
                       Cancelar
                     </Button>
                     <Button
-                      size="sm"
-                      className="bg-primary hover:bg-primary/90"
+                      size="default"
+                      className="min-w-[140px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 flex items-center gap-2"
                       onClick={() => {
                         clonarTodosLosRepositorios(forzarReclonado);
                       }}
                     >
+                      <Download className="w-4 h-4" />
                       Clonar todos
                     </Button>
                   </div>
