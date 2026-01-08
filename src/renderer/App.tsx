@@ -6569,7 +6569,7 @@ function App() {
                 </Button>
                 <Button 
                   size="sm" 
-                  className="bg-green-600 hover:bg-green-700 text-white shadow-sm"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   onClick={crearNuevaCarpeta}
                 >
                   Crear
@@ -6671,7 +6671,7 @@ function App() {
                 </Button>
                 <Button 
                   size="sm" 
-                  className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   onClick={guardarEdicionColeccion}
                 >
                   Guardar
@@ -6756,7 +6756,7 @@ function App() {
 
           return cantidadRepos > 0 ? (
             <div
-              className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[100]"
               onClick={() => {
                 setMostrarModalClonarTodos(false);
                 setForzarReclonado(false);
@@ -6764,8 +6764,7 @@ function App() {
             >
               <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
                 <CardHeader className="p-4">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Download className="h-5 w-5 text-primary" />
+                  <CardTitle className="text-lg">
                     Clonar todos los repositorios
                   </CardTitle>
                   <CardDescription className="text-sm">
@@ -6796,11 +6795,10 @@ function App() {
                       </p>
                     </div>
                   )}
-                  <div className="flex gap-2 pt-2">
+                  <div className="flex gap-2 pt-2 justify-end">
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1"
                       onClick={() => {
                         setMostrarModalClonarTodos(false);
                         setForzarReclonado(false);
@@ -6810,7 +6808,7 @@ function App() {
                     </Button>
                     <Button
                       size="sm"
-                      className="flex-1 bg-primary hover:bg-primary/90"
+                      className="bg-primary hover:bg-primary/90"
                       onClick={() => {
                         clonarTodosLosRepositorios(forzarReclonado);
                       }}
