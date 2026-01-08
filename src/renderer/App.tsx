@@ -7088,34 +7088,74 @@ function App() {
       {
         mostrarModalConfirmarReclon && repoAClonar && (
           <div
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4 animate-in fade-in duration-200"
             onClick={() => {
               setMostrarModalConfirmarReclon(false);
               setRepoAClonar(null);
               setRutaDestinoAClonar("");
             }}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setMostrarModalConfirmarReclon(false);
+                setRepoAClonar(null);
+                setRutaDestinoAClonar("");
+              }
+            }}
+            tabIndex={-1}
           >
-            <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
-              <CardHeader className="p-4">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <AlertCircle className="h-5 w-5 text-yellow-500" />
-                  El repositorio ya existe
-                </CardTitle>
-                <CardDescription className="text-sm">
-                  La carpeta de destino ya existe y no está vacía. ¿Deseas eliminarla y volver a clonar el repositorio?
-                </CardDescription>
+            <Card 
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarModalConfirmarReclon(false);
+                  setRepoAClonar(null);
+                  setRutaDestinoAClonar("");
+                }
+              }}
+            >
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-amber-100 dark:bg-amber-950/30">
+                    <AlertCircle className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                      El repositorio ya existe
+                    </CardTitle>
+                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                      La carpeta de destino ya existe y no está vacía
+                    </CardDescription>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                    onClick={() => {
+                      setMostrarModalConfirmarReclon(false);
+                      setRepoAClonar(null);
+                      setRutaDestinoAClonar("");
+                    }}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
               </CardHeader>
-              <CardContent className="p-4 pt-0 space-y-4">
-                <div className="bg-red-700 border border-red-800 rounded-md p-3">
-                  <p className="text-xs text-white font-medium">
-                    Atención: Se perderán todos los cambios locales no guardados en esa carpeta.
+              <CardContent className="p-6 space-y-6">
+                <div className="bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 rounded-xl p-4">
+                  <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
+                    <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                    <span>
+                      <span className="font-semibold">Atención:</span> Se perderán todos los cambios locales no guardados en esa carpeta. ¿Deseas eliminar la carpeta existente y volver a clonar el repositorio?
+                    </span>
                   </p>
                 </div>
-                <div className="flex gap-2 pt-2">
+                <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                   <Button
                     variant="outline"
-                    size="sm"
-                    className="flex-1"
+                    size="default"
+                    className="min-w-[100px]"
                     onClick={() => {
                       setMostrarModalConfirmarReclon(false);
                       setRepoAClonar(null);
@@ -7125,9 +7165,9 @@ function App() {
                     Cancelar
                   </Button>
                   <Button
-                    size="sm"
+                    size="default"
                     variant="destructive"
-                    className="flex-1 bg-red-600 hover:bg-red-700"
+                    className="min-w-[120px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/25 flex items-center gap-2"
                     onClick={async () => {
                       if (repoAClonar) {
                         const item = repoAClonar;
@@ -7139,6 +7179,7 @@ function App() {
                       }
                     }}
                   >
+                    <Download className="w-4 h-4" />
                     Clonar
                   </Button>
                 </div>
@@ -7269,21 +7310,70 @@ function App() {
       {
         mostrarModalEliminarColeccion && (
           <div
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+            onClick={() => {
+              setMostrarModalEliminarColeccion(false);
+              setColeccionAEliminar(null);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setMostrarModalEliminarColeccion(false);
+                setColeccionAEliminar(null);
+              }
+            }}
+            tabIndex={-1}
           >
-            <Card className="w-full max-w-md mx-4 bg-background border-2">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold text-foreground">Eliminar Colección</CardTitle>
-                <CardDescription>
-                  ¿Estás seguro de que deseas eliminar esta colección? Esta acción no se puede deshacer.
-                </CardDescription>
+            <Card 
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarModalEliminarColeccion(false);
+                  setColeccionAEliminar(null);
+                }
+              }}
+            >
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-red-100 dark:bg-red-950/30">
+                    <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                      Eliminar Colección
+                    </CardTitle>
+                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                      Esta acción no se puede deshacer
+                    </CardDescription>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                    onClick={() => {
+                      setMostrarModalEliminarColeccion(false);
+                      setColeccionAEliminar(null);
+                    }}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex gap-2">
+              <CardContent className="p-6 space-y-6">
+                <div className="bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 rounded-xl p-4">
+                  <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
+                    <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                    <span>
+                      ¿Estás seguro de que deseas eliminar esta colección? Todos los repositorios dentro de ella también serán eliminados. Esta acción es permanente y no se puede deshacer.
+                    </span>
+                  </p>
+                </div>
+                <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                   <Button
                     variant="outline"
-                    size="sm"
-                    className="flex-1"
+                    size="default"
+                    className="min-w-[100px]"
                     onClick={() => {
                       setMostrarModalEliminarColeccion(false);
                       setColeccionAEliminar(null);
@@ -7292,9 +7382,9 @@ function App() {
                     Cancelar
                   </Button>
                   <Button
-                    size="sm"
+                    size="default"
                     variant="destructive"
-                    className="flex-1 bg-red-600 hover:bg-red-700"
+                    className="min-w-[120px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/25"
                     onClick={async () => {
                       if (!coleccionAEliminar) return;
 
@@ -7339,38 +7429,87 @@ function App() {
           const repositoriosAsociados = obtenerRepositoriosAsociados(conexionAEliminar.id, estructuraCarpetas);
           return (
             <div
-              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+              className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+              onClick={() => {
+                setMostrarModalEliminarConexion(false);
+                setConexionAEliminar(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  setMostrarModalEliminarConexion(false);
+                  setConexionAEliminar(null);
+                }
+              }}
+              tabIndex={-1}
             >
-              <Card className="w-full max-w-md mx-4 bg-background border-2">
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold text-foreground">Eliminar Conexión</CardTitle>
-                  <CardDescription>
-                    ¿Estás seguro de que deseas eliminar la conexión "{conexionAEliminar.nombre}"? Esta acción no se puede deshacer.
-                  </CardDescription>
+              <Card 
+                className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    e.stopPropagation();
+                    setMostrarModalEliminarConexion(false);
+                    setConexionAEliminar(null);
+                  }
+                }}
+              >
+                <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-red-100 dark:bg-red-950/30">
+                      <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                        Eliminar Conexión
+                      </CardTitle>
+                      <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                        Esta acción no se puede deshacer
+                      </CardDescription>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                      onClick={() => {
+                        setMostrarModalEliminarConexion(false);
+                        setConexionAEliminar(null);
+                      }}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="p-6 space-y-6">
+                  <div className="bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 rounded-xl p-4">
+                    <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
+                      <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                      <span>
+                        ¿Estás seguro de que deseas eliminar la conexión <span className="font-semibold">"{conexionAEliminar.nombre}"</span>? Esta acción es permanente y no se puede deshacer.
+                      </span>
+                    </p>
+                  </div>
                   {repositoriosAsociados.length > 0 && (
-                    <div className="p-4 rounded-lg bg-muted/50 border">
+                    <div className="p-4 rounded-xl bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/60 dark:border-slate-700/60">
                       <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-md bg-yellow-500/10 flex-shrink-0">
-                          <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                        <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-950/30 flex-shrink-0">
+                          <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-semibold text-foreground mb-1">
+                          <div className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-1">
                             {repositoriosAsociados.length} Repositorio{repositoriosAsociados.length !== 1 ? 's' : ''} asociado{repositoriosAsociados.length !== 1 ? 's' : ''}
                           </div>
-                          <div className="text-xs text-muted-foreground mb-3">
+                          <div className="text-xs text-slate-600 dark:text-slate-400 mb-3">
                             Al eliminar esta conexión, todos los repositorios asociados también serán eliminados de tu estructura.
                           </div>
                           <div className="space-y-1.5">
                             {repositoriosAsociados.slice(0, 4).map((repo) => (
-                              <div key={repo.id} className="flex items-center gap-2 text-xs text-foreground">
-                                <FolderGit2 className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                              <div key={repo.id} className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
+                                <FolderGit2 className="h-3.5 w-3.5 text-primary flex-shrink-0" />
                                 <span className="truncate">{repo.nombre}</span>
                               </div>
                             ))}
                             {repositoriosAsociados.length > 4 && (
-                              <div className="text-xs text-muted-foreground pt-1">
+                              <div className="text-xs text-slate-500 dark:text-slate-400 pt-1">
                                 +{repositoriosAsociados.length - 4} repositorio{repositoriosAsociados.length - 4 !== 1 ? 's' : ''} más
                               </div>
                             )}
@@ -7379,11 +7518,11 @@ function App() {
                       </div>
                     </div>
                   )}
-                  <div className="flex gap-2">
+                  <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                     <Button
                       variant="outline"
-                      size="sm"
-                      className="flex-1"
+                      size="default"
+                      className="min-w-[100px]"
                       onClick={() => {
                         setMostrarModalEliminarConexion(false);
                         setConexionAEliminar(null);
@@ -7392,9 +7531,9 @@ function App() {
                       Cancelar
                     </Button>
                     <Button
-                      size="sm"
+                      size="default"
                       variant="destructive"
-                      className="flex-1 bg-red-600 hover:bg-red-700"
+                      className="min-w-[120px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/25"
                       onClick={confirmarEliminarConexion}
                     >
                       Eliminar
@@ -7411,21 +7550,70 @@ function App() {
       {
         mostrarModalEliminarRepositorio && repositorioAEliminar && (
           <div
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+            onClick={() => {
+              setMostrarModalEliminarRepositorio(false);
+              setRepositorioAEliminar(null);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setMostrarModalEliminarRepositorio(false);
+                setRepositorioAEliminar(null);
+              }
+            }}
+            tabIndex={-1}
           >
-            <Card className="w-full max-w-md mx-4 bg-background border-2">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold text-foreground">Eliminar Repositorio</CardTitle>
-                <CardDescription>
-                  ¿Estás seguro de que deseas eliminar "{repositorioAEliminar.nombre}"? Esta acción no se puede deshacer.
-                </CardDescription>
+            <Card 
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarModalEliminarRepositorio(false);
+                  setRepositorioAEliminar(null);
+                }
+              }}
+            >
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-red-100 dark:bg-red-950/30">
+                    <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                      Eliminar Repositorio
+                    </CardTitle>
+                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                      Esta acción no se puede deshacer
+                    </CardDescription>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                    onClick={() => {
+                      setMostrarModalEliminarRepositorio(false);
+                      setRepositorioAEliminar(null);
+                    }}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex gap-2">
+              <CardContent className="p-6 space-y-6">
+                <div className="bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 rounded-xl p-4">
+                  <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
+                    <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                    <span>
+                      ¿Estás seguro de que deseas eliminar el repositorio <span className="font-semibold">"{repositorioAEliminar.nombre}"</span>? Esta acción es permanente y no se puede deshacer.
+                    </span>
+                  </p>
+                </div>
+                <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                   <Button
                     variant="outline"
-                    size="sm"
-                    className="flex-1"
+                    size="default"
+                    className="min-w-[100px]"
                     onClick={() => {
                       setMostrarModalEliminarRepositorio(false);
                       setRepositorioAEliminar(null);
@@ -7434,9 +7622,9 @@ function App() {
                     Cancelar
                   </Button>
                   <Button
-                    size="sm"
+                    size="default"
                     variant="destructive"
-                    className="flex-1 bg-red-600 hover:bg-red-700"
+                    className="min-w-[120px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/25"
                     onClick={async () => {
                       if (!repositorioAEliminar) return;
 
