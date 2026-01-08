@@ -88,7 +88,7 @@ export const InicioView = ({ setActiveTab, setConfigTabActiva }: InicioViewProps
                 </svg>
               </div>
               <div className="flex-1">
-                <h2 className="text-2xl font-bold mb-2">Bienvenido a Tuco</h2>
+                <h2 className="text-2xl font-bold mb-2">Bienvenido a TucoGit</h2>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Organiza y gestiona todos tus repositorios Git en un solo lugar. Conecta tus servicios favoritos y mantén todo organizado de manera eficiente.
                 </p>

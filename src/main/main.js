@@ -285,74 +285,57 @@ ipcMain.handle('select-folder', async () => {
   return null;
 });
 
-// Handler para inicializar configuraci?n (crear carpeta y archivo si no existen)
+// Handler para inicializar configuraci?n (verificar si existe el archivo)
 ipcMain.handle('initialize-config', async (event, configPath) => {
   try {
     const configDir = path.join(configPath, 'Tuco');
     const configFile = path.join(configDir, 'tuco-settings.json');
 
+    // Verificar si es la primera vez (archivo no existe)
+    const isFirstTime = !fs.existsSync(configFile);
 
-    // Crear carpeta Tuco si no existe
+    // Crear carpeta Tuco si no existe (pero NO crear el archivo aún)
     if (!fs.existsSync(configDir)) {
       fs.mkdirSync(configDir, { recursive: true });
-    } else {
     }
 
-    // Crear archivo tuco-settings.json con configuraci?n base si no existe
-    if (!fs.existsSync(configFile)) {
+    // Si es primera vez, retornar valores por defecto sin crear el archivo
+    if (isFirstTime) {
+      return {
+        success: true,
+        ruta: configDir,
+        archivo: configFile,
+        isFirstTime: true,
+        ultimaActualizacion: new Date().toISOString(),
+        tema: "dark",
+        temaNombre: "default",
+        zoomLevel: 100,
+        editorIDE: null,
+        gitSslVerify: true,
+        gitUserName: "",
+        gitUserEmail: "",
+        commitButtonBehavior: "commit",
+        gitIdentities: [],
+        wizardCompleted: false,
+        repositorios: []
+      };
+    }
 
-      // Generar una clave de encriptaci?n aleatoria
+    // Si el archivo existe, leerlo y asegurar que tenga una clave de encriptaci?n
+    const configData = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
+    if (!configData.encryptionKey) {
+      // Generar y guardar una clave si no existe
       const randomKey = crypto.randomBytes(32);
       const keyHex = randomKey.toString('hex');
-
-      const configBase = {
-        version: "1.0.0",
-        encryptionKey: keyHex, // Guardar la clave de encriptaci?n
-        repositorios: [
-          {
-            id: "root",
-            nombre: "Mis repositorios",
-            tipo: "coleccion",
-            hijos: []
-          }
-        ],
-        conexiones: [],
-        configuracion: {
-          tema: "dark",
-          temaNombre: "default",
-          zoomLevel: 100,
-          gitSslVerify: true,
-          rutaConfiguracion: configDir,
-          windowBounds: {
-            width: 1200,
-            height: 800
-          }
-        },
-        fechaCreacion: new Date().toISOString(),
-        ultimaActualizacion: new Date().toISOString()
-      };
-
-      fs.writeFileSync(configFile, JSON.stringify(configBase, null, 2), 'utf-8');
-    } else {
-
-      // Asegurar que el archivo existente tenga una clave de encriptaci?n
-      const configData = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
-      if (!configData.encryptionKey) {
-        // Generar y guardar una clave si no existe
-        const randomKey = crypto.randomBytes(32);
-        const keyHex = randomKey.toString('hex');
-        configData.encryptionKey = keyHex;
-        configData.ultimaActualizacion = new Date().toISOString();
-        fs.writeFileSync(configFile, JSON.stringify(configData, null, 2), 'utf-8');
-      }
+      configData.encryptionKey = keyHex;
+      configData.ultimaActualizacion = new Date().toISOString();
+      fs.writeFileSync(configFile, JSON.stringify(configData, null, 2), 'utf-8');
     }
-
-    // Leer y retornar la fecha de ?ltima actualizaci?n, el tema y los repositorios
-    const configData = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
     return {
       success: true,
       ruta: configDir,
       archivo: configFile,
+      isFirstTime: false,
       ultimaActualizacion: configData.ultimaActualizacion || new Date().toISOString(),
       tema: configData.configuracion?.tema || "dark",
       temaNombre: configData.configuracion?.temaNombre || "default",
@@ -363,6 +346,7 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
       gitUserEmail: configData.configuracion?.gitUserEmail || "",
       commitButtonBehavior: configData.configuracion?.commitButtonBehavior || "commit",
       gitIdentities: configData.configuracion?.gitIdentities || [],
+      wizardCompleted: configData.configuracion?.wizardCompleted !== undefined ? configData.configuracion.wizardCompleted : false,
       repositorios: configData.repositorios || []
     };
   } catch (error) {
@@ -426,15 +410,54 @@ ipcMain.handle('write-config', async (event, updates) => {
     const configDir = path.join(os.homedir(), 'Documents', 'Tuco');
     const configFile = path.join(configDir, 'tuco-settings.json');
 
-    if (!fs.existsSync(configFile)) {
-      return {
-        success: false,
-        error: 'Archivo de configuraci?n no existe'
-      };
+    // Crear carpeta si no existe
+    if (!fs.existsSync(configDir)) {
+      fs.mkdirSync(configDir, { recursive: true });
     }
 
-    // Leer configuraci?n actual
-    const configData = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
+    // Si el archivo no existe, crearlo con configuración base
+    let configData;
+    const isNewFile = !fs.existsSync(configFile);
+    if (isNewFile) {
+      // Generar una clave de encriptación aleatoria
+      const randomKey = crypto.randomBytes(32);
+      const keyHex = randomKey.toString('hex');
+
+      configData = {
+        version: "1.0.0",
+        encryptionKey: keyHex,
+        repositorios: [
+          {
+            id: "root",
+            nombre: "Mis repositorios",
+            tipo: "coleccion",
+            hijos: []
+          }
+        ],
+        conexiones: [],
+        configuracion: {
+          tema: "dark",
+          temaNombre: "default",
+          zoomLevel: 100,
+          gitSslVerify: true,
+          rutaConfiguracion: configDir,
+          wizardCompleted: false,
+          windowBounds: {
+            width: 1200,
+            height: 800
+          }
+        },
+        fechaCreacion: new Date().toISOString(),
+        ultimaActualizacion: new Date().toISOString()
+      };
+    } else {
+      // Leer configuración actual
+      configData = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
+      // Asegurar que tenga fechaCreacion si no la tiene (para archivos antiguos)
+      if (!configData.fechaCreacion) {
+        configData.fechaCreacion = new Date().toISOString();
+      }
+    }
 
     // Actualizar con los nuevos valores
     if (updates.tema !== undefined) {
@@ -506,6 +529,13 @@ ipcMain.handle('write-config', async (event, updates) => {
         configData.configuracion = {};
       }
       configData.configuracion.gitIdentities = updates.gitIdentities;
+    }
+
+    if (updates.wizardCompleted !== undefined) {
+      if (!configData.configuracion) {
+        configData.configuracion = {};
+      }
+      configData.configuracion.wizardCompleted = updates.wizardCompleted;
     }
 
     // Actualizar fecha de ?ltima actualizaci?n
@@ -641,7 +671,8 @@ function getEncryptionKey() {
           temaNombre: "default",
           zoomLevel: 100,
           gitSslVerify: true,
-          rutaConfiguracion: configDir
+          rutaConfiguracion: configDir,
+          wizardCompleted: false
         },
         fechaCreacion: new Date().toISOString(),
         ultimaActualizacion: new Date().toISOString()

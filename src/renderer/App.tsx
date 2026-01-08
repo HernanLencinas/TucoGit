@@ -8,6 +8,8 @@ import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Clou
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
 import type { Connection, FolderItem } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
+import { WelcomeWizard } from "@/renderer/components/WelcomeWizard";
+import { LoadingScreen } from "@/renderer/components/LoadingScreen";
 
 type TabType = "inicio" | "repositorios" | "conexiones" | "configuracion";
 type ConfigTabType = "general" | "datos" | "git" | "temas" | "actualizacion" | "acerca";
@@ -140,6 +142,9 @@ function App() {
   const [emailNuevaIdentidad, setEmailNuevaIdentidad] = useState("");
   const [mostrarModalEliminarIdentidad, setMostrarModalEliminarIdentidad] = useState(false);
   const [identidadAEliminar, setIdentidadAEliminar] = useState<GitIdentity | null>(null);
+  const [mostrarWizardBienvenida, setMostrarWizardBienvenida] = useState(false);
+  const [wizardCargado, setWizardCargado] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
 
   // Estado para la vista de detalles de repositorio
@@ -413,6 +418,9 @@ function App() {
   // Obtener ruta por defecto de documentos e inicializar configuración
   useEffect(() => {
     const inicializarConfiguracion = async () => {
+      // Mantener el loading activo mientras se inicializa
+      setIsLoading(true);
+      
       // Esperar un poco para asegurar que Electron esté listo
       await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -422,12 +430,20 @@ function App() {
           const documentsPath = await window.electronAPI.getDocumentsPath();
           const rutaPorDefecto = `${documentsPath}/Tuco`;
 
-          // Inicializar configuración (crear carpeta y archivo si no existen)
+          // Inicializar configuración (verificar si existe el archivo)
           if (window.electronAPI?.initializeConfig) {
             const resultado = await window.electronAPI.initializeConfig(documentsPath);
 
             if (resultado.success) {
               setRutaConfiguracion(resultado.ruta || rutaPorDefecto);
+
+              // Si es la primera vez (archivo no existe), mostrar wizard y no cargar configuración
+              if (resultado.isFirstTime) {
+                setMostrarWizardBienvenida(true);
+                setWizardCargado(true);
+                setIsLoading(false);
+                return; // Salir temprano, el wizard creará el archivo al completarse
+              }
 
               // Aplicar tema guardado
               const temaMode = resultado.tema === 'dark' ? 'dark' : 'light';
@@ -518,6 +534,9 @@ function App() {
                 setGitIdentities([IDENTIDAD_DEFAULT]);
               }
 
+              // Si llegamos aquí, el archivo ya existe, no mostrar wizard
+              setWizardCargado(true);
+
               // Cargar configuración de usuario de Git
               if (resultado.gitUserName !== undefined && resultado.gitUserName) {
                 setGitUserName(resultado.gitUserName);
@@ -584,6 +603,9 @@ function App() {
         }
       } catch (error) {
         // Error al inicializar configuración
+      } finally {
+        // Desactivar el loading una vez que todo esté cargado
+        setIsLoading(false);
       }
     };
 
@@ -806,6 +828,82 @@ function App() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  // Función para completar el wizard de bienvenida
+  const completarWizardBienvenida = async (nombre?: string, email?: string) => {
+    setMostrarWizardBienvenida(false);
+    
+    try {
+      // Crear el archivo de configuración con los datos del wizard
+      if (window.electronAPI?.getDocumentsPath && window.electronAPI?.writeConfig) {
+        const documentsPath = await window.electronAPI.getDocumentsPath();
+        
+        if (nombre && email) {
+          // Crear identidad predeterminada con los datos del wizard
+          const identidadActualizada = {
+            id: IDENTIDAD_DEFAULT_ID,
+            nombre: nombre,
+            email: email
+          };
+
+          // Guardar configuración inicial con los datos del wizard
+          // writeConfig ahora crea el archivo si no existe
+          await window.electronAPI.writeConfig({ 
+            wizardCompleted: true,
+            gitUserName: nombre,
+            gitUserEmail: email,
+            gitIdentities: [identidadActualizada]
+          });
+
+          // Aplicar a Git globalmente
+          if (window.electronAPI?.setGitConfig) {
+            await window.electronAPI.setGitConfig('user.name', nombre);
+            await window.electronAPI.setGitConfig('user.email', email);
+          }
+
+          // Actualizar el estado local
+          setGitUserName(nombre);
+          setGitUserEmail(email);
+          setGitIdentities([identidadActualizada]);
+        } else {
+          // Si no se proporcionaron valores, crear archivo con valores por defecto
+          await window.electronAPI.writeConfig({ 
+            wizardCompleted: true,
+            gitIdentities: [IDENTIDAD_DEFAULT]
+          });
+          setGitIdentities([IDENTIDAD_DEFAULT]);
+        }
+
+        // Recargar la configuración para aplicar todos los valores
+        if (window.electronAPI?.initializeConfig) {
+          const configRecargada = await window.electronAPI.initializeConfig(documentsPath);
+          if (configRecargada.success) {
+            setRutaConfiguracion(configRecargada.ruta || `${documentsPath}/Tuco`);
+            
+            // Aplicar tema y otros valores por defecto
+            const temaMode = configRecargada.tema === 'dark' ? 'dark' : 'light';
+            const temaNombre = configRecargada.temaNombre || 'default';
+            setIsDark(temaMode === 'dark');
+            setSelectedTheme({ name: temaNombre, mode: temaMode });
+            applyTheme(temaNombre as ThemeName, temaMode);
+            
+            if (configRecargada.zoomLevel) {
+              setZoomLevel(configRecargada.zoomLevel);
+              setTempZoomLevel(configRecargada.zoomLevel);
+              document.documentElement.style.setProperty('--zoom-level', `${configRecargada.zoomLevel}%`);
+            }
+
+            // Cargar repositorios si existen
+            if (configRecargada.repositorios && configRecargada.repositorios.length > 0) {
+              setEstructuraCarpetas(configRecargada.repositorios);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      // Error al guardar la configuración
+    }
+  };
 
   // Manejador para cerrar el wizard con Escape
   useEffect(() => {
@@ -2341,7 +2439,7 @@ function App() {
                       </span>
                       Tu centro de control Git
                     </div>
-                    <h2 className="text-3xl font-extrabold mb-3 tracking-tight text-foreground">Bienvenido a <span className="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">Tuco</span></h2>
+                    <h2 className="text-3xl font-extrabold mb-3 tracking-tight text-foreground">Bienvenido a <span className="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">TucoGit</span></h2>
                     <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">
                       Organiza y gestiona todos tus repositorios Git en un solo lugar.
                       Conecta tus servicios favoritos y mantén tu flujo de trabajo eficiente y ordenado.
@@ -5031,6 +5129,11 @@ function App() {
 
   const isMac = window.electronAPI?.platform === 'darwin';
 
+  // Mostrar pantalla de carga mientras se inicializa
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden">
       {/* Área de arrastre para macOS */}
@@ -7005,6 +7108,11 @@ function App() {
 
       {/* Toast Container */}
       <Toaster />
+
+      {/* Wizard de Bienvenida */}
+      {mostrarWizardBienvenida && wizardCargado && (
+        <WelcomeWizard onComplete={completarWizardBienvenida} />
+      )}
     </div >
   );
 }
