@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
-import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles } from "lucide-react";
+import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles } from "lucide-react";
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
 import type { Connection, FolderItem } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
@@ -117,6 +117,21 @@ function App() {
   const [mostrarModalConfirmarReclon, setMostrarModalConfirmarReclon] = useState(false);
   const [repoAClonar, setRepoAClonar] = useState<FolderItem | null>(null);
   const [rutaDestinoAClonar, setRutaDestinoAClonar] = useState<string>("");
+  
+  // Estado para identidades de Git
+  type GitIdentity = {
+    id: string;
+    nombre: string;
+    email: string;
+  };
+  const [gitIdentities, setGitIdentities] = useState<GitIdentity[]>([]);
+  const [mostrarModalNuevaIdentidad, setMostrarModalNuevaIdentidad] = useState(false);
+  const [mostrarModalEditarIdentidad, setMostrarModalEditarIdentidad] = useState(false);
+  const [identidadAEditar, setIdentidadAEditar] = useState<GitIdentity | null>(null);
+  const [nombreNuevaIdentidad, setNombreNuevaIdentidad] = useState("");
+  const [emailNuevaIdentidad, setEmailNuevaIdentidad] = useState("");
+  const [mostrarModalEliminarIdentidad, setMostrarModalEliminarIdentidad] = useState(false);
+  const [identidadAEliminar, setIdentidadAEliminar] = useState<GitIdentity | null>(null);
 
 
   // Estado para la vista de detalles de repositorio
@@ -473,6 +488,11 @@ function App() {
                 setCommitButtonBehavior(resultado.commitButtonBehavior);
               }
 
+              // Cargar identidades de Git
+              if (resultado.gitIdentities && Array.isArray(resultado.gitIdentities)) {
+                setGitIdentities(resultado.gitIdentities);
+              }
+
               // Cargar configuración de usuario de Git
               if (resultado.gitUserName !== undefined && resultado.gitUserName) {
                 setGitUserName(resultado.gitUserName);
@@ -611,6 +631,21 @@ function App() {
         }
 
         if (mostrarModalRestablecerConfig) setMostrarModalRestablecerConfig(false);
+        if (mostrarModalNuevaIdentidad) {
+          setMostrarModalNuevaIdentidad(false);
+          setNombreNuevaIdentidad("");
+          setEmailNuevaIdentidad("");
+        }
+        if (mostrarModalEditarIdentidad) {
+          setMostrarModalEditarIdentidad(false);
+          setIdentidadAEditar(null);
+          setNombreNuevaIdentidad("");
+          setEmailNuevaIdentidad("");
+        }
+        if (mostrarModalEliminarIdentidad) {
+          setMostrarModalEliminarIdentidad(false);
+          setIdentidadAEliminar(null);
+        }
 
         // Menús desplegables
         if (mostrarMenuNuevaCarpeta) setMostrarMenuNuevaCarpeta(false);
@@ -631,7 +666,8 @@ function App() {
     mostrarModalNuevaCarpeta, mostrarModalEditarColeccion, mostrarModalRestablecerConfig,
     mostrarModalConfirmarReclon,
     mostrarMenuNuevaCarpeta, mostrarMenuNuevaConexion, mostrarMenuOrdenar,
-    mostrarMenuOrdenarRepos, mostrarMenuConexion
+    mostrarMenuOrdenarRepos, mostrarMenuConexion,
+    mostrarModalNuevaIdentidad, mostrarModalEditarIdentidad, mostrarModalEliminarIdentidad
   ]);
 
   useEffect(() => {
@@ -4087,6 +4123,94 @@ function App() {
                 </p>
               </div>
 
+              {/* Identidades */}
+              <Card className="border-2">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-base">Identidades</CardTitle>
+                      <CardDescription className="text-xs mt-1">
+                        Gestiona múltiples identidades de usuario para usar en diferentes repositorios
+                      </CardDescription>
+                    </div>
+                    <Button
+                      onClick={() => {
+                        setNombreNuevaIdentidad("");
+                        setEmailNuevaIdentidad("");
+                        setMostrarModalNuevaIdentidad(true);
+                      }}
+                      className="h-8 px-3 text-xs"
+                      size="sm"
+                    >
+                      <Plus className="h-3.5 w-3.5 mr-1.5" />
+                      Nueva Identidad
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {gitIdentities.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                      <p className="text-sm">No hay identidades configuradas</p>
+                      <p className="text-xs mt-1">Agrega una identidad para comenzar</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-border">
+                            <th className="text-left py-3 px-4 text-sm font-semibold">Nombre Completo</th>
+                            <th className="text-left py-3 px-4 text-sm font-semibold">Correo Electrónico</th>
+                            <th className="text-right py-3 px-4 text-sm font-semibold">Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {gitIdentities.map((identidad) => (
+                            <tr key={identidad.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                              <td className="py-3 px-4 text-sm">
+                                <div className="flex items-center gap-2">
+                                  <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                  <span>{identidad.nombre}</span>
+                                </div>
+                              </td>
+                              <td className="py-3 px-4 text-sm text-muted-foreground">{identidad.email}</td>
+                              <td className="py-3 px-4 text-sm">
+                                <div className="flex items-center justify-end gap-2">
+                                  <Button
+                                    onClick={() => {
+                                      setIdentidadAEditar(identidad);
+                                      setNombreNuevaIdentidad(identidad.nombre);
+                                      setEmailNuevaIdentidad(identidad.email);
+                                      setMostrarModalEditarIdentidad(true);
+                                    }}
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-7 px-2"
+                                  >
+                                    <Pencil className="h-3.5 w-3.5" />
+                                  </Button>
+                                  <Button
+                                    onClick={() => {
+                                      setIdentidadAEliminar(identidad);
+                                      setMostrarModalEliminarIdentidad(true);
+                                    }}
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-7 px-2 text-red-600 hover:text-white hover:bg-red-600"
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
               {/* Configuración de Usuario */}
               <Card className="border-2">
                 <CardHeader className="pb-3">
@@ -6073,17 +6197,33 @@ function App() {
 
       {/* Modal para crear nueva colección */}
       {mostrarModalNuevaCarpeta && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => {
             setMostrarModalNuevaCarpeta(false);
             setNombreNuevaCarpeta("");
             setDescripcionNuevaCarpeta("");
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setMostrarModalNuevaCarpeta(false);
+              setNombreNuevaCarpeta("");
+              setDescripcionNuevaCarpeta("");
+            }
+          }}
+          tabIndex={-1}
         >
-          <Card 
+          <Card
             className="w-full max-w-lg mx-4 bg-background border border-slate-200 dark:border-slate-700 shadow-xl"
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                e.stopPropagation();
+                setMostrarModalNuevaCarpeta(false);
+                setNombreNuevaCarpeta("");
+                setDescripcionNuevaCarpeta("");
+              }
+            }}
           >
             <CardHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
               <CardTitle className="text-xl font-semibold">Nueva Colección</CardTitle>
@@ -6155,7 +6295,7 @@ function App() {
 
       {/* Modal para editar colección */}
       {mostrarModalEditarColeccion && coleccionAEditar && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => {
             setMostrarModalEditarColeccion(false);
@@ -6163,10 +6303,28 @@ function App() {
             setNombreEditarColeccion("");
             setDescripcionEditarColeccion("");
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setMostrarModalEditarColeccion(false);
+              setColeccionAEditar(null);
+              setNombreEditarColeccion("");
+              setDescripcionEditarColeccion("");
+            }
+          }}
+          tabIndex={-1}
         >
-          <Card 
+          <Card
             className="w-full max-w-lg mx-4 bg-background border border-slate-200 dark:border-slate-700 shadow-xl"
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                e.stopPropagation();
+                setMostrarModalEditarColeccion(false);
+                setColeccionAEditar(null);
+                setNombreEditarColeccion("");
+                setDescripcionEditarColeccion("");
+              }
+            }}
           >
             <CardHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
               <CardTitle className="text-xl font-semibold">Editar Colección</CardTitle>
@@ -6510,6 +6668,283 @@ function App() {
           </div>
         )
       }
+
+      {/* Modal para nueva identidad */}
+      {mostrarModalNuevaIdentidad && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => {
+            setMostrarModalNuevaIdentidad(false);
+            setNombreNuevaIdentidad("");
+            setEmailNuevaIdentidad("");
+          }}
+        >
+          <Card
+            className="w-full max-w-md bg-background border-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CardHeader>
+              <CardTitle className="text-lg">Nueva Identidad</CardTitle>
+              <CardDescription>
+                Agrega una nueva identidad de usuario para Git
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-semibold">Nombre Completo</label>
+                <input
+                  type="text"
+                  value={nombreNuevaIdentidad}
+                  onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
+                  placeholder="Tu nombre completo"
+                  className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                  autoFocus
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold">Correo Electrónico</label>
+                <input
+                  type="email"
+                  value={emailNuevaIdentidad}
+                  onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
+                  placeholder="tu.email@ejemplo.com"
+                  className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => {
+                    setMostrarModalNuevaIdentidad(false);
+                    setNombreNuevaIdentidad("");
+                    setEmailNuevaIdentidad("");
+                  }}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  size="sm"
+                  className="flex-1"
+                  onClick={async () => {
+                    if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
+                      showToast('Por favor completa todos los campos', 'error');
+                      return;
+                    }
+
+                    const nuevaIdentidad: GitIdentity = {
+                      id: Date.now().toString(),
+                      nombre: nombreNuevaIdentidad.trim(),
+                      email: emailNuevaIdentidad.trim()
+                    };
+
+                    const nuevasIdentidades = [...gitIdentities, nuevaIdentidad];
+                    setGitIdentities(nuevasIdentidades);
+
+                    if (window.electronAPI?.writeConfig) {
+                      try {
+                        await window.electronAPI.writeConfig({ gitIdentities: nuevasIdentidades });
+                      } catch (error) {
+                        showToast('Error al guardar identidad', 'error');
+                      }
+                    }
+
+                    setMostrarModalNuevaIdentidad(false);
+                    setNombreNuevaIdentidad("");
+                    setEmailNuevaIdentidad("");
+                  }}
+                >
+                  Agregar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Modal para editar identidad */}
+      {mostrarModalEditarIdentidad && identidadAEditar && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => {
+            setMostrarModalEditarIdentidad(false);
+            setIdentidadAEditar(null);
+            setNombreNuevaIdentidad("");
+            setEmailNuevaIdentidad("");
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setMostrarModalEditarIdentidad(false);
+              setIdentidadAEditar(null);
+              setNombreNuevaIdentidad("");
+              setEmailNuevaIdentidad("");
+            }
+          }}
+          tabIndex={-1}
+        >
+          <Card
+            className="w-full max-w-md bg-background border-2"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                e.stopPropagation();
+                setMostrarModalEditarIdentidad(false);
+                setIdentidadAEditar(null);
+                setNombreNuevaIdentidad("");
+                setEmailNuevaIdentidad("");
+              }
+            }}
+          >
+            <CardHeader>
+              <CardTitle className="text-lg">Editar Identidad</CardTitle>
+              <CardDescription>
+                Modifica la información de la identidad
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-semibold">Nombre Completo</label>
+                <input
+                  type="text"
+                  value={nombreNuevaIdentidad}
+                  onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
+                  placeholder="Tu nombre completo"
+                  className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                  autoFocus
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold">Correo Electrónico</label>
+                <input
+                  type="email"
+                  value={emailNuevaIdentidad}
+                  onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
+                  placeholder="tu.email@ejemplo.com"
+                  className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => {
+                    setMostrarModalEditarIdentidad(false);
+                    setIdentidadAEditar(null);
+                    setNombreNuevaIdentidad("");
+                    setEmailNuevaIdentidad("");
+                  }}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  size="sm"
+                  className="flex-1"
+                  onClick={async () => {
+                    if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
+                      showToast('Por favor completa todos los campos', 'error');
+                      return;
+                    }
+
+                    const identidadesActualizadas = gitIdentities.map(identidad =>
+                      identidad.id === identidadAEditar.id
+                        ? { ...identidad, nombre: nombreNuevaIdentidad.trim(), email: emailNuevaIdentidad.trim() }
+                        : identidad
+                    );
+                    setGitIdentities(identidadesActualizadas);
+
+                    if (window.electronAPI?.writeConfig) {
+                      try {
+                        await window.electronAPI.writeConfig({ gitIdentities: identidadesActualizadas });
+                        showToast('Identidad actualizada exitosamente', 'success');
+                      } catch (error) {
+                        showToast('Error al actualizar identidad', 'error');
+                      }
+                    }
+
+                    setMostrarModalEditarIdentidad(false);
+                    setIdentidadAEditar(null);
+                    setNombreNuevaIdentidad("");
+                    setEmailNuevaIdentidad("");
+                  }}
+                >
+                  Guardar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Modal para eliminar identidad */}
+      {mostrarModalEliminarIdentidad && identidadAEliminar && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => {
+            setMostrarModalEliminarIdentidad(false);
+            setIdentidadAEliminar(null);
+          }}
+        >
+          <Card
+            className="w-full max-w-md bg-background border-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CardHeader>
+              <CardTitle className="text-lg">Eliminar Identidad</CardTitle>
+              <CardDescription>
+                ¿Estás seguro de que deseas eliminar esta identidad? Esta acción no se puede deshacer.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-4 rounded-lg bg-muted/50 border">
+                <div className="space-y-1">
+                  <div className="text-sm font-semibold">{identidadAEliminar.nombre}</div>
+                  <div className="text-xs text-muted-foreground">{identidadAEliminar.email}</div>
+                </div>
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => {
+                    setMostrarModalEliminarIdentidad(false);
+                    setIdentidadAEliminar(null);
+                  }}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  className="flex-1 bg-red-600 hover:bg-red-700"
+                  onClick={async () => {
+                    const identidadesActualizadas = gitIdentities.filter(
+                      identidad => identidad.id !== identidadAEliminar.id
+                    );
+                    setGitIdentities(identidadesActualizadas);
+
+                    if (window.electronAPI?.writeConfig) {
+                      try {
+                        await window.electronAPI.writeConfig({ gitIdentities: identidadesActualizadas });
+                        showToast('Identidad eliminada exitosamente', 'success');
+                      } catch (error) {
+                        showToast('Error al eliminar identidad', 'error');
+                      }
+                    }
+
+                    setMostrarModalEliminarIdentidad(false);
+                    setIdentidadAEliminar(null);
+                  }}
+                >
+                  Eliminar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Toast Container */}
       <Toaster />
