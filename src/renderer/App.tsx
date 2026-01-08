@@ -4736,14 +4736,7 @@ function App() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="p-4 rounded-lg bg-muted/50 border text-center">
-                      <div className="flex items-center justify-center mb-2">
-                        <div className="text-2xl font-bold">3</div>
-                      </div>
-                      <div className="text-xs font-semibold text-foreground mb-1">Plataformas</div>
-                      <div className="text-xs text-muted-foreground">Windows, macOS, Linux</div>
-                    </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div className="p-4 rounded-lg bg-muted/50 border text-center">
                       <div className="flex items-center justify-center mb-2">
                         <div className="text-2xl font-bold">MIT</div>
