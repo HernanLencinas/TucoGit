@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag, Settings, Undo2, GitMerge, AlertCircle, RefreshCw, Lock } from 'lucide-react';
+import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag, Settings, Undo2, GitMerge, AlertCircle, RefreshCw, Lock, Info } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -58,6 +58,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const [newBranchFrom, setNewBranchFrom] = useState("");
     const [creatingBranch, setCreatingBranch] = useState(false);
     const [isCreatingFromRemote, setIsCreatingFromRemote] = useState(false);
+    const [branchFromDropdownOpen, setBranchFromDropdownOpen] = useState(false);
+    const branchFromDropdownRef = React.useRef<HTMLDivElement>(null);
     const [syncInfo, setSyncInfo] = useState<{ ahead: number, behind: number }>({ ahead: 0, behind: 0 });
     const [fetching, setFetching] = useState(false);
     const [pulling, setPulling] = useState(false);
@@ -378,7 +380,26 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         if (showNewBranchModal && branches.current && !isCreatingFromRemote) {
             setNewBranchFrom(branches.current);
         }
+        if (!showNewBranchModal) {
+            setBranchFromDropdownOpen(false);
+        }
     }, [showNewBranchModal, branches.current, isCreatingFromRemote]);
+
+    // Cerrar dropdown de branchFrom cuando se hace click fuera
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (branchFromDropdownRef.current && !branchFromDropdownRef.current.contains(event.target as Node)) {
+                setBranchFromDropdownOpen(false);
+            }
+        };
+
+        if (branchFromDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }
+    }, [branchFromDropdownOpen]);
 
     // Cerrar menú de cherry-pick cuando se hace click fuera
     useEffect(() => {
@@ -719,6 +740,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setNewBranchName("");
                 setNewBranchFrom("");
                 setIsCreatingFromRemote(false);
+                setBranchFromDropdownOpen(false);
                 loadBranches();
                 loadCommits(true);
             } else {
@@ -1969,31 +1991,76 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             {/* Modal para crear nuevo branch */}
             {showNewBranchModal && (
                 <div
-                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
                     onClick={() => {
                         if (!creatingBranch) {
                             setShowNewBranchModal(false);
                             setNewBranchName("");
                             setIsCreatingFromRemote(false);
+                            setBranchFromDropdownOpen(false);
                         }
                     }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' && !creatingBranch) {
+                            setShowNewBranchModal(false);
+                            setNewBranchName("");
+                            setIsCreatingFromRemote(false);
+                            setBranchFromDropdownOpen(false);
+                        }
+                    }}
+                    tabIndex={-1}
                 >
-                    <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
-                        <CardHeader className="p-4">
-                            <CardTitle className="text-lg">Nuevo Branch</CardTitle>
-                            <CardDescription className="text-sm">
-                                Crea un nuevo branch a partir de otro branch existente
-                            </CardDescription>
+                    <Card 
+                        className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                        onClick={(e) => e.stopPropagation()}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Escape' && !creatingBranch) {
+                                e.stopPropagation();
+                                setShowNewBranchModal(false);
+                                setNewBranchName("");
+                                setIsCreatingFromRemote(false);
+                                setBranchFromDropdownOpen(false);
+                            }
+                        }}
+                    >
+                        <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                                    <GitBranch className="w-6 h-6 text-primary" />
+                                </div>
+                                <div className="flex-1">
+                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                        Nuevo Branch
+                                    </CardTitle>
+                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                        Crea un nuevo branch a partir de otro branch existente
+                                    </CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
-                        <CardContent className="p-4 pt-0 space-y-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Nombre del nuevo branch</label>
+                        <CardContent className="p-6 space-y-6">
+                            <div className="space-y-3">
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <span>Nombre del nuevo branch</span>
+                                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                                        (requerido)
+                                    </span>
+                                </label>
+                                <p className="text-xs text-slate-600 dark:text-slate-400">
+                                    El nombre debe seguir las convenciones de Git (sin espacios, usar guiones o guiones bajos)
+                                </p>
                                 <input
                                     type="text"
                                     value={newBranchName}
                                     onChange={(e) => setNewBranchName(e.target.value)}
                                     placeholder="nombre-del-branch"
-                                    className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                                    className={cn(
+                                        "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                                        "bg-slate-50 dark:bg-slate-800/50",
+                                        "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                                        "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                                        creatingBranch && "opacity-60 cursor-not-allowed"
+                                    )}
                                     disabled={creatingBranch}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && newBranchName.trim() && !creatingBranch) {
@@ -2002,53 +2069,143 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                 />
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Crear a partir de</label>
-                                <select
-                                    value={newBranchFrom}
-                                    onChange={(e) => setNewBranchFrom(e.target.value)}
-                                    className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                                    disabled={creatingBranch}
-                                >
-                                    {branches.local.map((branch) => (
-                                        <option key={branch} value={branch}>
-                                            {branch} {branch === branches.current ? '(actual)' : ''}
-                                        </option>
-                                    ))}
-                                    {branches.remote.length > 0 && (
-                                        <>
-                                            <optgroup label="Remotos">
-                                                {branches.remote.map((branch) => (
-                                                    <option key={branch} value={branch}>
-                                                        {branch}
-                                                    </option>
-                                                ))}
-                                            </optgroup>
-                                        </>
+                            <div className="space-y-3">
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                    Crear a partir de
+                                </label>
+                                <p className="text-xs text-slate-600 dark:text-slate-400">
+                                    Selecciona el branch desde el cual se creará el nuevo branch. El nuevo branch contendrá todos los commits del branch seleccionado.
+                                </p>
+                                <div className="relative" ref={branchFromDropdownRef}>
+                                    <button
+                                        type="button"
+                                        onClick={() => !creatingBranch && setBranchFromDropdownOpen(!branchFromDropdownOpen)}
+                                        className={cn(
+                                            "w-full px-4 py-3 pr-10 text-sm rounded-xl border transition-all duration-200 text-left",
+                                            "bg-slate-50 dark:bg-slate-800/50",
+                                            "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                                            "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                                            "hover:bg-slate-100 dark:hover:bg-slate-800",
+                                            creatingBranch && "opacity-60 cursor-not-allowed",
+                                            !newBranchFrom && "text-slate-400 dark:text-slate-500"
+                                        )}
+                                        disabled={creatingBranch}
+                                    >
+                                        <span className="block truncate">
+                                            {newBranchFrom 
+                                                ? `${newBranchFrom}${newBranchFrom === branches.current ? ' (actual)' : ''}`
+                                                : 'Selecciona un branch'}
+                                        </span>
+                                        <ChevronDown className={cn(
+                                            "absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 dark:text-slate-400 transition-transform duration-200",
+                                            branchFromDropdownOpen && "rotate-180"
+                                        )} />
+                                    </button>
+                                    {branchFromDropdownOpen && (
+                                        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg max-h-60 overflow-auto">
+                                            {branches.local.length > 0 && (
+                                                <div className="py-1">
+                                                    {branches.local.map((branch) => (
+                                                        <button
+                                                            key={branch}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setNewBranchFrom(branch);
+                                                                setBranchFromDropdownOpen(false);
+                                                            }}
+                                                            className={cn(
+                                                                "w-full px-4 py-2.5 text-sm text-left transition-colors duration-150",
+                                                                "hover:bg-slate-100 dark:hover:bg-slate-700",
+                                                                "text-slate-900 dark:text-slate-100",
+                                                                newBranchFrom === branch && "bg-primary/10 dark:bg-primary/20 text-primary font-medium"
+                                                            )}
+                                                        >
+                                                            <div className="flex items-center justify-between">
+                                                                <span>{branch}</span>
+                                                                {branch === branches.current && (
+                                                                    <span className="text-xs text-slate-500 dark:text-slate-400 ml-2">(actual)</span>
+                                                                )}
+                                                            </div>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            {branches.remote.length > 0 && (
+                                                <>
+                                                    <div className="px-4 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700">
+                                                        Remotos
+                                                    </div>
+                                                    <div className="py-1">
+                                                        {branches.remote.map((branch) => (
+                                                            <button
+                                                                key={branch}
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setNewBranchFrom(branch);
+                                                                    setBranchFromDropdownOpen(false);
+                                                                }}
+                                                                className={cn(
+                                                                    "w-full px-4 py-2.5 text-sm text-left transition-colors duration-150",
+                                                                    "hover:bg-slate-100 dark:hover:bg-slate-700",
+                                                                    "text-slate-900 dark:text-slate-100",
+                                                                    newBranchFrom === branch && "bg-primary/10 dark:bg-primary/20 text-primary font-medium"
+                                                                )}
+                                                            >
+                                                                {branch}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </>
+                                            )}
+                                            {branches.local.length === 0 && branches.remote.length === 0 && (
+                                                <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 text-center">
+                                                    No hay branches disponibles
+                                                </div>
+                                            )}
+                                        </div>
                                     )}
-                                </select>
+                                </div>
+                                {newBranchFrom && (
+                                    <div className="bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-800/40 rounded-lg p-3">
+                                        <p className="text-xs text-blue-800 dark:text-blue-300 flex items-start gap-2">
+                                            <Info className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
+                                            <span>
+                                                El nuevo branch <span className="font-semibold">{newBranchName || 'nuevo-branch'}</span> se creará a partir de <span className="font-semibold">{newBranchFrom}</span>
+                                                {newBranchFrom === branches.current && ' (tu branch actual)'}
+                                            </span>
+                                        </p>
+                                    </div>
+                                )}
                             </div>
-                            <div className="flex gap-2 pt-2">
+                            <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                                 <Button
                                     variant="outline"
-                                    size="sm"
-                                    className="flex-1"
+                                    size="default"
+                                    className="min-w-[100px]"
                                     onClick={() => {
                                         setShowNewBranchModal(false);
                                         setNewBranchName("");
                                         setIsCreatingFromRemote(false);
+                                        setBranchFromDropdownOpen(false);
                                     }}
                                     disabled={creatingBranch}
                                 >
                                     Cancelar
                                 </Button>
                                 <Button
-                                    size="sm"
-                                    className="flex-1 bg-cyan-600 hover:bg-cyan-700"
+                                    size="default"
+                                    className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={handleCreateBranch}
                                     disabled={!newBranchName.trim() || creatingBranch}
                                 >
-                                    {creatingBranch ? 'Creando...' : 'Crear Branch'}
+                                    {creatingBranch ? (
+                                        <span className="flex items-center gap-2">
+                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                            Creando...
+                                        </span>
+                                    ) : (
+                                        "Crear"
+                                    )}
                                 </Button>
                             </div>
                         </CardContent>
@@ -2059,7 +2216,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             {/* Modal para crear nuevo tag */}
             {showNewTagModal && (
                 <div
-                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 animate-in fade-in duration-200"
                     onClick={() => {
                         if (!creatingTag) {
                             setShowNewTagModal(false);
@@ -2068,23 +2225,58 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             setPushToAllRemotes(false);
                         }
                     }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' && !creatingTag) {
+                            setShowNewTagModal(false);
+                            setTagName("");
+                            setTagMessage("");
+                            setPushToAllRemotes(false);
+                        }
+                    }}
+                    tabIndex={-1}
                 >
-                    <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
-                        <CardHeader className="p-4">
-                            <CardTitle className="text-lg">Nuevo Tag</CardTitle>
-                            <CardDescription className="text-sm">
-                                Crea un nuevo tag en el commit seleccionado
-                            </CardDescription>
+                    <Card 
+                        className="w-full max-w-md mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                                    <Tag className="w-6 h-6 text-primary" />
+                                </div>
+                                <div className="flex-1">
+                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                        Nuevo Tag
+                                    </CardTitle>
+                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                        Crea un nuevo tag en el commit seleccionado
+                                    </CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
-                        <CardContent className="p-4 pt-0 space-y-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Nombre del tag</label>
+                        <CardContent className="p-6 space-y-6">
+                            <div className="space-y-3">
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <span>Nombre del tag</span>
+                                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                                        (requerido)
+                                    </span>
+                                </label>
+                                <p className="text-xs text-slate-600 dark:text-slate-400">
+                                    Usa convenciones semánticas como v1.0.0, v2.1.3, etc. Los tags ayudan a marcar puntos importantes en el historial del proyecto.
+                                </p>
                                 <input
                                     type="text"
                                     value={tagName}
                                     onChange={(e) => setTagName(e.target.value)}
                                     placeholder="v1.0.0"
-                                    className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                                    className={cn(
+                                        "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                                        "bg-slate-50 dark:bg-slate-800/50",
+                                        "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                                        "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                                        creatingTag && "opacity-60 cursor-not-allowed"
+                                    )}
                                     disabled={creatingTag}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && tagName.trim() && !creatingTag) {
@@ -2092,52 +2284,63 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         }
                                     }}
                                 />
+                                {tagName && selectedCommit && (
+                                    <div className="bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-800/40 rounded-lg p-3">
+                                        <p className="text-xs text-blue-800 dark:text-blue-300 flex items-start gap-2">
+                                            <Info className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
+                                            <span>
+                                                El tag <span className="font-semibold">{tagName}</span> se creará en el commit <span className="font-mono font-semibold">{selectedCommit.hash?.substring(0, 7)}</span>
+                                            </span>
+                                        </p>
+                                    </div>
+                                )}
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Mensaje (opcional)</label>
+                            <div className="space-y-3">
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                    Mensaje
+                                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400 ml-2">
+                                        (opcional)
+                                    </span>
+                                </label>
+                                <p className="text-xs text-slate-600 dark:text-slate-400">
+                                    Proporciona una descripción detallada del tag. Esto es útil para documentar releases, cambios importantes o hitos del proyecto.
+                                </p>
                                 <textarea
                                     value={tagMessage}
                                     onChange={(e) => setTagMessage(e.target.value)}
                                     placeholder="Descripción del tag..."
                                     rows={3}
-                                    className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-none"
+                                    className={cn(
+                                        "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 resize-none",
+                                        "bg-slate-50 dark:bg-slate-800/50",
+                                        "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                                        "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                                        creatingTag && "opacity-60 cursor-not-allowed"
+                                    )}
                                     disabled={creatingTag}
                                 />
                             </div>
-                            <div className="space-y-2 py-2">
+                            <div className="space-y-3 py-2">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-sm font-medium cursor-pointer" htmlFor="push-to-remotes">
-                                        Push to all remotes
+                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 cursor-pointer" htmlFor="push-to-remotes">
+                                        Push a todos los remotes
                                     </label>
-                                    <button
-                                        type="button"
+                                    <Switch
                                         id="push-to-remotes"
-                                        role="switch"
-                                        aria-checked={pushToAllRemotes}
-                                        onClick={() => setPushToAllRemotes(!pushToAllRemotes)}
+                                        checked={pushToAllRemotes}
+                                        onCheckedChange={setPushToAllRemotes}
                                         disabled={creatingTag}
-                                        className={cn(
-                                            "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2",
-                                            pushToAllRemotes ? "bg-cyan-600" : "bg-slate-300 dark:bg-slate-600",
-                                            creatingTag && "opacity-50 cursor-not-allowed"
-                                        )}
-                                    >
-                                        <span
-                                            className={cn(
-                                                "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
-                                                pushToAllRemotes ? "translate-x-6" : "translate-x-1"
-                                            )}
-                                        />
-                                    </button>
+                                    />
                                 </div>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">
+                                <p className="text-xs text-slate-600 dark:text-slate-400">
                                     Si está activado, el tag se enviará automáticamente a todos los remotes configurados del repositorio.
                                 </p>
                             </div>
-                            <div className="flex gap-2 pt-2 justify-end">
+                            <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                                 <Button
                                     variant="outline"
-                                    size="sm"
+                                    size="default"
+                                    className="min-w-[100px]"
                                     onClick={() => {
                                         setShowNewTagModal(false);
                                         setTagName("");
@@ -2149,12 +2352,19 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     Cancelar
                                 </Button>
                                 <Button
-                                    size="sm"
-                                    className="bg-cyan-600 hover:bg-cyan-700"
+                                    size="default"
+                                    className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={handleCreateTag}
                                     disabled={!tagName.trim() || !selectedCommit || creatingTag}
                                 >
-                                    {creatingTag ? 'Creando...' : 'Crear'}
+                                    {creatingTag ? (
+                                        <span className="flex items-center gap-2">
+                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                            Creando...
+                                        </span>
+                                    ) : (
+                                        "Crear"
+                                    )}
                                 </Button>
                             </div>
                         </CardContent>
@@ -2416,7 +2626,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             {/* Modal para hacer stash */}
             {showStashModal && (
                 <div
-                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 animate-in fade-in duration-200"
                     onClick={() => {
                         if (!stashing) {
                             setShowStashModal(false);
@@ -2424,61 +2634,89 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             setStashIncludeUntracked(true);
                         }
                     }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' && !stashing) {
+                            setShowStashModal(false);
+                            setStashMessage('');
+                            setStashIncludeUntracked(true);
+                        }
+                    }}
+                    tabIndex={-1}
                 >
-                    <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
-                        <CardHeader className="p-4">
-                            <CardTitle className="text-lg">Crear Stash</CardTitle>
-                            <CardDescription className="text-sm">
-                                Guarda temporalmente tus cambios en el stash de Git
-                            </CardDescription>
+                    <Card 
+                        className="w-full max-w-md mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                                    <Archive className="w-6 h-6 text-primary" />
+                                </div>
+                                <div className="flex-1">
+                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                        Crear Stash
+                                    </CardTitle>
+                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                        Guarda temporalmente tus cambios en el stash de Git
+                                    </CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
-                        <CardContent className="p-4 pt-0 space-y-4">
-                            {/* Campo de mensaje */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">
-                                    Mensaje (opcional)
+                        <CardContent className="p-6 space-y-6">
+                            <div className="space-y-3">
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                    Mensaje
+                                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400 ml-2">
+                                        (opcional)
+                                    </span>
                                 </label>
+                                <p className="text-xs text-slate-600 dark:text-slate-400">
+                                    Proporciona un mensaje descriptivo para identificar este stash. Si no especificas un mensaje, se usará uno por defecto.
+                                </p>
                                 <input
                                     type="text"
                                     value={stashMessage}
                                     onChange={(e) => setStashMessage(e.target.value)}
-                                    className="w-full px-3 py-2 text-sm rounded-md border border-slate-200 dark:border-slate-700 bg-background focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+                                    className={cn(
+                                        "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                                        "bg-slate-50 dark:bg-slate-800/50",
+                                        "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                                        "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                                        stashing && "opacity-60 cursor-not-allowed"
+                                    )}
                                     placeholder="Mensaje para el stash"
                                     autoFocus
                                     disabled={stashing}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !stashing) {
+                                            handleStash();
+                                        }
+                                    }}
                                 />
-                                <p className="text-xs text-slate-500 dark:text-slate-400">
-                                    Si no especificas un mensaje, se usará uno por defecto
+                            </div>
+
+                            <div className="space-y-3 py-2">
+                                <div className="flex items-center justify-between">
+                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 cursor-pointer" htmlFor="stash-untracked">
+                                        Incluir archivos sin trackear
+                                    </label>
+                                    <Switch
+                                        id="stash-untracked"
+                                        checked={stashIncludeUntracked}
+                                        onCheckedChange={setStashIncludeUntracked}
+                                        disabled={stashing}
+                                    />
+                                </div>
+                                <p className="text-xs text-slate-600 dark:text-slate-400">
+                                    También guarda archivos nuevos que aún no están en el repositorio. Útil cuando quieres guardar cambios en archivos que no han sido agregados al staging area.
                                 </p>
                             </div>
 
-                            {/* Switch para incluir archivos sin trackear */}
-                            <div className="flex items-center justify-between p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
-                                <div className="flex-1">
-                                    <label className="text-sm font-medium cursor-pointer" htmlFor="stash-untracked">
-                                        Incluir archivos sin trackear
-                                    </label>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                                        También guarda archivos nuevos que aún no están en el repositorio
-                                    </p>
-                                </div>
-                                <label className="relative inline-flex items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        id="stash-untracked"
-                                        checked={stashIncludeUntracked}
-                                        onChange={(e) => setStashIncludeUntracked(e.target.checked)}
-                                        disabled={stashing}
-                                        className="sr-only peer"
-                                    />
-                                    <div className="w-11 h-6 bg-slate-200 dark:bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
-                                </label>
-                            </div>
-
-                            <div className="flex gap-2 pt-2 justify-end">
+                            <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                                 <Button
                                     variant="outline"
-                                    size="sm"
+                                    size="default"
+                                    className="min-w-[100px]"
                                     onClick={() => {
                                         setShowStashModal(false);
                                         setStashMessage('');
@@ -2489,12 +2727,19 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     Cancelar
                                 </Button>
                                 <Button
-                                    size="sm"
-                                    className="bg-cyan-600 hover:bg-cyan-700 text-white"
+                                    size="default"
+                                    className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={handleStash}
                                     disabled={stashing}
                                 >
-                                    {stashing ? 'Guardando...' : 'Crear'}
+                                    {stashing ? (
+                                        <span className="flex items-center gap-2">
+                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                            Guardando...
+                                        </span>
+                                    ) : (
+                                        "Crear"
+                                    )}
                                 </Button>
                             </div>
                         </CardContent>
@@ -2505,7 +2750,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             {/* Modal para lista de stashes */}
             {showStashListModal && (
                 <div
-                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 animate-in fade-in duration-200"
                     onClick={() => {
                         if (!applyingStash) {
                             setShowStashListModal(false);
@@ -2513,108 +2758,132 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             setSelectedStash(null);
                         }
                     }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' && !applyingStash) {
+                            setShowStashListModal(false);
+                            setStashList([]);
+                            setSelectedStash(null);
+                        }
+                    }}
+                    tabIndex={-1}
                 >
-                    <Card className="w-full max-w-3xl mx-4 bg-background border-2 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                        <CardHeader className="p-4">
-                            <CardTitle className="text-lg">Lista de Stashes</CardTitle>
-                            <CardDescription className="text-sm">
-                                Selecciona un stash para aplicarlo (pop)
-                            </CardDescription>
+                    <Card 
+                        className="w-full max-w-3xl mx-4 bg-background border-2 shadow-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                                    <Archive className="w-6 h-6 text-primary" />
+                                </div>
+                                <div className="flex-1">
+                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                        Stashes
+                                    </CardTitle>
+                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                        Selecciona un stash para aplicarlo (pop) y restaurar tus cambios guardados
+                                    </CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
-                        <CardContent className="p-4 pt-0">
+                        <CardContent className="p-6">
                             {loadingStashList ? (
-                                <div className="flex items-center justify-center py-8">
-                                    <RotateCw className="h-6 w-6 animate-spin text-slate-400" />
-                                    <span className="ml-2 text-sm text-slate-600 dark:text-slate-400">Cargando stashes...</span>
+                                <div className="flex items-center justify-center py-12">
+                                    <RefreshCw className="h-6 w-6 animate-spin text-primary" />
+                                    <span className="ml-3 text-sm text-slate-600 dark:text-slate-400 font-medium">Cargando stashes...</span>
                                 </div>
                             ) : stashList.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center py-12 px-4">
-                                    <div className="rounded-full bg-slate-100 dark:bg-slate-800 p-4 mb-4">
-                                        <Archive className="h-8 w-8 text-slate-400 dark:text-slate-500" />
+                                <div className="flex flex-col items-center justify-center py-16 px-4">
+                                    <div className="rounded-full bg-primary/10 dark:bg-primary/20 p-5 mb-5">
+                                        <Archive className="h-10 w-10 text-primary" />
                                     </div>
-                                    <p className="text-base font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                    <p className="text-base font-semibold text-slate-700 dark:text-slate-300 mb-2">
                                         No hay stashes disponibles
                                     </p>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400 text-center max-w-sm">
+                                    <p className="text-sm text-slate-600 dark:text-slate-400 text-center max-w-sm">
                                         Los stashes te permiten guardar temporalmente cambios sin hacer commit. Crea uno desde el menú de stashes.
                                     </p>
                                 </div>
                             ) : (
-                                <div className="overflow-x-auto">
-                                    <table className="w-full border-collapse">
-                                        <thead>
-                                            <tr className="border-b border-slate-200 dark:border-slate-700">
-                                                <th className="text-left p-3 text-xs font-semibold text-slate-600 dark:text-slate-400 w-12"></th>
-                                                <th className="text-left p-3 text-xs font-semibold text-slate-600 dark:text-slate-400">Referencia</th>
-                                                <th className="text-left p-3 text-xs font-semibold text-slate-600 dark:text-slate-400">Mensaje</th>
-                                                <th className="text-left p-3 text-xs font-semibold text-slate-600 dark:text-slate-400">Fecha</th>
-                                                <th className="text-center p-3 text-xs font-semibold text-slate-600 dark:text-slate-400 w-20">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {stashList.map((stash) => (
-                                                <tr
-                                                    key={stash.ref}
-                                                    className={`border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer ${
-                                                        selectedStash === stash.ref ? 'bg-cyan-50 dark:bg-cyan-950/20' : ''
-                                                    }`}
-                                                    onClick={() => setSelectedStash(stash.ref)}
-                                                >
-                                                    <td className="p-3">
-                                                        <div className="relative flex items-center justify-center">
-                                                            <input
-                                                                type="radio"
-                                                                name="stash-select"
-                                                                checked={selectedStash === stash.ref}
-                                                                onChange={() => setSelectedStash(stash.ref)}
-                                                                className="h-4 w-4 appearance-none border-2 border-slate-300 dark:border-slate-600 rounded-full bg-transparent checked:border-cyan-600 focus:ring-2 focus:ring-cyan-500 focus:ring-offset-0"
-                                                            />
-                                                            {selectedStash === stash.ref && (
-                                                                <div className="absolute top-[6px] left-[4px] h-2 w-2 bg-cyan-600 rounded-full" />
-                                                            )}
-                                                        </div>
-                                                    </td>
-                                                    <td className="p-3">
-                                                        <span className="text-xs font-mono text-slate-600 dark:text-slate-400">
-                                                            {stash.ref}
-                                                        </span>
-                                                    </td>
-                                                    <td className="p-3">
-                                                        <p className="text-sm text-slate-700 dark:text-slate-300 break-words">
-                                                            {stash.message}
-                                                        </p>
-                                                    </td>
-                                                    <td className="p-3">
-                                                        <p className="text-xs text-slate-500 dark:text-slate-400">
-                                                            {new Date(stash.date).toLocaleString()}
-                                                        </p>
-                                                    </td>
-                                                    <td className="p-3">
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="h-7 w-7 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setStashToDelete({ ref: stash.ref, message: stash.message });
-                                                            }}
-                                                            disabled={applyingStash !== null || deletingStash || clearingAllStashes}
-                                                            title="Eliminar stash"
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
-                                                    </td>
+                                <div className="space-y-4">
+                                    <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700">
+                                        <table className="w-full border-collapse">
+                                            <thead>
+                                                <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
+                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider w-12"></th>
+                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Referencia</th>
+                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Mensaje</th>
+                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Fecha</th>
+                                                    <th className="text-center p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider w-20">Acciones</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {stashList.map((stash) => (
+                                                    <tr
+                                                        key={stash.ref}
+                                                        className={cn(
+                                                            "border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer",
+                                                            selectedStash === stash.ref && "bg-primary/5 dark:bg-primary/10"
+                                                        )}
+                                                        onClick={() => setSelectedStash(stash.ref)}
+                                                    >
+                                                        <td className="p-4">
+                                                            <div className="relative flex items-center justify-center">
+                                                                <input
+                                                                    type="radio"
+                                                                    name="stash-select"
+                                                                    checked={selectedStash === stash.ref}
+                                                                    onChange={() => setSelectedStash(stash.ref)}
+                                                                    className="h-4 w-4 appearance-none border-2 border-slate-300 dark:border-slate-600 rounded-full bg-transparent checked:border-primary focus:ring-2 focus:ring-primary focus:ring-offset-0"
+                                                                />
+                                                                {selectedStash === stash.ref && (
+                                                                    <div className="absolute top-[6px] left-[4px] h-2 w-2 bg-primary rounded-full" />
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td className="p-4">
+                                                            <span className="text-xs font-mono text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">
+                                                                {stash.ref}
+                                                            </span>
+                                                        </td>
+                                                        <td className="p-4">
+                                                            <p className="text-sm text-slate-700 dark:text-slate-300 break-words font-medium">
+                                                                {stash.message}
+                                                            </p>
+                                                        </td>
+                                                        <td className="p-4">
+                                                            <p className="text-xs text-slate-600 dark:text-slate-400">
+                                                                {new Date(stash.date).toLocaleString()}
+                                                            </p>
+                                                        </td>
+                                                        <td className="p-4">
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="h-8 w-8 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setStashToDelete({ ref: stash.ref, message: stash.message });
+                                                                }}
+                                                                disabled={applyingStash !== null || deletingStash || clearingAllStashes}
+                                                                title="Eliminar stash"
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </Button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             )}
 
-                            <div className="flex gap-2 pt-4 mt-4 justify-end">
+                            <div className="flex gap-3 pt-4 mt-6 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                                 <Button
                                     variant="outline"
-                                    size="sm"
+                                    size="default"
+                                    className="min-w-[100px]"
                                     onClick={() => {
                                         setShowStashListModal(false);
                                         setStashList([]);
@@ -2627,28 +2896,28 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 {stashList.length > 0 && (
                                     <Button
                                         variant="outline"
-                                        size="sm"
-                                        className="text-red-600 dark:text-red-400 border-red-300 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                        size="default"
+                                        className="min-w-[130px] text-red-600 dark:text-red-400 border-red-300 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-400 dark:hover:border-red-600"
                                         onClick={() => setShowClearAllConfirm(true)}
                                         disabled={applyingStash !== null || deletingStash || clearingAllStashes}
                                     >
-                                        <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                                        <Trash2 className="h-4 w-4 mr-2" />
                                         Limpiar Todos
                                     </Button>
                                 )}
                                 <Button
-                                    size="sm"
-                                    className="bg-cyan-600 hover:bg-cyan-700 text-white"
+                                    size="default"
+                                    className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={handleStashPop}
                                     disabled={applyingStash !== null || deletingStash || clearingAllStashes || !selectedStash}
                                 >
                                     {applyingStash ? (
-                                        <>
-                                            <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                                        <span className="flex items-center gap-2">
+                                            <RefreshCw className="w-4 h-4 animate-spin" />
                                             Aplicando...
-                                        </>
+                                        </span>
                                     ) : (
-                                        'Aplicar'
+                                        "Aplicar"
                                     )}
                                 </Button>
                             </div>
@@ -2777,46 +3046,68 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             {/* Modal para Revert */}
             {showRevertModal && selectedCommit && (
                 <div
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 animate-in fade-in duration-200"
                     onClick={() => {
                         if (!reverting) {
                             setShowRevertModal(false);
                         }
                     }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' && !reverting) {
+                            setShowRevertModal(false);
+                        }
+                    }}
+                    tabIndex={-1}
                 >
-                    <Card className="w-full max-w-lg mx-4 bg-background border border-slate-200 dark:border-slate-700 shadow-xl" onClick={(e) => e.stopPropagation()}>
-                        <CardHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
-                            <CardTitle className="text-xl font-semibold">Revert Commit</CardTitle>
-                            <CardDescription className="text-sm mt-1">
-                                Crear un nuevo commit que deshace los cambios de este commit
-                            </CardDescription>
+                    <Card 
+                        className="w-full max-w-lg mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                                    <Undo2 className="w-6 h-6 text-primary" />
+                                </div>
+                                <div className="flex-1">
+                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                        Revert Commit
+                                    </CardTitle>
+                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                        Crear un nuevo commit que deshace los cambios de este commit
+                                    </CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Commit a revertir:</label>
-                                <div className="px-4 py-3 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3 shadow-sm">
-                                    <div className="p-1.5 bg-orange-100 dark:bg-orange-900/30 rounded-md">
+                            <div className="space-y-3">
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Commit a revertir</label>
+                                <div className="px-4 py-3 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3 shadow-sm">
+                                    <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
                                         <Undo2 className="h-4 w-4 text-orange-600 dark:text-orange-400" />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
-                                            <span className="text-slate-600 dark:text-slate-400 font-mono text-xs bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded">{selectedCommit.hash.substring(0, 7)}</span>
+                                            <span className="text-slate-700 dark:text-slate-300 font-mono text-xs bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded font-semibold">{selectedCommit.hash.substring(0, 7)}</span>
                                             <span className="text-slate-800 dark:text-slate-200 font-medium truncate">{selectedCommit.message}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div className="p-4 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-900/20">
-                                <p className="text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
-                                    Esto creará un nuevo commit que revierte los cambios realizados en el commit seleccionado. El commit original permanecerá en el historial.
-                                </p>
+                            <div className="p-4 rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-900/20">
+                                <div className="flex items-start gap-3">
+                                    <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                                    <p className="text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
+                                        Esto creará un nuevo commit que revierte los cambios realizados en el commit seleccionado. El commit original permanecerá en el historial y no se eliminará.
+                                    </p>
+                                </div>
                             </div>
 
-                            <div className="flex gap-3 pt-4 justify-end">
+                            <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                                 <Button
                                     variant="outline"
-                                    size="sm"
+                                    size="default"
+                                    className="min-w-[100px]"
                                     onClick={() => {
                                         setShowRevertModal(false);
                                     }}
@@ -2825,16 +3116,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     Cancelar
                                 </Button>
                                 <Button
-                                    size="sm"
-                                    className="bg-orange-600 hover:bg-orange-700 text-white shadow-sm"
+                                    size="default"
+                                    className="min-w-[120px] bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-600/25 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={handleRevert}
                                     disabled={reverting}
                                 >
                                     {reverting ? (
-                                        <>
-                                            <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                                        <span className="flex items-center gap-2">
+                                            <RefreshCw className="w-4 h-4 animate-spin" />
                                             Revirtiendo...
-                                        </>
+                                        </span>
                                     ) : (
                                         'Revertir'
                                     )}
@@ -2848,7 +3139,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             {/* Modal para Cherry-pick */}
             {showCherryPickModal && selectedCommit && (
                 <div
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 animate-in fade-in duration-200"
                     onClick={() => {
                         if (!cherryPicking) {
                             setShowCherryPickModal(false);
@@ -2856,35 +3147,55 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             setCherryPickAppendOrigin(false);
                         }
                     }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' && !cherryPicking) {
+                            setShowCherryPickModal(false);
+                            setCherryPickCommitChanges(true);
+                            setCherryPickAppendOrigin(false);
+                        }
+                    }}
+                    tabIndex={-1}
                 >
-                    <Card className="w-full max-w-lg mx-4 bg-background border border-slate-200 dark:border-slate-700 shadow-xl" onClick={(e) => e.stopPropagation()}>
-                        <CardHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
-                            <CardTitle className="text-xl font-semibold">Cherry Pick</CardTitle>
-                            <CardDescription className="text-sm mt-1">
-                                Aplicar cambios del commit individual
-                            </CardDescription>
+                    <Card 
+                        className="w-full max-w-lg mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                                    <GitMerge className="w-6 h-6 text-primary" />
+                                </div>
+                                <div className="flex-1">
+                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                        Cherry Pick
+                                    </CardTitle>
+                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                        Aplicar cambios del commit individual al branch actual
+                                    </CardDescription>
+                                </div>
+                            </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Commit a aplicar:</label>
-                                <div className="px-4 py-3 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3 shadow-sm">
-                                    <div className="p-1.5 bg-cyan-100 dark:bg-cyan-900/30 rounded-md">
-                                        <GitBranch className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
+                            <div className="space-y-3">
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Commit a aplicar</label>
+                                <div className="px-4 py-3 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3 shadow-sm">
+                                    <div className="p-2 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg">
+                                        <GitMerge className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
-                                            <span className="text-slate-600 dark:text-slate-400 font-mono text-xs bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded">{selectedCommit.hash.substring(0, 7)}</span>
+                                            <span className="text-slate-700 dark:text-slate-300 font-mono text-xs bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded font-semibold">{selectedCommit.hash.substring(0, 7)}</span>
                                             <span className="text-slate-800 dark:text-slate-200 font-medium truncate">{selectedCommit.message}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div className="space-y-5">
-                                <div className="p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/30">
+                            <div className="space-y-4">
+                                <div className="p-4 rounded-xl border border-slate-200/60 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-800/30">
                                     <div className="flex items-start justify-between gap-4">
-                                        <div className="flex-1 space-y-1.5">
-                                            <label htmlFor="cherry-pick-commit" className="text-sm font-semibold text-slate-800 dark:text-slate-200 block cursor-pointer">
+                                        <div className="flex-1 space-y-2">
+                                            <label htmlFor="cherry-pick-commit" className="text-sm font-semibold text-slate-700 dark:text-slate-300 block cursor-pointer">
                                                 Hacer commit de los cambios
                                             </label>
                                             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -2903,17 +3214,17 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </div>
                                 
                                 <div className={cn(
-                                    "p-4 rounded-lg border transition-all",
+                                    "p-4 rounded-xl border transition-all",
                                     cherryPickCommitChanges
-                                        ? "border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/30"
-                                        : "border-slate-200/50 dark:border-slate-700/50 bg-slate-50/30 dark:bg-slate-800/20 opacity-60"
+                                        ? "border-slate-200/60 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-800/30"
+                                        : "border-slate-200/30 dark:border-slate-700/30 bg-slate-50/20 dark:bg-slate-800/10 opacity-60"
                                 )}>
                                     <div className="flex items-start justify-between gap-4">
-                                        <div className="flex-1 space-y-1.5">
+                                        <div className="flex-1 space-y-2">
                                             <label htmlFor="cherry-pick-append" className={cn(
                                                 "text-sm font-semibold block",
                                                 cherryPickCommitChanges 
-                                                    ? "text-slate-800 dark:text-slate-200 cursor-pointer" 
+                                                    ? "text-slate-700 dark:text-slate-300 cursor-pointer" 
                                                     : "text-slate-500 dark:text-slate-500 cursor-not-allowed"
                                             )}>
                                                 Agregar origen al mensaje del commit
@@ -2924,7 +3235,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                     ? "text-slate-600 dark:text-slate-400" 
                                                     : "text-slate-400 dark:text-slate-600"
                                             )}>
-                                                Agregar una referencia al commit original al final del mensaje del commit (ej: "(cherry picked from commit abc1234")). Esto ayuda a rastrear de dónde vinieron los cambios en el historial de git. Solo disponible cuando "Hacer commit de los cambios" está habilitado.
+                                                Agregar una referencia al commit original al final del mensaje del commit (ej: "(cherry picked from commit abc1234")"). Esto ayuda a rastrear de dónde vinieron los cambios en el historial de git. Solo disponible cuando "Hacer commit de los cambios" está habilitado.
                                             </p>
                                         </div>
                                         <div className="pt-0.5">
@@ -2939,10 +3250,11 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </div>
                             </div>
 
-                            <div className="flex gap-3 pt-4 justify-end">
+                            <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                                 <Button
                                     variant="outline"
-                                    size="sm"
+                                    size="default"
+                                    className="min-w-[100px]"
                                     onClick={() => {
                                         setShowCherryPickModal(false);
                                         setCherryPickCommitChanges(true);
@@ -2953,16 +3265,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     Cancelar
                                 </Button>
                                 <Button
-                                    size="sm"
-                                    className="bg-cyan-600 hover:bg-cyan-700 text-white shadow-sm"
+                                    size="default"
+                                    className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={handleCherryPick}
                                     disabled={cherryPicking}
                                 >
                                     {cherryPicking ? (
-                                        <>
-                                            <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                                        <span className="flex items-center gap-2">
+                                            <RefreshCw className="w-4 h-4 animate-spin" />
                                             Aplicando...
-                                        </>
+                                        </span>
                                     ) : (
                                         'Aplicar'
                                     )}

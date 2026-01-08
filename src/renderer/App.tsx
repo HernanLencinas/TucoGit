@@ -5556,17 +5556,6 @@ function App() {
                         : "Configura una nueva conexión con tu proveedor de Git en pocos pasos"}
                     </CardDescription>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-                    onClick={() => {
-                      setMostrarWizardNuevaConexion(false);
-                      limpiarWizardConexion();
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
                 </div>
 
                 {/* Indicador de progreso */}
@@ -6106,25 +6095,6 @@ function App() {
                         : "Agrega un nuevo repositorio a tu colección en pocos pasos"}
                     </CardDescription>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-                    onClick={() => {
-                      setMostrarWizardNuevoRepositorio(false);
-                      setPasoWizardRepositorio(1);
-                      setConexionSeleccionada(null);
-                      setRepositorioSeleccionado("");
-                      setRepositoriosDisponibles([]);
-                      setNombreRepositorio("");
-                      setDescripcionRepositorio("");
-                      setEditandoRepositorio(false);
-                      setRepositorioAEditar(null);
-                      setBusquedaRepositorio("");
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
                 </div>
 
                 {/* Barra de progreso */}
@@ -6620,24 +6590,56 @@ function App() {
       {
         mostrarModalRestablecerConfig && (
           <div
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
             onClick={() => {
               setMostrarModalRestablecerConfig(false);
             }}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setMostrarModalRestablecerConfig(false);
+              }
+            }}
+            tabIndex={-1}
           >
-            <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
-              <CardHeader className="p-4">
-                <CardTitle className="text-lg">Restablecer Configuración</CardTitle>
-                <CardDescription className="text-sm">
-                  ¿Estás seguro de que deseas restablecer toda la configuración? Esta acción eliminará todos tus repositorios, conexiones y preferencias, y no se puede deshacer.
-                </CardDescription>
+            <Card 
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarModalRestablecerConfig(false);
+                }
+              }}
+            >
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-red-100 dark:bg-red-950/30">
+                    <RefreshCw className="w-6 h-6 text-red-600 dark:text-red-400" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                      Restablecer Configuración
+                    </CardTitle>
+                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                      Esta acción no se puede deshacer
+                    </CardDescription>
+                  </div>
+                </div>
               </CardHeader>
-              <CardContent className="p-4 pt-0 space-y-4">
-                <div className="flex gap-2 pt-2">
+              <CardContent className="p-6 space-y-6">
+                <div className="bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 rounded-xl p-4">
+                  <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
+                    <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                    <span>
+                      ¿Estás seguro de que deseas restablecer toda la configuración? Esta acción eliminará <span className="font-semibold">todos tus repositorios, conexiones y preferencias</span>. Esta acción es permanente y no se puede deshacer.
+                    </span>
+                  </p>
+                </div>
+                <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                   <Button
                     variant="outline"
-                    size="sm"
-                    className="flex-1"
+                    size="default"
+                    className="min-w-[100px]"
                     onClick={() => {
                       setMostrarModalRestablecerConfig(false);
                     }}
@@ -6645,9 +6647,9 @@ function App() {
                     Cancelar
                   </Button>
                   <Button
-                    size="sm"
+                    size="default"
                     variant="destructive"
-                    className="flex-1 bg-red-600 hover:bg-red-700"
+                    className="min-w-[180px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/25"
                     onClick={confirmarRestablecerConfig}
                   >
                     Restaurar Configuración
@@ -6709,24 +6711,8 @@ function App() {
                   <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
                     Organiza tus repositorios en una nueva colección personalizada
                   </CardDescription>
+                  </div>
                 </div>
-                {!creandoColeccion && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-                    onClick={() => {
-                      setMostrarModalNuevaCarpeta(false);
-                      setNombreNuevaCarpeta("");
-                      setDescripcionNuevaCarpeta("");
-                      setErrorNombre(null);
-                      setErrorDescripcion(null);
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div className="space-y-3">
@@ -6943,25 +6929,8 @@ function App() {
                   <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
                     Modifica los datos de la colección
                   </CardDescription>
+                  </div>
                 </div>
-                {!editandoColeccion && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-                    onClick={() => {
-                      setMostrarModalEditarColeccion(false);
-                      setColeccionAEditar(null);
-                      setNombreEditarColeccion("");
-                      setDescripcionEditarColeccion("");
-                      setErrorNombreEditar(null);
-                      setErrorDescripcionEditar(null);
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div className="space-y-3">
@@ -7185,18 +7154,6 @@ function App() {
                       La carpeta de destino ya existe y no está vacía
                     </CardDescription>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-                    onClick={() => {
-                      setMostrarModalConfirmarReclon(false);
-                      setRepoAClonar(null);
-                      setRutaDestinoAClonar("");
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
                 </div>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -7293,17 +7250,6 @@ function App() {
                         Se clonarán {cantidadRepos} {cantidadRepos === 1 ? 'repositorio' : 'repositorios'} de la carpeta actual
                       </CardDescription>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-                      onClick={() => {
-                        setMostrarModalClonarTodos(false);
-                        setForzarReclonado(false);
-                      }}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
@@ -7404,17 +7350,6 @@ function App() {
                       Esta acción no se puede deshacer
                     </CardDescription>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-                    onClick={() => {
-                      setMostrarModalEliminarColeccion(false);
-                      setColeccionAEliminar(null);
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
                 </div>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -7523,17 +7458,6 @@ function App() {
                         Esta acción no se puede deshacer
                       </CardDescription>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-                      onClick={() => {
-                        setMostrarModalEliminarConexion(false);
-                        setConexionAEliminar(null);
-                      }}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
@@ -7644,17 +7568,6 @@ function App() {
                       Esta acción no se puede deshacer
                     </CardDescription>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-                    onClick={() => {
-                      setMostrarModalEliminarRepositorio(false);
-                      setRepositorioAEliminar(null);
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
                 </div>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -7723,7 +7636,7 @@ function App() {
       {/* Modal para nueva identidad */}
       {mostrarModalNuevaIdentidad && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
           onClick={() => {
             setMostrarModalNuevaIdentidad(false);
             setNombreNuevaIdentidad("");
@@ -7739,7 +7652,7 @@ function App() {
           tabIndex={-1}
         >
           <Card
-            className="w-full max-w-md bg-background border-2"
+            className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
@@ -7750,39 +7663,76 @@ function App() {
               }
             }}
           >
-            <CardHeader>
-              <CardTitle className="text-lg">Nueva Identidad</CardTitle>
-              <CardDescription>
-                Agrega una nueva identidad de usuario para Git
-              </CardDescription>
+            <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                  <User className="w-6 h-6 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    Nueva Identidad
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    Agrega una nueva identidad de usuario para Git
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold">Nombre Completo</label>
+            <CardContent className="p-6 space-y-6">
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <span>Nombre Completo</span>
+                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                    (requerido)
+                  </span>
+                </label>
                 <input
                   type="text"
                   value={nombreNuevaIdentidad}
                   onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
                   placeholder="Tu nombre completo"
-                  className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                  className={cn(
+                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                    "bg-slate-50 dark:bg-slate-800/50",
+                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                    "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                  )}
                   autoFocus
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold">Correo Electrónico</label>
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <span>Correo Electrónico</span>
+                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                    (requerido)
+                  </span>
+                </label>
                 <input
                   type="email"
                   value={emailNuevaIdentidad}
                   onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
                   placeholder="tu.email@ejemplo.com"
-                  className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                  className={cn(
+                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                    "bg-slate-50 dark:bg-slate-800/50",
+                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                    !emailNuevaIdentidad.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())
+                      ? "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                      : "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
+                  )}
                 />
+                {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
+                  <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
+                    <AlertCircle className="w-4 h-4" />
+                    <span>Por favor ingresa un correo electrónico válido</span>
+                  </div>
+                )}
               </div>
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                 <Button
                   variant="outline"
-                  size="sm"
-                  className="flex-1"
+                  size="default"
+                  className="min-w-[100px]"
                   onClick={() => {
                     setMostrarModalNuevaIdentidad(false);
                     setNombreNuevaIdentidad("");
@@ -7792,8 +7742,8 @@ function App() {
                   Cancelar
                 </Button>
                 <Button
-                  size="sm"
-                  className="flex-1"
+                  size="default"
+                  className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())}
                   onClick={async () => {
                     if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
@@ -7837,7 +7787,7 @@ function App() {
       {/* Modal para editar identidad */}
       {mostrarModalEditarIdentidad && identidadAEditar && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
           onClick={() => {
             setMostrarModalEditarIdentidad(false);
             setIdentidadAEditar(null);
@@ -7855,7 +7805,7 @@ function App() {
           tabIndex={-1}
         >
           <Card
-            className="w-full max-w-md bg-background border-2"
+            className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
@@ -7867,39 +7817,76 @@ function App() {
               }
             }}
           >
-            <CardHeader>
-              <CardTitle className="text-lg">Editar Identidad</CardTitle>
-              <CardDescription>
-                Modifica la información de la identidad
-              </CardDescription>
+            <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                  <Pencil className="w-6 h-6 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    Editar Identidad
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    Modifica la información de la identidad
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold">Nombre Completo</label>
+            <CardContent className="p-6 space-y-6">
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <span>Nombre Completo</span>
+                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                    (requerido)
+                  </span>
+                </label>
                 <input
                   type="text"
                   value={nombreNuevaIdentidad}
                   onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
                   placeholder="Tu nombre completo"
-                  className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                  className={cn(
+                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                    "bg-slate-50 dark:bg-slate-800/50",
+                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                    "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                  )}
                   autoFocus
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold">Correo Electrónico</label>
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <span>Correo Electrónico</span>
+                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                    (requerido)
+                  </span>
+                </label>
                 <input
                   type="email"
                   value={emailNuevaIdentidad}
                   onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
                   placeholder="tu.email@ejemplo.com"
-                  className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                  className={cn(
+                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                    "bg-slate-50 dark:bg-slate-800/50",
+                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                    !emailNuevaIdentidad.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())
+                      ? "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                      : "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
+                  )}
                 />
+                {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
+                  <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
+                    <AlertCircle className="w-4 h-4" />
+                    <span>Por favor ingresa un correo electrónico válido</span>
+                  </div>
+                )}
               </div>
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                 <Button
                   variant="outline"
-                  size="sm"
-                  className="flex-1"
+                  size="default"
+                  className="min-w-[100px]"
                   onClick={() => {
                     setMostrarModalEditarIdentidad(false);
                     setIdentidadAEditar(null);
@@ -7910,8 +7897,9 @@ function App() {
                   Cancelar
                 </Button>
                 <Button
-                  size="sm"
-                  className="flex-1"
+                  size="default"
+                  className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())}
                   onClick={async () => {
                     if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
                       showToast('Por favor completa todos los campos', 'error');
