@@ -4513,6 +4513,11 @@ function App() {
                                 <div className="flex items-center gap-2">
                                   <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                                   <span>{identidad.nombre}</span>
+                                  {identidad.id === IDENTIDAD_DEFAULT_ID && (
+                                    <span className="px-1 py-0.5 text-[8px] font-semibold rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                                      Default
+                                    </span>
+                                  )}
                                 </div>
                               </td>
                               <td className="py-3 px-4 text-sm text-muted-foreground">{identidad.email}</td>
@@ -5817,7 +5822,14 @@ function App() {
                                 >
                                   <Check className={`h-4 w-4 flex-shrink-0 ${identidadSeleccionada === identidad.id ? "opacity-100" : "opacity-0"}`} />
                                   <div className="flex-1 min-w-0">
-                                    <div className="font-medium truncate">{identidad.nombre}</div>
+                                    <div className="font-medium truncate flex items-center gap-2">
+                                      {identidad.nombre}
+                                      {identidad.id === IDENTIDAD_DEFAULT_ID && (
+                                        <span className="px-0.5 py-0.5 text-[7px] font-semibold rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                                          Default
+                                        </span>
+                                      )}
+                                    </div>
                                     <div className="text-xs text-muted-foreground truncate">{identidad.email}</div>
                                   </div>
                                 </button>
