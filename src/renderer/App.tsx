@@ -1325,16 +1325,16 @@ function App() {
     }
   };
 
-  const handleThemeSelect = async (themeName: ThemeName, mode: ThemeMode) => {
-    setSelectedTheme({ name: themeName, mode });
-    setIsDark(mode === 'dark');
-    applyTheme(themeName, mode);
+  const handleThemeSelect = async (themeName: ThemeName) => {
+    const currentMode = isDark ? 'dark' : 'light';
+    setSelectedTheme({ name: themeName, mode: currentMode });
+    applyTheme(themeName, currentMode);
 
     // Guardar tema en el archivo de configuración
     try {
       if (window.electronAPI?.writeConfig) {
         await window.electronAPI.writeConfig({
-          tema: mode,
+          tema: currentMode,
           temaNombre: themeName
         });
       }
@@ -4389,94 +4389,68 @@ function App() {
               {/* Selección de Temas */}
               <Card className="border-2">
                 <CardHeader className="pb-3">
-                  <div>
-                    <CardTitle className="text-base">Temas</CardTitle>
-                    <CardDescription className="text-xs mt-1">
-                      Selecciona un tema y su variante (claro u oscuro) para personalizar la apariencia
-                    </CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-base">Temas</CardTitle>
+                      <CardDescription className="text-xs mt-1">
+                        Selecciona un estilo de tema para personalizar la apariencia
+                      </CardDescription>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Sun className="h-4 w-4 text-muted-foreground" />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={toggleTheme}
+                        className="h-8 px-3"
+                      >
+                        {isDark ? (
+                          <>
+                            <Moon className="h-3.5 w-3.5 mr-1.5" />
+                            Oscuro
+                          </>
+                        ) : (
+                          <>
+                            <Sun className="h-3.5 w-3.5 mr-1.5" />
+                            Claro
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {themes.map((theme) => (
-                      <Card
-                        key={theme.name}
-                        className={`p-4 cursor-pointer hover:border-primary/50 transition-all border-2 ${
-                          selectedTheme.name === theme.name 
-                            ? 'border-primary bg-primary/5 shadow-md' 
-                            : 'border-border'
-                        }`}
-                        onClick={() => {
-                          // Mantener el modo actual si el tema ya está seleccionado
-                          if (selectedTheme.name === theme.name) {
-                            return;
-                          }
-                          handleThemeSelect(theme.name, selectedTheme.mode);
-                        }}
-                      >
-                        <div className="space-y-3">
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <div className="text-sm font-semibold mb-1">{theme.displayName}</div>
-                              <div className="text-xs text-muted-foreground">{theme.description}</div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                    {themes.map((theme) => {
+                      const currentColors = isDark ? theme.colors.dark : theme.colors.light;
+                      return (
+                        <Card
+                          key={theme.name}
+                          className={`p-3 cursor-pointer hover:border-primary/50 transition-all border-2 ${
+                            selectedTheme.name === theme.name 
+                              ? 'border-primary bg-primary/5 shadow-md' 
+                              : 'border-border'
+                          }`}
+                          onClick={() => handleThemeSelect(theme.name)}
+                        >
+                          <div className="space-y-2">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1 min-w-0">
+                                <div className="text-xs font-semibold truncate">{theme.displayName}</div>
+                              </div>
+                              {selectedTheme.name === theme.name && (
+                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 ml-1" />
+                              )}
                             </div>
-                            {selectedTheme.name === theme.name && (
-                              <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
-                            )}
-                          </div>
-                          <div className="flex gap-2">
-                            <div
-                              className={`flex-1 p-3 rounded-lg border-2 cursor-pointer relative transition-all ${
-                                selectedTheme.name === theme.name && !isDark
-                                  ? 'border-primary bg-primary/10 shadow-sm'
-                                  : 'border-border hover:border-primary/50'
-                              }`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleThemeSelect(theme.name, 'light');
-                              }}
-                            >
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="text-xs font-semibold">Claro</div>
-                                {selectedTheme.name === theme.name && !isDark && (
-                                  <Check className="h-3.5 w-3.5 text-primary" />
-                                )}
-                              </div>
-                              <div className="h-6 rounded-md shadow-sm" style={{ backgroundColor: `hsl(${theme.colors.light.primary})` }} />
-                              <div className="mt-1.5 flex gap-1">
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.light.background})` }} />
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.light.muted})` }} />
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.light.accent})` }} />
-                              </div>
-                            </div>
-                            <div
-                              className={`flex-1 p-3 rounded-lg border-2 cursor-pointer relative transition-all ${
-                                selectedTheme.name === theme.name && isDark
-                                  ? 'border-primary bg-primary/10 shadow-sm'
-                                  : 'border-border hover:border-primary/50'
-                              }`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleThemeSelect(theme.name, 'dark');
-                              }}
-                            >
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="text-xs font-semibold">Oscuro</div>
-                                {selectedTheme.name === theme.name && isDark && (
-                                  <Check className="h-3.5 w-3.5 text-primary" />
-                                )}
-                              </div>
-                              <div className="h-6 rounded-md shadow-sm" style={{ backgroundColor: `hsl(${theme.colors.dark.primary})` }} />
-                              <div className="mt-1.5 flex gap-1">
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.dark.background})` }} />
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.dark.muted})` }} />
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.dark.accent})` }} />
-                              </div>
+                            <div className="h-8 rounded-md shadow-sm" style={{ backgroundColor: `hsl(${currentColors.primary})` }} />
+                            <div className="flex gap-1 justify-center">
+                              <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: `hsl(${currentColors.secondary})` }} />
+                              <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: `hsl(${currentColors.accent})` }} />
                             </div>
                           </div>
-                        </div>
-                      </Card>
-                    ))}
+                        </Card>
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>
