@@ -323,6 +323,7 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
           zoomLevel: 100,
           gitSslVerify: true,
           rutaConfiguracion: configDir,
+          wizardCompleted: false,
           windowBounds: {
             width: 1200,
             height: 800
@@ -363,6 +364,7 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
       gitUserEmail: configData.configuracion?.gitUserEmail || "",
       commitButtonBehavior: configData.configuracion?.commitButtonBehavior || "commit",
       gitIdentities: configData.configuracion?.gitIdentities || [],
+      wizardCompleted: configData.configuracion?.wizardCompleted !== undefined ? configData.configuracion.wizardCompleted : false,
       repositorios: configData.repositorios || []
     };
   } catch (error) {
@@ -508,6 +510,13 @@ ipcMain.handle('write-config', async (event, updates) => {
       configData.configuracion.gitIdentities = updates.gitIdentities;
     }
 
+    if (updates.wizardCompleted !== undefined) {
+      if (!configData.configuracion) {
+        configData.configuracion = {};
+      }
+      configData.configuracion.wizardCompleted = updates.wizardCompleted;
+    }
+
     // Actualizar fecha de ?ltima actualizaci?n
     configData.ultimaActualizacion = new Date().toISOString();
 
@@ -641,7 +650,8 @@ function getEncryptionKey() {
           temaNombre: "default",
           zoomLevel: 100,
           gitSslVerify: true,
-          rutaConfiguracion: configDir
+          rutaConfiguracion: configDir,
+          wizardCompleted: false
         },
         fechaCreacion: new Date().toISOString(),
         ultimaActualizacion: new Date().toISOString()

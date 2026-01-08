@@ -8,6 +8,8 @@ import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Clou
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
 import type { Connection, FolderItem } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
+import { WelcomeWizard } from "@/renderer/components/WelcomeWizard";
+import { LoadingScreen } from "@/renderer/components/LoadingScreen";
 
 type TabType = "inicio" | "repositorios" | "conexiones" | "configuracion";
 type ConfigTabType = "general" | "datos" | "git" | "temas" | "actualizacion" | "acerca";
@@ -140,6 +142,9 @@ function App() {
   const [emailNuevaIdentidad, setEmailNuevaIdentidad] = useState("");
   const [mostrarModalEliminarIdentidad, setMostrarModalEliminarIdentidad] = useState(false);
   const [identidadAEliminar, setIdentidadAEliminar] = useState<GitIdentity | null>(null);
+  const [mostrarWizardBienvenida, setMostrarWizardBienvenida] = useState(false);
+  const [wizardCargado, setWizardCargado] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
 
   // Estado para la vista de detalles de repositorio
@@ -413,6 +418,9 @@ function App() {
   // Obtener ruta por defecto de documentos e inicializar configuración
   useEffect(() => {
     const inicializarConfiguracion = async () => {
+      // Mantener el loading activo mientras se inicializa
+      setIsLoading(true);
+      
       // Esperar un poco para asegurar que Electron esté listo
       await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -518,6 +526,13 @@ function App() {
                 setGitIdentities([IDENTIDAD_DEFAULT]);
               }
 
+              // Verificar si el wizard de bienvenida ya fue completado
+              const wizardCompleted = resultado.wizardCompleted !== undefined ? resultado.wizardCompleted : false;
+              if (!wizardCompleted) {
+                setMostrarWizardBienvenida(true);
+              }
+              setWizardCargado(true);
+
               // Cargar configuración de usuario de Git
               if (resultado.gitUserName !== undefined && resultado.gitUserName) {
                 setGitUserName(resultado.gitUserName);
@@ -584,6 +599,9 @@ function App() {
         }
       } catch (error) {
         // Error al inicializar configuración
+      } finally {
+        // Desactivar el loading una vez que todo esté cargado
+        setIsLoading(false);
       }
     };
 
@@ -806,6 +824,66 @@ function App() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  // Función para completar el wizard de bienvenida
+  const completarWizardBienvenida = async (nombre?: string, email?: string) => {
+    setMostrarWizardBienvenida(false);
+    
+    try {
+      // Si se proporcionaron nombre y email, guardarlos
+      if (nombre && email) {
+        // Guardar en la configuración
+        if (window.electronAPI?.writeConfig) {
+          await window.electronAPI.writeConfig({ 
+            wizardCompleted: true,
+            gitUserName: nombre,
+            gitUserEmail: email
+          });
+        }
+
+        // Aplicar a Git globalmente
+        if (window.electronAPI?.setGitConfig) {
+          await window.electronAPI.setGitConfig('user.name', nombre);
+          await window.electronAPI.setGitConfig('user.email', email);
+        }
+
+        // Actualizar el estado local
+        setGitUserName(nombre);
+        setGitUserEmail(email);
+
+        // Actualizar la identidad predeterminada
+        const identidadActualizada = {
+          id: IDENTIDAD_DEFAULT_ID,
+          nombre: nombre,
+          email: email
+        };
+
+        // Actualizar las identidades guardadas
+        const identidadesActualizadas = gitIdentities.map(id => 
+          id.id === IDENTIDAD_DEFAULT_ID ? identidadActualizada : id
+        );
+
+        // Si no existe la identidad predeterminada, agregarla
+        if (!identidadesActualizadas.find(id => id.id === IDENTIDAD_DEFAULT_ID)) {
+          identidadesActualizadas.unshift(identidadActualizada);
+        }
+
+        setGitIdentities(identidadesActualizadas);
+
+        // Guardar las identidades actualizadas
+        if (window.electronAPI?.writeConfig) {
+          await window.electronAPI.writeConfig({ gitIdentities: identidadesActualizadas });
+        }
+      } else {
+        // Si no se proporcionaron valores, solo marcar el wizard como completado
+        if (window.electronAPI?.writeConfig) {
+          await window.electronAPI.writeConfig({ wizardCompleted: true });
+        }
+      }
+    } catch (error) {
+      // Error al guardar la configuración
+    }
+  };
 
   // Manejador para cerrar el wizard con Escape
   useEffect(() => {
@@ -5031,6 +5109,11 @@ function App() {
 
   const isMac = window.electronAPI?.platform === 'darwin';
 
+  // Mostrar pantalla de carga mientras se inicializa
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden">
       {/* Área de arrastre para macOS */}
@@ -7005,6 +7088,11 @@ function App() {
 
       {/* Toast Container */}
       <Toaster />
+
+      {/* Wizard de Bienvenida */}
+      {mostrarWizardBienvenida && wizardCargado && (
+        <WelcomeWizard onComplete={completarWizardBienvenida} />
+      )}
     </div >
   );
 }

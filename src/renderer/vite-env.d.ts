@@ -22,6 +22,7 @@ interface Window {
       gitSslVerify?: boolean;
       gitUserName?: string;
       gitUserEmail?: string;
+      wizardCompleted?: boolean;
       repositorios?: any[];
       error?: string;
     }>;
@@ -30,7 +31,7 @@ interface Window {
       config?: any;
       error?: string;
     }>;
-    writeConfig: (updates: { tema?: string; temaNombre?: string; zoomLevel?: number; editorIDE?: string | null; repositorios?: any[]; conexiones?: any[]; gitSslVerify?: boolean; gitUserName?: string; gitUserEmail?: string }) => Promise<{
+    writeConfig: (updates: { tema?: string; temaNombre?: string; zoomLevel?: number; editorIDE?: string | null; repositorios?: any[]; conexiones?: any[]; gitSslVerify?: boolean; gitUserName?: string; gitUserEmail?: string; wizardCompleted?: boolean }) => Promise<{
       success: boolean;
       error?: string;
     }>;
