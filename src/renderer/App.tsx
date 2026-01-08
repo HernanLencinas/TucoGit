@@ -5521,29 +5521,45 @@ function App() {
       {
         mostrarWizardNuevaConexion && (
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setMostrarWizardNuevaConexion(false);
+                limpiarWizardConexion();
+              }
+            }}
+            tabIndex={-1}
           >
             <Card
-              className="w-full max-w-2xl mx-4 bg-background border-2 max-h-[90vh] overflow-y-auto"
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
               onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarWizardNuevaConexion(false);
+                  limpiarWizardConexion();
+                }
+              }}
             >
-              <CardHeader className="p-6 pb-4 border-b">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-2xl mb-1">
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
+                    <Link2 className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
                       {editandoConexion ? "Editar Conexión" : "Nueva Conexión"}
                     </CardTitle>
-                    <CardDescription className="text-sm">
+                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
                       {editandoConexion
                         ? "Modifica los datos de tu conexión Git"
-                        : "Configura una nueva conexión con tu proveedor de Git en pocos pasos"
-                      }
+                        : "Configura una nueva conexión con tu proveedor de Git en pocos pasos"}
                     </CardDescription>
                   </div>
                   <Button
                     variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
                     onClick={() => {
                       setMostrarWizardNuevaConexion(false);
                       limpiarWizardConexion();
@@ -5552,43 +5568,42 @@ function App() {
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
+
+                {/* Indicador de progreso */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-200 ${pasoWizard >= 1 ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                      }`}>
+                      {pasoWizard > 1 ? <Check className="w-4 h-4" /> : "1"}
+                    </div>
+                    <span className={`text-sm font-medium transition-colors ${pasoWizard >= 1 ? "text-foreground" : "text-muted-foreground"}`}>
+                      Proveedor
+                    </span>
+                  </div>
+                  <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizard >= 2 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
+                  <div className="flex items-center gap-2">
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-200 ${pasoWizard >= 2 ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                      }`}>
+                      {pasoWizard > 2 ? <Check className="w-4 h-4" /> : "2"}
+                    </div>
+                    <span className={`text-sm font-medium transition-colors ${pasoWizard >= 2 ? "text-foreground" : "text-muted-foreground"}`}>
+                      Autenticación
+                    </span>
+                  </div>
+                  <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizard >= 3 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
+                  <div className="flex items-center gap-2">
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-200 ${pasoWizard >= 3 ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                      }`}>
+                      3
+                    </div>
+                    <span className={`text-sm font-medium transition-colors ${pasoWizard >= 3 ? "text-foreground" : "text-muted-foreground"}`}>
+                      Confirmación
+                    </span>
+                  </div>
+                </div>
               </CardHeader>
 
               <CardContent className="p-6">
-                {/* Indicador de progreso */}
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center gap-2 flex-1">
-                    <div className={`flex items-center gap-2 ${pasoWizard >= 1 ? 'text-primary' : 'text-muted-foreground'}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${pasoWizard >= 1
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-muted-foreground'
-                        }`}>
-                        1
-                      </div>
-                      <span className="text-sm font-medium">Proveedor</span>
-                    </div>
-                    <div className={`flex-1 h-0.5 ${pasoWizard >= 2 ? 'bg-primary' : 'bg-muted'}`} />
-                    <div className={`flex items-center gap-2 ${pasoWizard >= 2 ? 'text-primary' : 'text-muted-foreground'}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${pasoWizard >= 2
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-muted-foreground'
-                        }`}>
-                        2
-                      </div>
-                      <span className="text-sm font-medium">Autenticación</span>
-                    </div>
-                    <div className={`flex-1 h-0.5 ${pasoWizard >= 3 ? 'bg-primary' : 'bg-muted'}`} />
-                    <div className={`flex items-center gap-2 ${pasoWizard >= 3 ? 'text-primary' : 'text-muted-foreground'}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${pasoWizard >= 3
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-muted-foreground'
-                        }`}>
-                        3
-                      </div>
-                      <span className="text-sm font-medium">Confirmación</span>
-                    </div>
-                  </div>
-                </div>
 
                 {/* Contenido del paso actual */}
                 {pasoWizard === 1 && !editandoConexion && (
@@ -5734,12 +5749,15 @@ function App() {
                 {pasoWizard === 2 && (
                   <div className="space-y-6 min-h-[300px]">
                     {/* Nombre de la Conexión */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">
-                        Nombre de la Conexión <span className="text-destructive">*</span>
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <span>Nombre de la Conexión</span>
+                        <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                          (requerido)
+                        </span>
                       </label>
-                      <p className="text-xs text-muted-foreground">
-                        Ingresa un nombre descriptivo para identificar esta conexión (máximo 32 caracteres)
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
+                        Ingresa un nombre descriptivo para identificar esta conexión
                       </p>
                       <div className="relative">
                         <input
@@ -5748,27 +5766,43 @@ function App() {
                           onChange={(e) => setNombreConexion(e.target.value)}
                           placeholder="Ej: Mi cuenta de GitHub"
                           maxLength={32}
-                          className="w-full px-3 py-2 pr-16 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                          className={cn(
+                            "w-full px-4 py-3 pr-16 text-sm rounded-xl border transition-all duration-200",
+                            "bg-slate-50 dark:bg-slate-800/50",
+                            "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                            "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                          )}
                         />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
+                        <span className={cn(
+                          "absolute top-2.5 right-3 text-xs font-medium transition-colors pointer-events-none",
+                          nombreConexion.length > 28 
+                            ? "text-amber-600 dark:text-amber-500" 
+                            : "text-slate-500 dark:text-slate-400"
+                        )}>
                           {nombreConexion.length}/32
                         </span>
                       </div>
                     </div>
 
                     {/* Identidad Asociada */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                         Identidad Asociada
                       </label>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
                         Selecciona la identidad de Git que se usará para esta conexión
                       </p>
                       <div className="relative">
                         <button
                           type="button"
                           onClick={() => setMostrarMenuIdentidad(!mostrarMenuIdentidad)}
-                          className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:border-primary/50 transition-colors"
+                          className={cn(
+                            "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 text-left flex items-center justify-between",
+                            "bg-slate-50 dark:bg-slate-800/50",
+                            "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                            "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
+                            "hover:bg-slate-100 dark:hover:bg-slate-800"
+                          )}
                         >
                           <span className={identidadSeleccionada ? "text-foreground" : "text-muted-foreground"}>
                             {identidadSeleccionada
@@ -5809,11 +5843,14 @@ function App() {
                     </div>
 
                     {/* Token de Acceso */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">
-                        Token de Acceso <span className="text-destructive">*</span>
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <span>Token de Acceso</span>
+                        <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                          (requerido)
+                        </span>
                       </label>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
                         Token personal de acceso
                       </p>
                       <div className="relative">
@@ -5822,7 +5859,12 @@ function App() {
                           value={tokenAcceso}
                           onChange={(e) => setTokenAcceso(e.target.value)}
                           placeholder="Ingresa tu token de acceso"
-                          className="w-full px-3 py-2 pr-10 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                          className={cn(
+                            "w-full px-4 py-3 pr-10 text-sm rounded-xl border transition-all duration-200",
+                            "bg-slate-50 dark:bg-slate-800/50",
+                            "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                            "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                          )}
                           autoComplete="off"
                         />
                         <button
@@ -5871,11 +5913,14 @@ function App() {
                     </div>
 
                     {/* URL del Servidor */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold">
-                        URL del Servidor <span className="text-muted-foreground text-xs font-normal">(opcional)</span>
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <span>URL del Servidor</span>
+                        <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                          (opcional)
+                        </span>
                       </label>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-slate-600 dark:text-slate-400">
                         URL base del servidor Git (solo para servidores personalizados)
                       </p>
                       <input
@@ -5883,7 +5928,12 @@ function App() {
                         value={urlServidor}
                         onChange={(e) => setUrlServidor(e.target.value)}
                         placeholder={getUrlPorDefecto(proveedorSeleccionado) || "https://ejemplo.com"}
-                        className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                        className={cn(
+                          "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                          "bg-slate-50 dark:bg-slate-800/50",
+                          "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                          "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                        )}
                       />
                     </div>
                   </div>
@@ -5893,33 +5943,33 @@ function App() {
                 {pasoWizard === 3 && (
                   <div className="space-y-6 min-h-[300px]">
                     <div>
-                      <label className="text-sm font-semibold mb-2 block">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
                         Confirma los datos de tu conexión
                       </label>
-                      <p className="text-sm text-muted-foreground mb-4">
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
                         Revisa la información antes de guardar
                       </p>
-                      <Card className="bg-secondary/40 border-2">
-                        <CardContent className="p-3 space-y-1.5">
-                          <div className="flex items-center justify-between py-1 border-b border-border/50">
-                            <span className="text-xs font-medium text-muted-foreground">Proveedor:</span>
-                            <span className="text-xs font-semibold">{getNombreProveedor(proveedorSeleccionado)}</span>
+                      <Card className="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
+                        <CardContent className="p-4 space-y-2">
+                          <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Proveedor:</span>
+                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{getNombreProveedor(proveedorSeleccionado)}</span>
                           </div>
-                          <div className="flex items-center justify-between py-1 border-b border-border/50">
-                            <span className="text-xs font-medium text-muted-foreground">Nombre:</span>
-                            <span className="text-xs font-semibold">{nombreConexion || "-"}</span>
+                          <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Nombre:</span>
+                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{nombreConexion || "-"}</span>
                           </div>
-                          <div className="flex items-center justify-between py-1 border-b border-border/50">
-                            <span className="text-xs font-medium text-muted-foreground">URL:</span>
-                            <span className="text-xs font-semibold break-all text-right max-w-[60%]">{urlServidor || "-"}</span>
+                          <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">URL:</span>
+                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 break-all text-right max-w-[60%]">{urlServidor || "-"}</span>
                           </div>
-                          <div className="flex items-center justify-between py-1 border-b border-border/50">
-                            <span className="text-xs font-medium text-muted-foreground">Tipo de Autenticación:</span>
-                            <span className="text-xs font-semibold">Token</span>
+                          <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Tipo de Autenticación:</span>
+                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">Token</span>
                           </div>
-                          <div className="flex items-center justify-between py-1">
-                            <span className="text-xs font-medium text-muted-foreground">Token:</span>
-                            <span className="text-xs font-semibold font-mono">
+                          <div className="flex items-center justify-between py-2">
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Token:</span>
+                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 font-mono">
                               {ocultarToken(tokenAcceso)}
                             </span>
                           </div>
@@ -5945,7 +5995,8 @@ function App() {
                     {pasoWizard > 1 && (
                       <Button
                         variant="outline"
-                        size="sm"
+                        size="default"
+                        className="min-w-[100px]"
                         onClick={() => {
                           setPasoWizard((prev) => (prev - 1) as 1 | 2 | 3);
                         }}
@@ -5955,14 +6006,17 @@ function App() {
                     )}
                     {pasoWizard === 3 ? (
                       <Button
-                        size="sm"
+                        size="default"
+                        className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 flex items-center gap-2"
                         onClick={guardarConexion}
                       >
+                        <Check className="w-4 h-4" />
                         Guardar
                       </Button>
                     ) : (
                       <Button
-                        size="sm"
+                        size="default"
+                        className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 flex items-center gap-2"
                         disabled={
                           (pasoWizard === 1 && !editandoConexion && !proveedorSeleccionado) ||
                           (pasoWizard === 2 && (!nombreConexion.trim() || nombreConexion.length > 32 || !tokenAcceso.trim() || validandoToken))
@@ -5978,11 +6032,14 @@ function App() {
                       >
                         {validandoToken ? (
                           <>
-                            <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
+                            <RefreshCw className="w-4 h-4 animate-spin" />
                             Validando...
                           </>
                         ) : (
-                          "Siguiente"
+                          <>
+                            Siguiente
+                            <ChevronRight className="w-4 h-4" />
+                          </>
                         )}
                       </Button>
                     )}
