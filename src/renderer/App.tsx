@@ -5546,6 +5546,14 @@ function App() {
                           )}
                         </button>
                       </div>
+                      {errorValidacionToken && !validandoToken && (
+                        <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/10 border border-amber-500/20 mt-2">
+                          <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                          <p className="text-xs text-amber-700 dark:text-amber-300">
+                            {errorValidacionToken}
+                          </p>
+                        </div>
+                      )}
                     </div>
 
                     {/* URL del Servidor */}
@@ -5571,15 +5579,6 @@ function App() {
                         <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                         <p className="text-xs text-blue-600 dark:text-blue-400">
                           Validando token y conectando con el servidor...
-                        </p>
-                      </div>
-                    )}
-
-                    {errorValidacionToken && !validandoToken && (
-                      <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/10 border border-amber-500/20">
-                        <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                        <p className="text-xs text-amber-700 dark:text-amber-300">
-                          {errorValidacionToken}
                         </p>
                       </div>
                     )}
