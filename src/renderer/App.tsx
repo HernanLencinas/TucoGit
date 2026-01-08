@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
-import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock } from "lucide-react";
+import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock, MoreVertical } from "lucide-react";
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
 import type { Connection, FolderItem } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
@@ -85,6 +86,9 @@ function App() {
   const [mostrarMenuOrdenarRepos, setMostrarMenuOrdenarRepos] = useState(false);
   const [ordenRepositorios, setOrdenRepositorios] = useState<"asc" | "desc" | null>(null);
   const [refrescandoRepositorios, setRefrescandoRepositorios] = useState(false);
+  const [mostrarMenuAccionesRepos, setMostrarMenuAccionesRepos] = useState(false);
+  const [mostrarModalClonarTodos, setMostrarModalClonarTodos] = useState(false);
+  const [forzarReclonado, setForzarReclonado] = useState(false);
   const [clonandoRepositorios, setClonandoRepositorios] = useState<Record<string, { progress: number, message: string }>>({});
   const [gitInfoRepositorios, setGitInfoRepositorios] = useState<Record<string, { branch: string, ahead: number, behind: number, uncommitted: number, author: string, date: string, hash: string }>>({});
   const [configTabActiva, setConfigTabActiva] = useState<ConfigTabType>("general");
@@ -378,6 +382,95 @@ function App() {
         delete next[item.id];
         return next;
       });
+    }
+  };
+
+  const clonarTodosLosRepositorios = async (forzarReclonado: boolean) => {
+    const carpetaActual = obtenerCarpetaActual();
+    if (!carpetaActual) {
+      showToast("No se pudo obtener la carpeta actual", 'error');
+      return;
+    }
+
+    const itemsActuales = carpetaActual.hijos || [];
+    const repositorios = itemsActuales.filter(item => item.tipo === "archivo");
+
+    if (repositorios.length === 0) {
+      showToast("No hay repositorios para clonar en la carpeta actual", 'info');
+      return;
+    }
+
+    // Cerrar el modal
+    setMostrarModalClonarTodos(false);
+    setForzarReclonado(false);
+
+    // Mostrar toast inicial
+    showToast(`Iniciando clonación de ${repositorios.length} ${repositorios.length === 1 ? 'repositorio' : 'repositorios'}...`, 'info');
+
+    let exitosos = 0;
+    let fallidos = 0;
+    let omitidos = 0;
+    const errores: string[] = [];
+
+    // Clonar cada repositorio secuencialmente
+    for (let i = 0; i < repositorios.length; i++) {
+      const repo = repositorios[i];
+      
+      try {
+        // Verificar si tiene URL de clonación
+        if (!repo.urlClon) {
+          fallidos++;
+          errores.push(`${repo.nombre}: No tiene URL de clonación`);
+          continue;
+        }
+
+        // Si no se fuerza el re-clonado, verificar si ya existe
+        if (!forzarReclonado && window.electronAPI?.checkPathExists) {
+          const orgPath = repo.organizacion ? `${repo.organizacion}/` : "";
+          const repoName = repo.nombreGit || repo.nombre;
+          const destPath = `${rutaConfiguracion}/repositories/${repo.idConexion || 'unknown'}/${orgPath}${repoName}`;
+          
+          const existe = await window.electronAPI.checkPathExists(destPath);
+          if (existe) {
+            omitidos++;
+            continue;
+          }
+        }
+
+        // Clonar el repositorio (si forzarReclonado es true, saltará la confirmación y eliminará la carpeta)
+        await clonarRepositorio(repo, forzarReclonado);
+        
+        // Esperar un poco para que el proceso de clonación se inicie
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        exitosos++;
+      } catch (error) {
+        fallidos++;
+        errores.push(`${repo.nombre}: ${(error as Error).message}`);
+      }
+    }
+
+    // Mostrar resumen
+    let mensaje = "";
+    if (fallidos === 0 && omitidos === 0) {
+      mensaje = `Se clonaron exitosamente ${exitosos} ${exitosos === 1 ? 'repositorio' : 'repositorios'}`;
+      showToast(mensaje, 'success');
+    } else if (exitosos === 0 && omitidos === 0) {
+      mensaje = `Error al clonar todos los repositorios. ${errores.length > 0 ? errores[0] : ''}`;
+      showToast(mensaje, 'error');
+    } else {
+      const partes: string[] = [];
+      if (exitosos > 0) {
+        partes.push(`${exitosos} ${exitosos === 1 ? 'clonado' : 'clonados'}`);
+      }
+      if (omitidos > 0) {
+        partes.push(`${omitidos} ${omitidos === 1 ? 'omitido' : 'omitidos'}`);
+      }
+      if (fallidos > 0) {
+        partes.push(`${fallidos} ${fallidos === 1 ? 'falló' : 'fallaron'}`);
+      }
+      mensaje = `Resultado: ${partes.join(', ')}`;
+      showToast(mensaje, omitidos > 0 || fallidos > 0 ? 'info' : 'success');
     }
   };
 
@@ -701,6 +794,8 @@ function App() {
         if (mostrarMenuOrdenarRepos) setMostrarMenuOrdenarRepos(false);
         if (mostrarMenuConexion) setMostrarMenuConexion(false);
         if (mostrarMenuIdentidad) setMostrarMenuIdentidad(false);
+        if (mostrarMenuAccionesRepos) setMostrarMenuAccionesRepos(false);
+        if (mostrarModalClonarTodos) setMostrarModalClonarTodos(false);
       }
     };
 
@@ -714,8 +809,8 @@ function App() {
     mostrarModalNuevaCarpeta, mostrarModalEditarColeccion, mostrarModalRestablecerConfig,
     mostrarModalConfirmarReclon,
     mostrarMenuNuevaCarpeta, mostrarMenuNuevaConexion, mostrarMenuOrdenar,
-    mostrarMenuOrdenarRepos, mostrarMenuConexion, mostrarMenuIdentidad,
-    mostrarModalNuevaIdentidad, mostrarModalEditarIdentidad, mostrarModalEliminarIdentidad
+    mostrarMenuOrdenarRepos, mostrarMenuConexion, mostrarMenuIdentidad, mostrarMenuAccionesRepos,
+    mostrarModalClonarTodos, mostrarModalNuevaIdentidad, mostrarModalEditarIdentidad, mostrarModalEliminarIdentidad
   ]);
 
   useEffect(() => {
@@ -2848,6 +2943,37 @@ function App() {
                 >
                   <RefreshCw className={`h-4 w-4 transition-transform duration-500 ${refrescandoRepositorios ? 'animate-spin' : 'active:rotate-180'}`} />
                 </Button>
+                <div className="relative">
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    onClick={() => setMostrarMenuAccionesRepos(!mostrarMenuAccionesRepos)}
+                    className="h-9 w-9 hover:bg-accent transition-colors"
+                    title="Más acciones"
+                  >
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                  {mostrarMenuAccionesRepos && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() => setMostrarMenuAccionesRepos(false)}
+                      />
+                      <div className="absolute right-0 top-full mt-1 w-48 rounded-md border bg-popover p-1 text-popover-foreground shadow-md z-20">
+                        <button
+                          onClick={() => {
+                            setMostrarMenuAccionesRepos(false);
+                            setMostrarModalClonarTodos(true);
+                          }}
+                          className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+                        >
+                          <Download className="h-4 w-4" />
+                          Clonar todos
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
               <div className="relative">
                 <Button
@@ -6589,6 +6715,85 @@ function App() {
             </Card>
           </div>
         )
+      }
+
+      {/* Modal para clonar todos los repositorios */}
+      {
+        mostrarModalClonarTodos && (() => {
+          const carpetaActual = obtenerCarpetaActual();
+          const itemsActuales = carpetaActual?.hijos || [];
+          const repositorios = itemsActuales.filter(item => item.tipo === "archivo");
+          const cantidadRepos = repositorios.length;
+
+          return cantidadRepos > 0 ? (
+            <div
+              className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]"
+              onClick={() => {
+                setMostrarModalClonarTodos(false);
+                setForzarReclonado(false);
+              }}
+            >
+              <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
+                <CardHeader className="p-4">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Download className="h-5 w-5 text-primary" />
+                    Clonar todos los repositorios
+                  </CardTitle>
+                  <CardDescription className="text-sm">
+                    Se clonarán {cantidadRepos} {cantidadRepos === 1 ? 'repositorio' : 'repositorios'} de la carpeta actual.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-4 pt-0 space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md border">
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="forzar-reclonado" className="text-sm font-medium cursor-pointer">
+                        Forzar re-clonado
+                      </label>
+                      <p className="text-xs text-muted-foreground">
+                        Si está activado, los repositorios ya clonados se eliminarán y se volverán a clonar
+                      </p>
+                    </div>
+                    <Switch
+                      id="forzar-reclonado"
+                      checked={forzarReclonado}
+                      onCheckedChange={setForzarReclonado}
+                    />
+                  </div>
+                  {forzarReclonado && (
+                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-md p-3">
+                      <p className="text-xs text-yellow-700 dark:text-yellow-400 font-medium flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4" />
+                        Atención: Se perderán todos los cambios locales no guardados en los repositorios que ya están clonados.
+                      </p>
+                    </div>
+                  )}
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => {
+                        setMostrarModalClonarTodos(false);
+                        setForzarReclonado(false);
+                      }}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="flex-1 bg-primary hover:bg-primary/90"
+                      onClick={() => {
+                        clonarTodosLosRepositorios(forzarReclonado);
+                      }}
+                    >
+                      Clonar todos
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          ) : null;
+        })()
       }
 
       {/* Modal para confirmar eliminación de colección */}
