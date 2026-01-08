@@ -346,25 +346,34 @@ function App() {
         const resultado = await window.electronAPI.cloneRepository(item.urlClon, destPath, item.id, gitSslVerify, token);
 
         if (resultado.success) {
-          // Actualizar estado de clonado en la estructura
-          const actualizarEstructura = (items: FolderItem[]): FolderItem[] => {
-            return items.map(i => {
-              if (i.id === item.id) {
-                return { ...i, clonado: true };
-              }
-              if (i.hijos) {
-                return { ...i, hijos: actualizarEstructura(i.hijos) };
-              }
-              return i;
-            });
-          };
+          // Actualizar estado de clonado en la estructura usando función funcional para asegurar estado actualizado
+          setEstructuraCarpetas(prevEstructura => {
+            const actualizarEstructura = (items: FolderItem[]): FolderItem[] => {
+              return items.map(i => {
+                if (i.id === item.id) {
+                  return { ...i, clonado: true };
+                }
+                if (i.hijos) {
+                  return { ...i, hijos: actualizarEstructura(i.hijos) };
+                }
+                return i;
+              });
+            };
 
-          const nuevaEstructura = actualizarEstructura(estructuraCarpetas);
-          setEstructuraCarpetas(nuevaEstructura);
+            const nuevaEstructura = actualizarEstructura(prevEstructura);
+            
+            // Guardar configuración de forma asíncrona
+            if (window.electronAPI?.writeConfig) {
+              window.electronAPI.writeConfig({ repositorios: nuevaEstructura }).catch(() => {
+                // Error al guardar, pero continuamos
+              });
+            }
+            
+            return nuevaEstructura;
+          });
 
-          if (window.electronAPI?.writeConfig) {
-            await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
-          }
+          // Esperar un momento para que el estado se actualice
+          await new Promise(resolve => setTimeout(resolve, 100));
 
           // Cargar info de git inmediatamente después de clonar
           await cargarGitInfo(item);
@@ -433,15 +442,35 @@ function App() {
           const existe = await window.electronAPI.checkPathExists(destPath);
           if (existe) {
             omitidos++;
+            // Si ya existe, asegurarse de que esté marcado como clonado en la estructura
+            const actualizarEstructura = (items: FolderItem[]): FolderItem[] => {
+              return items.map(i => {
+                if (i.id === repo.id) {
+                  return { ...i, clonado: true };
+                }
+                if (i.hijos) {
+                  return { ...i, hijos: actualizarEstructura(i.hijos) };
+                }
+                return i;
+              });
+            };
+            const nuevaEstructura = actualizarEstructura(estructuraCarpetas);
+            setEstructuraCarpetas(nuevaEstructura);
+            if (window.electronAPI?.writeConfig) {
+              await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
+            }
+            // Cargar info de git para repositorios que ya existen
+            await cargarGitInfo(repo);
             continue;
           }
         }
 
         // Clonar el repositorio (si forzarReclonado es true, saltará la confirmación y eliminará la carpeta)
+        // Esperar a que la clonación termine completamente
         await clonarRepositorio(repo, forzarReclonado);
         
-        // Esperar un poco para que el proceso de clonación se inicie
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Esperar un momento adicional para asegurar que el estado se haya actualizado
+        await new Promise(resolve => setTimeout(resolve, 200));
         
         exitosos++;
       } catch (error) {
