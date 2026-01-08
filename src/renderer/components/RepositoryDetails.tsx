@@ -365,15 +365,31 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     setCherryPickAppendOrigin(false);
                 }
             }
+            if (e.key === 'Escape' && showNewBranchModal) {
+                if (!creatingBranch) {
+                    setShowNewBranchModal(false);
+                    setNewBranchName("");
+                    setIsCreatingFromRemote(false);
+                    setBranchFromDropdownOpen(false);
+                }
+            }
+            if (e.key === 'Escape' && showNewTagModal) {
+                if (!creatingTag) {
+                    setShowNewTagModal(false);
+                    setTagName("");
+                    setTagMessage("");
+                    setPushToAllRemotes(false);
+                }
+            }
         };
 
-        if (showPullStrategyModal || showCheckoutConflictModal || showStashModal || showStashListModal || showRevertModal || showCherryPickModal) {
+        if (showPullStrategyModal || showCheckoutConflictModal || showStashModal || showStashListModal || showRevertModal || showCherryPickModal || showNewBranchModal || showNewTagModal) {
             window.addEventListener('keydown', handleEscape);
             return () => {
                 window.removeEventListener('keydown', handleEscape);
             };
         }
-    }, [showPullStrategyModal, showCheckoutConflictModal, showStashModal, showStashListModal, showRevertModal, showCherryPickModal, stashing, applyingStash, reverting, cherryPicking]);
+    }, [showPullStrategyModal, showCheckoutConflictModal, showStashModal, showStashListModal, showRevertModal, showCherryPickModal, showNewBranchModal, showNewTagModal, stashing, applyingStash, reverting, cherryPicking, creatingBranch, creatingTag]);
 
     // Inicializar el branch base cuando se abre el modal (solo si no viene de un branch remoto)
     useEffect(() => {
@@ -2024,18 +2040,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         }}
                     >
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                                    <GitBranch className="w-6 h-6 text-primary" />
-                                </div>
-                                <div className="flex-1">
-                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                        Nuevo Branch
-                                    </CardTitle>
-                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                        Crea un nuevo branch a partir de otro branch existente
-                                    </CardDescription>
-                                </div>
+                            <div className="flex-1">
+                                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                    Nuevo Branch
+                                </CardTitle>
+                                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                    Crea un nuevo branch a partir de otro branch existente
+                                </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
@@ -2240,18 +2251,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                                    <Tag className="w-6 h-6 text-primary" />
-                                </div>
-                                <div className="flex-1">
-                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                        Nuevo Tag
-                                    </CardTitle>
-                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                        Crea un nuevo tag en el commit seleccionado
-                                    </CardDescription>
-                                </div>
+                            <div className="flex-1">
+                                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                    Nuevo Tag
+                                </CardTitle>
+                                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                    Crea un nuevo tag en el commit seleccionado
+                                </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
@@ -2648,18 +2654,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                                    <Archive className="w-6 h-6 text-primary" />
-                                </div>
-                                <div className="flex-1">
-                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                        Crear Stash
-                                    </CardTitle>
-                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                        Guarda temporalmente tus cambios en el stash de Git
-                                    </CardDescription>
-                                </div>
+                            <div className="flex-1">
+                                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                    Crear Stash
+                                </CardTitle>
+                                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                    Guarda temporalmente tus cambios en el stash de Git
+                                </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
@@ -2772,18 +2773,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                                    <Archive className="w-6 h-6 text-primary" />
-                                </div>
-                                <div className="flex-1">
-                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                        Stashes
-                                    </CardTitle>
-                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                        Selecciona un stash para aplicarlo (pop) y restaurar tus cambios guardados
-                                    </CardDescription>
-                                </div>
+                            <div className="flex-1">
+                                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                    Stashes
+                                </CardTitle>
+                                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                    Selecciona un stash para aplicarlo (pop) y restaurar tus cambios guardados
+                                </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6">
@@ -3064,18 +3060,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                                    <Undo2 className="w-6 h-6 text-primary" />
-                                </div>
-                                <div className="flex-1">
-                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                        Revert Commit
-                                    </CardTitle>
-                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                        Crear un nuevo commit que deshace los cambios de este commit
-                                    </CardDescription>
-                                </div>
+                            <div className="flex-1">
+                                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                    Revert Commit
+                                </CardTitle>
+                                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                    Crear un nuevo commit que deshace los cambios de este commit
+                                </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
@@ -3161,18 +3152,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                                    <GitMerge className="w-6 h-6 text-primary" />
-                                </div>
-                                <div className="flex-1">
-                                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                        Cherry Pick
-                                    </CardTitle>
-                                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                        Aplicar cambios del commit individual al branch actual
-                                    </CardDescription>
-                                </div>
+                            <div className="flex-1">
+                                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                                    Cherry Pick
+                                </CardTitle>
+                                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                                    Aplicar cambios del commit individual al branch actual
+                                </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">

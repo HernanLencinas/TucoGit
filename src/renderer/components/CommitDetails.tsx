@@ -571,11 +571,373 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
     };
 
     /**
-     * Renderiza el contenido de un archivo con estilo de editor.
+     * Detecta el lenguaje de programación basándose en la extensión del archivo.
+     * 
+     * @param {string} filePath - Ruta del archivo
+     * @returns {string} Nombre del lenguaje detectado o 'text' por defecto
+     * @private
+     */
+    const detectLanguage = (filePath: string): string => {
+        if (!filePath) return 'text';
+        const fileName = filePath.toLowerCase();
+        const ext = fileName.split('.').pop() || '';
+        
+        const languageMap: { [key: string]: string } = {
+            'js': 'javascript', 'jsx': 'javascript', 'mjs': 'javascript', 'cjs': 'javascript',
+            'ts': 'typescript', 'tsx': 'typescript',
+            'py': 'python', 'pyw': 'python', 'pyi': 'python',
+            'java': 'java',
+            'c': 'c', 'h': 'c',
+            'cpp': 'cpp', 'cc': 'cpp', 'cxx': 'cpp', 'hpp': 'cpp', 'hxx': 'cpp',
+            'cs': 'csharp',
+            'php': 'php', 'phtml': 'php',
+            'rb': 'ruby',
+            'go': 'go',
+            'rs': 'rust',
+            'swift': 'swift',
+            'kt': 'kotlin', 'kts': 'kotlin',
+            'scala': 'scala',
+            'sh': 'bash', 'bash': 'bash', 'zsh': 'bash', 'fish': 'bash',
+            'ps1': 'powershell',
+            'sql': 'sql',
+            'html': 'html', 'htm': 'html', 'xhtml': 'html',
+            'xml': 'xml', 'xsl': 'xml',
+            'css': 'css',
+            'scss': 'scss', 'sass': 'scss',
+            'less': 'less',
+            'json': 'json',
+            'yaml': 'yaml', 'yml': 'yaml',
+            'toml': 'toml',
+            'ini': 'ini', 'cfg': 'ini', 'conf': 'ini',
+            'md': 'markdown', 'markdown': 'markdown',
+            'dockerfile': 'dockerfile',
+            'makefile': 'makefile', 'mk': 'makefile',
+            'cmake': 'cmake',
+            'lua': 'lua',
+            'r': 'r',
+            'm': 'matlab',
+            'pl': 'perl', 'pm': 'perl',
+            'vim': 'vim',
+            'diff': 'diff', 'patch': 'diff',
+        };
+        
+        if (fileName === 'dockerfile' || fileName === 'makefile') {
+            return fileName;
+        }
+        
+        return languageMap[ext] || 'text';
+    };
+
+    /**
+     * Resalta la sintaxis de una línea de código con colores profesionales.
+     * 
+     * Esquema de colores:
+     * - Comentarios (verde/gris): Información no ejecutable, ayuda a entender el código
+     * - Strings (amarillo/naranja): Datos literales, valores de texto entre comillas
+     * - Keywords (azul/cyan): Palabras reservadas del lenguaje (if, for, function, etc.)
+     * - Números (verde esmeralda): Valores numéricos literales
+     * - Funciones (púrpura): Llamadas a funciones, identificadores seguidos de paréntesis
+     * - Operadores (gris): Símbolos matemáticos y lógicos (+, -, *, /, ==, etc.)
+     * - Variables (color base): Identificadores normales, nombres de variables
+     * 
+     * Este esquema mejora la legibilidad al agrupar visualmente elementos similares,
+     * facilita la comprensión del flujo del programa al destacar estructuras de control,
+     * y ayuda a detectar errores al hacer evidentes elementos mal formados.
+     * 
+     * @param {string} line - Línea de código a resaltar
+     * @param {string} language - Lenguaje de programación
+     * @returns {JSX.Element} Elemento JSX con el código resaltado
+     * @private
+     */
+    const highlightSyntax = (line: string, language: string): JSX.Element => {
+        if (!line) return <span> </span>;
+        if (language === 'text') return <span>{line}</span>;
+
+        interface Token {
+            text: string;
+            type: 'comment' | 'string' | 'keyword' | 'number' | 'function' | 'operator' | 'normal';
+            start: number;
+            end: number;
+        }
+
+        const tokens: Token[] = [];
+        let remaining = line;
+
+        // 1. COMENTARIOS (Verde/Gris) - Prioridad máxima
+        // Representan información no ejecutable que ayuda a entender el código
+        // Ejemplo: // Esta función calcula el total
+        const commentPatterns: { [key: string]: RegExp } = {
+            javascript: /^(\s*)(\/\/.*)$/,
+            typescript: /^(\s*)(\/\/.*)$/,
+            java: /^(\s*)(\/\/.*)$/,
+            c: /^(\s*)(\/\/.*)$/,
+            cpp: /^(\s*)(\/\/.*)$/,
+            csharp: /^(\s*)(\/\/.*)$/,
+            python: /^(\s*)(#.*)$/,
+            bash: /^(\s*)(#.*)$/,
+            yaml: /^(\s*)(#.*)$/,
+        };
+
+        const commentPattern = commentPatterns[language];
+        if (commentPattern) {
+            const match = remaining.match(commentPattern);
+            if (match) {
+                tokens.push({ text: match[1], type: 'normal', start: 0, end: match[1].length });
+                tokens.push({ text: match[2], type: 'comment', start: match[1].length, end: line.length });
+                remaining = '';
+            }
+        }
+
+        // 2. STRINGS (Amarillo/Naranja) - Alta prioridad
+        // Representan datos literales, valores de texto entre comillas
+        // Ejemplo: "Hello World" o 'nombre de usuario'
+        if (remaining) {
+            const stringRegex = /(["'`])(?:(?=(\\?))\2.)*?\1/g;
+            const stringMatches: Array<{ start: number; end: number; text: string }> = [];
+            let match;
+
+            while ((match = stringRegex.exec(remaining)) !== null) {
+                stringMatches.push({
+                    start: match.index,
+                    end: match.index + match[0].length,
+                    text: match[0]
+                });
+            }
+
+            // Dividir la línea en segmentos: texto normal y strings
+            let lastIndex = 0;
+            stringMatches.forEach((strMatch) => {
+                if (strMatch.start > lastIndex) {
+                    const textBefore = remaining.substring(lastIndex, strMatch.start);
+                    // Procesar el texto antes del string (keywords, números, funciones, etc.)
+                    processCodeTokens(textBefore, language, lastIndex, tokens);
+                }
+                tokens.push({ 
+                    text: strMatch.text, 
+                    type: 'string', 
+                    start: lastIndex + strMatch.start, 
+                    end: lastIndex + strMatch.end 
+                });
+                lastIndex = strMatch.end;
+            });
+
+            if (lastIndex < remaining.length) {
+                const textAfter = remaining.substring(lastIndex);
+                processCodeTokens(textAfter, language, lastIndex, tokens);
+            } else if (stringMatches.length === 0) {
+                processCodeTokens(remaining, language, 0, tokens);
+            }
+        }
+
+        // Ordenar tokens por posición
+        tokens.sort((a, b) => a.start - b.start);
+
+        // Renderizar tokens con colores
+        return (
+            <span>
+                {tokens.map((token, idx) => {
+                    let className = '';
+                    switch (token.type) {
+                        case 'comment':
+                            // Verde suave con cursiva - información no ejecutable
+                            className = 'text-emerald-600 dark:text-emerald-400 italic';
+                            break;
+                        case 'string':
+                            // Amarillo/naranja cálido - datos literales
+                            className = 'text-amber-600 dark:text-amber-300';
+                            break;
+                        case 'keyword':
+                            // Azul/cyan vibrante - palabras reservadas del lenguaje
+                            className = 'text-blue-600 dark:text-blue-400 font-semibold';
+                            break;
+                        case 'number':
+                            // Verde esmeralda - valores numéricos
+                            className = 'text-emerald-500 dark:text-emerald-400';
+                            break;
+                        case 'function':
+                            // Púrpura - llamadas a funciones
+                            className = 'text-purple-600 dark:text-purple-400';
+                            break;
+                        case 'operator':
+                            // Gris más oscuro - símbolos matemáticos/lógicos
+                            className = 'text-slate-500 dark:text-slate-400';
+                            break;
+                        default:
+                            // Color base - variables y texto normal
+                            className = '';
+                    }
+                    return (
+                        <span key={idx} className={className}>
+                            {token.text}
+                        </span>
+                    );
+                })}
+            </span>
+        );
+    };
+
+    /**
+     * Procesa tokens de código (keywords, números, funciones, operadores).
+     * 
+     * @param {string} text - Texto a procesar
+     * @param {string} language - Lenguaje de programación
+     * @param {number} offset - Desplazamiento en la línea original
+     * @param {Token[]} tokens - Array donde agregar los tokens
+     * @private
+     */
+    const processCodeTokens = (text: string, language: string, offset: number, tokens: Array<{ text: string; type: string; start: number; end: number }>) => {
+        if (!text) return;
+
+        // Keywords (Azul/Cyan) - Palabras reservadas del lenguaje
+        // Ejemplo: if, for, function, return, class, const, let
+        // Ayudan a identificar estructuras de control y declaraciones
+        const keywordPatterns: { [key: string]: RegExp } = {
+            javascript: /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|try|catch|finally|throw|new|this|class|extends|super|static|async|await|import|export|default|from|as|typeof|instanceof|void|null|undefined|true|false)\b/g,
+            typescript: /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|try|catch|finally|throw|new|this|class|extends|super|static|async|await|import|export|default|from|as|typeof|instanceof|void|null|undefined|true|false|interface|type|enum|namespace|declare|module|public|private|protected|readonly|abstract|implements)\b/g,
+            python: /\b(def|class|if|elif|else|for|while|try|except|finally|with|as|import|from|return|yield|lambda|and|or|not|in|is|None|True|False|pass|break|continue|raise|assert|async|await|global|nonlocal)\b/g,
+            java: /\b(public|private|protected|static|final|abstract|class|interface|extends|implements|if|else|for|while|do|switch|case|break|continue|try|catch|finally|throw|new|this|super|return|void|int|long|float|double|boolean|char|String|import|package)\b/g,
+            c: /\b(int|char|float|double|void|if|else|for|while|do|switch|case|break|continue|return|struct|typedef|enum|union|const|static|extern|volatile|register|goto|sizeof)\b/g,
+            cpp: /\b(int|char|float|double|void|bool|if|else|for|while|do|switch|case|break|continue|return|class|struct|namespace|using|template|typename|const|static|virtual|public|private|protected|new|delete|this|operator|friend|inline|explicit|mutable|volatile|register|goto|sizeof|auto|decltype|nullptr)\b/g,
+            csharp: /\b(public|private|protected|internal|static|readonly|class|interface|namespace|using|if|else|for|while|do|switch|case|break|continue|try|catch|finally|throw|new|this|base|return|void|int|long|float|double|bool|char|string|var|async|await)\b/g,
+            bash: /\b(if|then|else|fi|for|while|do|done|case|esac|function|return|export|alias|source|echo|printf|test|read|cd|pwd|ls|cat|grep|sed|awk|find|chmod|chown|sudo|su)\b/g,
+        };
+
+        // Números (Verde Esmeralda) - Valores numéricos literales
+        // Ejemplo: 42, 3.14, 1000
+        // Ayudan a identificar valores constantes y cálculos
+        const numberPattern = /\b\d+\.?\d*\b/g;
+
+        // Funciones (Púrpura) - Identificadores seguidos de paréntesis
+        // Ejemplo: console.log(), Math.max(), myFunction()
+        // Identifican llamadas a funciones y métodos
+        const functionPattern = /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*(?=\()/g;
+
+        // Operadores (Gris) - Símbolos matemáticos y lógicos
+        // Ejemplo: +, -, *, /, ==, !=, &&, ||, =, <, >
+        // Ayudan a identificar operaciones y comparaciones
+        const operatorPattern = /([+\-*/%=<>!&|^~?:]+)/g;
+
+        const keywordPattern = keywordPatterns[language];
+        const allMatches: Array<{ start: number; end: number; type: string; text: string }> = [];
+
+        // Recopilar todos los matches
+        if (keywordPattern) {
+            let match;
+            while ((match = keywordPattern.exec(text)) !== null) {
+                allMatches.push({
+                    start: match.index,
+                    end: match.index + match[0].length,
+                    type: 'keyword',
+                    text: match[0]
+                });
+            }
+        }
+
+        let match;
+        while ((match = numberPattern.exec(text)) !== null) {
+            // Verificar que no está dentro de una keyword
+            const isInsideKeyword = allMatches.some(k => 
+                match.index >= k.start && match.index < k.end
+            );
+            if (!isInsideKeyword) {
+                allMatches.push({
+                    start: match.index,
+                    end: match.index + match[0].length,
+                    type: 'number',
+                    text: match[0]
+                });
+            }
+        }
+
+        numberPattern.lastIndex = 0;
+
+        while ((match = functionPattern.exec(text)) !== null) {
+            // Verificar que no es una keyword
+            const isKeyword = allMatches.some(k => 
+                match.index >= k.start && match.index < k.end
+            );
+            if (!isKeyword) {
+                allMatches.push({
+                    start: match.index,
+                    end: match.index + match[0].trim().length,
+                    type: 'function',
+                    text: match[0].trim()
+                });
+            }
+        }
+
+        functionPattern.lastIndex = 0;
+
+        while ((match = operatorPattern.exec(text)) !== null) {
+            // Verificar que no está dentro de otro token
+            const isInsideOther = allMatches.some(k => 
+                match.index >= k.start && match.index < k.end
+            );
+            if (!isInsideOther) {
+                allMatches.push({
+                    start: match.index,
+                    end: match.index + match[0].length,
+                    type: 'operator',
+                    text: match[0]
+                });
+            }
+        }
+
+        // Ordenar matches por posición
+        allMatches.sort((a, b) => a.start - b.start);
+
+        // Construir tokens
+        let lastIndex = 0;
+        allMatches.forEach((m) => {
+            if (m.start > lastIndex) {
+                const normalText = text.substring(lastIndex, m.start);
+                if (normalText) {
+                    tokens.push({ 
+                        text: normalText, 
+                        type: 'normal', 
+                        start: offset + lastIndex, 
+                        end: offset + m.start 
+                    });
+                }
+            }
+            tokens.push({
+                text: m.text,
+                type: m.type,
+                start: offset + m.start,
+                end: offset + m.end
+            });
+            lastIndex = m.end;
+        });
+
+        if (lastIndex < text.length) {
+            const normalText = text.substring(lastIndex);
+            if (normalText) {
+                tokens.push({ 
+                    text: normalText, 
+                    type: 'normal', 
+                    start: offset + lastIndex, 
+                    end: offset + text.length 
+                });
+            }
+        }
+    };
+
+    /**
+     * Renderiza el contenido de un archivo con estilo de editor y resaltado de sintaxis profesional.
      * 
      * @description
-     * Muestra el contenido del archivo con números de línea,
-     * similar a un editor de código.
+     * Muestra el contenido del archivo con números de línea y resaltado de sintaxis
+     * según el tipo de archivo. El resaltado usa colores para diferenciar:
+     * - Comentarios: Verde/gris con cursiva (información no ejecutable)
+     * - Strings: Amarillo/naranja (datos literales)
+     * - Keywords: Azul/cyan (palabras reservadas)
+     * - Números: Verde esmeralda (valores numéricos)
+     * - Funciones: Púrpura (llamadas a funciones)
+     * - Operadores: Gris (símbolos matemáticos/lógicos)
+     * - Variables: Color base (identificadores normales)
+     * 
+     * Este esquema mejora la legibilidad, facilita la comprensión del flujo del programa
+     * y ayuda a detectar errores al hacer evidentes elementos mal formados.
      * 
      * @param {string} content - Contenido del archivo a renderizar
      * @returns {JSX.Element|null} Elemento JSX del contenido o null si está vacío
@@ -584,6 +946,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
     const renderFileContent = (content: string) => {
         if (!content) return null;
 
+        const language = detectLanguage(selectedTreeFile || '');
         const lines = content.split('\n');
         
         return (
@@ -594,9 +957,9 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                         <div className="w-12 text-right text-slate-400 dark:text-slate-600 select-none px-2 border-r border-slate-200 dark:border-slate-700/50">
                             {idx + 1}
                         </div>
-                        {/* Contenido */}
+                        {/* Contenido con resaltado de sintaxis */}
                         <div className="flex-1 px-4 whitespace-pre-wrap text-slate-600 dark:text-slate-300">
-                            {line || ' '}
+                            {highlightSyntax(line, language)}
                         </div>
                     </div>
                 ))}

@@ -5542,10 +5542,7 @@ function App() {
               }}
             >
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                    <Link2 className="w-6 h-6 text-primary" />
-                  </div>
+                <div className="mb-6">
                   <div className="flex-1">
                     <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
                       {editandoConexion ? "Editar Conexión" : "Nueva Conexión"}
@@ -6081,10 +6078,7 @@ function App() {
               }}
             >
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                    <GitBranch className="w-6 h-6 text-primary" />
-                  </div>
+                <div className="mb-6">
                   <div className="flex-1">
                     <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
                       {editandoRepositorio ? "Editar Repositorio" : "Nuevo Repositorio"}
@@ -6612,18 +6606,13 @@ function App() {
               }}
             >
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-red-100 dark:bg-red-950/30">
-                    <RefreshCw className="w-6 h-6 text-red-600 dark:text-red-400" />
-                  </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                      Restablecer Configuración
-                    </CardTitle>
-                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                      Esta acción no se puede deshacer
-                    </CardDescription>
-                  </div>
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    Restablecer Configuración
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    Esta acción no se puede deshacer
+                  </CardDescription>
                 </div>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -6700,19 +6689,14 @@ function App() {
             }}
           >
             <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                  <Folder className="w-6 h-6 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                    Nueva Colección
-                  </CardTitle>
-                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                    Organiza tus repositorios en una nueva colección personalizada
-                  </CardDescription>
-                  </div>
-                </div>
+              <div className="flex-1">
+                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                  Nueva Colección
+                </CardTitle>
+                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                  Organiza tus repositorios en una nueva colección personalizada
+                </CardDescription>
+              </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div className="space-y-3">
@@ -6918,19 +6902,14 @@ function App() {
             }}
           >
             <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                  <Pencil className="w-6 h-6 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                    Editar Colección
-                  </CardTitle>
-                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                    Modifica los datos de la colección
-                  </CardDescription>
-                  </div>
-                </div>
+              <div className="flex-1">
+                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                  Editar Colección
+                </CardTitle>
+                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                  Modifica los datos de la colección
+                </CardDescription>
+              </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div className="space-y-3">
@@ -7142,18 +7121,13 @@ function App() {
               }}
             >
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-amber-100 dark:bg-amber-950/30">
-                    <AlertCircle className="w-6 h-6 text-amber-600 dark:text-amber-400" />
-                  </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                      El repositorio ya existe
-                    </CardTitle>
-                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                      La carpeta de destino ya existe y no está vacía
-                    </CardDescription>
-                  </div>
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    El repositorio ya existe
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    La carpeta de destino ya existe y no está vacía
+                  </CardDescription>
                 </div>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -7238,18 +7212,13 @@ function App() {
                 }}
               >
                 <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                      <Download className="w-6 h-6 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                        Clonar todos los repositorios
-                      </CardTitle>
-                      <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                        Se clonarán {cantidadRepos} {cantidadRepos === 1 ? 'repositorio' : 'repositorios'} de la carpeta actual
-                      </CardDescription>
-                    </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                      Clonar todos los repositorios
+                    </CardTitle>
+                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                      Se clonarán {cantidadRepos} {cantidadRepos === 1 ? 'repositorio' : 'repositorios'} de la carpeta actual
+                    </CardDescription>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
@@ -7338,18 +7307,13 @@ function App() {
               }}
             >
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-red-100 dark:bg-red-950/30">
-                    <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
-                  </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                      Eliminar Colección
-                    </CardTitle>
-                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                      Esta acción no se puede deshacer
-                    </CardDescription>
-                  </div>
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    Eliminar Colección
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    Esta acción no se puede deshacer
+                  </CardDescription>
                 </div>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -7446,18 +7410,13 @@ function App() {
                 }}
               >
                 <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-red-100 dark:bg-red-950/30">
-                      <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
-                    </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                        Eliminar Conexión
-                      </CardTitle>
-                      <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                        Esta acción no se puede deshacer
-                      </CardDescription>
-                    </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                      Eliminar Conexión
+                    </CardTitle>
+                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                      Esta acción no se puede deshacer
+                    </CardDescription>
                   </div>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
@@ -7556,18 +7515,13 @@ function App() {
               }}
             >
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-red-100 dark:bg-red-950/30">
-                    <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
-                  </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                      Eliminar Repositorio
-                    </CardTitle>
-                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                      Esta acción no se puede deshacer
-                    </CardDescription>
-                  </div>
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    Eliminar Repositorio
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    Esta acción no se puede deshacer
+                  </CardDescription>
                 </div>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -7664,18 +7618,13 @@ function App() {
             }}
           >
             <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                  <User className="w-6 h-6 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                    Nueva Identidad
-                  </CardTitle>
-                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                    Agrega una nueva identidad de usuario para Git
-                  </CardDescription>
-                </div>
+              <div className="flex-1">
+                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                  Nueva Identidad
+                </CardTitle>
+                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                  Agrega una nueva identidad de usuario para Git
+                </CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
@@ -7818,18 +7767,13 @@ function App() {
             }}
           >
             <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-primary/10 dark:bg-primary/20">
-                  <Pencil className="w-6 h-6 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                    Editar Identidad
-                  </CardTitle>
-                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                    Modifica la información de la identidad
-                  </CardDescription>
-                </div>
+              <div className="flex-1">
+                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                  Editar Identidad
+                </CardTitle>
+                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                  Modifica la información de la identidad
+                </CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
