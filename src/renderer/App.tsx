@@ -2439,7 +2439,7 @@ function App() {
                       </span>
                       Tu centro de control Git
                     </div>
-                    <h2 className="text-3xl font-extrabold mb-3 tracking-tight text-foreground">Bienvenido a <span className="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">Tuco</span></h2>
+                    <h2 className="text-3xl font-extrabold mb-3 tracking-tight text-foreground">Bienvenido a <span className="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">TucoGit</span></h2>
                     <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">
                       Organiza y gestiona todos tus repositorios Git en un solo lugar.
                       Conecta tus servicios favoritos y mantén tu flujo de trabajo eficiente y ordenado.
