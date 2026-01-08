@@ -2884,9 +2884,9 @@ function App() {
                         </>
                       ) : (
                         <>
-                          <CardHeader className="p-4 pb-3 flex-shrink-0 relative">
+                          <CardHeader className="pt-2.5 px-4 pb-3 flex-shrink-0 relative">
                             {/* Botón de favoritos en la esquina superior derecha */}
-                            <div className="absolute top-3 right-3 z-10">
+                            <div className="absolute top-2.5 right-3 z-10">
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -2899,12 +2899,12 @@ function App() {
                             </div>
 
                             {/* Nombre del repositorio con icono del proveedor */}
-                            <div className="flex items-start justify-between gap-2 mb-2 pr-8">
-                              <div className="flex items-start gap-2 flex-1 min-w-0">
-                                <div className="flex-shrink-0 mt-0.5">
+                            <div className="flex items-center justify-between gap-2 mb-2 pr-8 -mt-0.5">
+                              <div className="flex items-center gap-2 flex-1 min-w-0">
+                                <div className="flex-shrink-0">
                                   {getIconoProveedor(item.proveedor || "GitHub")}
                                 </div>
-                                <CardTitle className="text-base font-semibold truncate group-hover:text-primary transition-colors">
+                                <CardTitle className="text-sm font-semibold truncate group-hover:text-primary transition-colors leading-tight">
                                   {item.nombre}
                                 </CardTitle>
                               </div>
@@ -2912,7 +2912,7 @@ function App() {
 
                             {/* Descripción */}
                             {item.descripcion && (
-                              <CardDescription className="text-xs text-muted-foreground line-clamp-2">
+                              <CardDescription className="text-xs text-muted-foreground line-clamp-2 pt-1.5 mt-0.5">
                                 {item.descripcion}
                               </CardDescription>
                             )}
