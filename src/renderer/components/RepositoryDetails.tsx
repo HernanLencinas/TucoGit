@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag, Settings, Undo2, GitMerge, AlertCircle, RefreshCw } from 'lucide-react';
+import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag, Settings, Undo2, GitMerge, AlertCircle, RefreshCw, Lock } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -1155,6 +1155,11 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <h2 className="font-semibold text-sm text-white truncate">
                             {repository.nombre}
                         </h2>
+                        {repository.privado && (
+                            <span title="Privado" className="flex-shrink-0 pointer-events-auto">
+                                <Lock className="h-3 w-3 text-white/70" />
+                            </span>
+                        )}
                     </div>
 
                     {/* Botón de minimizar dentro del área roja */}
@@ -1186,6 +1191,11 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             <h2 className="font-bold text-lg text-slate-900 dark:text-white flex items-center justify-center gap-2 mb-0.5">
                                 <GitBranch className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
                                 <span>{repository.nombre}</span>
+                                {repository.privado && (
+                                    <span title="Privado" className="flex-shrink-0">
+                                        <Lock className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
+                                    </span>
+                                )}
                             </h2>
                         </div>
                     </div>
