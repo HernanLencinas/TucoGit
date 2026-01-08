@@ -208,17 +208,12 @@ export interface AvatarOptions {
  */
 export const getAvatarUrl = ({ email, size = 80 }: AvatarOptions): string => {
   if (!email) {
-    console.log('[Avatar Debug] Email vacío, retornando string vacío');
     return '';
   }
 
-  console.log('[Avatar Debug] Email original recibido:', email);
   const cleanEmail = email.trim().toLowerCase();
-  console.log('[Avatar Debug] Email limpio (trim + lowercase):', cleanEmail);
   const hash = md5(cleanEmail);
-  console.log('[Avatar Debug] Hash MD5 generado:', hash);
   const url = `https://www.gravatar.com/avatar/${hash}?s=${size}&d=identicon`;
-  console.log('[Avatar Debug] URL final generada:', url);
   return url;
 };
 

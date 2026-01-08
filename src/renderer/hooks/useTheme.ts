@@ -55,7 +55,7 @@ export const useTheme = () => {
         await window.electronAPI.writeConfig({ tema: nuevoTema ? 'dark' : 'light' });
       }
     } catch (error) {
-      console.error('Error al guardar tema:', error);
+      // Error al guardar tema
     }
   };
 

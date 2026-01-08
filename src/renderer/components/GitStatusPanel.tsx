@@ -130,7 +130,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                 }
             }
         } catch (err) {
-            console.error('Error al cargar configuración del botón de commit:', err);
+            // Error al cargar configuración del botón de commit
         }
     };
 
@@ -167,7 +167,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
 
         // Iniciar el watcher
         (window as any).electronAPI.startRepoWatcher(repoPath).catch((err: any) => {
-            console.error('Error al iniciar watcher:', err);
+            // Error al iniciar watcher
         });
 
         // Escuchar cambios
@@ -182,7 +182,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         return () => {
             unsubscribe();
             (window as any).electronAPI.stopRepoWatcher(repoPath).catch((err: any) => {
-                console.error('Error al detener watcher:', err);
+                // Error al detener watcher
             });
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -248,7 +248,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                             // Fetch
                             const fetchResult = await (window as any).electronAPI.gitFetch?.(repoPath);
                             if (!fetchResult?.success) {
-                                console.warn('Fetch falló:', fetchResult?.error);
+                                // Fetch falló
                             }
                             
                             // Pull
@@ -261,7 +261,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                                     onRefreshGraph();
                                     return;
                                 } else {
-                                    console.warn('Pull falló:', pullResult?.error);
+                                    // Pull falló
                                 }
                             }
                         }

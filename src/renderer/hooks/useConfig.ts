@@ -67,7 +67,7 @@ export const useConfig = () => {
           }
         }
       } catch (error) {
-        console.error('Error al inicializar configuración:', error);
+        // Error al inicializar configuración
       }
     };
     

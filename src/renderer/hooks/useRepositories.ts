@@ -52,7 +52,7 @@ export const useRepositories = () => {
           }
         }
       } catch (error) {
-        console.error('Error al cargar repositorios:', error);
+        // Error al cargar repositorios
       }
     };
     
@@ -71,7 +71,7 @@ export const useRepositories = () => {
         await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
       }
     } catch (error) {
-      console.error('Error al guardar repositorios:', error);
+      // Error al guardar repositorios
     }
   };
 

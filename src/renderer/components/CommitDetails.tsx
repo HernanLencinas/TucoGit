@@ -332,7 +332,6 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                         setCommitParents([]);
                     }
                 } catch (err) {
-                    console.error('Error al obtener los padres del commit:', err);
                     setCommitParents([]);
                 }
             }
@@ -399,7 +398,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                 setTimeout(() => setCopiedParentHash(null), 2000);
             }
         } catch (err) {
-            console.error('Error al copiar al portapapeles:', err);
+            // Error al copiar al portapapeles
         }
     };
 
@@ -690,16 +689,11 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                             alt={commit.author.name}
                             className="w-full h-full object-cover"
                             onError={(e) => {
-                                console.log('[Avatar Debug] Error al cargar imagen de avatar');
-                                console.log('[Avatar Debug] Email del commit:', commit.author.email);
-                                console.log('[Avatar Debug] URL que falló:', e.currentTarget.src);
                                 e.currentTarget.style.display = 'none';
                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
                             }}
                             onLoad={(e) => {
-                                console.log('[Avatar Debug] Avatar cargado exitosamente');
-                                console.log('[Avatar Debug] Email del commit:', commit.author.email);
-                                console.log('[Avatar Debug] URL cargada:', e.currentTarget.src);
+                                // Avatar cargado exitosamente
                             }}
                         />
                         <span className="hidden text-[10px] text-slate-600 dark:text-slate-300">{commit.author.name.charAt(0).toUpperCase()}</span>

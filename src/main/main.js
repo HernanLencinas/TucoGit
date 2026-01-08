@@ -69,11 +69,10 @@ function startRepositoryWatcher(repoPath) {
   });
 
   watcher.on('error', (error) => {
-    console.error('Error en watcher del repositorio:', error);
+    // Error en watcher del repositorio
   });
 
   activeWatchers.set(repoPath, watcher);
-  console.log(`Watcher iniciado para: ${repoPath}`);
 }
 
 // Función para detener el watcher de un repositorio
@@ -82,7 +81,6 @@ function stopRepositoryWatcher(repoPath) {
   if (watcher) {
     watcher.close();
     activeWatchers.delete(repoPath);
-    console.log(`Watcher detenido para: ${repoPath}`);
   }
 }
 
@@ -124,7 +122,6 @@ function getWindowBounds() {
       }
     }
   } catch (error) {
-    console.error('Error al leer windowBounds de configuración:', error);
   }
 
   // Valores por defecto
@@ -162,7 +159,6 @@ function saveWindowBounds() {
       fs.writeFileSync(configFile, JSON.stringify(configData, null, 2), 'utf-8');
     }
   } catch (error) {
-    console.error('Error al guardar windowBounds:', error);
   }
 }
 
@@ -172,8 +168,6 @@ function createWindow() {
     ? path.join(__dirname, '../preload/preload.js')
     : path.join(__dirname, '../preload/preload.js');
 
-  console.log('Preload path:', preloadPath);
-  console.log('Preload exists:', fs.existsSync(preloadPath));
 
   // Obtener tamaño y posición guardados
   const windowBounds = getWindowBounds();
@@ -213,10 +207,8 @@ function createWindow() {
     // Validar que solo sea localhost
     if (devUrl.includes('localhost') || devUrl.includes('127.0.0.1')) {
       mainWindow.loadURL(devUrl).catch((err) => {
-        console.error('Error loading dev server:', err);
       });
     } else {
-      console.error('Security: Only localhost is allowed in development');
       app.quit();
     }
   } else {
@@ -224,22 +216,15 @@ function createWindow() {
     // app.getAppPath() devuelve la ruta correcta tanto en desarrollo como en producción
     const htmlPath = path.join(app.getAppPath(), 'dist-renderer', 'index.html');
 
-    console.log('App path:', app.getAppPath());
-    console.log('HTML path:', htmlPath);
 
     // loadFile maneja automáticamente archivos dentro del .asar
     mainWindow.loadFile(htmlPath).catch((err) => {
-      console.error('Error al cargar index.html:', err);
       // Si falla, intentar construir la URL manualmente
       const fileUrl = `file://${htmlPath}`;
-      console.log('Intentando con URL manual:', fileUrl);
       mainWindow.loadURL(fileUrl).catch((urlErr) => {
-        console.error('Error con URL manual:', urlErr);
         // Último fallback: intentar con __dirname
         const fallbackPath = path.join(__dirname, '../../dist-renderer/index.html');
-        console.log('Intentando fallback final:', fallbackPath);
         mainWindow.loadFile(fallbackPath).catch((finalErr) => {
-          console.error('Error final:', finalErr);
           app.quit();
         });
       });
@@ -306,19 +291,15 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
     const configDir = path.join(configPath, 'Tuco');
     const configFile = path.join(configDir, 'tuco-settings.json');
 
-    console.log('Inicializando configuraci?n en:', configDir);
 
     // Crear carpeta Tuco si no existe
     if (!fs.existsSync(configDir)) {
-      console.log('Creando carpeta:', configDir);
       fs.mkdirSync(configDir, { recursive: true });
     } else {
-      console.log('La carpeta ya existe:', configDir);
     }
 
     // Crear archivo tuco-settings.json con configuraci?n base si no existe
     if (!fs.existsSync(configFile)) {
-      console.log('Creando archivo de configuraci?n:', configFile);
 
       // Generar una clave de encriptaci?n aleatoria
       const randomKey = crypto.randomBytes(32);
@@ -352,9 +333,7 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
       };
 
       fs.writeFileSync(configFile, JSON.stringify(configBase, null, 2), 'utf-8');
-      console.log('Archivo de configuraci?n creado exitosamente con clave de encriptaci?n');
     } else {
-      console.log('El archivo de configuraci?n ya existe:', configFile);
 
       // Asegurar que el archivo existente tenga una clave de encriptaci?n
       const configData = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
@@ -365,7 +344,6 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
         configData.encryptionKey = keyHex;
         configData.ultimaActualizacion = new Date().toISOString();
         fs.writeFileSync(configFile, JSON.stringify(configData, null, 2), 'utf-8');
-        console.log('Clave de encriptaci?n agregada al archivo de configuraci?n existente');
       }
     }
 
@@ -387,7 +365,6 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
       repositorios: configData.repositorios || []
     };
   } catch (error) {
-    console.error('Error al inicializar configuraci?n:', error);
     return {
       success: false,
       error: error.message
@@ -410,7 +387,6 @@ function getGitSslVerify() {
     }
     return true; // Por defecto true si no existe el archivo
   } catch (error) {
-    console.error('Error al leer gitSslVerify de configuración:', error);
     return true; // Por defecto true en caso de error
   }
 }
@@ -435,7 +411,6 @@ ipcMain.handle('read-config', async () => {
       config: configData
     };
   } catch (error) {
-    console.error('Error al leer configuraci?n:', error);
     return {
       success: false,
       error: error.message
@@ -518,30 +493,24 @@ ipcMain.handle('write-config', async (event, updates) => {
     }
 
     if (updates.repositorios !== undefined) {
-      console.log('Guardando repositorios:', JSON.stringify(updates.repositorios, null, 2));
       configData.repositorios = updates.repositorios;
     }
 
     if (updates.conexiones !== undefined) {
-      console.log('Guardando conexiones:', JSON.stringify(updates.conexiones, null, 2));
       configData.conexiones = updates.conexiones;
     }
 
     // Actualizar fecha de ?ltima actualizaci?n
     configData.ultimaActualizacion = new Date().toISOString();
 
-    console.log('Escribiendo configuraci?n actualizada:', JSON.stringify(configData, null, 2));
 
     // Escribir archivo actualizado
-    console.log('Escribiendo configuraci?n actualizada:', JSON.stringify(configData, null, 2));
     fs.writeFileSync(configFile, JSON.stringify(configData, null, 2), 'utf-8');
-    console.log('Archivo de configuraci?n actualizado exitosamente');
 
     return {
       success: true
     };
   } catch (error) {
-    console.error('Error al escribir configuraci?n:', error);
     return {
       success: false,
       error: error.message
@@ -611,13 +580,11 @@ ipcMain.handle('import-config', async (event, configData) => {
 
     // Escribir el archivo completo
     fs.writeFileSync(configFile, JSON.stringify(configData, null, 2), 'utf-8');
-    console.log('Configuración importada exitosamente');
 
     return {
       success: true
     };
   } catch (error) {
-    console.error('Error al importar configuración:', error);
     return {
       success: false,
       error: error.message
@@ -673,7 +640,6 @@ function getEncryptionKey() {
       };
 
       fs.writeFileSync(configFile, JSON.stringify(configBase, null, 2), 'utf-8');
-      console.log('Clave de encriptaci?n generada y guardada');
       return randomKey;
     }
 
@@ -693,11 +659,9 @@ function getEncryptionKey() {
     configData.ultimaActualizacion = new Date().toISOString();
 
     fs.writeFileSync(configFile, JSON.stringify(configData, null, 2), 'utf-8');
-    console.log('Clave de encriptaci?n generada y guardada en configuraci?n existente');
 
     return randomKey;
   } catch (error) {
-    console.error('Error al obtener/generar clave de encriptaci?n:', error);
     // Fallback: generar una clave temporal (no se guardar? pero permitir? funcionar)
     return crypto.randomBytes(32);
   }
@@ -728,7 +692,6 @@ ipcMain.handle('encrypt-token', async (event, token) => {
       encryptedToken: result
     };
   } catch (error) {
-    console.error('Error al encriptar token:', error);
     return {
       success: false,
       error: error.message
@@ -784,7 +747,6 @@ ipcMain.handle('decrypt-token', async (event, encryptedToken) => {
       return { success: false, error: 'Formato de token encriptado inv?lido' };
     }
   } catch (error) {
-    console.error('Error al desencriptar token:', error);
     return {
       success: false,
       error: error.message
@@ -840,12 +802,6 @@ function makeRequest(url, options) {
     }
 
     // Log para debug
-    console.log(`[DEBUG makeRequest] URL completa: ${url}`);
-    console.log(`[DEBUG makeRequest] hostname: ${requestOptions.hostname}`);
-    console.log(`[DEBUG makeRequest] path: ${requestOptions.path}`);
-    console.log(`[DEBUG makeRequest] sslVerify: ${sslVerify}`);
-    console.log(`[DEBUG makeRequest] rejectUnauthorized: ${requestOptions.rejectUnauthorized}`);
-    console.log(`[DEBUG makeRequest] headers:`, JSON.stringify(requestOptions.headers, null, 2));
 
     const req = httpModule.request(requestOptions, (res) => {
       let data = '';
@@ -944,9 +900,6 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
         return { success: false, error: 'Proveedor no soportado' };
     }
 
-    console.log(`[DEBUG] Obteniendo repositorios para ${proveedor}`);
-    console.log(`[DEBUG] URL API: ${apiUrl}`);
-    console.log(`[DEBUG] gitSslVerify: ${sslVerify}`);
 
     try {
       // Para Gitea, Gogs y Codeberg, necesitamos manejar paginación
@@ -967,15 +920,11 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
         normalizedBaseUrl = normalizedBaseUrl.replace(/\/$/, '');
         const apiBase = `${normalizedBaseUrl}/api/v1`;
 
-        console.log(`[DEBUG] Base URL normalizada: ${normalizedBaseUrl}`);
-        console.log(`[DEBUG] API Base: ${apiBase}`);
 
         while (hasMore && page <= maxPages) {
           // Construir URL con paginación
           const paginatedUrl = `${apiBase}/user/repos?page=${page}&limit=${limit}`;
 
-          console.log(`[DEBUG] Obteniendo página ${page} de repositorios de ${proveedor}`);
-          console.log(`[DEBUG] URL paginada: ${paginatedUrl}`);
 
           const response = await makeRequest(paginatedUrl, {
             method: 'GET',
@@ -983,15 +932,12 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
             sslVerify: sslVerify
           });
 
-          console.log(`[DEBUG] Status code: ${response.statusCode}`);
-          console.log(`[DEBUG] Headers de respuesta:`, JSON.stringify(response.headers, null, 2));
 
           if (response.statusCode >= 200 && response.statusCode < 300) {
             let reposData;
             try {
               reposData = JSON.parse(response.data);
             } catch (e) {
-              console.error(`[DEBUG] Error al parsear JSON:`, e);
               return { success: false, error: 'Error al parsear respuesta del servidor' };
             }
 
@@ -999,22 +945,18 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
             const xTotalCount = response.headers['x-total-count'] || response.headers['X-Total-Count'];
             if (xTotalCount) {
               totalCount = parseInt(xTotalCount, 10);
-              console.log(`[DEBUG] Total de repositorios según header: ${totalCount}`);
             }
 
             // Verificar header Link para ver si hay más páginas
             const linkHeader = response.headers['link'] || response.headers['Link'];
             if (linkHeader) {
-              console.log(`[DEBUG] Link header: ${linkHeader}`);
               // Buscar si hay un link "next"
               hasMore = linkHeader.includes('rel="next"') || linkHeader.includes('rel=next');
             }
 
-            console.log(`[DEBUG] Repositorios en esta página: ${reposData ? reposData.length : 0}`);
 
             // Si no hay repositorios en esta página, terminamos
             if (!reposData || reposData.length === 0) {
-              console.log(`[DEBUG] No hay más repositorios, terminando paginación`);
               hasMore = false;
               break;
             }
@@ -1030,11 +972,9 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
             }));
 
             allRepos = allRepos.concat(pageRepos);
-            console.log(`[DEBUG] Total acumulado hasta ahora: ${allRepos.length}`);
 
             // Si tenemos el total del header y ya obtuvimos todos, terminamos
             if (totalCount !== null && allRepos.length >= totalCount) {
-              console.log(`[DEBUG] Ya obtuvimos todos los repositorios (${allRepos.length}/${totalCount})`);
               hasMore = false;
               break;
             }
@@ -1044,7 +984,6 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
             if (lastPageCount !== null && lastPageCount === reposData.length && !linkHeader && totalCount === null) {
               // Si obtuvimos la misma cantidad que la página anterior y no hay headers, probablemente es la última
               hasMore = false;
-              console.log(`[DEBUG] Detectada misma cantidad de repositorios (${reposData.length}) en páginas consecutivas sin headers, asumiendo última página`);
               break;
             }
             lastPageCount = reposData.length;
@@ -1056,19 +995,15 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
               // hasMore ya fue establecido arriba basado en linkHeader
               if (hasMore) {
                 page++;
-                console.log(`[DEBUG] Hay más páginas según Link header, continuando con página ${page}`);
               } else {
-                console.log(`[DEBUG] No hay más páginas según Link header`);
               }
             } else if (totalCount !== null) {
               // Si no hay link header pero tenemos total count, comparar
               if (allRepos.length < totalCount) {
                 hasMore = true;
                 page++;
-                console.log(`[DEBUG] Hay más repositorios (${allRepos.length}/${totalCount}), continuando con página ${page}`);
               } else {
                 hasMore = false;
-                console.log(`[DEBUG] Ya obtuvimos todos los repositorios (${allRepos.length}/${totalCount})`);
               }
             } else {
               // Si no hay headers de paginación, usar la cantidad de repositorios
@@ -1079,35 +1014,28 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
               if (reposData.length === limit) {
                 hasMore = true;
                 page++;
-                console.log(`[DEBUG] Obtuvimos ${limit} repositorios (límite solicitado), asumiendo que hay más páginas. Continuando con página ${page}`);
               } else if (reposData.length >= 30) {
                 // Si obtuvimos entre 30 y el límite, puede haber más (el servidor puede tener un límite menor)
                 // Intentar la siguiente página para estar seguros
                 hasMore = true;
                 page++;
-                console.log(`[DEBUG] Obtuvimos ${reposData.length} repositorios (entre 30 y ${limit}), intentando siguiente página para verificar`);
               } else {
                 // Si obtuvimos menos de 30, es definitivamente la última página
                 hasMore = false;
-                console.log(`[DEBUG] Obtuvimos ${reposData.length} repositorios (menos de 30), última página confirmada`);
               }
             }
           } else if (response.statusCode === 401 || response.statusCode === 403) {
             return { success: false, error: 'Token inválido o sin permisos suficientes' };
           } else {
             const errorMsg = response.data ? response.data.substring(0, 200) : 'Sin detalles';
-            console.error(`[DEBUG] Error del servidor: ${response.statusCode} - ${errorMsg}`);
             return { success: false, error: `Error del servidor: ${response.statusCode} - ${errorMsg}` };
           }
         }
 
         if (page > maxPages) {
-          console.warn(`[DEBUG] Se alcanzó el límite máximo de páginas (${maxPages}), deteniendo paginación`);
         }
 
-        console.log(`[DEBUG] Paginación completada. Total de repositorios obtenidos: ${allRepos.length}`);
         if (totalCount !== null) {
-          console.log(`[DEBUG] Total esperado según servidor: ${totalCount}`);
         }
 
         return {
@@ -1172,7 +1100,6 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
       return { success: false, error: `Error de conexión: ${error.message}` };
     }
   } catch (error) {
-    console.error('Error al obtener repositorios:', error);
     return {
       success: false,
       error: error.message || 'Error desconocido al obtener repositorios'
@@ -1245,11 +1172,6 @@ ipcMain.handle('validate-git-token', async (event, { proveedor, token, urlServid
         return { success: false, error: 'Proveedor no soportado' };
     }
 
-    console.log(`[DEBUG] Validando token para ${proveedor}`);
-    console.log(`[DEBUG] URL base: ${baseUrl}`);
-    console.log(`[DEBUG] URL API: ${apiUrl}`);
-    console.log(`[DEBUG] gitSslVerify: ${sslVerify}`);
-    console.log(`[DEBUG] Headers Authorization: ${headers['Authorization'] ? 'Presente' : 'Ausente'}`);
 
     try {
       const response = await makeRequest(apiUrl, {
@@ -1258,8 +1180,6 @@ ipcMain.handle('validate-git-token', async (event, { proveedor, token, urlServid
         sslVerify: sslVerify
       });
 
-      console.log(`[DEBUG] Respuesta status: ${response.statusCode}`);
-      console.log(`[DEBUG] Respuesta data (primeros 200 chars): ${response.data ? response.data.substring(0, 200) : 'vacío'}`);
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         // Token válido
@@ -1291,7 +1211,6 @@ ipcMain.handle('validate-git-token', async (event, { proveedor, token, urlServid
       return { success: false, error: `Error de conexión: ${error.message}` };
     }
   } catch (error) {
-    console.error('Error al validar token:', error);
     return {
       success: false,
       error: error.message || 'Error desconocido al validar el token'
@@ -1423,7 +1342,6 @@ ipcMain.handle('get-connection-details', async (event, { proveedor, token, urlSe
         });
       }
     } catch (error) {
-      console.error('Error al obtener organizaciones:', error);
     }
 
     // Obtener total de repositorios (usando headers de paginación)
@@ -1475,7 +1393,6 @@ ipcMain.handle('get-connection-details', async (event, { proveedor, token, urlSe
         }
       }
     } catch (error) {
-      console.error('Error al obtener repositorios:', error);
     }
 
     return {
@@ -1490,7 +1407,6 @@ ipcMain.handle('get-connection-details', async (event, { proveedor, token, urlSe
       }
     };
   } catch (error) {
-    console.error('Error al obtener detalles de conexión:', error);
     return {
       success: false,
       error: error.message || 'Error desconocido al obtener detalles de conexión'
@@ -1667,7 +1583,6 @@ ipcMain.handle('detect-installed-editors', async () => {
       editors: installedEditors
     };
   } catch (error) {
-    console.error('Error al detectar editores instalados:', error);
     return {
       success: false,
       error: error.message,
@@ -1683,7 +1598,6 @@ ipcMain.handle('open-in-ide', async (event, { path: repoPath, ideName }) => {
   return new Promise((resolve) => {
     try {
       if (!fs.existsSync(repoPath)) {
-        console.error(`[DEBUG] Error: La ruta no existe: ${repoPath}`);
         return resolve({ success: false, error: 'La ruta del repositorio no existe localmente.' });
       }
 
@@ -1751,24 +1665,18 @@ ipcMain.handle('open-in-ide', async (event, { path: repoPath, ideName }) => {
           return resolve({ success: false, error: 'IDE no soportado' });
       }
 
-      console.log(`[DEBUG] Intentando abrir IDE con comando: ${command}`);
 
       exec(command, { shell: true }, (error, stdout, stderr) => {
         if (error) {
-          console.error(`[DEBUG] Error al ejecutar comando IDE (${ideName}):`, error);
-          console.error(`[DEBUG] Stderr: ${stderr}`);
           // Intentar abrir con Finder como último recurso en Mac
           if (isMac) {
-            console.log('[DEBUG] Intentando abrir con Finder como fallback...');
             exec(`open "${repoPath}"`);
           }
           return resolve({ success: false, error: stderr || error.message });
         }
-        console.log(`[DEBUG] Comando IDE ejecutado exitosamente`);
         resolve({ success: true });
       });
     } catch (error) {
-      console.error('[DEBUG] Error en open-in-ide handler:', error);
       resolve({ success: false, error: error.message });
     }
   });
@@ -1805,25 +1713,19 @@ ipcMain.handle('clone-repository', async (event, { url, destPath, repoId, sslVer
             if (hostname.includes('gitlab.com') || hostname.includes('gitlab')) {
               urlObj.username = 'oauth2';
               urlObj.password = token;
-              console.log(`[DEBUG] Formato GitLab detectado, usando oauth2:token`);
             } else {
               // Para GitHub, Gitea, Gogs y otros, usar el token directamente como usuario
               urlObj.username = token;
-              console.log(`[DEBUG] Formato estándar detectado, usando token como usuario`);
             }
 
             cloneUrl = urlObj.toString();
             // Ocultar el token en los logs por seguridad
             const safeUrl = cloneUrl.replace(/:(.*?)@/, ':****@');
-            console.log(`[DEBUG] URL de clonación preparada: ${safeUrl}`);
           }
         } catch (e) {
-          console.error('Error al procesar la URL para clonación:', e);
         }
       }
 
-      console.log(`[DEBUG] Iniciando git clone en: ${destPath} (incluyendo todos los branches remotos)`);
-      console.log(`[DEBUG] SSL Verify configurado: ${sslVerify}`);
 
       // Argumentos para clonar incluyendo todos los branches remotos explicitly
       const args = ['clone', '--progress', '--no-single-branch'];
@@ -1835,7 +1737,6 @@ ipcMain.handle('clone-repository', async (event, { url, destPath, repoId, sslVer
       
       args.push(cloneUrl, '.');
 
-      console.log(`[DEBUG] Comando git: git ${args.join(' ')}`);
 
       const gitProcess = spawn('git', args, {
         cwd: destPath,
@@ -1872,7 +1773,6 @@ ipcMain.handle('clone-repository', async (event, { url, destPath, repoId, sslVer
         if (code === 0) {
           resolve({ success: true });
         } else {
-          console.error(`Error en git clone (código ${code}):`, errorOutput);
           let cleanError = errorOutput;
           if (token) {
             const escapedToken = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -1900,7 +1800,6 @@ ipcMain.handle('delete-path', async (event, pathToDelete) => {
     }
     return { success: true };
   } catch (error) {
-    console.error('Error al eliminar ruta:', error);
     return { success: false, error: error.message };
   }
 });
@@ -1979,7 +1878,6 @@ ipcMain.handle('get-git-local-info', async (event, repoPath) => {
       }
     };
   } catch (error) {
-    console.error('Error al obtener info de Git:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2041,7 +1939,6 @@ ipcMain.handle('get-git-status', async (event, repoPath) => {
 
     return { success: true, staged, unstaged, branch };
   } catch (error) {
-    console.error('Error al obtener status de Git:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2057,7 +1954,6 @@ ipcMain.handle('git-stage', async (event, { repoPath, file }) => {
     await execPromise(command, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al poner en stage:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2073,7 +1969,6 @@ ipcMain.handle('git-unstage', async (event, { repoPath, file }) => {
     await execPromise(command, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al quitar de stage:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2089,7 +1984,6 @@ ipcMain.handle('git-commit', async (event, { repoPath, message }) => {
     await execPromise(`git commit -m "${escapedMessage}"`, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al realizar commit:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2104,7 +1998,6 @@ ipcMain.handle('git-fetch', async (event, repoPath) => {
     await execPromise('git fetch', { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al hacer fetch:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2119,7 +2012,6 @@ ipcMain.handle('git-pull', async (event, repoPath) => {
     await execPromise('git pull', { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al hacer pull:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2134,7 +2026,6 @@ ipcMain.handle('git-push', async (event, repoPath) => {
     await execPromise('git push', { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al hacer push:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2185,7 +2076,6 @@ ipcMain.handle('get-git-branches', async (event, repoPath) => {
 
     return { success: true, local, remote, current, headHash };
   } catch (error) {
-    console.error('Error al obtener branches:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2214,7 +2104,6 @@ ipcMain.handle('git-create-branch', async (event, { repoPath, branchName, fromBr
     await execPromise(command, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al crear branch:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2233,7 +2122,6 @@ ipcMain.handle('git-checkout', async (event, { repoPath, branchName }) => {
     await execPromise(`git checkout "${branchName}"`, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al hacer checkout:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2302,7 +2190,6 @@ ipcMain.handle('can-cherry-pick-commit', async (event, { repoPath, commitHash })
 
     return { success: true, canCherryPick: true };
   } catch (error) {
-    console.error('Error al verificar si el commit puede ser cherry-picked:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2322,7 +2209,6 @@ ipcMain.handle('git-revert', async (event, { repoPath, commitHash }) => {
     await execPromise(`git revert --no-edit ${commitHash}`, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al hacer revert:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2368,13 +2254,11 @@ ipcMain.handle('git-cherry-pick', async (event, { repoPath, commitHash, commitCh
         await execPromise(`git commit --amend -m "${escapedMessage}"`, { cwd: repoPath });
       } catch (e) {
         // Si falla al modificar el mensaje, no es crítico, el cherry-pick ya se hizo
-        console.warn('No se pudo agregar la referencia al mensaje del commit:', e);
       }
     }
     
     return { success: true };
   } catch (error) {
-    console.error('Error al hacer cherry-pick:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2431,7 +2315,6 @@ ipcMain.handle('get-pending-operation', async (event, repoPath) => {
 
     return { success: true, hasPendingOperation: false };
   } catch (error) {
-    console.error('Error al verificar operaciones pendientes:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2457,7 +2340,6 @@ ipcMain.handle('abort-pending-operation', async (event, { repoPath, operation })
     await execPromise(command, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error(`Error al abortar ${operation}:`, error);
     return { success: false, error: error.message };
   }
 });
@@ -2483,7 +2365,6 @@ ipcMain.handle('continue-pending-operation', async (event, { repoPath, operation
     await execPromise(command, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error(`Error al continuar ${operation}:`, error);
     return { success: false, error: error.message };
   }
 });
@@ -2534,19 +2415,16 @@ ipcMain.handle('git-create-tag', async (event, { repoPath, tagName, message, com
           try {
             await execPromise(`git push ${remote} "${tagName.trim()}"`, { cwd: repoPath });
           } catch (pushError) {
-            console.error(`Error al hacer push del tag a ${remote}:`, pushError);
             // Continuar con los demás remotes aunque uno falle
           }
         }
       } catch (remoteError) {
-        console.error('Error al obtener remotes o hacer push:', remoteError);
         // No fallar la creación del tag si el push falla
       }
     }
 
     return { success: true };
   } catch (error) {
-    console.error('Error al crear tag:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2577,11 +2455,9 @@ ipcMain.handle('git-stash', async (event, { repoPath, includeUntracked = false, 
       ? `git stash push --include-untracked -m '${escapedMessage}'`
       : `git stash push -m '${escapedMessage}'`;
     
-    console.log('Ejecutando stash con mensaje:', stashMessage);
     await execPromise(command, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al hacer stash:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2628,7 +2504,6 @@ ipcMain.handle('get-git-stash-list', async (event, repoPath) => {
     if (error.message.includes('No stash entries')) {
       return { success: true, stashes: [] };
     }
-    console.error('Error al obtener lista de stashes:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2648,7 +2523,6 @@ ipcMain.handle('git-stash-pop', async (event, { repoPath, stashRef }) => {
     await execPromise(`git stash pop ${stashRef}`, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al aplicar stash:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2668,7 +2542,6 @@ ipcMain.handle('git-stash-drop', async (event, { repoPath, stashRef }) => {
     await execPromise(`git stash drop ${stashRef}`, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al eliminar stash:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2688,7 +2561,6 @@ ipcMain.handle('git-stash-clear', async (event, repoPath) => {
     await execPromise('git stash clear', { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al limpiar stashes:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2710,7 +2582,6 @@ ipcMain.handle('git-clean', async (event, { repoPath, force = false }) => {
     await execPromise(command, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al limpiar archivos:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2729,7 +2600,6 @@ ipcMain.handle('git-reset-hard', async (event, repoPath) => {
     await execPromise('git reset --hard HEAD', { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al resetear cambios:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2835,12 +2705,10 @@ ipcMain.handle('get-git-log', async (event, repoPath, skip = 0, limit = 50, sear
       });
 
       gitProcess.stderr.on('data', (data) => {
-        console.error('Git log search error:', data.toString());
       });
     });
 
   } catch (error) {
-    console.error('Error al obtener git log:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2905,7 +2773,6 @@ ipcMain.handle('get-commit-details', async (event, { repoPath, commitHash }) => 
     };
 
   } catch (error) {
-    console.error('Error al obtener detalles del commit:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2940,7 +2807,6 @@ ipcMain.handle('get-commit-tree', async (event, { repoPath, commitHash }) => {
     };
 
   } catch (error) {
-    console.error('Error al obtener el árbol del commit:', error);
     return { success: false, error: error.message };
   }
 });
@@ -2970,7 +2836,6 @@ ipcMain.handle('get-commit-file-content', async (event, { repoPath, commitHash, 
     };
 
   } catch (error) {
-    console.error('Error al obtener el contenido del archivo:', error);
     return { success: false, error: error.message };
   }
 });
@@ -3002,7 +2867,6 @@ ipcMain.handle('get-commit-parents', async (event, { repoPath, commitHash }) => 
     };
 
   } catch (error) {
-    console.error('Error al obtener los padres del commit:', error);
     return { success: false, error: error.message };
   }
 });
@@ -3089,7 +2953,6 @@ ipcMain.handle('set-git-config-local', async (event, { repoPath, key, value }) =
     await execPromise(`git config ${key} ${value}`, { cwd: repoPath });
     return { success: true };
   } catch (error) {
-    console.error('Error al configurar git local:', error);
     return { success: false, error: error.message };
   }
 });
@@ -3100,7 +2963,6 @@ ipcMain.handle('start-repo-watcher', async (event, repoPath) => {
     startRepositoryWatcher(repoPath);
     return { success: true };
   } catch (error) {
-    console.error('Error al iniciar watcher:', error);
     return { success: false, error: error.message };
   }
 });
@@ -3111,7 +2973,6 @@ ipcMain.handle('stop-repo-watcher', async (event, repoPath) => {
     stopRepositoryWatcher(repoPath);
     return { success: true };
   } catch (error) {
-    console.error('Error al detener watcher:', error);
     return { success: false, error: error.message };
   }
 });
@@ -3135,7 +2996,6 @@ ipcMain.handle('save-config-file', async (event, configData) => {
 
     return { success: false, error: 'Operación cancelada' };
   } catch (error) {
-    console.error('Error al guardar archivo:', error);
     return { success: false, error: error.message };
   }
 });
@@ -3160,7 +3020,6 @@ ipcMain.handle('save-file', async (event, content, defaultFilename) => {
 
     return { success: false, error: 'Operación cancelada' };
   } catch (error) {
-    console.error('Error al guardar archivo:', error);
     return { success: false, error: error.message };
   }
 });
@@ -3186,7 +3045,6 @@ ipcMain.handle('open-file', async (event) => {
 
     return null;
   } catch (error) {
-    console.error('Error al abrir archivo:', error);
     throw error;
   }
 });
