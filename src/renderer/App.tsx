@@ -12,7 +12,18 @@ import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
 type TabType = "inicio" | "repositorios" | "conexiones" | "configuracion";
 type ConfigTabType = "general" | "datos" | "git" | "temas" | "actualizacion" | "acerca";
 
-
+// Constantes para identidades de Git
+type GitIdentity = {
+  id: string;
+  nombre: string;
+  email: string;
+};
+const IDENTIDAD_DEFAULT_ID = "default-tucogit";
+const IDENTIDAD_DEFAULT: GitIdentity = {
+  id: IDENTIDAD_DEFAULT_ID,
+  nombre: "TucoGit",
+  email: "git@tuco.com"
+};
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>("inicio");
@@ -64,6 +75,8 @@ function App() {
   const [validandoToken, setValidandoToken] = useState(false);
   const [errorValidacionToken, setErrorValidacionToken] = useState<string | null>(null);
   const [tokenValidado, setTokenValidado] = useState(false);
+  const [identidadSeleccionada, setIdentidadSeleccionada] = useState<string>(IDENTIDAD_DEFAULT_ID);
+  const [mostrarMenuIdentidad, setMostrarMenuIdentidad] = useState(false);
   const [mostrarMenuOrdenar, setMostrarMenuOrdenar] = useState(false);
   const [ordenConexiones, setOrdenConexiones] = useState<"asc" | "desc" | null>(null);
   const [refrescandoConexiones, setRefrescandoConexiones] = useState(false);
@@ -119,17 +132,6 @@ function App() {
   const [rutaDestinoAClonar, setRutaDestinoAClonar] = useState<string>("");
   
   // Estado para identidades de Git
-  type GitIdentity = {
-    id: string;
-    nombre: string;
-    email: string;
-  };
-  const IDENTIDAD_DEFAULT_ID = "default-tucogit";
-  const IDENTIDAD_DEFAULT: GitIdentity = {
-    id: IDENTIDAD_DEFAULT_ID,
-    nombre: "TucoGit",
-    email: "git@tuco.com"
-  };
   const [gitIdentities, setGitIdentities] = useState<GitIdentity[]>([]);
   const [mostrarModalNuevaIdentidad, setMostrarModalNuevaIdentidad] = useState(false);
   const [mostrarModalEditarIdentidad, setMostrarModalEditarIdentidad] = useState(false);
@@ -676,6 +678,7 @@ function App() {
         if (mostrarMenuOrdenar) setMostrarMenuOrdenar(false);
         if (mostrarMenuOrdenarRepos) setMostrarMenuOrdenarRepos(false);
         if (mostrarMenuConexion) setMostrarMenuConexion(false);
+        if (mostrarMenuIdentidad) setMostrarMenuIdentidad(false);
       }
     };
 
@@ -689,7 +692,7 @@ function App() {
     mostrarModalNuevaCarpeta, mostrarModalEditarColeccion, mostrarModalRestablecerConfig,
     mostrarModalConfirmarReclon,
     mostrarMenuNuevaCarpeta, mostrarMenuNuevaConexion, mostrarMenuOrdenar,
-    mostrarMenuOrdenarRepos, mostrarMenuConexion,
+    mostrarMenuOrdenarRepos, mostrarMenuConexion, mostrarMenuIdentidad,
     mostrarModalNuevaIdentidad, mostrarModalEditarIdentidad, mostrarModalEliminarIdentidad
   ]);
 
@@ -925,6 +928,8 @@ function App() {
     setValidandoToken(false);
     setErrorValidacionToken(null);
     setTokenValidado(false);
+    setIdentidadSeleccionada(IDENTIDAD_DEFAULT_ID);
+    setMostrarMenuIdentidad(false);
     setEditandoConexion(false);
     setConexionAEditar(null);
   };
@@ -955,6 +960,7 @@ function App() {
           tipo: getNombreProveedor(proveedorSeleccionado),
           host: urlServidor || getUrlPorDefecto(proveedorSeleccionado) || "",
           tokenEncriptado: tokenEncriptado,
+          identidadId: identidadSeleccionada,
         };
 
         conexionesActualizadas = conexionesGuardadas.map(c =>
@@ -971,6 +977,7 @@ function App() {
           host: urlServidor || getUrlPorDefecto(proveedorSeleccionado) || "",
           tokenEncriptado: tokenEncriptado,
           fechaCreacion: new Date().toISOString(),
+          identidadId: identidadSeleccionada,
         };
 
         conexionesActualizadas = [...conexionesGuardadas, nuevaConexion];
@@ -1074,6 +1081,7 @@ function App() {
     setProveedorSeleccionado(tipoProveedor as "github" | "gitlab" | "gitea" | "gogs" | "codeberg" | null);
     setNombreConexion(conexion.nombre);
     setUrlServidor(conexion.host);
+    setIdentidadSeleccionada(conexion.identidadId || IDENTIDAD_DEFAULT_ID);
 
     // Desencriptar el token para mostrarlo (solo para edición)
     if (window.electronAPI?.decryptToken) {
@@ -2435,7 +2443,10 @@ function App() {
                     </button>
 
                     <button
-                      onClick={() => setMostrarWizardNuevaConexion(true)}
+                      onClick={() => {
+                        setIdentidadSeleccionada(IDENTIDAD_DEFAULT_ID);
+                        setMostrarWizardNuevaConexion(true);
+                      }}
                       className="group relative flex flex-col items-start gap-3 p-4 rounded-xl bg-secondary/20 border border-border/50 hover:bg-secondary/40 hover:border-primary/30 transition-all duration-300 hover:scale-[1.02] hover:shadow-md text-left"
                     >
                       <div className="flex items-center justify-between w-full">
@@ -3321,6 +3332,7 @@ function App() {
                       onClick={() => {
                         setMostrarMenuNuevaConexion(false);
                         limpiarWizardConexion();
+                        setIdentidadSeleccionada(IDENTIDAD_DEFAULT_ID);
                         setMostrarWizardNuevaConexion(true);
                       }}
                       className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
@@ -5497,17 +5509,71 @@ function App() {
                       <p className="text-xs text-muted-foreground">
                         Ingresa un nombre descriptivo para identificar esta conexión (máximo 32 caracteres)
                       </p>
-                      <input
-                        type="text"
-                        value={nombreConexion}
-                        onChange={(e) => setNombreConexion(e.target.value)}
-                        placeholder="Ej: Mi cuenta de GitHub"
-                        maxLength={32}
-                        className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                      />
-                      <p className="text-xs text-muted-foreground text-right">
-                        {nombreConexion.length}/32
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={nombreConexion}
+                          onChange={(e) => setNombreConexion(e.target.value)}
+                          placeholder="Ej: Mi cuenta de GitHub"
+                          maxLength={32}
+                          className="w-full px-3 py-2 pr-16 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
+                          {nombreConexion.length}/32
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Identidad Asociada */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold">
+                        Identidad Asociada
+                      </label>
+                      <p className="text-xs text-muted-foreground">
+                        Selecciona la identidad de Git que se usará para esta conexión
                       </p>
+                      <div className="relative">
+                        <button
+                          type="button"
+                          onClick={() => setMostrarMenuIdentidad(!mostrarMenuIdentidad)}
+                          className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:border-primary/50 transition-colors"
+                        >
+                          <span className={identidadSeleccionada ? "text-foreground" : "text-muted-foreground"}>
+                            {identidadSeleccionada
+                              ? gitIdentities.find(id => id.id === identidadSeleccionada)?.nombre || "Seleccionar identidad"
+                              : "Seleccionar identidad"}
+                          </span>
+                          <ChevronRight className={`h-4 w-4 transition-transform flex-shrink-0 ${mostrarMenuIdentidad ? "rotate-90" : ""}`} />
+                        </button>
+                        {mostrarMenuIdentidad && (
+                          <>
+                            <div
+                              className="fixed inset-0 z-10"
+                              onClick={() => setMostrarMenuIdentidad(false)}
+                            />
+                            <div className="absolute z-20 w-full mt-1 rounded-md border bg-popover shadow-md overflow-auto max-h-60">
+                              {gitIdentities.map((identidad) => (
+                                <button
+                                  key={identidad.id}
+                                  onClick={() => {
+                                    setIdentidadSeleccionada(identidad.id);
+                                    setMostrarMenuIdentidad(false);
+                                  }}
+                                  className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${
+                                    identidadSeleccionada === identidad.id ? "bg-accent text-accent-foreground" : ""
+                                  }`}
+                                >
+                                  <Check className={`h-4 w-4 flex-shrink-0 ${identidadSeleccionada === identidad.id ? "opacity-100" : "opacity-0"}`} />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="font-medium truncate">{identidad.nombre}</div>
+                                    <div className="text-xs text-muted-foreground truncate">{identidad.email}</div>
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
                     </div>
 
                     {/* Token de Acceso */}
@@ -5546,11 +5612,27 @@ function App() {
                           )}
                         </button>
                       </div>
+                      {validandoToken && (
+                        <div className="flex items-center gap-2 p-3 rounded-md bg-blue-500/10 border border-blue-500/20 mt-2">
+                          <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                          <p className="text-xs text-blue-600 dark:text-blue-400">
+                            Validando token y conectando con el servidor...
+                          </p>
+                        </div>
+                      )}
                       {errorValidacionToken && !validandoToken && (
                         <div className="flex items-start gap-2 p-3 rounded-md bg-amber-500/10 border border-amber-500/20 mt-2">
                           <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                           <p className="text-xs text-amber-700 dark:text-amber-300">
                             {errorValidacionToken}
+                          </p>
+                        </div>
+                      )}
+                      {tokenValidado && !validandoToken && (
+                        <div className="flex items-center gap-2 p-3 rounded-md bg-green-500/10 border border-green-500/20 mt-2">
+                          <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
+                          <p className="text-xs text-green-600 dark:text-green-400">
+                            Token válido. Puedes continuar al siguiente paso.
                           </p>
                         </div>
                       )}
@@ -5572,25 +5654,6 @@ function App() {
                         className="w-full px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                       />
                     </div>
-
-                    {/* Mensaje de validación */}
-                    {validandoToken && (
-                      <div className="flex items-center gap-2 p-3 rounded-md bg-blue-500/10 border border-blue-500/20">
-                        <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                        <p className="text-xs text-blue-600 dark:text-blue-400">
-                          Validando token y conectando con el servidor...
-                        </p>
-                      </div>
-                    )}
-
-                    {tokenValidado && !validandoToken && (
-                      <div className="flex items-center gap-2 p-3 rounded-md bg-green-500/10 border border-green-500/20">
-                        <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
-                        <p className="text-xs text-green-600 dark:text-green-400">
-                          Token válido. Puedes continuar al siguiente paso.
-                        </p>
-                      </div>
-                    )}
                   </div>
                 )}
 
@@ -6906,7 +6969,6 @@ function App() {
                     if (window.electronAPI?.writeConfig) {
                       try {
                         await window.electronAPI.writeConfig({ gitIdentities: identidadesOrdenadas });
-                        showToast('Identidad actualizada exitosamente', 'success');
                       } catch (error) {
                         showToast('Error al actualizar identidad', 'error');
                       }
