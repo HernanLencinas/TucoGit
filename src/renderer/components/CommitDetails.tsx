@@ -866,45 +866,45 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                                                         return (
                                                             <>
                                                                 {filesCount > 0 && (
-                                                                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-2.5 py-2 rounded-md border border-blue-200 dark:border-blue-800/50 flex-1 min-w-[120px]">
-                                                                        <div className="p-1.5 rounded-md bg-blue-100 dark:bg-blue-900/40 flex-shrink-0">
-                                                                            <FileText className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                                                                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-blue-200 dark:border-blue-800/50 flex-1 min-w-[130px] hover:border-blue-300 dark:hover:border-blue-700/70 transition-colors">
+                                                                        <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/40 flex-shrink-0">
+                                                                            <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                                                                         </div>
                                                                         <div className="flex-1 min-w-0">
-                                                                            <div className="text-[10px] text-blue-600 dark:text-blue-400 font-medium uppercase tracking-wide truncate">
+                                                                            <div className="text-[10px] text-blue-600 dark:text-blue-400 font-medium uppercase tracking-wide mb-0.5">
                                                                                 Archivos
                                                                             </div>
-                                                                            <div className="text-sm font-bold text-blue-700 dark:text-blue-300">
+                                                                            <div className="text-base font-bold text-blue-700 dark:text-blue-300 leading-tight">
                                                                                 {filesCount}
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 )}
                                                                 {insertionsCount > 0 && (
-                                                                    <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/20 px-2.5 py-2 rounded-md border border-green-200 dark:border-green-800/50 flex-1 min-w-[120px]">
-                                                                        <div className="p-1.5 rounded-md bg-green-100 dark:bg-green-900/40 flex-shrink-0">
-                                                                            <TrendingUp className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                                                                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-green-200 dark:border-green-800/50 flex-1 min-w-[130px] hover:border-green-300 dark:hover:border-green-700/70 transition-colors">
+                                                                        <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/40 flex-shrink-0">
+                                                                            <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-400" />
                                                                         </div>
                                                                         <div className="flex-1 min-w-0">
-                                                                            <div className="text-[10px] text-green-600 dark:text-green-400 font-medium uppercase tracking-wide truncate">
+                                                                            <div className="text-[10px] text-green-600 dark:text-green-400 font-medium uppercase tracking-wide mb-0.5">
                                                                                 Inserciones
                                                                             </div>
-                                                                            <div className="text-sm font-bold text-green-700 dark:text-green-300">
+                                                                            <div className="text-base font-bold text-green-700 dark:text-green-300 leading-tight">
                                                                                 +{insertionsCount}
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 )}
                                                                 {deletionsCount > 0 && (
-                                                                    <div className="flex items-center gap-2 bg-red-50 dark:bg-red-900/20 px-2.5 py-2 rounded-md border border-red-200 dark:border-red-800/50 flex-1 min-w-[120px]">
-                                                                        <div className="p-1.5 rounded-md bg-red-100 dark:bg-red-900/40 flex-shrink-0">
-                                                                            <TrendingDown className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
+                                                                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-red-200 dark:border-red-800/50 flex-1 min-w-[130px] hover:border-red-300 dark:hover:border-red-700/70 transition-colors">
+                                                                        <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/40 flex-shrink-0">
+                                                                            <TrendingDown className="h-4 w-4 text-red-600 dark:text-red-400" />
                                                                         </div>
                                                                         <div className="flex-1 min-w-0">
-                                                                            <div className="text-[10px] text-red-600 dark:text-red-400 font-medium uppercase tracking-wide truncate">
+                                                                            <div className="text-[10px] text-red-600 dark:text-red-400 font-medium uppercase tracking-wide mb-0.5">
                                                                                 Deleciones
                                                                             </div>
-                                                                            <div className="text-sm font-bold text-red-700 dark:text-red-300">
+                                                                            <div className="text-base font-bold text-red-700 dark:text-red-300 leading-tight">
                                                                                 -{deletionsCount}
                                                                             </div>
                                                                         </div>
