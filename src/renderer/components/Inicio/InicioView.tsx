@@ -1,12 +1,48 @@
+/**
+ * @fileoverview Vista de inicio de la aplicación.
+ * 
+ * Este módulo proporciona la pantalla de bienvenida con accesos rápidos
+ * y sección de favoritos.
+ */
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import type { TabType, ConfigTabType } from "@/renderer/types";
 
+/**
+ * Propiedades del componente InicioView.
+ * 
+ * @interface InicioViewProps
+ * @property {Function} setActiveTab - Función para cambiar la pestaña activa
+ * @property {Function} setConfigTabActiva - Función para cambiar la pestaña de configuración activa
+ */
 interface InicioViewProps {
   setActiveTab: (tab: TabType) => void;
   setConfigTabActiva: (tab: ConfigTabType) => void;
 }
 
+/**
+ * Componente de vista de inicio.
+ * 
+ * @description
+ * Muestra la pantalla de bienvenida con:
+ * - Mensaje de bienvenida y logo
+ * - Accesos rápidos a diferentes secciones con atajos de teclado
+ * - Sección de favoritos (actualmente vacía)
+ * 
+ * @param {InicioViewProps} props - Propiedades del componente
+ * @param {Function} props.setActiveTab - Función para cambiar la pestaña activa
+ * @param {Function} props.setConfigTabActiva - Función para cambiar la pestaña de configuración
+ * @returns {JSX.Element} Componente de vista de inicio
+ * 
+ * @example
+ * ```tsx
+ * <InicioView
+ *   setActiveTab={(tab) => setActiveTab(tab)}
+ *   setConfigTabActiva={(tab) => setConfigTabActiva(tab)}
+ * />
+ * ```
+ */
 export const InicioView = ({ setActiveTab, setConfigTabActiva }: InicioViewProps) => {
   return (
     <div className="flex gap-4 h-full">

@@ -1,6 +1,23 @@
+/**
+ * @fileoverview Script de preload para exponer APIs seguras de Electron al proceso de renderizado.
+ * 
+ * Este módulo actúa como puente seguro entre el proceso principal de Electron
+ * y el proceso de renderizado, exponiendo solo las APIs necesarias de forma
+ * controlada y segura.
+ */
+
 const { contextBridge, ipcRenderer } = require('electron');
 
-// Exponer APIs seguras al renderer process
+/**
+ * API expuesta al proceso de renderizado.
+ * 
+ * @description
+ * Objeto que contiene todas las funciones disponibles para el proceso de renderizado.
+ * Todas las funciones son asíncronas y utilizan IPC (Inter-Process Communication)
+ * para comunicarse con el proceso principal de Electron.
+ * 
+ * @namespace electronAPI
+ */
 contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,
   versions: {

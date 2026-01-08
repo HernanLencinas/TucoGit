@@ -1,8 +1,33 @@
+/**
+ * @fileoverview Componente para mostrar detalles completos de un commit de Git.
+ * 
+ * Este módulo proporciona un componente completo para visualizar información
+ * detallada de un commit, incluyendo archivos modificados, diffs, árbol de archivos
+ * y contenido de archivos específicos.
+ */
+
 import React, { useEffect, useState, useMemo } from 'react';
 import { FileCode, FilePlus, FileMinus, FileDiff, X, GitBranch, File, Folder, RefreshCw, FileJson, ChevronRight, ChevronDown, FolderOpen, Info, AlertCircle, Copy, Check, TrendingUp, TrendingDown, FileText } from 'lucide-react';
 import { getAvatarUrl } from '@/renderer/utils/avatar';
 import { cn } from '@/lib/utils';
 
+/**
+ * Propiedades del componente CommitDetails.
+ * 
+ * @interface CommitDetailsProps
+ * @property {Object} commit - Información del commit
+ * @property {string} commit.hash - Hash del commit
+ * @property {string} commit.message - Mensaje del commit
+ * @property {Object} commit.author - Información del autor
+ * @property {string} commit.author.name - Nombre del autor
+ * @property {string} commit.author.email - Email del autor
+ * @property {string} commit.date - Fecha del commit
+ * @property {string[]} [commit.parents] - Array de hashes de commits padres
+ * @property {string} repoPath - Ruta del repositorio Git
+ * @property {Function} onClose - Callback cuando se cierra el panel
+ * @property {string} [provider] - Proveedor Git (opcional)
+ * @property {string} [host] - Host del servidor Git (opcional)
+ */
 interface CommitDetailsProps {
     commit: {
         hash: string;
@@ -17,15 +42,37 @@ interface CommitDetailsProps {
     host?: string;
 }
 
+/**
+ * Interfaz que representa un archivo modificado en un commit.
+ * 
+ * @interface FileChange
+ * @property {string} path - Ruta del archivo
+ * @property {string} status - Estado del cambio (M, A, D, R, etc.)
+ */
 interface FileChange {
     path: string;
     status: string; // M, A, D, R, etc.
 }
 
+/**
+ * Interfaz que representa un archivo en el árbol del commit.
+ * 
+ * @interface TreeFile
+ * @property {string} path - Ruta del archivo
+ */
 interface TreeFile {
     path: string;
 }
 
+/**
+ * Interfaz que representa un nodo en el árbol de archivos.
+ * 
+ * @interface TreeNode
+ * @property {string} name - Nombre del archivo o carpeta
+ * @property {string} path - Ruta completa
+ * @property {'file'|'folder'} type - Tipo de nodo
+ * @property {TreeNode[]} [children] - Hijos del nodo (solo para carpetas)
+ */
 interface TreeNode {
     name: string;
     path: string;
@@ -33,6 +80,20 @@ interface TreeNode {
     children?: TreeNode[];
 }
 
+/**
+ * Estado interno del componente para los detalles del commit.
+ * 
+ * @interface DetailsState
+ * @property {FileChange[]} files - Archivos modificados en el commit
+ * @property {string} stats - Estadísticas del commit (inserciones, deleciones)
+ * @property {string} fullDiff - Diff completo del commit
+ * @property {boolean} loading - Indica si se está cargando información
+ * @property {string|null} error - Mensaje de error si existe
+ * @property {Object} [committer] - Información del committer (puede diferir del autor)
+ * @property {string} [committer.name] - Nombre del committer
+ * @property {string} [committer.email] - Email del committer
+ * @property {string} [committer.date] - Fecha del commit
+ */
 interface DetailsState {
     files: FileChange[];
     stats: string;
@@ -46,8 +107,50 @@ interface DetailsState {
     };
 }
 
+/**
+ * Tipo de pestaña activa en el panel de detalles.
+ * 
+ * @typedef {'detail'|'modified'|'tree'} TabType
+ */
 type TabType = 'detail' | 'modified' | 'tree';
 
+/**
+ * Componente para mostrar detalles completos de un commit.
+ * 
+ * @description
+ * Panel deslizable que muestra información detallada de un commit:
+ * - Pestaña Detalle: Información del commit, autor, fecha, hashes, estadísticas
+ * - Pestaña Archivos Modificados: Lista de archivos y diffs
+ * - Pestaña Árbol: Estructura de archivos del commit y contenido
+ * 
+ * Incluye funcionalidades como:
+ * - Visualización de diffs con colores
+ * - Navegación por árbol de archivos
+ * - Visualización de contenido de archivos
+ * - Copia de hashes al portapapeles
+ * 
+ * @param {CommitDetailsProps} props - Propiedades del componente
+ * @param {Object} props.commit - Información del commit a mostrar
+ * @param {string} props.repoPath - Ruta del repositorio Git
+ * @param {Function} props.onClose - Función para cerrar el panel
+ * @param {string} [props.provider] - Proveedor Git opcional
+ * @param {string} [props.host] - Host del servidor Git opcional
+ * @returns {JSX.Element} Componente de detalles del commit
+ * 
+ * @example
+ * ```tsx
+ * <CommitDetails
+ *   commit={{
+ *     hash: 'abc123',
+ *     message: 'Fix bug',
+ *     author: { name: 'John', email: 'john@example.com' },
+ *     date: '2024-01-15T10:30:00Z'
+ *   }}
+ *   repoPath="/path/to/repo"
+ *   onClose={() => setShowDetails(false)}
+ * />
+ * ```
+ */
 export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, onClose, provider, host }) => {
     const [details, setDetails] = useState<DetailsState>({
         files: [],
@@ -73,7 +176,18 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
     const [copiedHash, setCopiedHash] = useState<string | null>(null);
     const [copiedParentHash, setCopiedParentHash] = useState<string | null>(null);
 
-    // Función para construir la estructura de árbol a partir de la lista plana de archivos
+    /**
+     * Construye una estructura de árbol jerárquica a partir de una lista plana de archivos.
+     * 
+     * @description
+     * Convierte un array de rutas de archivos en una estructura de árbol
+     * con carpetas y archivos anidados. Ordena alfabéticamente con
+     * carpetas primero.
+     * 
+     * @param {TreeFile[]} files - Array de archivos con sus rutas
+     * @returns {TreeNode[]} Estructura de árbol jerárquica
+     * @private
+     */
     const buildTreeStructure = (files: TreeFile[]): TreeNode[] => {
         const root: { [key: string]: TreeNode } = {};
 
@@ -119,7 +233,16 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         return convertToArray(root);
     };
 
-    // Función para cargar el árbol de archivos del commit
+    /**
+     * Carga el árbol de archivos del commit.
+     * 
+     * @description
+     * Obtiene la lista de archivos del commit y construye la estructura
+     * de árbol para visualización.
+     * 
+     * @returns {Promise<void>} Promesa que se resuelve cuando se completa la carga
+     * @private
+     */
     const loadCommitTree = async () => {
         if (!repoPath || !commit.hash) return;
         setLoadingTree(true);
@@ -143,7 +266,12 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         }
     };
 
-    // Función para alternar la expansión de una carpeta
+    /**
+     * Alterna el estado de expansión de una carpeta en el árbol.
+     * 
+     * @param {string} path - Ruta de la carpeta a expandir/colapsar
+     * @private
+     */
     const toggleFolder = (path: string) => {
         setExpandedFolders(prev => {
             const next = new Set(prev);
@@ -156,7 +284,13 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         });
     };
 
-    // Función para cargar el contenido de un archivo del árbol
+    /**
+     * Carga el contenido de un archivo específico del commit.
+     * 
+     * @param {string} filePath - Ruta del archivo a cargar
+     * @returns {Promise<void>} Promesa que se resuelve cuando se completa la carga
+     * @private
+     */
     const loadFileContent = async (filePath: string) => {
         if (!repoPath || !commit.hash) return;
         setSelectedTreeFile(filePath);
@@ -198,7 +332,6 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                         setCommitParents([]);
                     }
                 } catch (err) {
-                    console.error('Error al obtener los padres del commit:', err);
                     setCommitParents([]);
                 }
             }
@@ -246,7 +379,14 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         }
     }, [activeTab, commit.hash, repoPath]);
 
-    // Función para copiar hash al portapapeles
+    /**
+     * Copia un hash al portapapeles.
+     * 
+     * @param {string} text - Texto (hash) a copiar
+     * @param {'hash'|'parent'} type - Tipo de hash (para mostrar feedback visual)
+     * @returns {Promise<void>} Promesa que se resuelve cuando se completa la copia
+     * @private
+     */
     const copyToClipboard = async (text: string, type: 'hash' | 'parent') => {
         try {
             await navigator.clipboard.writeText(text);
@@ -258,10 +398,17 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                 setTimeout(() => setCopiedParentHash(null), 2000);
             }
         } catch (err) {
-            console.error('Error al copiar al portapapeles:', err);
+            // Error al copiar al portapapeles
         }
     };
 
+    /**
+     * Obtiene el icono apropiado según el estado del archivo.
+     * 
+     * @param {string} status - Estado del archivo (A, D, M, etc.)
+     * @returns {JSX.Element} Componente de icono
+     * @private
+     */
     const getStatusIcon = (status: string) => {
         switch (status.charAt(0).toUpperCase()) {
             case 'A': return <FilePlus className="h-4 w-4 text-green-400" />;
@@ -271,6 +418,13 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         }
     };
 
+    /**
+     * Obtiene el icono apropiado según el tipo de archivo.
+     * 
+     * @param {string} filePath - Ruta del archivo
+     * @returns {React.ComponentType} Componente de icono de Lucide React
+     * @private
+     */
     const getFileIcon = (filePath: string) => {
         const isFolder = filePath.endsWith('/');
         if (isFolder) return Folder;
@@ -320,6 +474,19 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         return match;
     }, [selectedFile, details.fullDiff]);
 
+    /**
+     * Renderiza el contenido de un diff con colores y números de línea.
+     * 
+     * @description
+     * Procesa el texto del diff y lo renderiza con:
+     * - Números de línea para código antiguo y nuevo
+     * - Colores diferenciados para inserciones (verde) y deleciones (rojo)
+     * - Headers de hunks formateados
+     * 
+     * @param {string} diffText - Texto del diff a renderizar
+     * @returns {JSX.Element|null} Elemento JSX del diff renderizado o null si está vacío
+     * @private
+     */
     const renderDiffContent = (diffText: string) => {
         if (!diffText) return null;
 
@@ -403,7 +570,17 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         return <div>{renderedLines}</div>;
     };
 
-    // Función para renderizar el contenido del archivo con estilo de editor
+    /**
+     * Renderiza el contenido de un archivo con estilo de editor.
+     * 
+     * @description
+     * Muestra el contenido del archivo con números de línea,
+     * similar a un editor de código.
+     * 
+     * @param {string} content - Contenido del archivo a renderizar
+     * @returns {JSX.Element|null} Elemento JSX del contenido o null si está vacío
+     * @private
+     */
     const renderFileContent = (content: string) => {
         if (!content) return null;
 
@@ -427,7 +604,18 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         );
     };
 
-    // Función recursiva para renderizar el treeview
+    /**
+     * Renderiza recursivamente un nodo del árbol de archivos.
+     * 
+     * @description
+     * Renderiza un nodo y sus hijos de forma recursiva, con
+     * soporte para expandir/colapsar carpetas y seleccionar archivos.
+     * 
+     * @param {TreeNode} node - Nodo a renderizar
+     * @param {number} [level=0] - Nivel de anidación (para indentación)
+     * @returns {JSX.Element} Elemento JSX del nodo y sus hijos
+     * @private
+     */
     const renderTreeNode = (node: TreeNode, level: number = 0): JSX.Element => {
         const isExpanded = expandedFolders.has(node.path);
         const hasChildren = node.children && node.children.length > 0;
@@ -501,16 +689,11 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                             alt={commit.author.name}
                             className="w-full h-full object-cover"
                             onError={(e) => {
-                                console.log('[Avatar Debug] Error al cargar imagen de avatar');
-                                console.log('[Avatar Debug] Email del commit:', commit.author.email);
-                                console.log('[Avatar Debug] URL que falló:', e.currentTarget.src);
                                 e.currentTarget.style.display = 'none';
                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
                             }}
                             onLoad={(e) => {
-                                console.log('[Avatar Debug] Avatar cargado exitosamente');
-                                console.log('[Avatar Debug] Email del commit:', commit.author.email);
-                                console.log('[Avatar Debug] URL cargada:', e.currentTarget.src);
+                                // Avatar cargado exitosamente
                             }}
                         />
                         <span className="hidden text-[10px] text-slate-600 dark:text-slate-300">{commit.author.name.charAt(0).toUpperCase()}</span>

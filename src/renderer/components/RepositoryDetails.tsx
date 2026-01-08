@@ -172,7 +172,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     await (window as any).electronAPI.gitFetch?.(repoPath);
                 } catch (fetchErr) {
                     // Ignorar errores de fetch, continuar cargando branches
-                    console.warn('Error al hacer fetch antes de cargar branches:', fetchErr);
+                    // Error al hacer fetch antes de cargar branches
                 }
             }
             const result = await (window as any).electronAPI.getGitBranches?.(repoPath);
@@ -180,7 +180,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setBranches(result);
             }
         } catch (err) {
-            console.error('Error al cargar branches:', err);
+            // Error al cargar branches
         }
     };
 
@@ -202,7 +202,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 });
             }
         } catch (err) {
-            console.error('Error al cargar info de sincronización:', err);
+            // Error al cargar info de sincronización
         }
     };
 
@@ -269,7 +269,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 });
                             }
                         } catch (pushErr: any) {
-                            console.error('Error al hacer push después del pull:', pushErr);
+                            // Error al hacer push después del pull
                             toast({
                                 title: "Error al hacer push",
                                 description: pushErr?.message || "Ocurrió un error inesperado al hacer push",
@@ -300,7 +300,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 });
             }
         } catch (err: any) {
-            console.error('Error al manejar estrategia de pull:', err);
+            // Error al manejar estrategia de pull
             toast({
                 title: "Error",
                 description: err?.message || "Ocurrió un error inesperado",
@@ -413,7 +413,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     setCanCherryPick(false);
                 }
             } catch (err: any) {
-                console.error('Error al verificar cherry-pick:', err);
+                // Error al verificar cherry-pick
                 setCanCherryPick(false);
             }
         };
@@ -440,7 +440,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     setPendingOperation(null);
                 }
             } catch (err) {
-                console.error('Error al verificar operaciones pendientes:', err);
+                // Error al verificar operaciones pendientes
                 setPendingOperation(null);
             } finally {
                 setCheckingPendingOperation(false);
@@ -478,7 +478,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 });
             }
         } catch (err: any) {
-            console.error('Error al abortar operación:', err);
+            // Error al abortar operación
             toast({
                 title: "Error al abortar operación",
                 description: err?.message || "Ocurrió un error inesperado",
@@ -515,7 +515,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 });
             }
         } catch (err: any) {
-            console.error('Error al continuar operación:', err);
+            // Error al continuar operación
             toast({
                 title: "Error al continuar operación",
                 description: err?.message || "Ocurrió un error inesperado",
@@ -578,7 +578,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 });
             }
         } catch (err: any) {
-            console.error('Error al aplicar stash:', err);
+            // Error al aplicar stash
             toast({
                 title: "Error al aplicar stash",
                 description: err?.message || "Ocurrió un error inesperado",
@@ -620,7 +620,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 });
             }
         } catch (err: any) {
-            console.error('Error al eliminar stash:', err);
+            // Error al eliminar stash
             toast({
                 title: "Error al eliminar stash",
                 description: err?.message || "Ocurrió un error inesperado",
@@ -658,7 +658,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 });
             }
         } catch (err: any) {
-            console.error('Error al limpiar stashes:', err);
+            // Error al limpiar stashes
             toast({
                 title: "Error al limpiar stashes",
                 description: err?.message || "Ocurrió un error inesperado",
@@ -674,7 +674,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
         setStashing(true);
         try {
-            console.log('Enviando stash con mensaje:', stashMessage, 'includeUntracked:', stashIncludeUntracked);
+            // Enviando stash
             const result = await (window as any).electronAPI.gitStash?.(repoPath, stashIncludeUntracked, stashMessage || '');
             if (result?.success) {
                 toast({
@@ -695,7 +695,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 });
             }
         } catch (err: any) {
-            console.error('Error al hacer stash:', err);
+            // Error al hacer stash
             toast({
                 title: "Error al hacer stash",
                 description: err?.message || "Ocurrió un error inesperado",
@@ -725,7 +725,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 alert(result?.error || 'Error al crear el branch');
             }
         } catch (err) {
-            console.error('Error al crear branch:', err);
+            // Error al crear branch
             alert('Error al crear el branch');
         } finally {
             setCreatingBranch(false);
@@ -757,7 +757,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 });
             }
         } catch (err: any) {
-            console.error('Error al hacer revert:', err);
+            // Error al hacer revert
             toast({
                 title: "Error al hacer revert",
                 description: err?.message || "Ocurrió un error inesperado",
@@ -815,7 +815,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 }
             }
         } catch (err: any) {
-            console.error('Error al hacer cherry-pick:', err);
+            // Error al hacer cherry-pick
             const errorMessage = err?.message || "";
             // Detectar si hay conflictos en el error
             if (errorMessage.includes("conflict") || errorMessage.includes("CONFLICT") || errorMessage.includes("could not apply")) {
@@ -870,7 +870,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 });
             }
         } catch (err: any) {
-            console.error('Error al crear tag:', err);
+            // Error al crear tag
             toast({
                 title: "Error al crear tag",
                 description: err.message || 'Error desconocido',
@@ -949,7 +949,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         }
                     }
                 } catch (err: any) {
-                    console.error('Error al hacer checkout:', err);
+                    // Error al hacer checkout
                     toast({
                         title: "Error al hacer checkout",
                         description: err?.message || "Ocurrió un error inesperado",
@@ -984,7 +984,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     }
                 }
             } catch (err: any) {
-                console.error('Error al hacer checkout:', err);
+                // Error al hacer checkout
                 toast({
                     title: "Error al hacer checkout",
                     description: err?.message || "Ocurrió un error inesperado",
@@ -1054,7 +1054,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 throw new Error(checkoutResult?.error || 'Error al hacer checkout después de resolver el conflicto');
             }
         } catch (err: any) {
-            console.error('Error al resolver conflicto:', err);
+            // Error al resolver conflicto
             toast({
                 title: "Error al resolver conflicto",
                 description: err?.message || "Ocurrió un error inesperado",
@@ -1283,7 +1283,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                             }
                                                         }
                                                     } catch (err: any) {
-                                                        console.error('Error al hacer checkout:', err);
+                                                        // Error al hacer checkout
                                                         toast({
                                                             title: "Error al hacer checkout",
                                                             description: err?.message || "Ocurrió un error inesperado",
@@ -1420,7 +1420,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         });
                                     }
                                 } catch (err: any) {
-                                    console.error('Error al hacer fetch:', err);
+                                    // Error al hacer fetch
                                     toast({
                                         title: "Error al hacer fetch",
                                         description: err?.message || "Ocurrió un error inesperado",
@@ -1473,7 +1473,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         }
                                     }
                                 } catch (err: any) {
-                                    console.error('Error al hacer pull:', err);
+                                    // Error al hacer pull
                                     const errorMessage = err?.message || "";
                                     if (errorMessage.includes("divergent branches") || errorMessage.includes("Need to specify how to reconcile")) {
                                         setPendingPullRepoPath(repoPath);
@@ -1542,7 +1542,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         }
                                     }
                                 } catch (err: any) {
-                                    console.error('Error al hacer push:', err);
+                                    // Error al hacer push
                                     const errorMessage = err?.message || "";
                                     if (errorMessage.includes("non-fast-forward") || errorMessage.includes("behind") || errorMessage.includes("Updates were rejected")) {
                                         setPendingPullRepoPath(repoPath);
@@ -1646,7 +1646,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                     setShowStashListModal(false);
                                                 }
                                             } catch (err: any) {
-                                                console.error('Error al obtener stashes:', err);
+                                                // Error al obtener stashes
                                                 toast({
                                                     title: "Error al obtener stashes",
                                                     description: err?.message || "Ocurrió un error inesperado",

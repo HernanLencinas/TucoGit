@@ -1,7 +1,23 @@
+/**
+ * @fileoverview Componente de pie de página de la aplicación.
+ * 
+ * Este módulo proporciona el footer con navegación entre pestañas
+ * y control del tema.
+ */
+
 import { Button } from "@/components/ui/button";
 import { Home, FolderGit2, Settings, Sun, Moon } from "lucide-react";
 import type { TabType } from "@/renderer/types";
 
+/**
+ * Propiedades del componente Footer.
+ * 
+ * @interface FooterProps
+ * @property {TabType} activeTab - Pestaña actualmente activa
+ * @property {Function} setActiveTab - Función para cambiar la pestaña activa
+ * @property {boolean} isDark - Indica si el tema oscuro está activo
+ * @property {Function} toggleTheme - Función para alternar el tema
+ */
 interface FooterProps {
   activeTab: TabType;
   setActiveTab: (tab: TabType) => void;
@@ -9,6 +25,32 @@ interface FooterProps {
   toggleTheme: () => void;
 }
 
+/**
+ * Componente de pie de página.
+ * 
+ * @description
+ * Footer fijo en la parte inferior con:
+ * - Botones de navegación entre pestañas principales
+ * - Botón para alternar entre tema claro y oscuro
+ * - Indicador visual de la pestaña activa
+ * 
+ * @param {FooterProps} props - Propiedades del componente
+ * @param {TabType} props.activeTab - Pestaña actualmente activa
+ * @param {Function} props.setActiveTab - Función para cambiar la pestaña
+ * @param {boolean} props.isDark - Estado del tema oscuro
+ * @param {Function} props.toggleTheme - Función para alternar el tema
+ * @returns {JSX.Element} Componente de footer
+ * 
+ * @example
+ * ```tsx
+ * <Footer
+ *   activeTab="inicio"
+ *   setActiveTab={(tab) => setActiveTab(tab)}
+ *   isDark={false}
+ *   toggleTheme={() => toggleTheme()}
+ * />
+ * ```
+ */
 export const Footer = ({ activeTab, setActiveTab, isDark, toggleTheme }: FooterProps) => {
   return (
     <footer className="border-t bg-muted/50 py-3 px-6 flex-shrink-0">

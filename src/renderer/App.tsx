@@ -159,7 +159,7 @@ function App() {
         }));
       }
     } catch (error) {
-      console.error(`Error al cargar info git para ${item.nombre}:`, error);
+      // Error al cargar info git
     }
   };
 
@@ -234,7 +234,7 @@ function App() {
         }
       }
     } catch (error) {
-      console.error('Error al restablecer configuración:', error);
+      // Error al restablecer configuración
       showToast('Error al restablecer configuración: ' + (error as Error).message, 'error');
     }
   };
@@ -258,9 +258,7 @@ function App() {
   }, []);
 
   const clonarRepositorio = async (item: FolderItem, saltarConfirmacion: boolean = false) => {
-    console.log('[DEBUG clonarRepositorio] Function called with item:', item.nombre, 'saltarConfirmacion:', saltarConfirmacion);
     if (!item.urlClon) {
-      console.log('[DEBUG clonarRepositorio] No urlClon found');
       showToast("No se encontró la URL de clonación para este repositorio", 'error');
       return;
     }
@@ -336,7 +334,7 @@ function App() {
         }
       }
     } catch (error) {
-      console.error("Error al clonar repositorio:", error);
+      // Error al clonar repositorio
       showToast(`Error al clonar: ${(error as Error).message}`, 'error');
     } finally {
       // Quitar de la lista de clonando
@@ -349,9 +347,7 @@ function App() {
   };
 
   const abrirEnIDE = async (item: FolderItem) => {
-    console.log(`[DEBUG] Intentando abrir en IDE: ${item.nombre}, clonado: ${item.clonado}, editor: ${editorIDESeleccionado}`);
     if (!item.clonado || !editorIDESeleccionado || !window.electronAPI?.openInIDE) {
-      console.warn('[DEBUG] No se puede abrir en IDE: faltan requisitos');
       return;
     }
 
@@ -365,7 +361,7 @@ function App() {
         showToast(`Error al abrir en ${editorIDESeleccionado}: ${resultado.error}`, 'error');
       }
     } catch (error) {
-      console.error(`Error al abrir en ${editorIDESeleccionado}:`, error);
+      // Error al abrir en IDE
       showToast(`Error al abrir en ${editorIDESeleccionado}`, 'error');
     }
   };
@@ -398,9 +394,7 @@ function App() {
 
           // Inicializar configuración (crear carpeta y archivo si no existen)
           if (window.electronAPI?.initializeConfig) {
-            console.log('Inicializando configuración en:', documentsPath);
             const resultado = await window.electronAPI.initializeConfig(documentsPath);
-            console.log('Resultado de inicialización:', resultado);
 
             if (resultado.success) {
               setRutaConfiguracion(resultado.ruta || rutaPorDefecto);
@@ -476,7 +470,7 @@ function App() {
                 // Aplicar a Git si hay valor guardado
                 if (window.electronAPI?.setGitConfig) {
                   window.electronAPI.setGitConfig('user.name', resultado.gitUserName).catch(err => {
-                    console.error('Error al aplicar nombre de Git:', err);
+                    // Error al aplicar nombre de Git
                   });
                 }
               } else {
@@ -487,7 +481,7 @@ function App() {
                       setGitUserName(result.value);
                     }
                   }).catch(err => {
-                    console.error('Error al leer nombre de Git:', err);
+                    // Error al leer nombre de Git
                   });
                 }
               }
@@ -497,7 +491,7 @@ function App() {
                 // Aplicar a Git si hay valor guardado
                 if (window.electronAPI?.setGitConfig) {
                   window.electronAPI.setGitConfig('user.email', resultado.gitUserEmail).catch(err => {
-                    console.error('Error al aplicar correo de Git:', err);
+                    // Error al aplicar correo de Git
                   });
                 }
               } else {
@@ -508,7 +502,7 @@ function App() {
                       setGitUserEmail(result.value);
                     }
                   }).catch(err => {
-                    console.error('Error al leer correo de Git:', err);
+                    // Error al leer correo de Git
                   });
                 }
               }
@@ -526,18 +520,16 @@ function App() {
                 }));
               }
             } else {
-              console.error('Error al inicializar configuración:', resultado.error);
+              // Error al inicializar configuración
               setRutaConfiguracion(rutaPorDefecto);
             }
           } else {
-            console.warn('initializeConfig no está disponible');
             setRutaConfiguracion(rutaPorDefecto);
           }
         } else {
-          console.warn('getDocumentsPath no está disponible');
         }
       } catch (error) {
-        console.error('Error al inicializar configuración:', error);
+        // Error al inicializar configuración
       }
     };
 
@@ -658,7 +650,7 @@ function App() {
               }
             }
           } catch (error) {
-            console.error('Error al verificar configuración:', error);
+            // Error al verificar configuración
           }
         }
       }
@@ -846,7 +838,7 @@ function App() {
         setErrorValidacionToken("Error: No se pudo validar el token");
       }
     } catch (error) {
-      console.error("Error al validar token:", error);
+      // Error al validar token
       setErrorValidacionToken("Error inesperado al validar el token: " + (error as Error).message);
       setTokenValidado(false);
     } finally {
@@ -879,7 +871,7 @@ function App() {
         if (resultadoEncriptacion.success && resultadoEncriptacion.encryptedToken) {
           tokenEncriptado = resultadoEncriptacion.encryptedToken;
         } else {
-          console.error("Error al encriptar token:", resultadoEncriptacion.error);
+          // Error al encriptar token
           alert("Error al encriptar el token: " + (resultadoEncriptacion.error || "Error desconocido"));
           return;
         }
@@ -930,12 +922,12 @@ function App() {
           setMostrarWizardNuevaConexion(false);
           limpiarWizardConexion();
         } else {
-          console.error("Error al guardar conexión:", resultado.error);
+          // Error al guardar conexión
           alert("Error al guardar la conexión: " + resultado.error);
         }
       }
     } catch (error) {
-      console.error("Error al guardar conexión:", error);
+      // Error al guardar conexión
       alert("Error al guardar la conexión: " + (error as Error).message);
     }
   };
@@ -1024,7 +1016,7 @@ function App() {
           setTokenValidado(true);
         }
       } catch (error) {
-        console.error("Error al desencriptar token:", error);
+        // Error al desencriptar token
       }
     }
 
@@ -1072,7 +1064,7 @@ function App() {
         }
       }
     } catch (error) {
-      console.error(`Error al verificar estado de conexión ${conexion.id}:`, error);
+      // Error al verificar estado de conexión
       setEstadosConexion(prev => ({ ...prev, [conexion.id]: 'disconnected' }));
     }
   };
@@ -1122,7 +1114,7 @@ function App() {
         }));
       }
     } catch (error) {
-      console.error(`Error al obtener detalles de conexión ${conexion.id}:`, error);
+      // Error al obtener detalles de conexión
     } finally {
       setCargandoDetalles(prev => ({ ...prev, [conexion.id]: false }));
     }
@@ -1167,7 +1159,7 @@ function App() {
         }
       }
     } catch (error) {
-      console.error("Error al refrescar conexiones:", error);
+      // Error al refrescar conexiones
     } finally {
       setRefrescandoConexiones(false);
     }
@@ -1226,7 +1218,7 @@ function App() {
         }
       }
     } catch (error) {
-      console.error("Error al refrescar repositorios:", error);
+      // Error al refrescar repositorios
     } finally {
       setRefrescandoRepositorios(false);
     }
@@ -1274,12 +1266,12 @@ function App() {
           setConexionAEliminar(null);
           showToast('Conexión y repositorios asociados eliminados exitosamente', 'success');
         } else {
-          console.error("Error al eliminar conexión:", resultado.error);
+          // Error al eliminar conexión
           showToast(`Error al eliminar la conexión: ${resultado.error}`, 'error');
         }
       }
     } catch (error) {
-      console.error("Error al eliminar conexión:", error);
+      // Error al eliminar conexión
       showToast(`Error al eliminar la conexión: ${(error as Error).message}`, 'error');
     }
   };
@@ -1320,7 +1312,7 @@ function App() {
         });
       }
     } catch (error) {
-      console.error('Error al guardar tema:', error);
+      // Error al guardar tema
     }
   };
 
@@ -1338,7 +1330,7 @@ function App() {
         });
       }
     } catch (error) {
-      console.error('Error al guardar tema:', error);
+      // Error al guardar tema
     }
   };
 
@@ -1434,17 +1426,14 @@ function App() {
     // Guardar estructura actualizada en el archivo de configuración
     try {
       if (window.electronAPI?.writeConfig) {
-        console.log('Guardando nueva estructura:', nuevaEstructura);
         const resultado = await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
-        console.log('Resultado del guardado:', resultado);
         if (!resultado.success) {
-          console.error('Error al guardar:', resultado.error);
+          // Error al guardar
         }
       } else {
-        console.warn('writeConfig no está disponible');
       }
     } catch (error) {
-      console.error('Error al guardar estructura de repositorios:', error);
+      // Error al guardar estructura de repositorios
     }
 
     setNombreNuevaCarpeta("");
@@ -1507,13 +1496,12 @@ function App() {
       }
 
       if (!resultado.repositories || resultado.repositories.length === 0) {
-        console.warn("No se encontraron repositorios");
         setRepositoriosDisponibles([]);
       } else {
         setRepositoriosDisponibles(resultado.repositories);
       }
     } catch (error) {
-      console.error("Error al cargar repositorios:", error);
+      // Error al cargar repositorios
       setRepositoriosDisponibles([]);
       // Solo mostrar alert si se solicita explícitamente (cuando se está creando un nuevo repositorio)
       if (mostrarError) {
@@ -1685,7 +1673,7 @@ function App() {
                       try {
                         await window.electronAPI.writeConfig({ editorIDE: primerEditor });
                       } catch (error) {
-                        console.error('Error al guardar editor IDE:', error);
+                        // Error al guardar editor IDE
                       }
                     }
                   }
@@ -1703,7 +1691,7 @@ function App() {
                     try {
                       await window.electronAPI.writeConfig({ editorIDE: primerEditor });
                     } catch (error) {
-                      console.error('Error al guardar editor IDE:', error);
+                      // Error al guardar editor IDE
                     }
                   }
                 }
@@ -1711,7 +1699,7 @@ function App() {
             }
           }
         } catch (error) {
-          console.error('Error al detectar editores instalados:', error);
+          // Error al detectar editores instalados
         }
       }
     };
@@ -1799,7 +1787,7 @@ function App() {
             setRepositorioAEditar(null);
             setBusquedaRepositorio("");
           } else {
-            console.error("Error al guardar repositorio:", resultado.error);
+            // Error al guardar repositorio
             alert("Error al guardar el repositorio: " + resultado.error);
           }
         }
@@ -1906,12 +1894,12 @@ function App() {
           setDescripcionRepositorio("");
           setBusquedaRepositorio("");
         } else {
-          console.error("Error al guardar repositorio:", resultado.error);
+          // Error al guardar repositorio
           alert("Error al guardar el repositorio: " + resultado.error);
         }
       }
     } catch (error) {
-      console.error("Error al guardar repositorio:", error);
+      // Error al guardar repositorio
       alert("Error al guardar el repositorio: " + (error as Error).message);
     }
   };
@@ -1997,15 +1985,13 @@ function App() {
     // Guardar estructura actualizada en el archivo de configuración
     try {
       if (window.electronAPI?.writeConfig) {
-        console.log('Guardando estructura después de editar:', nuevaEstructura);
         const resultado = await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
-        console.log('Resultado del guardado:', resultado);
         if (!resultado.success) {
-          console.error('Error al guardar:', resultado.error);
+          // Error al guardar
         }
       }
     } catch (error) {
-      console.error('Error al guardar estructura después de editar:', error);
+      // Error al guardar estructura después de editar
     }
 
     // Cerrar modal y limpiar estado
@@ -2031,7 +2017,6 @@ function App() {
   };
 
   const abrirModalEliminarColeccion = (coleccionId: string) => {
-    console.log('[DEBUG abrirModalEliminarColeccion] Called with ID:', coleccionId);
     setColeccionAEliminar(coleccionId);
     setMostrarModalEliminarColeccion(true);
   };
@@ -2071,16 +2056,14 @@ function App() {
     // Guardar estructura actualizada en el archivo de configuración
     try {
       if (window.electronAPI?.writeConfig) {
-        console.log('Eliminando colección, guardando nueva estructura:', nuevaEstructura);
         const resultado = await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
-        console.log('Resultado del guardado después de eliminar:', resultado);
         if (!resultado.success) {
-          console.error('Error al guardar después de eliminar:', resultado.error);
+          // Error al guardar después de eliminar
           alert('Error al guardar los cambios. La colección se eliminó de la vista pero puede no haberse guardado en el archivo.');
         }
       }
     } catch (error) {
-      console.error('Error al guardar estructura después de eliminar:', error);
+      // Error al guardar estructura después de eliminar
       alert('Error al guardar los cambios. La colección se eliminó de la vista pero puede no haberse guardado en el archivo.');
     }
 
@@ -2091,7 +2074,6 @@ function App() {
 
   // Función para abrir el modal de confirmación de eliminación de repositorio
   const abrirModalEliminarRepositorio = (repositorio: FolderItem) => {
-    console.log('[DEBUG abrirModalEliminarRepositorio] Called with:', repositorio.nombre);
     setRepositorioAEliminar(repositorio);
     setMostrarModalEliminarRepositorio(true);
   };
@@ -2125,12 +2107,12 @@ function App() {
       if (window.electronAPI?.writeConfig) {
         const resultado = await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
         if (!resultado.success) {
-          console.error('Error al guardar después de eliminar:', resultado.error);
+          // Error al guardar después de eliminar
           alert('Error al guardar los cambios. El repositorio se eliminó de la vista pero puede no haberse guardado en el archivo.');
         }
       }
     } catch (error) {
-      console.error('Error al guardar estructura después de eliminar:', error);
+      // Error al guardar estructura después de eliminar
       alert('Error al guardar los cambios. El repositorio se eliminó de la vista pero puede no haberse guardado en el archivo.');
     }
 
@@ -2153,7 +2135,6 @@ function App() {
       // ya que solo estamos editando el nombre y descripción del repositorio local
       cargarRepositorios(conexionEncontrada, false).catch((error) => {
         // Silenciar el error cuando se está editando, ya que no es necesario para la edición
-        console.warn("No se pudieron cargar los repositorios al editar (no es crítico):", error);
       });
       // Establecer el repositorio seleccionado (necesitamos encontrar el ID correcto)
       // Por ahora, usaremos el nombre del repositorio como referencia
@@ -2194,11 +2175,11 @@ function App() {
       if (window.electronAPI?.writeConfig) {
         const resultado = await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
         if (!resultado.success) {
-          console.error('Error al guardar favorito:', resultado.error);
+          // Error al guardar favorito
         }
       }
     } catch (error) {
-      console.error('Error al guardar favorito:', error);
+      // Error al guardar favorito
     }
   };
 
@@ -2955,7 +2936,6 @@ function App() {
                                 variant="ghost"
                                 className="h-7 w-7 hover:bg-accent flex-shrink-0"
                                 onClick={(e) => {
-                                  console.log('[DEBUG Delete Collection Button] onClick triggered for:', item.nombre);
                                   e.stopPropagation();
                                   abrirModalEliminarColeccion(item.id);
                                 }}
@@ -2999,7 +2979,6 @@ function App() {
                                 variant="ghost"
                                 className={`h-7 w-7 hover:bg-accent flex-shrink-0 ${clonandoRepositorios[item.id] !== undefined ? "animate-pulse opacity-50 pointer-events-none" : ""}`}
                                 onClick={(e) => {
-                                  console.log('[DEBUG Clone Button] onClick triggered for:', item.nombre);
                                   e.stopPropagation();
                                   clonarRepositorio(item);
                                 }}
@@ -3039,7 +3018,6 @@ function App() {
                                 variant="ghost"
                                 className="h-7 w-7 hover:bg-accent flex-shrink-0"
                                 onClick={(e) => {
-                                  console.log('[DEBUG Delete Repository Button] onClick triggered for:', item.nombre);
                                   e.stopPropagation();
                                   abrirModalEliminarRepositorio(item);
                                 }}
@@ -3708,7 +3686,7 @@ function App() {
                                           await window.electronAPI.writeConfig({ editorIDE: ide });
                                           showToast(`Editor IDE cambiado a ${ide}`, 'success');
                                         } catch (error) {
-                                          console.error('Error al guardar editor IDE:', error);
+                                          // Error al guardar editor IDE
                                           showToast('Error al guardar la configuración', 'error');
                                         }
                                       }
@@ -3777,7 +3755,7 @@ function App() {
                 }
               }
             } catch (error) {
-              console.error('Error al seleccionar carpeta:', error);
+              // Error al seleccionar carpeta
             }
           };
 
@@ -3803,7 +3781,7 @@ function App() {
                 showToast('Funcionalidad no disponible', 'error');
               }
             } catch (error) {
-              console.error('Error al exportar configuración:', error);
+              // Error al exportar configuración
               showToast(`Error al exportar configuración: ${(error as Error).message}`, 'error');
             }
           };
@@ -3903,7 +3881,7 @@ function App() {
                 }
               }
             } catch (error) {
-              console.error('Error al recargar datos:', error);
+              // Error al recargar datos
             }
           };
 
@@ -3931,7 +3909,7 @@ function App() {
                 }
               }
             } catch (error) {
-              console.error('Error al importar configuración:', error);
+              // Error al importar configuración
               const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
               if (errorMessage.includes('JSON') || errorMessage.includes('parse')) {
                 showToast('El archivo seleccionado no es un JSON válido', 'error');
@@ -4131,7 +4109,7 @@ function App() {
                                 showToast('Nombre de Git guardado exitosamente', 'success');
                               }
                             } catch (error) {
-                              console.error('Error al guardar nombre de Git:', error);
+                              // Error al guardar nombre de Git
                               showToast('Error al guardar nombre de Git', 'error');
                             }
                           }
@@ -4163,7 +4141,7 @@ function App() {
                                 showToast('Correo de Git guardado exitosamente', 'success');
                               }
                             } catch (error) {
-                              console.error('Error al guardar correo de Git:', error);
+                              // Error al guardar correo de Git
                               showToast('Error al guardar correo de Git', 'error');
                             }
                           }
@@ -4224,7 +4202,7 @@ function App() {
                                     try {
                                       await window.electronAPI.writeConfig({ commitButtonBehavior: nuevoValor });
                                     } catch (error) {
-                                      console.error('Error al guardar comportamiento del botón:', error);
+                                      // Error al guardar comportamiento del botón
                                     }
                                   }
                                 }}
@@ -4244,7 +4222,7 @@ function App() {
                                     try {
                                       await window.electronAPI.writeConfig({ commitButtonBehavior: nuevoValor });
                                     } catch (error) {
-                                      console.error('Error al guardar comportamiento del botón:', error);
+                                      // Error al guardar comportamiento del botón
                                     }
                                   }
                                 }}
@@ -4264,7 +4242,7 @@ function App() {
                                     try {
                                       await window.electronAPI.writeConfig({ commitButtonBehavior: nuevoValor });
                                     } catch (error) {
-                                      console.error('Error al guardar comportamiento del botón:', error);
+                                      // Error al guardar comportamiento del botón
                                     }
                                   }
                                 }}
@@ -4363,7 +4341,7 @@ function App() {
                                 nuevoValor ? 'success' : 'warning'
                               );
                             } catch (error) {
-                              console.error('Error al guardar SSL verify:', error);
+                              // Error al guardar SSL verify
                               showToast('Error al guardar configuración SSL', 'error');
                             }
                           }
@@ -4532,7 +4510,7 @@ function App() {
                                 await window.electronAPI.writeConfig({ zoomLevel: size });
                                 showToast(`Zoom ajustado a ${size}%`, 'success');
                               } catch (error) {
-                                console.error('Error al guardar zoom:', error);
+                                // Error al guardar zoom
                                 showToast('Error al guardar configuración de zoom', 'error');
                               }
                             }
