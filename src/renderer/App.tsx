@@ -331,9 +331,6 @@ function App() {
 
           // Cargar info de git inmediatamente después de clonar
           await cargarGitInfo(item);
-          
-          // Mostrar mensaje de éxito
-          showToast(`Repositorio "${item.nombre}" clonado exitosamente`, 'success');
         } else {
           showToast(`Error al clonar: ${resultado.error}`, 'error');
         }
