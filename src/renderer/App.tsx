@@ -2602,22 +2602,34 @@ function App() {
           <div className="flex items-center flex-shrink-0 px-2">
             {/* Breadcrumb funcional */}
             <div className="flex items-center gap-1 text-sm flex-wrap">
-              {rutaCompleta.map((item, index) => (
-                <div key={item.id} className="flex items-center gap-1">
-                  {index > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
-                  <button
-                    onClick={() => navegarABreadcrumb(index)}
-                    className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1.5 text-sm ${index === rutaCompleta.length - 1
-                      ? "text-foreground font-medium cursor-default"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50 cursor-pointer"
-                      }`}
-                    disabled={index === rutaCompleta.length - 1}
-                  >
-                    {index === 0 && <FolderGit2 className="h-4 w-4" />}
-                    {item.nombre}
-                  </button>
-                </div>
-              ))}
+              {rutaCompleta.map((item, index) => {
+                const esUltimo = index === rutaCompleta.length - 1;
+                const cantidadRepos = esUltimo ? itemsActuales.filter(item => item.tipo === "archivo").length : 0;
+                
+                return (
+                  <div key={item.id} className="flex items-center gap-1">
+                    {index > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => navegarABreadcrumb(index)}
+                        className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1.5 text-sm ${esUltimo
+                          ? "text-foreground font-medium cursor-default"
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50 cursor-pointer"
+                          }`}
+                        disabled={esUltimo}
+                      >
+                        {index === 0 && <FolderGit2 className="h-4 w-4" />}
+                        {item.nombre}
+                      </button>
+                      {esUltimo && cantidadRepos > 0 && (
+                        <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-muted text-muted-foreground border border-border">
+                          {cantidadRepos}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -3213,7 +3225,7 @@ function App() {
         {/* Header con Breadcrumb */}
         <div className="flex items-center flex-shrink-0 px-2">
           <div className="flex items-center gap-1 text-sm flex-wrap">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <button
                 className="px-2 py-1 rounded-md transition-colors flex items-center gap-1.5 text-sm text-foreground font-medium cursor-default"
                 disabled
@@ -3221,6 +3233,9 @@ function App() {
                 <Plug className="h-4 w-4" />
                 Conexiones
               </button>
+              <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-muted text-muted-foreground border border-border">
+                {conexionesGuardadas.length}
+              </span>
             </div>
           </div>
         </div>
@@ -3443,19 +3458,21 @@ function App() {
                   >
                     <div className="flex flex-col h-[280px] overflow-hidden">
                       <CardHeader className="p-4 pb-3 flex-shrink-0">
-                        <div className="flex items-center gap-2 flex-1 min-w-0">
-                          <div className="flex-shrink-0 self-center">
+                        <div className="flex items-start gap-2 flex-1 min-w-0">
+                          <div className="flex-shrink-0 mt-0.5">
                             {getTipoIconLocal(conexion.tipo)}
                           </div>
                           <div className="flex-1 min-w-0">
                             <CardTitle className="text-sm font-semibold truncate group-hover:text-primary transition-colors">
                               {conexion.nombre}
                             </CardTitle>
-                            {/* URL debajo del título */}
-                            <p className="text-[10px] text-muted-foreground mt-0.5 truncate">
-                              {obtenerDominio(conexion.host)}
-                            </p>
                           </div>
+                        </div>
+                        {/* URL del proveedor en nueva fila */}
+                        <div className="mt-2 w-full">
+                          <p className="text-[10px] text-muted-foreground truncate text-left">
+                            {obtenerDominio(conexion.host)}
+                          </p>
                         </div>
                         {/* Chip del proveedor y estado */}
                         <div className="mt-2 flex items-center gap-2 flex-wrap">
