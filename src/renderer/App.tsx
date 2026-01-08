@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
-import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, XCircle, CircleDot } from "lucide-react";
+import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles } from "lucide-react";
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
 import type { Connection, FolderItem } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
@@ -19,6 +19,12 @@ function App() {
   const [isDark, setIsDark] = useState(true);
   const [selectedTheme, setSelectedTheme] = useState<{ name: string; mode: "light" | "dark" }>({ name: "default", mode: "dark" });
   const [zoomLevel, setZoomLevel] = useState<number>(100);
+  const [tempZoomLevel, setTempZoomLevel] = useState<number>(100);
+  
+  // Sincronizar tempZoomLevel cuando zoomLevel cambia externamente
+  useEffect(() => {
+    setTempZoomLevel(zoomLevel);
+  }, [zoomLevel]);
   const [estructuraCarpetas, setEstructuraCarpetas] = useState<FolderItem[]>([
     {
       id: "root",
@@ -213,6 +219,7 @@ function App() {
           setSelectedTheme({ name: "default", mode: "light" });
           applyTheme("default", "light");
           setZoomLevel(100);
+          setTempZoomLevel(100);
           document.documentElement.style.setProperty('--zoom-level', '100%');
           setEstructuraCarpetas([
             {
@@ -409,10 +416,12 @@ function App() {
               // Aplicar zoom guardado
               if (resultado.zoomLevel) {
                 setZoomLevel(resultado.zoomLevel);
+                setTempZoomLevel(resultado.zoomLevel);
                 document.documentElement.style.setProperty('--zoom-level', `${resultado.zoomLevel}%`);
               } else {
                 // Si no hay zoom guardado, usar el por defecto
                 setZoomLevel(100);
+                setTempZoomLevel(100);
                 document.documentElement.style.setProperty('--zoom-level', '100%');
               }
 
@@ -1316,16 +1325,16 @@ function App() {
     }
   };
 
-  const handleThemeSelect = async (themeName: ThemeName, mode: ThemeMode) => {
-    setSelectedTheme({ name: themeName, mode });
-    setIsDark(mode === 'dark');
-    applyTheme(themeName, mode);
+  const handleThemeSelect = async (themeName: ThemeName) => {
+    const currentMode = isDark ? 'dark' : 'light';
+    setSelectedTheme({ name: themeName, mode: currentMode });
+    applyTheme(themeName, currentMode);
 
     // Guardar tema en el archivo de configuración
     try {
       if (window.electronAPI?.writeConfig) {
         await window.electronAPI.writeConfig({
-          tema: mode,
+          tema: currentMode,
           temaNombre: themeName
         });
       }
@@ -3806,6 +3815,7 @@ function App() {
                   // Aplicar zoom
                   if (resultado.zoomLevel) {
                     setZoomLevel(resultado.zoomLevel);
+                    setTempZoomLevel(resultado.zoomLevel);
                     document.documentElement.style.setProperty('--zoom-level', `${resultado.zoomLevel}%`);
                   }
                   
@@ -4379,94 +4389,68 @@ function App() {
               {/* Selección de Temas */}
               <Card className="border-2">
                 <CardHeader className="pb-3">
-                  <div>
-                    <CardTitle className="text-base">Temas</CardTitle>
-                    <CardDescription className="text-xs mt-1">
-                      Selecciona un tema y su variante (claro u oscuro) para personalizar la apariencia
-                    </CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-base">Temas</CardTitle>
+                      <CardDescription className="text-xs mt-1">
+                        Selecciona un estilo de tema para personalizar la apariencia
+                      </CardDescription>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Sun className="h-4 w-4 text-muted-foreground" />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={toggleTheme}
+                        className="h-8 px-3"
+                      >
+                        {isDark ? (
+                          <>
+                            <Moon className="h-3.5 w-3.5 mr-1.5" />
+                            Oscuro
+                          </>
+                        ) : (
+                          <>
+                            <Sun className="h-3.5 w-3.5 mr-1.5" />
+                            Claro
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {themes.map((theme) => (
-                      <Card
-                        key={theme.name}
-                        className={`p-4 cursor-pointer hover:border-primary/50 transition-all border-2 ${
-                          selectedTheme.name === theme.name 
-                            ? 'border-primary bg-primary/5 shadow-md' 
-                            : 'border-border'
-                        }`}
-                        onClick={() => {
-                          // Mantener el modo actual si el tema ya está seleccionado
-                          if (selectedTheme.name === theme.name) {
-                            return;
-                          }
-                          handleThemeSelect(theme.name, selectedTheme.mode);
-                        }}
-                      >
-                        <div className="space-y-3">
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <div className="text-sm font-semibold mb-1">{theme.displayName}</div>
-                              <div className="text-xs text-muted-foreground">{theme.description}</div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                    {themes.map((theme) => {
+                      const currentColors = isDark ? theme.colors.dark : theme.colors.light;
+                      return (
+                        <Card
+                          key={theme.name}
+                          className={`p-3 cursor-pointer hover:border-primary/50 transition-all border-2 ${
+                            selectedTheme.name === theme.name 
+                              ? 'border-primary bg-primary/5 shadow-md' 
+                              : 'border-border'
+                          }`}
+                          onClick={() => handleThemeSelect(theme.name)}
+                        >
+                          <div className="space-y-2">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1 min-w-0">
+                                <div className="text-xs font-semibold truncate">{theme.displayName}</div>
+                              </div>
+                              {selectedTheme.name === theme.name && (
+                                <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0 ml-1" />
+                              )}
                             </div>
-                            {selectedTheme.name === theme.name && (
-                              <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
-                            )}
-                          </div>
-                          <div className="flex gap-2">
-                            <div
-                              className={`flex-1 p-3 rounded-lg border-2 cursor-pointer relative transition-all ${
-                                selectedTheme.name === theme.name && !isDark
-                                  ? 'border-primary bg-primary/10 shadow-sm'
-                                  : 'border-border hover:border-primary/50'
-                              }`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleThemeSelect(theme.name, 'light');
-                              }}
-                            >
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="text-xs font-semibold">Claro</div>
-                                {selectedTheme.name === theme.name && !isDark && (
-                                  <Check className="h-3.5 w-3.5 text-primary" />
-                                )}
-                              </div>
-                              <div className="h-6 rounded-md shadow-sm" style={{ backgroundColor: `hsl(${theme.colors.light.primary})` }} />
-                              <div className="mt-1.5 flex gap-1">
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.light.background})` }} />
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.light.muted})` }} />
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.light.accent})` }} />
-                              </div>
-                            </div>
-                            <div
-                              className={`flex-1 p-3 rounded-lg border-2 cursor-pointer relative transition-all ${
-                                selectedTheme.name === theme.name && isDark
-                                  ? 'border-primary bg-primary/10 shadow-sm'
-                                  : 'border-border hover:border-primary/50'
-                              }`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleThemeSelect(theme.name, 'dark');
-                              }}
-                            >
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="text-xs font-semibold">Oscuro</div>
-                                {selectedTheme.name === theme.name && isDark && (
-                                  <Check className="h-3.5 w-3.5 text-primary" />
-                                )}
-                              </div>
-                              <div className="h-6 rounded-md shadow-sm" style={{ backgroundColor: `hsl(${theme.colors.dark.primary})` }} />
-                              <div className="mt-1.5 flex gap-1">
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.dark.background})` }} />
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.dark.muted})` }} />
-                                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(${theme.colors.dark.accent})` }} />
-                              </div>
+                            <div className="h-8 rounded-md shadow-sm" style={{ backgroundColor: `hsl(${currentColors.primary})` }} />
+                            <div className="flex gap-1 justify-center">
+                              <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: `hsl(${currentColors.secondary})` }} />
+                              <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: `hsl(${currentColors.accent})` }} />
                             </div>
                           </div>
-                        </div>
-                      </Card>
-                    ))}
+                        </Card>
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>
@@ -4488,7 +4472,7 @@ function App() {
                         <div className="flex items-center gap-2 mb-2">
                           <label className="text-sm font-semibold">Nivel de Zoom</label>
                           <div className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">
-                            {zoomLevel}%
+                            {tempZoomLevel}%
                           </div>
                         </div>
                         <p className="text-xs text-muted-foreground">
@@ -4496,34 +4480,63 @@ function App() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {[25, 50, 75, 100, 125, 150].map((size) => (
-                        <Button
-                          key={size}
-                          size="sm"
-                          variant={zoomLevel === size ? "default" : "outline"}
-                          onClick={async () => {
-                            setZoomLevel(size);
-                            document.documentElement.style.setProperty('--zoom-level', `${size}%`);
+                    <div className="space-y-3">
+                      <div className="px-1">
+                        <input
+                          type="range"
+                          min="50"
+                          max="150"
+                          step="10"
+                          value={Math.max(50, Math.min(150, tempZoomLevel))}
+                          onChange={(e) => {
+                            const newZoom = parseInt(e.target.value);
+                            setTempZoomLevel(newZoom);
+                          }}
+                          onMouseUp={async (e) => {
+                            const newZoom = parseInt((e.target as HTMLInputElement).value);
+                            setZoomLevel(newZoom);
+                            setTempZoomLevel(newZoom);
+                            document.documentElement.style.setProperty('--zoom-level', `${newZoom}%`);
                             if (window.electronAPI?.writeConfig) {
                               try {
-                                await window.electronAPI.writeConfig({ zoomLevel: size });
-                                showToast(`Zoom ajustado a ${size}%`, 'success');
+                                await window.electronAPI.writeConfig({ zoomLevel: newZoom });
                               } catch (error) {
                                 // Error al guardar zoom
-                                showToast('Error al guardar configuración de zoom', 'error');
                               }
                             }
                           }}
-                          className={`min-w-[60px] ${
-                            zoomLevel === size 
-                              ? 'shadow-md' 
-                              : 'hover:border-primary/50'
-                          }`}
-                        >
-                          {size}%
-                        </Button>
-                      ))}
+                          className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
+                          style={{
+                            background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${((Math.max(50, Math.min(150, tempZoomLevel)) - 50) / 100) * 100}%, hsl(var(--muted)) ${((Math.max(50, Math.min(150, tempZoomLevel)) - 50) / 100) * 100}%, hsl(var(--muted)) 100%)`
+                          }}
+                        />
+                        <style>{`
+                          .slider::-webkit-slider-thumb {
+                            appearance: none;
+                            width: 18px;
+                            height: 18px;
+                            border-radius: 50%;
+                            background: hsl(var(--primary));
+                            cursor: pointer;
+                            border: 2px solid hsl(var(--background));
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                          }
+                          .slider::-moz-range-thumb {
+                            width: 18px;
+                            height: 18px;
+                            border-radius: 50%;
+                            background: hsl(var(--primary));
+                            cursor: pointer;
+                            border: 2px solid hsl(var(--background));
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                          }
+                        `}</style>
+                      </div>
+                      <div className="flex justify-between text-xs text-muted-foreground px-1">
+                        <span>50%</span>
+                        <span>100%</span>
+                        <span>150%</span>
+                      </div>
                     </div>
                     <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
                       <Info className="h-4 w-4 text-primary flex-shrink-0" />
@@ -4672,72 +4685,49 @@ function App() {
           return (
             <div className="space-y-6 px-8 py-0 max-w-4xl">
               {/* Logo y Versión Principal */}
-              <Card className="border-2">
-                <CardContent className="pt-6">
-                  <div className="text-center space-y-4">
-                    <div className="flex justify-center">
-                      <div className="relative">
-                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
-                          <div className="text-3xl font-bold text-white">T</div>
-                        </div>
-                        <div className="absolute -bottom-2 -right-2 w-7 h-7 rounded-full bg-green-500 border-4 border-background flex items-center justify-center">
-                          <Check className="h-3.5 w-3.5 text-white" />
+              <Card className="border-2 overflow-hidden">
+                <div className="relative bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-cyan-500/10">
+                  <CardContent className="pt-8 pb-8">
+                    <div className="text-center space-y-5">
+                      {/* Logo */}
+                      <div className="flex justify-center">
+                        <div className="relative group">
+                          <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                          <div className="relative w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 flex items-center justify-center shadow-2xl shadow-purple-500/40 transform group-hover:scale-105 transition-transform">
+                            <div className="text-4xl font-bold text-white drop-shadow-lg">T</div>
+                          </div>
+                          <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-green-500 border-4 border-background flex items-center justify-center shadow-lg">
+                            <Check className="h-4 w-4 text-white" />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                        TucoGit
-                      </h2>
-                      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                        <span className="text-sm font-semibold text-primary">v1.0.0</span>
-                        <span className="text-xs text-muted-foreground">•</span>
-                        <span className="text-xs text-muted-foreground">Beta</span>
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                      Aplicación de escritorio multiplataforma diseñada para gestionar repositorios Git y conexiones de manera eficiente. 
-                      Construida con tecnologías modernas para ofrecer una experiencia de usuario excepcional.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
 
-              {/* Estadísticas Rápidas */}
-              <Card className="border-2">
-                <CardHeader className="pb-3">
-                  <div>
-                    <CardTitle className="text-base">Información General</CardTitle>
-                    <CardDescription className="text-xs mt-1">
-                      Detalles sobre la aplicación y su distribución
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div className="p-4 rounded-lg bg-muted/50 border text-center">
-                      <div className="flex items-center justify-center mb-2">
-                        <div className="text-2xl font-bold">MIT</div>
+                      {/* Título y Versión */}
+                      <div className="space-y-3">
+                        <div>
+                          <h2 className="text-3xl font-bold mb-1 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                            TucoGit
+                          </h2>
+                          <div className="flex items-center justify-center gap-2 mt-2">
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                              <span className="text-xs font-semibold text-primary">v1.0.0</span>
+                            </div>
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
+                              <span className="text-xs font-medium text-blue-600 dark:text-blue-400">Beta</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-xs font-semibold text-foreground mb-1">Licencia</div>
-                      <div className="text-xs text-muted-foreground">Open Source</div>
-                    </div>
-                    <div className="p-4 rounded-lg bg-muted/50 border text-center">
-                      <div className="flex items-center justify-center mb-2">
-                        <div className="text-2xl font-bold">2026</div>
+
+                      {/* Descripción */}
+                      <div className="max-w-2xl mx-auto px-4">
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Cliente Git diseñado para simplificar la gestión de repositorios y reducir la complejidad del trabajo diario, alineado con flujos de trabajo modernos y las operaciones más comunes de control de versiones.
+                        </p>
                       </div>
-                      <div className="text-xs font-semibold text-foreground mb-1">Año</div>
-                      <div className="text-xs text-muted-foreground">Lanzamiento</div>
                     </div>
-                    <div className="p-4 rounded-lg bg-muted/50 border text-center">
-                      <div className="flex items-center justify-center mb-2">
-                        <div className="text-2xl font-bold">v1.0</div>
-                      </div>
-                      <div className="text-xs font-semibold text-foreground mb-1">Versión</div>
-                      <div className="text-xs text-muted-foreground">Beta</div>
-                    </div>
-                  </div>
-                </CardContent>
+                  </CardContent>
+                </div>
               </Card>
 
               {/* Información del Autor */}
@@ -4746,39 +4736,136 @@ function App() {
                   <div>
                     <CardTitle className="text-base">Desarrollador</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Información de contacto del desarrollador
+                      Información de contacto y perfil del desarrollador
                     </CardDescription>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-start gap-4 p-4 rounded-lg bg-muted/50 border">
-                    <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20">
-                      <Users className="h-6 w-6 text-primary" />
+                  <div className="space-y-4">
+                    {/* Perfil Principal */}
+                    <div className="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20">
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-primary/20">
+                        <Users className="h-6 w-6 text-primary" />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <div>
+                          <div className="text-base font-bold text-foreground mb-0.5">Hernan Lencinas</div>
+                          <div className="text-xs text-muted-foreground">Desarrollador Full Stack</div>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          Creador y mantenedor de TucoGit. Apasionado por crear herramientas que simplifiquen el trabajo diario de los desarrolladores.
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex-1 space-y-2">
-                      <div>
-                        <div className="text-sm font-semibold text-foreground mb-1">Hernan Lencinas</div>
-                        <div className="text-xs text-muted-foreground">Desarrollador</div>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs">
-                        <span className="text-muted-foreground">Email:</span>
-                        <span className="font-mono">lencinas.hernan@gmail.com</span>
-                      </div>
+
+                    {/* Información de Contacto */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <a
+                        href="mailto:lencinas.hernan@gmail.com"
+                        className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                      >
+                        <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors">
+                          <Mail className="h-4 w-4 text-blue-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-semibold text-foreground mb-0.5">Email</div>
+                          <div className="text-xs text-muted-foreground truncate font-mono">lencinas.hernan@gmail.com</div>
+                        </div>
+                        <ExternalLink className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                      </a>
+                      <a
+                        href="https://github.com/HernanLencinas"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                      >
+                        <div className="p-2 rounded-lg bg-gray-500/10 group-hover:bg-gray-500/20 transition-colors">
+                          <GitBranch className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-semibold text-foreground mb-0.5">GitHub</div>
+                          <div className="text-xs text-muted-foreground truncate">@HernanLencinas</div>
+                        </div>
+                        <ExternalLink className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                      </a>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
+              {/* Soporte y Comunidad */}
+              <Card className="border-2">
+                <CardHeader className="pb-3">
+                  <div>
+                    <CardTitle className="text-base">Soporte y Comunidad</CardTitle>
+                    <CardDescription className="text-xs mt-1">
+                      Reporta problemas, comparte ideas y participa en la comunidad
+                    </CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <a
+                      href="https://github.com/HernanLencinas/TucoGit/issues"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-4 rounded-lg border-2 border-border hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                    >
+                      <div className="p-2 rounded-lg bg-red-500/10 group-hover:bg-red-500/20 transition-colors">
+                        <AlertCircle className="h-5 w-5 text-red-500" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-sm font-semibold text-foreground mb-1">Reportar un Problema</div>
+                        <div className="text-xs text-muted-foreground">Abre un issue en GitHub para reportar bugs o solicitar características</div>
+                      </div>
+                      <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </a>
+                    <a
+                      href="https://github.com/HernanLencinas/TucoGit/discussions"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-4 rounded-lg border-2 border-border hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                    >
+                      <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors">
+                        <Users className="h-5 w-5 text-blue-500" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-sm font-semibold text-foreground mb-1">Foro de Discusión</div>
+                        <div className="text-xs text-muted-foreground">Participa en discusiones, comparte ideas y obtén ayuda de la comunidad</div>
+                      </div>
+                      <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Footer */}
-              <Card className="border-2 bg-muted/30">
-                <CardContent className="pt-6">
-                  <div className="text-center space-y-2">
-                    <p className="text-xs text-muted-foreground">
-                      © 2026 Hernan Lencinas. Licencia MIT.
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Hecho con ❤️ usando tecnologías open source
-                    </p>
+              <Card className="border-2 border-t-primary/20">
+                <CardContent className="pt-5 pb-5">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    {/* Lado izquierdo - Copyright y descripción */}
+                    <div className="flex flex-col items-center md:items-start gap-1.5">
+                      <p className="text-sm font-semibold text-foreground">
+                        © 2026 Hernan Lencinas
+                      </p>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Heart className="h-3 w-3 text-red-500 fill-red-500" />
+                        <span>Hecho con tecnologías</span>
+                        <span className="font-medium text-primary">open source</span>
+                      </div>
+                    </div>
+
+                    {/* Lado derecho - Badges */}
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/5 border border-primary/10">
+                        <Code className="h-3.5 w-3.5 text-primary" />
+                        <span className="text-xs font-medium text-primary">MIT</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/5 border border-blue-500/10">
+                        <Star className="h-3.5 w-3.5 text-blue-500 fill-blue-500" />
+                        <span className="text-xs font-medium text-blue-600 dark:text-blue-400">Open Source</span>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
