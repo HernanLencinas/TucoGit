@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
-import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles } from "lucide-react";
+import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock } from "lucide-react";
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
 import type { Connection, FolderItem } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
@@ -2907,6 +2907,11 @@ function App() {
                                 <CardTitle className="text-sm font-semibold truncate group-hover:text-primary transition-colors leading-tight">
                                   {item.nombre}
                                 </CardTitle>
+                                {item.privado && (
+                                  <span title="Privado" className="flex-shrink-0">
+                                    <Lock className="h-2.5 w-2.5 text-muted-foreground" />
+                                  </span>
+                                )}
                               </div>
                             </div>
 
