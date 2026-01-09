@@ -80,11 +80,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return ipcRenderer.invoke('detect-installed-editors');
   },
 
-  // Guardar archivo de configuración
-  saveConfigFile: (configData) => {
-    return ipcRenderer.invoke('save-config-file', configData);
-  },
-
   // Clonar repositorio
   cloneRepository: (url, destPath, repoId, sslVerify, token) => {
     return ipcRenderer.invoke('clone-repository', { url, destPath, repoId, sslVerify, token });
@@ -140,21 +135,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Abrir carpeta en IDE
   openInIDE: (path, ideName) => {
     return ipcRenderer.invoke('open-in-ide', { path, ideName });
-  },
-
-  // Leer configuración de Git
-  getGitConfig: (key) => {
-    return ipcRenderer.invoke('get-git-config', key);
-  },
-
-  // Configurar Git globalmente
-  setGitConfig: (key, value) => {
-    return ipcRenderer.invoke('set-git-config', { key, value });
-  },
-
-  // Configurar Git localmente en un repositorio
-  setGitConfigLocal: (repoPath, key, value) => {
-    return ipcRenderer.invoke('set-git-config-local', { repoPath, key, value });
   },
 
   // Obtener estado de Git

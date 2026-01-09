@@ -2929,92 +2929,6 @@ ipcMain.handle('get-commit-parents', async (event, { repoPath, commitHash }) => 
   }
 });
 
-// Handler para leer configuración de Git
-ipcMain.handle('get-git-config', async (event, key) => {
-  const { spawn } = require('child_process');
-
-  return new Promise((resolve) => {
-    try {
-      const gitProcess = spawn('git', ['config', '--global', '--get', key], {
-        env: { ...process.env }
-      });
-
-      let output = '';
-      let errorOutput = '';
-
-      gitProcess.stdout.on('data', (data) => {
-        output += data.toString();
-      });
-
-      gitProcess.stderr.on('data', (data) => {
-        errorOutput += data.toString();
-      });
-
-      gitProcess.on('close', (code) => {
-        if (code === 0) {
-          resolve({ success: true, value: output.trim() });
-        } else {
-          // Si no existe la configuración, retornar éxito con valor vacío
-          resolve({ success: true, value: '' });
-        }
-      });
-
-      gitProcess.on('error', (error) => {
-        resolve({ success: false, error: error.message });
-      });
-    } catch (error) {
-      resolve({ success: false, error: error.message });
-    }
-  });
-});
-
-// Handler para configurar Git globalmente
-ipcMain.handle('set-git-config', async (event, { key, value }) => {
-  const { spawn } = require('child_process');
-
-  return new Promise((resolve) => {
-    try {
-      const gitProcess = spawn('git', ['config', '--global', key, value], {
-        env: { ...process.env }
-      });
-
-      let errorOutput = '';
-
-      gitProcess.stderr.on('data', (data) => {
-        errorOutput += data.toString();
-      });
-
-      gitProcess.on('close', (code) => {
-        if (code === 0) {
-          resolve({ success: true });
-        } else {
-          resolve({ success: false, error: errorOutput || `Git config falló con código ${code}` });
-        }
-      });
-
-      gitProcess.on('error', (error) => {
-        resolve({ success: false, error: error.message });
-      });
-    } catch (error) {
-      resolve({ success: false, error: error.message });
-    }
-  });
-});
-
-// Handler para configurar Git localmente en un repositorio
-ipcMain.handle('set-git-config-local', async (event, { repoPath, key, value }) => {
-  const { exec } = require('child_process');
-  const util = require('util');
-  const execPromise = util.promisify(exec);
-
-  try {
-    await execPromise(`git config ${key} ${value}`, { cwd: repoPath });
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-});
-
 // Handler para iniciar el monitoreo de cambios en un repositorio
 ipcMain.handle('start-repo-watcher', async (event, repoPath) => {
   try {
@@ -3035,28 +2949,6 @@ ipcMain.handle('stop-repo-watcher', async (event, repoPath) => {
   }
 });
 
-// Handler para guardar archivo de configuración
-ipcMain.handle('save-config-file', async (event, configData) => {
-  try {
-    const result = await dialog.showSaveDialog({
-      title: 'Guardar archivo de configuración',
-      defaultPath: 'tuco-settings.json',
-      filters: [
-        { name: 'JSON Files', extensions: ['json'] },
-        { name: 'All Files', extensions: ['*'] }
-      ]
-    });
-
-    if (!result.canceled && result.filePath) {
-      fs.writeFileSync(result.filePath, JSON.stringify(configData, null, 2), 'utf-8');
-      return { success: true, filePath: result.filePath };
-    }
-
-    return { success: false, error: 'Operación cancelada' };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-});
 
 // Handler para guardar un archivo (genérico)
 ipcMain.handle('save-file', async (event, content, defaultFilename) => {
