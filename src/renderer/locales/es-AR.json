@@ -742,7 +742,13 @@
     },
     "menuItems": {
       "newBranch": "Nuevo Branch",
-      "newTag": "Nuevo Tag"
+      "newTag": "Nuevo Tag",
+      "actions": "Acciones"
+    },
+    "search": {
+      "placeholder": "Buscar commits (mensaje, autor, hash)...",
+      "clear": "Limpiar",
+      "commits": "commits"
     },
     "newBranchModal": {
       "title": "Nuevo Branch",
@@ -917,6 +923,126 @@
           "title": "Error al limpiar stashes",
           "description": "No se pudieron eliminar los stashes",
           "unknownError": "Ocurrió un error inesperado"
+        }
+      }
+    },
+    "revertModal": {
+      "title": "Revert Commit",
+      "description": "Crear un nuevo commit que deshace los cambios de este commit",
+      "fields": {
+        "commitToRevert": "Commit a revertir"
+      },
+      "warning": "Esto creará un nuevo commit que revierte los cambios realizados en el commit seleccionado. El commit original permanecerá en el historial y no se eliminará.",
+      "buttons": {
+        "cancel": "Cancelar",
+        "revert": "Revertir",
+        "reverting": "Revirtiendo..."
+      },
+      "toasts": {
+        "success": {
+          "title": "Revert completado",
+          "description": "El commit ha sido revertido exitosamente"
+        },
+        "error": {
+          "title": "Error al hacer revert",
+          "description": "No se pudo completar la operación",
+          "unknownError": "Ocurrió un error inesperado"
+        }
+      }
+    },
+    "cherryPickModal": {
+      "title": "Cherry Pick",
+      "description": "Aplicar cambios del commit individual al branch actual",
+      "fields": {
+        "commitToApply": "Commit a aplicar",
+        "commitChanges": {
+          "label": "Hacer commit de los cambios",
+          "hint": "Crear automáticamente un commit con los cambios cherry-picked. Si está desactivado, los cambios quedarán en staging pero no se hará commit, permitiéndote revisarlos y modificarlos antes de hacer commit."
+        },
+        "appendOrigin": {
+          "label": "Agregar origen al mensaje del commit",
+          "hint": "Agregar una referencia al commit original al final del mensaje del commit (ej: \"(cherry picked from commit abc1234)\"). Esto ayuda a rastrear de dónde vinieron los cambios en el historial de git. Solo disponible cuando \"Hacer commit de los cambios\" está habilitado."
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "apply": "Aplicar",
+        "applying": "Aplicando..."
+      },
+      "toasts": {
+        "success": {
+          "title": "Cherry-pick completado",
+          "description": "El commit ha sido aplicado y commiteado exitosamente",
+          "descriptionNoCommit": "El commit ha sido aplicado (sin commit)"
+        },
+        "conflicts": {
+          "title": "Cherry-pick con conflictos",
+          "description": "Hay conflictos que necesitan ser resueltos. Usa la barra de notificaciones para resolver o abortar la operación."
+        },
+        "error": {
+          "title": "Error al hacer cherry-pick",
+          "description": "No se pudo completar la operación",
+          "unknownError": "Ocurrió un error inesperado"
+        }
+      }
+    },
+    "commitDetails": {
+      "tabs": {
+        "detail": "Detalle del Commit",
+        "modified": "Archivos Modificados",
+        "tree": "Árbol del Commit"
+      },
+      "detail": {
+        "sections": {
+          "description": "Descripción",
+          "author": "Autor",
+          "date": "Fecha",
+          "committer": "Committer",
+          "commitDate": "Fecha de Commit",
+          "commitHash": "Hash del Commit",
+          "parentCommit": "Commit Padre",
+          "parentCommits": "Commits Padres",
+          "statistics": "Estadísticas"
+        },
+        "stats": {
+          "files": "Archivos",
+          "insertions": "Inserciones",
+          "deletions": "Deleciones"
+        },
+        "copy": {
+          "copyHash": "Copiar hash completo",
+          "copyParentHash": "Copiar hash del padre"
+        },
+        "timeAgo": {
+          "years": "Hace {{count}} año",
+          "yearsPlural": "Hace {{count}} años",
+          "months": "Hace {{count}} mes",
+          "monthsPlural": "Hace {{count}} meses",
+          "weeks": "Hace {{count}} semana",
+          "weeksPlural": "Hace {{count}} semanas",
+          "days": "Hace {{count}} día",
+          "daysPlural": "Hace {{count}} días",
+          "hours": "Hace {{count}} hora",
+          "hoursPlural": "Hace {{count}} horas",
+          "minutes": "Hace {{count}} minuto",
+          "minutesPlural": "Hace {{count}} minutos",
+          "seconds": "Hace unos segundos"
+        }
+      },
+      "modified": {
+        "loading": "Cargando...",
+        "detail": "Detalle",
+        "selectFile": "Selecciona un archivo para ver los cambios"
+      },
+      "tree": {
+        "loading": "Cargando árbol...",
+        "noFiles": "No hay archivos",
+        "content": "Contenido",
+        "noFileSelected": "Sin archivo seleccionado",
+        "selectFileMessage": "Haz clic en un archivo del árbol para ver su contenido",
+        "errors": {
+          "loadTree": "Error al cargar el árbol",
+          "loadFile": "Error al cargar el archivo"
         }
       }
     }

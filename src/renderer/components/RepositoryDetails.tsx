@@ -782,8 +782,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitRevert?.(repoPath, selectedCommit.hash);
             if (result?.success) {
                 toast({
-                    title: "Revert completado",
-                    description: "El commit ha sido revertido exitosamente",
+                    title: t('repositories.revertModal.toasts.success.title'),
+                    description: t('repositories.revertModal.toasts.success.description'),
                     variant: "success",
                 });
                 setShowRevertModal(false);
@@ -791,16 +791,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadBranches();
             } else {
                 toast({
-                    title: "Error al hacer revert",
-                    description: result?.error || "No se pudo completar la operación",
+                    title: t('repositories.revertModal.toasts.error.title'),
+                    description: result?.error || t('repositories.revertModal.toasts.error.description'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al hacer revert
             toast({
-                title: "Error al hacer revert",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.revertModal.toasts.error.title'),
+                description: err?.message || t('repositories.revertModal.toasts.error.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -818,10 +818,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitCherryPick?.(repoPath, selectedCommit.hash, cherryPickCommitChanges, cherryPickAppendOrigin);
             if (result?.success) {
                 toast({
-                    title: "Cherry-pick completado",
+                    title: t('repositories.cherryPickModal.toasts.success.title'),
                     description: cherryPickCommitChanges 
-                        ? "El commit ha sido aplicado y commiteado exitosamente"
-                        : "El commit ha sido aplicado (sin commit)",
+                        ? t('repositories.cherryPickModal.toasts.success.description')
+                        : t('repositories.cherryPickModal.toasts.success.descriptionNoCommit'),
                     variant: "success",
                 });
                 setShowCherryPickModal(false);
@@ -839,8 +839,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     setCherryPickAppendOrigin(false);
                     // Mostrar toaster informando sobre conflictos
                     toast({
-                        title: "Cherry-pick con conflictos",
-                        description: "Hay conflictos que necesitan ser resueltos. Usa la barra de notificaciones para resolver o abortar la operación.",
+                        title: t('repositories.cherryPickModal.toasts.conflicts.title'),
+                        description: t('repositories.cherryPickModal.toasts.conflicts.description'),
                         variant: "destructive",
                     });
                     // Recargar para que aparezca la barra de notificaciones
@@ -848,8 +848,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     loadBranches();
                 } else {
                     toast({
-                        title: "Error al hacer cherry-pick",
-                        description: errorMessage || "No se pudo completar la operación",
+                        title: t('repositories.cherryPickModal.toasts.error.title'),
+                        description: errorMessage || t('repositories.cherryPickModal.toasts.error.description'),
                         variant: "destructive",
                     });
                 }
@@ -865,8 +865,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setCherryPickAppendOrigin(false);
                 // Mostrar toaster informando sobre conflictos
                 toast({
-                    title: "Cherry-pick con conflictos",
-                    description: "Hay conflictos que necesitan ser resueltos. Usa la barra de notificaciones para resolver o abortar la operación.",
+                    title: t('repositories.cherryPickModal.toasts.conflicts.title'),
+                    description: t('repositories.cherryPickModal.toasts.conflicts.description'),
                     variant: "destructive",
                 });
                 // Recargar para que aparezca la barra de notificaciones
@@ -874,8 +874,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadBranches();
             } else {
                 toast({
-                    title: "Error al hacer cherry-pick",
-                    description: errorMessage || "Ocurrió un error inesperado",
+                    title: t('repositories.cherryPickModal.toasts.error.title'),
+                    description: errorMessage || t('repositories.cherryPickModal.toasts.error.unknownError'),
                     variant: "destructive",
                 });
             }
@@ -1739,7 +1739,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     setCherryPickMenuOpen(!cherryPickMenuOpen);
                                 }}
                                 className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm flex items-center gap-1.5"
-                                title="Acciones"
+                                title={t('repositories.menuItems.actions')}
                             >
                                 <svg 
                                     className="h-3.5 w-3.5" 
@@ -1757,7 +1757,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                <span>Acciones</span>
+                                <span>{t('repositories.menuItems.actions')}</span>
                             </Button>
                             {cherryPickMenuOpen && (
                                 <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
@@ -1830,7 +1830,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-cyan-500 transition-colors z-10" />
                                     <input
                                         type="text"
-                                        placeholder="Buscar commits (mensaje, autor, hash)..."
+                                        placeholder={t('repositories.search.placeholder')}
                                         className={cn(
                                             "w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md py-1.5 pl-9 text-xs outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all shadow-sm",
                                             searchTerm ? "pr-28" : "pr-24"
@@ -1844,13 +1844,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             onClick={() => setSearchTerm("")}
                                             className="absolute right-20 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 transition-colors z-10"
                                         >
-                                            Limpiar
+                                            {t('repositories.search.clear')}
                                         </button>
                                     )}
                                     <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
                                         <div className="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
                                         <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">
-                                            {commits.length} commits
+                                            {commits.length} {t('repositories.search.commits')}
                                         </span>
                                     </div>
                                 </>
@@ -1862,7 +1862,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     <Search className="h-4 w-4 text-slate-400" />
                                     <div className="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
                                     <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">
-                                        {commits.length} commits
+                                        {commits.length} {t('repositories.search.commits')}
                                     </span>
                                 </div>
                             )}
@@ -3112,16 +3112,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Revert Commit
+                                    {t('repositories.revertModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Crear un nuevo commit que deshace los cambios de este commit
+                                    {t('repositories.revertModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-3">
-                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Commit a revertir</label>
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('repositories.revertModal.fields.commitToRevert')}</label>
                                 <div className="px-4 py-3 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3 shadow-sm">
                                     <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
                                         <Undo2 className="h-4 w-4 text-orange-600 dark:text-orange-400" />
@@ -3139,7 +3139,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 <div className="flex items-start gap-3">
                                     <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
                                     <p className="text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
-                                        Esto creará un nuevo commit que revierte los cambios realizados en el commit seleccionado. El commit original permanecerá en el historial y no se eliminará.
+                                        {t('repositories.revertModal.warning')}
                                     </p>
                                 </div>
                             </div>
@@ -3154,21 +3154,21 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={reverting}
                                 >
-                                    Cancelar
+                                    {t('repositories.revertModal.buttons.cancel')}
                                 </Button>
                                 <Button
                                     size="default"
-                                    className="min-w-[120px] bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-600/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={handleRevert}
                                     disabled={reverting}
                                 >
                                     {reverting ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Revirtiendo...
+                                            {t('repositories.revertModal.buttons.reverting')}
                                         </span>
                                     ) : (
-                                        'Revertir'
+                                        t('repositories.revertModal.buttons.revert')
                                     )}
                                 </Button>
                             </div>
@@ -3204,16 +3204,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Cherry Pick
+                                    {t('repositories.cherryPickModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Aplicar cambios del commit individual al branch actual
+                                    {t('repositories.cherryPickModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-3">
-                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Commit a aplicar</label>
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('repositories.cherryPickModal.fields.commitToApply')}</label>
                                 <div className="px-4 py-3 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3 shadow-sm">
                                     <div className="p-2 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg">
                                         <GitMerge className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
@@ -3232,10 +3232,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex-1 space-y-2">
                                             <label htmlFor="cherry-pick-commit" className="text-sm font-semibold text-slate-700 dark:text-slate-300 block cursor-pointer">
-                                                Hacer commit de los cambios
+                                                {t('repositories.cherryPickModal.fields.commitChanges.label')}
                                             </label>
                                             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                                                Crear automáticamente un commit con los cambios cherry-picked. Si está desactivado, los cambios quedarán en staging pero no se hará commit, permitiéndote revisarlos y modificarlos antes de hacer commit.
+                                                {t('repositories.cherryPickModal.fields.commitChanges.hint')}
                                             </p>
                                         </div>
                                         <div className="pt-0.5">
@@ -3263,7 +3263,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                     ? "text-slate-700 dark:text-slate-300 cursor-pointer" 
                                                     : "text-slate-500 dark:text-slate-500 cursor-not-allowed"
                                             )}>
-                                                Agregar origen al mensaje del commit
+                                                {t('repositories.cherryPickModal.fields.appendOrigin.label')}
                                             </label>
                                             <p className={cn(
                                                 "text-xs leading-relaxed",
@@ -3271,7 +3271,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                     ? "text-slate-600 dark:text-slate-400" 
                                                     : "text-slate-400 dark:text-slate-600"
                                             )}>
-                                                Agregar una referencia al commit original al final del mensaje del commit (ej: "(cherry picked from commit abc1234")"). Esto ayuda a rastrear de dónde vinieron los cambios en el historial de git. Solo disponible cuando "Hacer commit de los cambios" está habilitado.
+                                                {t('repositories.cherryPickModal.fields.appendOrigin.hint')}
                                             </p>
                                         </div>
                                         <div className="pt-0.5">
@@ -3298,7 +3298,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={cherryPicking}
                                 >
-                                    Cancelar
+                                    {t('repositories.cherryPickModal.buttons.cancel')}
                                 </Button>
                                 <Button
                                     size="default"
@@ -3309,10 +3309,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {cherryPicking ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Aplicando...
+                                            {t('repositories.cherryPickModal.buttons.applying')}
                                         </span>
                                     ) : (
-                                        'Aplicar'
+                                        t('repositories.cherryPickModal.buttons.apply')
                                     )}
                                 </Button>
                             </div>

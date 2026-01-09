@@ -742,7 +742,13 @@
     },
     "menuItems": {
       "newBranch": "New Branch",
-      "newTag": "New Tag"
+      "newTag": "New Tag",
+      "actions": "Actions"
+    },
+    "search": {
+      "placeholder": "Search commits (message, author, hash)...",
+      "clear": "Clear",
+      "commits": "commits"
     },
     "newBranchModal": {
       "title": "New Branch",
@@ -917,6 +923,126 @@
           "title": "Error clearing stashes",
           "description": "Could not delete the stashes",
           "unknownError": "An unexpected error occurred"
+        }
+      }
+    },
+    "revertModal": {
+      "title": "Revert Commit",
+      "description": "Create a new commit that undoes the changes from this commit",
+      "fields": {
+        "commitToRevert": "Commit to revert"
+      },
+      "warning": "This will create a new commit that reverts the changes made in the selected commit. The original commit will remain in the history and will not be deleted.",
+      "buttons": {
+        "cancel": "Cancel",
+        "revert": "Revert",
+        "reverting": "Reverting..."
+      },
+      "toasts": {
+        "success": {
+          "title": "Revert completed",
+          "description": "The commit has been successfully reverted"
+        },
+        "error": {
+          "title": "Error reverting commit",
+          "description": "Could not complete the operation",
+          "unknownError": "An unexpected error occurred"
+        }
+      }
+    },
+    "cherryPickModal": {
+      "title": "Cherry Pick",
+      "description": "Apply changes from an individual commit to the current branch",
+      "fields": {
+        "commitToApply": "Commit to apply",
+        "commitChanges": {
+          "label": "Commit the changes",
+          "hint": "Automatically create a commit with the cherry-picked changes. If disabled, changes will remain in staging but no commit will be made, allowing you to review and modify them before committing."
+        },
+        "appendOrigin": {
+          "label": "Append origin to commit message",
+          "hint": "Add a reference to the original commit at the end of the commit message (e.g., \"(cherry picked from commit abc1234)\"). This helps track where the changes came from in the git history. Only available when \"Commit the changes\" is enabled."
+        }
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "apply": "Apply",
+        "applying": "Applying..."
+      },
+      "toasts": {
+        "success": {
+          "title": "Cherry-pick completed",
+          "description": "The commit has been applied and committed successfully",
+          "descriptionNoCommit": "The commit has been applied (no commit)"
+        },
+        "conflicts": {
+          "title": "Cherry-pick with conflicts",
+          "description": "There are conflicts that need to be resolved. Use the notification bar to resolve or abort the operation."
+        },
+        "error": {
+          "title": "Error performing cherry-pick",
+          "description": "Could not complete the operation",
+          "unknownError": "An unexpected error occurred"
+        }
+      }
+    },
+    "commitDetails": {
+      "tabs": {
+        "detail": "Commit Detail",
+        "modified": "Modified Files",
+        "tree": "Commit Tree"
+      },
+      "detail": {
+        "sections": {
+          "description": "Description",
+          "author": "Author",
+          "date": "Date",
+          "committer": "Committer",
+          "commitDate": "Commit Date",
+          "commitHash": "Commit Hash",
+          "parentCommit": "Parent Commit",
+          "parentCommits": "Parent Commits",
+          "statistics": "Statistics"
+        },
+        "stats": {
+          "files": "Files",
+          "insertions": "Insertions",
+          "deletions": "Deletions"
+        },
+        "copy": {
+          "copyHash": "Copy full hash",
+          "copyParentHash": "Copy parent hash"
+        },
+        "timeAgo": {
+          "years": "{{count}} year ago",
+          "yearsPlural": "{{count}} years ago",
+          "months": "{{count}} month ago",
+          "monthsPlural": "{{count}} months ago",
+          "weeks": "{{count}} week ago",
+          "weeksPlural": "{{count}} weeks ago",
+          "days": "{{count}} day ago",
+          "daysPlural": "{{count}} days ago",
+          "hours": "{{count}} hour ago",
+          "hoursPlural": "{{count}} hours ago",
+          "minutes": "{{count}} minute ago",
+          "minutesPlural": "{{count}} minutes ago",
+          "seconds": "A few seconds ago"
+        }
+      },
+      "modified": {
+        "loading": "Loading...",
+        "detail": "Detail",
+        "selectFile": "Select a file to view changes"
+      },
+      "tree": {
+        "loading": "Loading tree...",
+        "noFiles": "No files",
+        "content": "Content",
+        "noFileSelected": "No file selected",
+        "selectFileMessage": "Click on a file in the tree to view its content",
+        "errors": {
+          "loadTree": "Error loading tree",
+          "loadFile": "Error loading file"
         }
       }
     }
