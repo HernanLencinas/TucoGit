@@ -7237,10 +7237,10 @@ function App() {
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                 <div className="flex-1">
                   <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                    El repositorio ya existe
+                    {t('repositories.cloneRepositoryModal.title')}
                   </CardTitle>
                   <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                    La carpeta de destino ya existe y no está vacía
+                    {t('repositories.cloneRepositoryModal.description')}
                   </CardDescription>
                 </div>
               </CardHeader>
@@ -7249,7 +7249,7 @@ function App() {
                   <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
                     <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
                     <span>
-                      <span className="font-semibold">Atención:</span> Se perderán todos los cambios locales no guardados en esa carpeta. ¿Deseas eliminar la carpeta existente y volver a clonar el repositorio?
+                      {t('repositories.cloneRepositoryModal.warning')}
                     </span>
                   </p>
                 </div>
@@ -7264,7 +7264,7 @@ function App() {
                       setRutaDestinoAClonar("");
                     }}
                   >
-                    Cancelar
+                    {t('repositories.cloneRepositoryModal.buttons.cancel')}
                   </Button>
                   <Button
                     size="default"
@@ -7282,7 +7282,7 @@ function App() {
                     }}
                   >
                     <Download className="w-4 h-4" />
-                    Clonar
+                    {t('repositories.cloneRepositoryModal.buttons.clone')}
                   </Button>
                 </div>
               </CardContent>
@@ -7631,10 +7631,10 @@ function App() {
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                 <div className="flex-1">
                   <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                    Eliminar Repositorio
+                    {t('repositories.deleteRepositoryModal.title')}
                   </CardTitle>
                   <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                    Esta acción no se puede deshacer
+                    {t('repositories.deleteRepositoryModal.description')}
                   </CardDescription>
                 </div>
               </CardHeader>
@@ -7643,7 +7643,7 @@ function App() {
                   <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
                     <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
                     <span>
-                      ¿Estás seguro de que deseas eliminar el repositorio <span className="font-semibold">"{repositorioAEliminar.nombre}"</span>? Esta acción es permanente y no se puede deshacer.
+                      {t('repositories.deleteRepositoryModal.warning', { name: repositorioAEliminar.nombre })}
                     </span>
                   </p>
                 </div>
@@ -7657,7 +7657,7 @@ function App() {
                       setRepositorioAEliminar(null);
                     }}
                   >
-                    Cancelar
+                    {t('repositories.deleteRepositoryModal.buttons.cancel')}
                   </Button>
                   <Button
                     size="default"
@@ -7692,7 +7692,7 @@ function App() {
                       setRepositorioAEliminar(null);
                     }}
                   >
-                    Eliminar
+                    {t('repositories.deleteRepositoryModal.buttons.delete')}
                   </Button>
                 </div>
               </CardContent>

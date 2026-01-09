@@ -584,6 +584,24 @@
         "delete": "Delete"
       }
     },
+    "deleteRepositoryModal": {
+      "title": "Delete Repository",
+      "description": "This action cannot be undone",
+      "warning": "Are you sure you want to delete the repository \"{{name}}\"? This action is permanent and cannot be undone.",
+      "buttons": {
+        "cancel": "Cancel",
+        "delete": "Delete"
+      }
+    },
+    "cloneRepositoryModal": {
+      "title": "Repository already exists",
+      "description": "The destination folder already exists and is not empty",
+      "warning": "Warning: All unsaved local changes in that folder will be lost. Do you want to delete the existing folder and clone the repository again?",
+      "buttons": {
+        "cancel": "Cancel",
+        "clone": "Clone"
+      }
+    },
     "newRepositoryWizard": {
       "title": {
         "new": "New Repository",

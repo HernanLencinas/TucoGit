@@ -584,6 +584,24 @@
         "delete": "Eliminar"
       }
     },
+    "deleteRepositoryModal": {
+      "title": "Eliminar Repositorio",
+      "description": "Esta acción no se puede deshacer",
+      "warning": "¿Estás seguro de que deseas eliminar el repositorio \"{{name}}\"? Esta acción es permanente y no se puede deshacer.",
+      "buttons": {
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+      }
+    },
+    "cloneRepositoryModal": {
+      "title": "El repositorio ya existe",
+      "description": "La carpeta de destino ya existe y no está vacía",
+      "warning": "Atención: Se perderán todos los cambios locales no guardados en esa carpeta. ¿Deseas eliminar la carpeta existente y volver a clonar el repositorio?",
+      "buttons": {
+        "cancel": "Cancelar",
+        "clone": "Clonar"
+      }
+    },
     "newRepositoryWizard": {
       "title": {
         "new": "Nuevo Repositorio",
