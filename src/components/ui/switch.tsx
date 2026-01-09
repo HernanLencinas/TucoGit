@@ -25,9 +25,18 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           {...props}
         />
         <div className={cn(
-          "w-11 h-6 bg-slate-200 dark:bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-500 dark:peer-focus:ring-cyan-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600 dark:peer-checked:bg-cyan-500",
+          "relative w-11 h-6 rounded-full transition-colors duration-200 ease-in-out",
+          "bg-slate-200 dark:bg-slate-700",
+          "peer-checked:bg-primary",
+          "peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring peer-focus:ring-offset-2 dark:peer-focus:ring-offset-slate-800",
           className
-        )} />
+        )}>
+          <span className={cn(
+            "absolute top-[2px] left-[2px] h-5 w-5 bg-white rounded-full border border-slate-300 dark:border-slate-600",
+            "transition-transform duration-200 ease-in-out",
+            "peer-checked:translate-x-5"
+          )} />
+        </div>
       </label>
     )
   }
