@@ -18,7 +18,17 @@
     "default": "Default",
     "actions": "Actions",
     "fullName": "Full Name",
-    "email": "Email"
+    "email": "Email",
+    "tabs": {
+      "home": "Home",
+      "repositories": "Repositories",
+      "connections": "Connections",
+      "settings": "Settings"
+    },
+    "theme": {
+      "switchToLight": "Switch to light mode",
+      "switchToDark": "Switch to dark mode"
+    }
   },
   "settings": {
     "title": "Settings",

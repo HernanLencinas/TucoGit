@@ -18,7 +18,17 @@
     "default": "Default",
     "actions": "Acciones",
     "fullName": "Nombre Completo",
-    "email": "Correo Electrónico"
+    "email": "Correo Electrónico",
+    "tabs": {
+      "home": "Inicio",
+      "repositories": "Repositorios",
+      "connections": "Conexiones",
+      "settings": "Configuración"
+    },
+    "theme": {
+      "switchToLight": "Cambiar a modo claro",
+      "switchToDark": "Cambiar a modo oscuro"
+    }
   },
   "settings": {
     "title": "Configuración",
