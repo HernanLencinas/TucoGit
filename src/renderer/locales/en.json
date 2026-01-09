@@ -1072,6 +1072,17 @@
         }
       },
       "commitMessage": "Save files before switching to {{branch}}"
+    },
+    "tooltips": {
+      "private": "Private",
+      "minimize": "Minimize",
+      "new": "New",
+      "stash": "Stash",
+      "moreStashOptions": "More stash options",
+      "refresh": "Refresh",
+      "close": "Close",
+      "middleClickToClose": "Middle click to close",
+      "uncommittedChanges": "uncommitted changes"
     }
   }
 }

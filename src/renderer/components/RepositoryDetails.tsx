@@ -1198,7 +1198,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             {repository.nombre}
                         </h2>
                         {repository.privado && (
-                            <span title="Privado" className="flex-shrink-0 pointer-events-auto">
+                            <span title={t('repositories.tooltips.private')} className="flex-shrink-0 pointer-events-auto">
                                 <Lock className="h-3 w-3 text-white/70" />
                             </span>
                         )}
@@ -1215,7 +1215,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 size="sm"
                                 onClick={onMinimize}
                                 className="text-white hover:text-white/80 hover:bg-white/20 h-6 w-6 p-0"
-                                title="Minimizar"
+                                title={t('repositories.tooltips.minimize')}
                             >
                                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
@@ -1234,7 +1234,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 <GitBranch className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
                                 <span>{repository.nombre}</span>
                                 {repository.privado && (
-                                    <span title="Privado" className="flex-shrink-0">
+                                    <span title={t('repositories.tooltips.private')} className="flex-shrink-0">
                                         <Lock className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
                                     </span>
                                 )}
@@ -1249,7 +1249,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 size="sm"
                                 onClick={onMinimize}
                                 className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800"
-                                title="Minimizar"
+                                title={t('repositories.tooltips.minimize')}
                             >
                                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
@@ -1407,7 +1407,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         setNewBranchMenuOpen(!newBranchMenuOpen);
                                     }}
                                     className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm rounded-l-none"
-                                    title="Nuevo"
+                                    title={t('repositories.tooltips.new')}
                                 >
                                     <Plus className="h-4 w-4" />
                                 </Button>
@@ -1644,7 +1644,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     setShowStashModal(true);
                                 }}
                                 className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm rounded-r-none"
-                                title="Stash"
+                                title={t('repositories.tooltips.stash')}
                             >
                                 <svg
                                     className="h-3.5 w-3.5"
@@ -1669,7 +1669,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     setStashMenuOpen(!stashMenuOpen);
                                 }}
                                 className="h-7 w-6 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm rounded-l-none border-l-0"
-                                title="Más opciones de stash"
+                                title={t('repositories.tooltips.moreStashOptions')}
                             >
                                 <ChevronDown className="h-3 w-3" />
                             </Button>
@@ -1804,7 +1804,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             onClick={() => loadCommits(true)}
                             className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
                             disabled={loading}
-                            title="Refrescar"
+                            title={t('repositories.tooltips.refresh')}
                         >
                             <RotateCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                         </Button>

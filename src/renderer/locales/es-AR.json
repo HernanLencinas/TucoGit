@@ -1072,6 +1072,17 @@
         }
       },
       "commitMessage": "Guardar archivos antes de cambiar a {{branch}}"
+    },
+    "tooltips": {
+      "private": "Privado",
+      "minimize": "Minimizar",
+      "new": "Nuevo",
+      "stash": "Stash",
+      "moreStashOptions": "Más opciones de stash",
+      "refresh": "Refrescar",
+      "close": "Cerrar",
+      "middleClickToClose": "Click medio para cerrar",
+      "uncommittedChanges": "cambios sin commit"
     }
   }
 }

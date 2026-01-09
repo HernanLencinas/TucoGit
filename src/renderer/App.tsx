@@ -5490,7 +5490,7 @@ function App() {
                         "flex items-center gap-1.5 flex-1 min-w-0 text-xs transition-colors",
                         esActivo ? "text-foreground font-medium" : "text-muted-foreground group-hover:text-foreground"
                       )}
-                      title={`${repo.nombre}${gitInfo?.branch ? ` - ${gitInfo.branch}` : ''}${tieneCambios ? ' (cambios sin commit)' : ''}\nClick medio para cerrar`}
+                      title={`${repo.nombre}${gitInfo?.branch ? ` - ${gitInfo.branch}` : ''}${tieneCambios ? ` (${t('repositories.tooltips.uncommittedChanges')})` : ''}\n${t('repositories.tooltips.middleClickToClose')}`}
                     >
                       <GitBranch className={cn(
                         "h-3.5 w-3.5 flex-shrink-0",
@@ -5526,7 +5526,7 @@ function App() {
                           ? "hover:bg-muted/80 text-foreground/70 hover:text-foreground"
                           : "hover:bg-muted/60 text-muted-foreground/50 group-hover:text-foreground/70"
                       )}
-                      title="Cerrar"
+                      title={t('repositories.tooltips.close')}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'scale(1.1)';
                       }}
