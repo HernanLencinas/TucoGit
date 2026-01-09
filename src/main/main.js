@@ -311,6 +311,7 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
         temaNombre: "default",
         zoomLevel: 100,
         editorIDE: null,
+        uiLanguage: "es-AR",
         gitSslVerify: true,
         gitUserName: "",
         gitUserEmail: "",
@@ -341,6 +342,7 @@ ipcMain.handle('initialize-config', async (event, configPath) => {
       temaNombre: configData.configuracion?.temaNombre || "default",
       zoomLevel: configData.configuracion?.zoomLevel || 100,
       editorIDE: configData.configuracion?.editorIDE || null,
+      uiLanguage: configData.configuracion?.uiLanguage || "es-AR",
       gitSslVerify: configData.configuracion?.gitSslVerify !== undefined ? configData.configuracion.gitSslVerify : true,
       gitUserName: configData.configuracion?.gitUserName || "",
       gitUserEmail: configData.configuracion?.gitUserEmail || "",
@@ -439,6 +441,7 @@ ipcMain.handle('write-config', async (event, updates) => {
           tema: "dark",
           temaNombre: "default",
           zoomLevel: 100,
+          uiLanguage: "es-AR",
           gitSslVerify: true,
           rutaConfiguracion: configDir,
           wizardCompleted: false,
@@ -486,6 +489,13 @@ ipcMain.handle('write-config', async (event, updates) => {
         configData.configuracion = {};
       }
       configData.configuracion.editorIDE = updates.editorIDE;
+    }
+
+    if (updates.uiLanguage !== undefined) {
+      if (!configData.configuracion) {
+        configData.configuracion = {};
+      }
+      configData.configuracion.uiLanguage = updates.uiLanguage;
     }
 
     if (updates.gitSslVerify !== undefined) {

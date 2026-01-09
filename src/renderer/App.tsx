@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
-import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock, MoreVertical } from "lucide-react";
+import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock, MoreVertical, Globe } from "lucide-react";
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
 import type { Connection, FolderItem } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
@@ -138,6 +138,8 @@ function App() {
   const [gitUserEmail, setGitUserEmail] = useState<string>("");
   const [commitButtonBehavior, setCommitButtonBehavior] = useState<"commit" | "commit-push" | "commit-sync">("commit");
   const [mostrarMenuCommitBehavior, setMostrarMenuCommitBehavior] = useState(false);
+  const [uiLanguage, setUiLanguage] = useState<"en" | "es-AR">("es-AR");
+  const [mostrarMenuIdioma, setMostrarMenuIdioma] = useState(false);
   const [mostrarModalRestablecerConfig, setMostrarModalRestablecerConfig] = useState(false);
   const [mostrarModalConfirmarReclon, setMostrarModalConfirmarReclon] = useState(false);
   const [repoAClonar, setRepoAClonar] = useState<FolderItem | null>(null);
@@ -638,6 +640,11 @@ function App() {
               // Cargar comportamiento del botón de commit
               if (resultado.commitButtonBehavior !== undefined) {
                 setCommitButtonBehavior(resultado.commitButtonBehavior);
+              }
+
+              // Cargar idioma de UI
+              if (resultado.uiLanguage !== undefined) {
+                setUiLanguage(resultado.uiLanguage);
               }
 
               // Cargar identidades de Git
@@ -4114,6 +4121,99 @@ function App() {
                         </p>
                       </div>
                     )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Idioma de UI */}
+              <Card className="border-2">
+                <CardHeader className="pb-3">
+                  <div>
+                    <CardTitle className="text-base">Idioma de Interfaz</CardTitle>
+                    <CardDescription className="text-xs mt-1">
+                      Selecciona el idioma que se mostrará en la interfaz de usuario
+                    </CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setMostrarMenuIdioma(!mostrarMenuIdioma)}
+                        className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background hover:border-primary/50 transition-all text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 group"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="flex-shrink-0 p-2 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                            <Globe className="h-4 w-4 text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-semibold text-foreground truncate">
+                              {uiLanguage === "en" ? "English" : "Español (Argentina)"}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {uiLanguage === "en" ? "English" : "Español (Argentina)"}
+                            </div>
+                          </div>
+                        </div>
+                        <ChevronRight className={`h-5 w-5 text-muted-foreground transition-all flex-shrink-0 ${mostrarMenuIdioma ? "rotate-90 text-primary" : ""}`} />
+                      </button>
+                      {mostrarMenuIdioma && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-10"
+                            onClick={() => setMostrarMenuIdioma(false)}
+                          />
+                          <div className="absolute z-20 w-full mt-2 rounded-lg border-2 bg-popover shadow-lg max-h-72 overflow-auto">
+                            <div className="p-1">
+                              {(["en", "es-AR"] as const).map((idioma) => (
+                                <button
+                                  key={idioma}
+                                  onClick={async () => {
+                                    setUiLanguage(idioma);
+                                    setMostrarMenuIdioma(false);
+                                    if (window.electronAPI?.writeConfig) {
+                                      try {
+                                        await window.electronAPI.writeConfig({ uiLanguage: idioma });
+                                        showToast(
+                                          idioma === "en" 
+                                            ? "Language changed to English" 
+                                            : "Idioma cambiado a Español (Argentina)",
+                                          'success'
+                                        );
+                                      } catch (error) {
+                                        showToast('Error al guardar la configuración', 'error');
+                                      }
+                                    }
+                                  }}
+                                  className={`w-full px-4 py-3 text-sm text-left rounded-md hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ${
+                                    uiLanguage === idioma ? 'bg-primary/10 border border-primary/20' : ''
+                                  }`}
+                                >
+                                  <div className="flex-shrink-0 p-1.5 rounded-md bg-background">
+                                    <Globe className="h-4 w-4 text-muted-foreground" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="font-semibold">
+                                      {idioma === "en" ? "English" : "Español (Argentina)"}
+                                    </div>
+                                    {uiLanguage === idioma && (
+                                      <div className="text-xs text-primary mt-0.5 flex items-center gap-1">
+                                        <Check className="h-3 w-3" />
+                                        Seleccionado
+                                      </div>
+                                    )}
+                                  </div>
+                                  {uiLanguage === idioma && (
+                                    <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                                  )}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
