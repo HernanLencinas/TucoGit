@@ -3143,7 +3143,10 @@ function App() {
                 {itemsFiltrados.map((item) => (
                   <Card
                     key={item.id}
-                    className={`relative bg-secondary/40 hover:bg-secondary/60 hover:shadow-lg transition-all duration-300 hover:border-primary/50 group border-border/80 backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px] w-full`}
+                    className={`relative ${item.tipo === "coleccion"
+                        ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20"
+                        : "bg-secondary/40 hover:bg-secondary/60 border-border/80"
+                      } hover:shadow-lg transition-all duration-300 hover:border-primary/50 group backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px] w-full`}
                   >
                     <div
                       className="flex-1 flex flex-col min-h-0 cursor-pointer"
