@@ -3533,7 +3533,7 @@ function App() {
                 disabled
               >
                 <Plug className="h-4 w-4" />
-                Conexiones
+                {t('connections.title')}
               </button>
               <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-muted text-muted-foreground border border-border">
                 {conexionesGuardadas.length}
@@ -3549,7 +3549,7 @@ function App() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="Buscar conexiones..."
+                placeholder={t('connections.search.placeholder')}
                 value={terminoBusquedaConexiones}
                 onChange={(e) => setTerminoBusquedaConexiones(e.target.value)}
                 className={`w-full pl-9 ${terminoBusquedaConexiones ? 'pr-20' : 'pr-3'} py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:border-input`}
@@ -3561,7 +3561,7 @@ function App() {
                   onClick={() => setTerminoBusquedaConexiones("")}
                   className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 text-xs"
                 >
-                  Limpiar
+                  {t('connections.search.clear')}
                 </Button>
               )}
             </div>
@@ -3572,7 +3572,7 @@ function App() {
                   variant="outline"
                   onClick={() => setMostrarMenuOrdenar(!mostrarMenuOrdenar)}
                   className="h-9 w-9"
-                  title="Ordenar"
+                  title={t('connections.sort.title')}
                 >
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
@@ -3591,7 +3591,7 @@ function App() {
                         className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                       >
                         <ArrowUp className="h-4 w-4" />
-                        Ascendente
+                        {t('connections.sort.ascending')}
                       </button>
                       <button
                         onClick={() => {
@@ -3601,7 +3601,7 @@ function App() {
                         className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                       >
                         <ArrowDown className="h-4 w-4" />
-                        Descendente
+                        {t('connections.sort.descending')}
                       </button>
                       {ordenConexiones && (
                         <button
@@ -3612,7 +3612,7 @@ function App() {
                           className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors text-muted-foreground"
                         >
                           <X className="h-4 w-4" />
-                          Sin orden
+                          {t('connections.sort.none')}
                         </button>
                       )}
                     </div>
@@ -3625,7 +3625,7 @@ function App() {
                 onClick={refrescarConexiones}
                 disabled={refrescandoConexiones}
                 className="h-9 w-9 hover:bg-accent transition-colors"
-                title="Refrescar"
+                title={t('connections.actions.refresh')}
               >
                 <RefreshCw className={`h-4 w-4 transition-transform duration-500 ${refrescandoConexiones ? 'animate-spin' : 'active:rotate-180'}`} />
               </Button>
@@ -3655,7 +3655,7 @@ function App() {
                       className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                     >
                       <Link2 className="h-4 w-4" />
-                      Nueva Conexión
+                      {t('connections.actions.newConnection')}
                     </button>
                   </div>
                 </>
@@ -3670,20 +3670,20 @@ function App() {
               {terminoBusquedaConexionesDebounced.trim() === "" ? (
                 <>
                   <Plug className="h-16 w-16 text-muted-foreground mb-6 opacity-60" />
-                  <h3 className="text-xl font-semibold text-foreground mb-3">No hay conexiones definidas</h3>
+                  <h3 className="text-xl font-semibold text-foreground mb-3">{t('connections.empty.title')}</h3>
                   <p className="text-sm text-muted-foreground max-w-md">
-                    Para comenzar, presiona el botón 'Nueva Conexión' para crear tu primera conexión con un proveedor de Git.
+                    {t('connections.empty.description')}
                   </p>
                 </>
               ) : (
                 <>
                   <Search className="h-12 w-12 text-muted-foreground mb-4" />
                   <p className="text-muted-foreground mb-2">
-                    No se encontraron resultados para "{terminoBusquedaConexionesDebounced}"
+                    {t('connections.search.noResults', { query: terminoBusquedaConexionesDebounced })}
                   </p>
                   <Button size="sm" variant="outline" onClick={() => setTerminoBusquedaConexiones("")}>
                     <X className="h-3.5 w-3.5 mr-1" />
-                    Limpiar búsqueda
+                    {t('connections.search.clearSearch')}
                   </Button>
                 </>
               )}
@@ -3708,7 +3708,7 @@ function App() {
 
                 // Formatear fecha de creación de conexión
                 const formatearFechaConexion = (fechaISO: string | null): string => {
-                  if (!fechaISO) return "Fecha no disponible";
+                  if (!fechaISO) return t('connections.date.notAvailable');
                   const fecha = new Date(fechaISO);
                   const ahora = new Date();
                   const diffMs = ahora.getTime() - fecha.getTime();
@@ -3721,19 +3721,19 @@ function App() {
                   const diffAnos = Math.floor(diffDias / 365);
 
                   if (diffMinutos < 1) {
-                    return "Creado hace un momento";
+                    return t('connections.date.justNow');
                   } else if (diffMinutos < 60) {
-                    return `Creado hace ${diffMinutos} ${diffMinutos === 1 ? 'minuto' : 'minutos'}`;
+                    return t('connections.date.minutesAgo', { count: diffMinutos });
                   } else if (diffHoras < 24) {
-                    return `Creado hace ${diffHoras} ${diffHoras === 1 ? 'hora' : 'horas'}`;
+                    return t('connections.date.hoursAgo', { count: diffHoras });
                   } else if (diffDias < 7) {
-                    return `Creado hace ${diffDias} ${diffDias === 1 ? 'día' : 'días'}`;
+                    return t('connections.date.daysAgo', { count: diffDias });
                   } else if (diffSemanas < 4) {
-                    return `Creado hace ${diffSemanas} ${diffSemanas === 1 ? 'semana' : 'semanas'}`;
+                    return t('connections.date.weeksAgo', { count: diffSemanas });
                   } else if (diffMeses < 12) {
-                    return `Creado hace ${diffMeses} ${diffMeses === 1 ? 'mes' : 'meses'}`;
+                    return t('connections.date.monthsAgo', { count: diffMeses });
                   } else {
-                    return `Creado hace ${diffAnos} ${diffAnos === 1 ? 'año' : 'años'}`;
+                    return t('connections.date.yearsAgo', { count: diffAnos });
                   }
                 };
 
@@ -3789,7 +3789,7 @@ function App() {
                               return (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-muted text-muted-foreground">
                                   <RefreshCw className="h-2.5 w-2.5 animate-spin" />
-                                  Verificando...
+                                  {t('connections.status.checking')}
                                 </span>
                               );
                             }
@@ -3798,7 +3798,7 @@ function App() {
                               return (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-green-500/20 text-green-600 dark:text-green-400">
                                   <CheckCircle2 className="h-2.5 w-2.5" />
-                                  Conectado
+                                  {t('connections.status.connected')}
                                 </span>
                               );
                             }
@@ -3807,7 +3807,7 @@ function App() {
                               return (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-amber-500/20 text-amber-600 dark:text-amber-400">
                                   <AlertCircle className="h-2.5 w-2.5" />
-                                  Token expirado
+                                  {t('connections.status.expired')}
                                 </span>
                               );
                             }
@@ -3816,7 +3816,7 @@ function App() {
                               return (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-red-500/20 text-red-600 dark:text-red-400">
                                   <XCircle className="h-2.5 w-2.5" />
-                                  Desconectado
+                                  {t('connections.status.disconnected')}
                                 </span>
                               );
                             }
@@ -3836,12 +3836,12 @@ function App() {
                               <div className="flex flex-col items-center justify-center py-6 text-center">
                                 <AlertCircle className="h-8 w-8 text-muted-foreground/50 mb-2" />
                                 <p className="text-xs font-medium text-foreground mb-1">
-                                  {estadoConexion === 'expired' ? 'Token expirado' : 'Sin conexión'}
+                                  {estadoConexion === 'expired' ? t('connections.status.expired') : t('connections.status.noConnection')}
                                 </p>
                                 <p className="text-[10px] text-muted-foreground">
                                   {estadoConexion === 'expired'
-                                    ? 'Actualiza el token para ver la información'
-                                    : 'No se puede conectar al servidor'}
+                                    ? t('connections.status.expiredMessage')
+                                    : t('connections.status.disconnectedMessage')}
                                 </p>
                               </div>
                             );
@@ -3865,7 +3865,7 @@ function App() {
                                   <div className="flex items-center justify-between text-xs">
                                     <div className="flex items-center gap-1.5">
                                       <Cloud className="h-3 w-3 text-muted-foreground" />
-                                      <span className="text-muted-foreground">Repositorios remotos</span>
+                                      <span className="text-muted-foreground">{t('connections.stats.remoteRepos')}</span>
                                     </div>
                                     <span className="font-medium text-foreground">{detalles.totalRepos}</span>
                                   </div>
@@ -3874,7 +3874,7 @@ function App() {
                                   <div className="flex items-center justify-between text-xs">
                                     <div className="flex items-center gap-1.5">
                                       <Link2 className="h-3 w-3 text-muted-foreground" />
-                                      <span className="text-muted-foreground">Configurados localmente</span>
+                                      <span className="text-muted-foreground">{t('connections.stats.configuredLocally')}</span>
                                     </div>
                                     <span className="font-medium text-foreground">{reposLocales.configurados}</span>
                                   </div>
@@ -3883,7 +3883,7 @@ function App() {
                                   <div className="flex items-center justify-between text-xs">
                                     <div className="flex items-center gap-1.5">
                                       <CheckCircle2 className="h-3 w-3 text-green-500" />
-                                      <span className="text-green-500">Clonados localmente</span>
+                                      <span className="text-green-500">{t('connections.stats.clonedLocally')}</span>
                                     </div>
                                     <span className="font-medium text-green-500">{reposLocales.clonados}</span>
                                   </div>
@@ -3893,7 +3893,7 @@ function App() {
                                 <div className="pt-1 border-t border-border/50">
                                   <div className="flex items-center gap-1.5 mb-1.5">
                                     <Users className="h-3 w-3 text-muted-foreground" />
-                                    <span className="text-xs text-muted-foreground">Organizaciones:</span>
+                                    <span className="text-xs text-muted-foreground">{t('connections.stats.organizations')}</span>
                                   </div>
                                   {detalles.organizations && detalles.organizations.length > 0 ? (
                                     <div className="flex flex-wrap gap-1">
@@ -3914,7 +3914,7 @@ function App() {
                                     </div>
                                   ) : (
                                     <p className="text-[10px] text-muted-foreground/70 italic">
-                                      No perteneces a ninguna organización
+                                      {t('connections.stats.noOrganizations')}
                                     </p>
                                   )}
                                 </div>
@@ -3934,7 +3934,7 @@ function App() {
                           // Por defecto, mostrar mensaje de espera
                           return (
                             <div className="text-xs text-muted-foreground text-center py-4">
-                              Esperando conexión...
+                              {t('connections.status.waiting')}
                             </div>
                           );
                         })()}
@@ -3954,7 +3954,7 @@ function App() {
                       <div className="px-3 py-1.5 flex justify-end gap-1.5">
                         <div className="relative group/tooltip">
                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                            Editar
+                            {t('connections.actions.edit')}
                             <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                           </div>
                           <Button
@@ -3972,7 +3972,7 @@ function App() {
 
                         <div className="relative group/tooltip">
                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                            Eliminar
+                            {t('connections.actions.delete')}
                             <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                           </div>
                           <Button

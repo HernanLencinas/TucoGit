@@ -321,5 +321,57 @@
       "start": "Comenzar",
       "step": "Paso {{current}} de {{total}}"
     }
+  },
+  "connections": {
+    "title": "Conexiones",
+    "search": {
+      "placeholder": "Buscar conexiones...",
+      "clear": "Limpiar",
+      "clearSearch": "Limpiar búsqueda",
+      "noResults": "No se encontraron resultados para \"{{query}}\""
+    },
+    "sort": {
+      "title": "Ordenar",
+      "ascending": "Ascendente",
+      "descending": "Descendente",
+      "none": "Sin orden"
+    },
+    "actions": {
+      "refresh": "Refrescar",
+      "newConnection": "Nueva Conexión",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "empty": {
+      "title": "No hay conexiones definidas",
+      "description": "Para comenzar, presiona el botón 'Nueva Conexión' para crear tu primera conexión con un proveedor de Git."
+    },
+    "status": {
+      "checking": "Verificando...",
+      "connected": "Conectado",
+      "expired": "Token expirado",
+      "disconnected": "Desconectado",
+      "noConnection": "Sin conexión",
+      "expiredMessage": "Actualiza el token para ver la información",
+      "disconnectedMessage": "No se puede conectar al servidor",
+      "waiting": "Esperando conexión..."
+    },
+    "stats": {
+      "remoteRepos": "Repositorios remotos",
+      "configuredLocally": "Configurados localmente",
+      "clonedLocally": "Clonados localmente",
+      "organizations": "Organizaciones:",
+      "noOrganizations": "No perteneces a ninguna organización"
+    },
+    "date": {
+      "notAvailable": "Fecha no disponible",
+      "justNow": "Creado hace un momento",
+      "minutesAgo": "Creado hace {{count}} {{count, plural, one {minuto} other {minutos}}}",
+      "hoursAgo": "Creado hace {{count}} {{count, plural, one {hora} other {horas}}}",
+      "daysAgo": "Creado hace {{count}} {{count, plural, one {día} other {días}}}",
+      "weeksAgo": "Creado hace {{count}} {{count, plural, one {semana} other {semanas}}}",
+      "monthsAgo": "Creado hace {{count}} {{count, plural, one {mes} other {meses}}}",
+      "yearsAgo": "Creado hace {{count}} {{count, plural, one {año} other {años}}}"
+    }
   }
 }

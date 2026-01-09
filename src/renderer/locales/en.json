@@ -321,5 +321,57 @@
       "start": "Start",
       "step": "Step {{current}} of {{total}}"
     }
+  },
+  "connections": {
+    "title": "Connections",
+    "search": {
+      "placeholder": "Search connections...",
+      "clear": "Clear",
+      "clearSearch": "Clear search",
+      "noResults": "No results found for \"{{query}}\""
+    },
+    "sort": {
+      "title": "Sort",
+      "ascending": "Ascending",
+      "descending": "Descending",
+      "none": "No sort"
+    },
+    "actions": {
+      "refresh": "Refresh",
+      "newConnection": "New Connection",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "empty": {
+      "title": "No connections defined",
+      "description": "To get started, press the 'New Connection' button to create your first connection with a Git provider."
+    },
+    "status": {
+      "checking": "Checking...",
+      "connected": "Connected",
+      "expired": "Token expired",
+      "disconnected": "Disconnected",
+      "noConnection": "No connection",
+      "expiredMessage": "Update the token to see information",
+      "disconnectedMessage": "Cannot connect to server",
+      "waiting": "Waiting for connection..."
+    },
+    "stats": {
+      "remoteRepos": "Remote repositories",
+      "configuredLocally": "Configured locally",
+      "clonedLocally": "Cloned locally",
+      "organizations": "Organizations:",
+      "noOrganizations": "You don't belong to any organization"
+    },
+    "date": {
+      "notAvailable": "Date not available",
+      "justNow": "Created just now",
+      "minutesAgo": "Created {{count}} {{count, plural, one {minute} other {minutes}}} ago",
+      "hoursAgo": "Created {{count}} {{count, plural, one {hour} other {hours}}} ago",
+      "daysAgo": "Created {{count}} {{count, plural, one {day} other {days}}} ago",
+      "weeksAgo": "Created {{count}} {{count, plural, one {week} other {weeks}}} ago",
+      "monthsAgo": "Created {{count}} {{count, plural, one {month} other {months}}} ago",
+      "yearsAgo": "Created {{count}} {{count, plural, one {year} other {years}}} ago"
+    }
   }
 }
