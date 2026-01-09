@@ -9,6 +9,7 @@ import { FolderItem } from "@/renderer/types";
 import { CommitGraph } from "./CommitGraph";
 import { CommitDetails } from "./CommitDetails";
 import { GitStatusPanel } from "./GitStatusPanel";
+import { useI18n } from "@/renderer/hooks/useI18n";
 
 interface RepositoryDetailsProps {
     repository: FolderItem;
@@ -18,6 +19,7 @@ interface RepositoryDetailsProps {
 }
 
 export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository, configPath, onBack, onMinimize }) => {
+    const { t } = useI18n();
     const { toast } = useToast();
     const [commits, setCommits] = useState<any[]>([]);
     const [selectedCommit, setSelectedCommit] = useState<any | null>(null);
@@ -760,11 +762,11 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadBranches();
                 loadCommits(true);
             } else {
-                alert(result?.error || 'Error al crear el branch');
+                alert(result?.error || t('repositories.newBranchModal.errors.createError'));
             }
         } catch (err) {
             // Error al crear branch
-            alert('Error al crear el branch');
+            alert(t('repositories.newBranchModal.errors.createError'));
         } finally {
             setCreatingBranch(false);
         }
@@ -897,21 +899,23 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setPushToAllRemotes(false);
                 loadCommits(true);
                 toast({
-                    title: "Tag creado exitosamente",
-                    description: `El tag "${tagName.trim()}" ha sido creado${pushToAllRemotes ? ' y enviado a todos los remotes' : ''}`,
+                    title: t('repositories.newTagModal.success.title'),
+                    description: pushToAllRemotes 
+                        ? t('repositories.newTagModal.success.descriptionWithPush', { tagName: tagName.trim() })
+                        : t('repositories.newTagModal.success.description', { tagName: tagName.trim() }),
                 });
             } else {
                 toast({
-                    title: "Error al crear tag",
-                    description: result?.error || 'Error desconocido',
+                    title: t('repositories.newTagModal.errors.createError'),
+                    description: result?.error || t('repositories.newTagModal.errors.unknownError'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al crear tag
             toast({
-                title: "Error al crear tag",
-                description: err.message || 'Error desconocido',
+                title: t('repositories.newTagModal.errors.createError'),
+                description: err.message || t('repositories.newTagModal.errors.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -1423,7 +1427,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         className="w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-600 dark:text-slate-400"
                                     >
                                         <GitBranch className="h-3.5 w-3.5" />
-                                        <span>Nuevo Branch</span>
+                                        <span>{t('repositories.menuItems.newBranch')}</span>
                                     </button>
                                     <button
                                         onClick={() => {
@@ -1439,7 +1443,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         )}
                                     >
                                         <Tag className="h-3.5 w-3.5" />
-                                        <span>Nuevo Tag</span>
+                                        <span>{t('repositories.menuItems.newTag')}</span>
                                     </button>
                                 </div>
                             )}
@@ -2042,29 +2046,29 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Nuevo Branch
+                                    {t('repositories.newBranchModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Crea un nuevo branch a partir de otro branch existente
+                                    {t('repositories.newBranchModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-3">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                                    <span>Nombre del nuevo branch</span>
+                                    <span>{t('repositories.newBranchModal.fields.branchName.label')}</span>
                                     <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                                        (requerido)
+                                        {t('repositories.newBranchModal.fields.branchName.required')}
                                     </span>
                                 </label>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    El nombre debe seguir las convenciones de Git (sin espacios, usar guiones o guiones bajos)
+                                    {t('repositories.newBranchModal.fields.branchName.hint')}
                                 </p>
                                 <input
                                     type="text"
                                     value={newBranchName}
                                     onChange={(e) => setNewBranchName(e.target.value)}
-                                    placeholder="nombre-del-branch"
+                                    placeholder={t('repositories.newBranchModal.fields.branchName.placeholder')}
                                     className={cn(
                                         "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
                                         "bg-slate-50 dark:bg-slate-800/50",
@@ -2082,10 +2086,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             </div>
                             <div className="space-y-3">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                    Crear a partir de
+                                    {t('repositories.newBranchModal.fields.createFrom.label')}
                                 </label>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    Selecciona el branch desde el cual se creará el nuevo branch. El nuevo branch contendrá todos los commits del branch seleccionado.
+                                    {t('repositories.newBranchModal.fields.createFrom.hint')}
                                 </p>
                                 <div className="relative" ref={branchFromDropdownRef}>
                                     <button
@@ -2104,8 +2108,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     >
                                         <span className="block truncate">
                                             {newBranchFrom 
-                                                ? `${newBranchFrom}${newBranchFrom === branches.current ? ' (actual)' : ''}`
-                                                : 'Selecciona un branch'}
+                                                ? `${newBranchFrom}${newBranchFrom === branches.current ? ` ${t('repositories.newBranchModal.fields.createFrom.current')}` : ''}`
+                                                : t('repositories.newBranchModal.fields.createFrom.placeholder')}
                                         </span>
                                         <ChevronDown className={cn(
                                             "absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 dark:text-slate-400 transition-transform duration-200",
@@ -2134,7 +2138,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                             <div className="flex items-center justify-between">
                                                                 <span>{branch}</span>
                                                                 {branch === branches.current && (
-                                                                    <span className="text-xs text-slate-500 dark:text-slate-400 ml-2">(actual)</span>
+                                                                    <span className="text-xs text-slate-500 dark:text-slate-400 ml-2">{t('repositories.newBranchModal.fields.createFrom.current')}</span>
                                                                 )}
                                                             </div>
                                                         </button>
@@ -2144,7 +2148,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             {branches.remote.length > 0 && (
                                                 <>
                                                     <div className="px-4 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700">
-                                                        Remotos
+                                                        {t('repositories.newBranchModal.fields.createFrom.remotes')}
                                                     </div>
                                                     <div className="py-1">
                                                         {branches.remote.map((branch) => (
@@ -2170,7 +2174,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             )}
                                             {branches.local.length === 0 && branches.remote.length === 0 && (
                                                 <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 text-center">
-                                                    No hay branches disponibles
+                                                    {t('repositories.newBranchModal.fields.createFrom.noBranches')}
                                                 </div>
                                             )}
                                         </div>
@@ -2181,8 +2185,23 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         <p className="text-xs text-blue-800 dark:text-blue-300 flex items-start gap-2">
                                             <Info className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
                                             <span>
-                                                El nuevo branch <span className="font-semibold">{newBranchName || 'nuevo-branch'}</span> se creará a partir de <span className="font-semibold">{newBranchFrom}</span>
-                                                {newBranchFrom === branches.current && ' (tu branch actual)'}
+                                                {(() => {
+                                                    const template = t('repositories.newBranchModal.info.willCreateFrom', { 
+                                                        branchName: '{{branchName}}',
+                                                        fromBranch: '{{fromBranch}}'
+                                                    });
+                                                    const parts = template.split('{{branchName}}');
+                                                    return (
+                                                        <>
+                                                            {parts[0]}
+                                                            <span className="font-semibold">{newBranchName || 'nuevo-branch'}</span>
+                                                            {parts[1]?.split('{{fromBranch}}')[0]}
+                                                            <span className="font-semibold">{newBranchFrom}</span>
+                                                            {parts[1]?.split('{{fromBranch}}')[1]}
+                                                            {newBranchFrom === branches.current && t('repositories.newBranchModal.info.currentBranch')}
+                                                        </>
+                                                    );
+                                                })()}
                                             </span>
                                         </p>
                                     </div>
@@ -2201,7 +2220,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={creatingBranch}
                                 >
-                                    Cancelar
+                                    {t('repositories.newBranchModal.buttons.cancel')}
                                 </Button>
                                 <Button
                                     size="default"
@@ -2212,10 +2231,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {creatingBranch ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Creando...
+                                            {t('repositories.newBranchModal.buttons.creating')}
                                         </span>
                                     ) : (
-                                        "Crear"
+                                        t('repositories.newBranchModal.buttons.create')
                                     )}
                                 </Button>
                             </div>
@@ -2253,29 +2272,29 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Nuevo Tag
+                                    {t('repositories.newTagModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Crea un nuevo tag en el commit seleccionado
+                                    {t('repositories.newTagModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-3">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                                    <span>Nombre del tag</span>
+                                    <span>{t('repositories.newTagModal.fields.tagName.label')}</span>
                                     <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                                        (requerido)
+                                        {t('repositories.newTagModal.fields.tagName.required')}
                                     </span>
                                 </label>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    Usa convenciones semánticas como v1.0.0, v2.1.3, etc. Los tags ayudan a marcar puntos importantes en el historial del proyecto.
+                                    {t('repositories.newTagModal.fields.tagName.hint')}
                                 </p>
                                 <input
                                     type="text"
                                     value={tagName}
                                     onChange={(e) => setTagName(e.target.value)}
-                                    placeholder="v1.0.0"
+                                    placeholder={t('repositories.newTagModal.fields.tagName.placeholder')}
                                     className={cn(
                                         "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
                                         "bg-slate-50 dark:bg-slate-800/50",
@@ -2295,7 +2314,22 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         <p className="text-xs text-blue-800 dark:text-blue-300 flex items-start gap-2">
                                             <Info className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
                                             <span>
-                                                El tag <span className="font-semibold">{tagName}</span> se creará en el commit <span className="font-mono font-semibold">{selectedCommit.hash?.substring(0, 7)}</span>
+                                                {(() => {
+                                                    const template = t('repositories.newTagModal.info.willCreateAt', {
+                                                        tagName: '{{tagName}}',
+                                                        commitHash: '{{commitHash}}'
+                                                    });
+                                                    const parts = template.split('{{tagName}}');
+                                                    return (
+                                                        <>
+                                                            {parts[0]}
+                                                            <span className="font-semibold">{tagName}</span>
+                                                            {parts[1]?.split('{{commitHash}}')[0]}
+                                                            <span className="font-mono font-semibold">{selectedCommit.hash?.substring(0, 7)}</span>
+                                                            {parts[1]?.split('{{commitHash}}')[1]}
+                                                        </>
+                                                    );
+                                                })()}
                                             </span>
                                         </p>
                                     </div>
@@ -2303,18 +2337,18 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             </div>
                             <div className="space-y-3">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                    Mensaje
+                                    {t('repositories.newTagModal.fields.message.label')}
                                     <span className="text-xs font-normal text-slate-500 dark:text-slate-400 ml-2">
-                                        (opcional)
+                                        {t('repositories.newTagModal.fields.message.optional')}
                                     </span>
                                 </label>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    Proporciona una descripción detallada del tag. Esto es útil para documentar releases, cambios importantes o hitos del proyecto.
+                                    {t('repositories.newTagModal.fields.message.hint')}
                                 </p>
                                 <textarea
                                     value={tagMessage}
                                     onChange={(e) => setTagMessage(e.target.value)}
-                                    placeholder="Descripción del tag..."
+                                    placeholder={t('repositories.newTagModal.fields.message.placeholder')}
                                     rows={3}
                                     className={cn(
                                         "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 resize-none",
@@ -2329,7 +2363,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             <div className="space-y-3 py-2">
                                 <div className="flex items-center justify-between">
                                     <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 cursor-pointer" htmlFor="push-to-remotes">
-                                        Push a todos los remotes
+                                        {t('repositories.newTagModal.fields.pushToRemotes.label')}
                                     </label>
                                     <Switch
                                         id="push-to-remotes"
@@ -2339,7 +2373,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     />
                                 </div>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    Si está activado, el tag se enviará automáticamente a todos los remotes configurados del repositorio.
+                                    {t('repositories.newTagModal.fields.pushToRemotes.hint')}
                                 </p>
                             </div>
                             <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
@@ -2355,7 +2389,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={creatingTag}
                                 >
-                                    Cancelar
+                                    {t('repositories.newTagModal.buttons.cancel')}
                                 </Button>
                                 <Button
                                     size="default"
@@ -2366,10 +2400,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {creatingTag ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Creando...
+                                            {t('repositories.newTagModal.buttons.creating')}
                                         </span>
                                     ) : (
-                                        "Crear"
+                                        t('repositories.newTagModal.buttons.create')
                                     )}
                                 </Button>
                             </div>

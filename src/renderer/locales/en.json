@@ -739,6 +739,81 @@
           "additionalOperationFailed": "Commit completed successfully, but additional operation failed: {{message}}"
         }
       }
+    },
+    "menuItems": {
+      "newBranch": "New Branch",
+      "newTag": "New Tag"
+    },
+    "newBranchModal": {
+      "title": "New Branch",
+      "description": "Create a new branch from an existing branch",
+      "fields": {
+        "branchName": {
+          "label": "New branch name",
+          "required": "(required)",
+          "hint": "The name must follow Git conventions (no spaces, use hyphens or underscores)",
+          "placeholder": "branch-name"
+        },
+        "createFrom": {
+          "label": "Create from",
+          "hint": "Select the branch from which the new branch will be created. The new branch will contain all commits from the selected branch.",
+          "placeholder": "Select a branch",
+          "current": "(current)",
+          "remotes": "Remotes",
+          "noBranches": "No branches available"
+        }
+      },
+      "info": {
+        "willCreateFrom": "The new branch {{branchName}} will be created from {{fromBranch}}",
+        "currentBranch": " (your current branch)"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "create": "Create",
+        "creating": "Creating..."
+      },
+      "errors": {
+        "createError": "Error creating branch"
+      }
+    },
+    "newTagModal": {
+      "title": "New Tag",
+      "description": "Create a new tag on the selected commit",
+      "fields": {
+        "tagName": {
+          "label": "Tag name",
+          "required": "(required)",
+          "hint": "Use semantic conventions like v1.0.0, v2.1.3, etc. Tags help mark important points in the project history.",
+          "placeholder": "v1.0.0"
+        },
+        "message": {
+          "label": "Message",
+          "optional": "(optional)",
+          "hint": "Provide a detailed description of the tag. This is useful for documenting releases, important changes, or project milestones.",
+          "placeholder": "Tag description..."
+        },
+        "pushToRemotes": {
+          "label": "Push to all remotes",
+          "hint": "If enabled, the tag will be automatically sent to all configured remotes of the repository."
+        }
+      },
+      "info": {
+        "willCreateAt": "The tag {{tagName}} will be created at commit {{commitHash}}"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "create": "Create",
+        "creating": "Creating..."
+      },
+      "success": {
+        "title": "Tag created successfully",
+        "description": "The tag \"{{tagName}}\" has been created",
+        "descriptionWithPush": "The tag \"{{tagName}}\" has been created and sent to all remotes"
+      },
+      "errors": {
+        "createError": "Error creating tag",
+        "unknownError": "Unknown error"
+      }
     }
   }
 }

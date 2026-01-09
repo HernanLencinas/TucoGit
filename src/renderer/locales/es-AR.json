@@ -739,6 +739,81 @@
           "additionalOperationFailed": "Commit realizado exitosamente, pero la operación adicional falló: {{message}}"
         }
       }
+    },
+    "menuItems": {
+      "newBranch": "Nuevo Branch",
+      "newTag": "Nuevo Tag"
+    },
+    "newBranchModal": {
+      "title": "Nuevo Branch",
+      "description": "Crea un nuevo branch a partir de otro branch existente",
+      "fields": {
+        "branchName": {
+          "label": "Nombre del nuevo branch",
+          "required": "(requerido)",
+          "hint": "El nombre debe seguir las convenciones de Git (sin espacios, usar guiones o guiones bajos)",
+          "placeholder": "nombre-del-branch"
+        },
+        "createFrom": {
+          "label": "Crear a partir de",
+          "hint": "Selecciona el branch desde el cual se creará el nuevo branch. El nuevo branch contendrá todos los commits del branch seleccionado.",
+          "placeholder": "Selecciona un branch",
+          "current": "(actual)",
+          "remotes": "Remotos",
+          "noBranches": "No hay branches disponibles"
+        }
+      },
+      "info": {
+        "willCreateFrom": "El nuevo branch {{branchName}} se creará a partir de {{fromBranch}}",
+        "currentBranch": " (tu branch actual)"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "create": "Crear",
+        "creating": "Creando..."
+      },
+      "errors": {
+        "createError": "Error al crear el branch"
+      }
+    },
+    "newTagModal": {
+      "title": "Nuevo Tag",
+      "description": "Crea un nuevo tag en el commit seleccionado",
+      "fields": {
+        "tagName": {
+          "label": "Nombre del tag",
+          "required": "(requerido)",
+          "hint": "Usa convenciones semánticas como v1.0.0, v2.1.3, etc. Los tags ayudan a marcar puntos importantes en el historial del proyecto.",
+          "placeholder": "v1.0.0"
+        },
+        "message": {
+          "label": "Mensaje",
+          "optional": "(opcional)",
+          "hint": "Proporciona una descripción detallada del tag. Esto es útil para documentar releases, cambios importantes o hitos del proyecto.",
+          "placeholder": "Descripción del tag..."
+        },
+        "pushToRemotes": {
+          "label": "Push a todos los remotes",
+          "hint": "Si está activado, el tag se enviará automáticamente a todos los remotes configurados del repositorio."
+        }
+      },
+      "info": {
+        "willCreateAt": "El tag {{tagName}} se creará en el commit {{commitHash}}"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "create": "Crear",
+        "creating": "Creando..."
+      },
+      "success": {
+        "title": "Tag creado exitosamente",
+        "description": "El tag \"{{tagName}}\" ha sido creado",
+        "descriptionWithPush": "El tag \"{{tagName}}\" ha sido creado y enviado a todos los remotes"
+      },
+      "errors": {
+        "createError": "Error al crear tag",
+        "unknownError": "Error desconocido"
+      }
     }
   }
 }
