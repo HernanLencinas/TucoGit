@@ -337,7 +337,7 @@ function App() {
     }
 
     // Iniciar progreso en 0 con mensaje inicial
-    setClonandoRepositorios(prev => ({ ...prev, [item.id]: { progress: 0, message: "Preparando..." } }));
+    setClonandoRepositorios(prev => ({ ...prev, [item.id]: { progress: 0, message: t('repositories.preparing') } }));
 
     try {
       if (window.electronAPI?.cloneRepository) {
@@ -2911,7 +2911,7 @@ function App() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="Buscar colecciones y repositorios..."
+                  placeholder={t('repositories.search.placeholder')}
                   value={terminoBusqueda}
                   onChange={(e) => setTerminoBusqueda(e.target.value)}
                   className={`w-full pl-9 ${terminoBusqueda ? 'pr-52' : 'pr-36'} py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:border-input`}
@@ -2923,7 +2923,7 @@ function App() {
                     onClick={() => setTerminoBusqueda("")}
                     className="absolute right-[165px] top-1/2 transform -translate-y-1/2 h-7 text-xs whitespace-nowrap"
                   >
-                    Limpiar
+                    {t('repositories.search.clear')}
                   </Button>
                 )}
                 {/* Checkbox para buscar en todas las colecciones - dentro del input */}
@@ -2953,7 +2953,7 @@ function App() {
                       setBuscarEnTodasLasColecciones(!buscarEnTodasLasColecciones);
                     }}
                   >
-                    Todas las colecciones
+                    {t('repositories.search.allCollections')}
                   </label>
                 </div>
               </div>
@@ -2964,7 +2964,7 @@ function App() {
                     variant="outline"
                     onClick={() => setMostrarMenuOrdenarRepos(!mostrarMenuOrdenarRepos)}
                     className="h-9 w-9"
-                    title="Ordenar"
+                    title={t('repositories.sort.title')}
                   >
                     <ArrowUpDown className="h-4 w-4" />
                   </Button>
@@ -2983,7 +2983,7 @@ function App() {
                           className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                         >
                           <ArrowUp className="h-4 w-4" />
-                          Ascendente
+                          {t('repositories.sort.ascending')}
                         </button>
                         <button
                           onClick={() => {
@@ -2993,7 +2993,7 @@ function App() {
                           className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                         >
                           <ArrowDown className="h-4 w-4" />
-                          Descendente
+                          {t('repositories.sort.descending')}
                         </button>
                         {ordenRepositorios && (
                           <button
@@ -3004,7 +3004,7 @@ function App() {
                             className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors text-muted-foreground"
                           >
                             <X className="h-4 w-4" />
-                            Sin orden
+                            {t('repositories.sort.none')}
                           </button>
                         )}
                       </div>
@@ -3017,7 +3017,7 @@ function App() {
                   onClick={refrescarRepositorios}
                   disabled={refrescandoRepositorios}
                   className="h-9 w-9 hover:bg-accent transition-colors"
-                  title="Refrescar"
+                  title={t('repositories.actions.refresh')}
                 >
                   <RefreshCw className={`h-4 w-4 transition-transform duration-500 ${refrescandoRepositorios ? 'animate-spin' : 'active:rotate-180'}`} />
                 </Button>
@@ -3027,7 +3027,7 @@ function App() {
                     variant="outline"
                     onClick={() => setMostrarMenuAccionesRepos(!mostrarMenuAccionesRepos)}
                     className="h-9 w-9 hover:bg-accent transition-colors"
-                    title="Más acciones"
+                    title={t('repositories.actions.moreActions')}
                   >
                     <MoreVertical className="h-4 w-4" />
                   </Button>
@@ -3046,7 +3046,7 @@ function App() {
                           className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                         >
                           <Download className="h-4 w-4" />
-                          Clonar todos
+                          {t('repositories.actions.cloneAll')}
                         </button>
                       </div>
                     </>
@@ -3073,14 +3073,14 @@ function App() {
                         className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                       >
                         <Folder className="h-4 w-4" />
-                        Nueva Colección
+                        {t('repositories.actions.newCollection')}
                       </button>
                       <button
                         onClick={abrirWizardNuevoRepositorio}
                         className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                       >
                         <GitBranch className="h-4 w-4" />
-                        Nuevo Repositorio
+                        {t('repositories.actions.newRepository')}
                       </button>
                     </div>
                   </>
@@ -3102,18 +3102,18 @@ function App() {
                         <GitBranch className="h-6 w-6 text-muted-foreground" strokeWidth="1.5" />
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold text-foreground mb-3">No hay repositorios definidos</h3>
+                    <h3 className="text-xl font-bold text-foreground mb-3">{t('repositories.empty.title')}</h3>
                     <p className="text-sm text-muted-foreground mb-4 max-w-md">
-                      Para comenzar, haz clic en el botón <span className="font-medium text-foreground">"Nueva colección"</span> para agregar tu primera colección.
+                      {t('repositories.empty.description')}
                     </p>
                     <div className="flex items-center gap-2">
                       <Button size="sm" variant="outline" onClick={abrirModalNuevaCarpeta}>
                         <Plus className="h-3.5 w-3.5 mr-1.5" />
-                        Nueva colección
+                        {t('repositories.empty.newCollection')}
                       </Button>
                       <Button size="sm" variant="outline" onClick={abrirWizardNuevoRepositorio}>
                         <GitBranch className="h-3.5 w-3.5 mr-1.5" />
-                        Nuevo repositorio
+                        {t('repositories.empty.newRepository')}
                       </Button>
                     </div>
                   </>
@@ -3121,11 +3121,11 @@ function App() {
                   <>
                     <Search className="h-12 w-12 text-muted-foreground mb-4" />
                     <p className="text-muted-foreground mb-2">
-                      No se encontraron resultados para "{terminoBusquedaDebounced}"
+                      {t('repositories.search.noResults', { query: terminoBusquedaDebounced })}
                     </p>
                     <Button size="sm" variant="outline" onClick={() => setTerminoBusqueda("")}>
                       <X className="h-3.5 w-3.5 mr-1" />
-                      Limpiar búsqueda
+                      {t('repositories.search.clearSearch')}
                     </Button>
                   </>
                 )}
@@ -3163,7 +3163,7 @@ function App() {
                               </CardTitle>
                             </div>
                             <CardDescription className="text-xs line-clamp-2">
-                              {item.descripcion || `${item.hijos?.length || 0} ${item.hijos?.length === 1 ? "elemento" : "elementos"}`}
+                              {item.descripcion || `${item.hijos?.length || 0} ${item.hijos?.length === 1 ? t('repositories.collection.element') : t('repositories.collection.elements')}`}
                             </CardDescription>
                           </CardHeader>
                           <CardContent className="p-4 pt-0 flex flex-col flex-1 min-h-0">
@@ -3171,13 +3171,19 @@ function App() {
                             <div className="mt-auto pt-2 border-t space-y-1">
                               <div className="flex items-center justify-between text-xs text-muted-foreground">
                                 <span>
-                                  {item.hijos?.filter((h) => h.tipo === "coleccion").length || 0} colección{(item.hijos?.filter((h) => h.tipo === "coleccion").length || 0) !== 1 ? "es" : ""}
+                                  {(() => {
+                                    const count = item.hijos?.filter((h) => h.tipo === "coleccion").length || 0;
+                                    return `${count} ${count === 1 ? t('repositories.collection.collection') : t('repositories.collection.collections')}`;
+                                  })()}
                                 </span>
                                 <Folder className="h-3 w-3" />
                               </div>
                               <div className="flex items-center justify-between text-xs text-muted-foreground">
                                 <span>
-                                  {item.hijos?.filter((h) => h.tipo === "archivo").length || 0} repositorio{(item.hijos?.filter((h) => h.tipo === "archivo").length || 0) !== 1 ? "s" : ""}
+                                  {(() => {
+                                    const count = item.hijos?.filter((h) => h.tipo === "archivo").length || 0;
+                                    return `${count} ${count === 1 ? t('repositories.collection.repository') : t('repositories.collection.repositories')}`;
+                                  })()}
                                 </span>
                                 <GitBranch className="h-3 w-3" />
                               </div>
@@ -3210,7 +3216,7 @@ function App() {
                                   {item.nombre}
                                 </CardTitle>
                                 {item.privado && (
-                                  <span title="Privado" className="flex-shrink-0">
+                                  <span title={t('repositories.actions.private')} className="flex-shrink-0">
                                     <Lock className="h-2.5 w-2.5 text-muted-foreground" />
                                   </span>
                                 )}
@@ -3230,7 +3236,7 @@ function App() {
                               {clonandoRepositorios[item.id] !== undefined ? (
                                 <div className="space-y-1.5">
                                   <div className="flex items-center justify-between text-[10px] text-muted-foreground/70">
-                                    <span className="truncate flex-1 mr-2">{clonandoRepositorios[item.id].message}</span>
+                                    <span className="truncate flex-1 mr-2">{clonandoRepositorios[item.id].message === "Preparando..." ? t('repositories.preparing') : clonandoRepositorios[item.id].message}</span>
                                     <span>{clonandoRepositorios[item.id].progress}%</span>
                                   </div>
                                   <div className="h-1 w-full bg-secondary rounded-full overflow-hidden">
@@ -3246,24 +3252,24 @@ function App() {
                                     <>
                                       {/* Info de Branch y Commits Pendientes */}
                                       <div className="flex items-center gap-1.5 flex-wrap">
-                                        <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-primary/10 border border-primary/20 text-[10px] font-medium text-primary" title="Rama actual">
+                                        <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-primary/10 border border-primary/20 text-[10px] font-medium text-primary" title={t('repositories.repository.currentBranch')}>
                                           <GitBranch className="h-3 w-3" />
                                           <span className="max-w-[120px] truncate">{gitInfoRepositorios[item.id].branch}</span>
                                         </div>
 
                                         {gitInfoRepositorios[item.id].uncommitted > 0 && (
-                                          <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-[10px] font-semibold text-amber-600 dark:text-amber-400" title="Cambios locales sin commitear">
+                                          <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-[10px] font-semibold text-amber-600 dark:text-amber-400" title={t('repositories.repository.uncommittedChanges')}>
                                             <div className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
                                             <span>{gitInfoRepositorios[item.id].uncommitted}</span>
                                           </div>
                                         )}
 
-                                        <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-medium ${gitInfoRepositorios[item.id].ahead > 0 ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400' : 'bg-secondary/50 border-border/50 text-muted-foreground'}`} title="Pendientes de subida (Push)">
+                                        <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-medium ${gitInfoRepositorios[item.id].ahead > 0 ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400' : 'bg-secondary/50 border-border/50 text-muted-foreground'}`} title={t('repositories.repository.pendingPush')}>
                                           <ArrowUp className="h-2.5 w-2.5" />
                                           <span>{gitInfoRepositorios[item.id].ahead}</span>
                                         </div>
 
-                                        <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-medium ${gitInfoRepositorios[item.id].behind > 0 ? 'bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400' : 'bg-secondary/50 border-border/50 text-muted-foreground'}`} title="Pendientes de bajada (Pull)">
+                                        <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-medium ${gitInfoRepositorios[item.id].behind > 0 ? 'bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400' : 'bg-secondary/50 border-border/50 text-muted-foreground'}`} title={t('repositories.repository.pendingPull')}>
                                           <ArrowDown className="h-2.5 w-2.5" />
                                           <span>{gitInfoRepositorios[item.id].behind}</span>
                                         </div>
@@ -3285,14 +3291,14 @@ function App() {
                                         <RefreshCw className="h-3 w-3 text-cyan-500 animate-spin" />
                                         <div className="absolute inset-0 h-3 w-3 rounded-full border border-cyan-500/30 animate-ping" />
                                       </div>
-                                      <span className="font-medium">Obteniendo información de Git...</span>
+                                      <span className="font-medium">{t('repositories.repository.gettingGitInfo')}</span>
                                     </div>
                                   )}
                                 </div>
                               ) : (
                                 <div className="flex items-center gap-2 text-[10px] text-muted-foreground/70">
                                   <div className="h-1.5 w-1.5 rounded-full bg-amber-500/50" />
-                                  <span>No clonado localmente</span>
+                                  <span>{t('repositories.repository.notCloned')}</span>
                                 </div>
                               )}
                             </div>
@@ -3308,7 +3314,7 @@ function App() {
                           <>
                             <div className="relative group/tooltip">
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                Editar
+                                {t('repositories.actions.edit')}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                               </div>
                               <Button
@@ -3326,7 +3332,7 @@ function App() {
 
                             <div className="relative group/tooltip">
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                Eliminar
+                                {t('repositories.actions.delete')}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                               </div>
                               <Button
@@ -3347,7 +3353,7 @@ function App() {
                             {item.clonado && gitInfoRepositorios[item.id] && editorIDESeleccionado && (
                               <div className="relative group/tooltip mr-1.5">
                                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                  Abrir en {editorIDESeleccionado}
+                                  {t('repositories.actions.openIn', { ide: editorIDESeleccionado })}
                                   <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                                 </div>
                                 <Button
@@ -3369,7 +3375,7 @@ function App() {
 
                             <div className="relative group/tooltip">
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                {item.clonado ? "Re-clonar" : "Clonar"}
+                                {item.clonado ? t('repositories.actions.reclone') : t('repositories.actions.clone')}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                               </div>
                               <Button
@@ -3390,7 +3396,7 @@ function App() {
 
                             <div className="relative group/tooltip">
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                Editar
+                                {t('repositories.actions.edit')}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                               </div>
                               <Button
@@ -3408,7 +3414,7 @@ function App() {
 
                             <div className="relative group/tooltip">
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                Eliminar
+                                {t('repositories.actions.delete')}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                               </div>
                               <Button

@@ -467,5 +467,57 @@
       "validating": "Validating...",
       "save": "Save"
     }
+  },
+  "repositories": {
+    "title": "Repositories",
+    "search": {
+      "placeholder": "Search collections and repositories...",
+      "clear": "Clear",
+      "clearSearch": "Clear search",
+      "noResults": "No results found for \"{{query}}\"",
+      "allCollections": "All collections"
+    },
+    "sort": {
+      "title": "Sort",
+      "ascending": "Ascending",
+      "descending": "Descending",
+      "none": "No sort"
+    },
+    "actions": {
+      "refresh": "Refresh",
+      "moreActions": "More actions",
+      "cloneAll": "Clone all",
+      "newCollection": "New Collection",
+      "newRepository": "New Repository",
+      "edit": "Edit",
+      "delete": "Delete",
+      "clone": "Clone",
+      "reclone": "Re-clone",
+      "openIn": "Open in {{ide}}",
+      "private": "Private"
+    },
+    "empty": {
+      "title": "No repositories defined",
+      "description": "To get started, click the \"New collection\" button to add your first collection.",
+      "newCollection": "New collection",
+      "newRepository": "New repository"
+    },
+    "collection": {
+      "element": "element",
+      "elements": "elements",
+      "collection": "collection",
+      "collections": "collections",
+      "repository": "repository",
+      "repositories": "repositories"
+    },
+    "repository": {
+      "notCloned": "Not cloned locally",
+      "gettingGitInfo": "Getting Git information...",
+      "currentBranch": "Current branch",
+      "uncommittedChanges": "Uncommitted local changes",
+      "pendingPush": "Pending upload (Push)",
+      "pendingPull": "Pending download (Pull)"
+    },
+    "preparing": "Preparing..."
   }
 }

@@ -467,5 +467,57 @@
       "validating": "Validando...",
       "save": "Guardar"
     }
+  },
+  "repositories": {
+    "title": "Repositorios",
+    "search": {
+      "placeholder": "Buscar colecciones y repositorios...",
+      "clear": "Limpiar",
+      "clearSearch": "Limpiar búsqueda",
+      "noResults": "No se encontraron resultados para \"{{query}}\"",
+      "allCollections": "Todas las colecciones"
+    },
+    "sort": {
+      "title": "Ordenar",
+      "ascending": "Ascendente",
+      "descending": "Descendente",
+      "none": "Sin orden"
+    },
+    "actions": {
+      "refresh": "Refrescar",
+      "moreActions": "Más acciones",
+      "cloneAll": "Clonar todos",
+      "newCollection": "Nueva Colección",
+      "newRepository": "Nuevo Repositorio",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "clone": "Clonar",
+      "reclone": "Re-clonar",
+      "openIn": "Abrir en {{ide}}",
+      "private": "Privado"
+    },
+    "empty": {
+      "title": "No hay repositorios definidos",
+      "description": "Para comenzar, haz clic en el botón \"Nueva colección\" para agregar tu primera colección.",
+      "newCollection": "Nueva colección",
+      "newRepository": "Nuevo repositorio"
+    },
+    "collection": {
+      "element": "elemento",
+      "elements": "elementos",
+      "collection": "colección",
+      "collections": "colecciones",
+      "repository": "repositorio",
+      "repositories": "repositorios"
+    },
+    "repository": {
+      "notCloned": "No clonado localmente",
+      "gettingGitInfo": "Obteniendo información de Git...",
+      "currentBranch": "Rama actual",
+      "uncommittedChanges": "Cambios locales sin commitear",
+      "pendingPush": "Pendientes de subida (Push)",
+      "pendingPull": "Pendientes de bajada (Pull)"
+    },
+    "preparing": "Preparando..."
   }
 }
