@@ -589,564 +589,564 @@
       "notCloned": "Not cloned locally",
       "gettingGitInfo": "Getting Git information...",
       "currentBranch": "Current branch",
-      "uncommittedChanges": "Uncommitted local changes",
-      "pendingPush": "Pending upload (Push)",
-      "pendingPull": "Pending download (Pull)"
+      "uncommittedChanges": "コミットされていないローカル変更",
+      "pendingPush": "アップロード待ち（Push）",
+      "pendingPull": "ダウンロード待ち（Pull）"
     },
     "newCollectionModal": {
-      "title": "New Collection",
-      "description": "Organize your repositories in a new custom collection",
+      "title": "新しいコレクション",
+      "description": "リポジトリを新しいカスタムコレクションに整理",
       "name": {
-        "label": "Collection name",
-        "required": "(required)",
-        "placeholder": "E.g: Frontend Projects, Backend APIs, etc.",
+        "label": "コレクション名",
+        "required": "（必須）",
+        "placeholder": "例：フロントエンドプロジェクト、バックエンドAPIなど",
         "errors": {
-          "required": "Name is required",
-          "maxLength": "Name cannot exceed 32 characters",
-          "duplicate": "A collection with that name already exists",
-          "createError": "Error creating collection. Please try again."
+          "required": "名前は必須です",
+          "maxLength": "名前は32文字を超えることはできません",
+          "duplicate": "その名前のコレクションは既に存在します",
+          "createError": "コレクションの作成中にエラーが発生しました。もう一度お試しください。"
         }
       },
       "descriptionField": {
-        "label": "Description",
-        "optional": "(optional)",
-        "placeholder": "Add a description to easily identify this collection...",
+        "label": "説明",
+        "optional": "（オプション）",
+        "placeholder": "このコレクションを簡単に識別できる説明を追加...",
         "errors": {
-          "maxLength": "Description cannot exceed 100 characters"
+          "maxLength": "説明は100文字を超えることはできません"
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "creating": "Creating...",
-        "create": "Create"
+        "cancel": "キャンセル",
+        "creating": "作成中...",
+        "create": "作成"
       }
     },
     "editCollectionModal": {
-      "title": "Edit Collection",
-      "description": "Modify collection data",
+      "title": "コレクションを編集",
+      "description": "コレクションデータを変更",
       "name": {
-        "label": "Collection name",
-        "required": "(required)",
-        "placeholder": "Collection name",
+        "label": "コレクション名",
+        "required": "（必須）",
+        "placeholder": "コレクション名",
         "errors": {
-          "required": "Name is required",
-          "maxLength": "Name cannot exceed 32 characters",
-          "duplicate": "A collection with that name already exists",
-          "duplicateLocation": "A collection with that name already exists in this location",
-          "saveError": "Error saving collection. Please try again."
+          "required": "名前は必須です",
+          "maxLength": "名前は32文字を超えることはできません",
+          "duplicate": "その名前のコレクションは既に存在します",
+          "duplicateLocation": "この場所には既にその名前のコレクションが存在します",
+          "saveError": "コレクションの保存中にエラーが発生しました。もう一度お試しください。"
         }
       },
       "descriptionField": {
-        "label": "Description",
-        "optional": "(optional)",
-        "placeholder": "Optional collection description",
+        "label": "説明",
+        "optional": "（オプション）",
+        "placeholder": "オプションのコレクション説明",
         "errors": {
-          "maxLength": "Description cannot exceed 100 characters"
+          "maxLength": "説明は100文字を超えることはできません"
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "saving": "Saving...",
-        "save": "Save"
+        "cancel": "キャンセル",
+        "saving": "保存中...",
+        "save": "保存"
       }
     },
     "deleteCollectionModal": {
-      "title": "Delete Collection",
-      "description": "This action cannot be undone",
-      "warning": "Are you sure you want to delete this collection? All repositories within it will also be deleted. This action is permanent and cannot be undone.",
+      "title": "コレクションを削除",
+      "description": "この操作は元に戻せません",
+      "warning": "このコレクションを削除してもよろしいですか？その中のすべてのリポジトリも削除されます。この操作は永続的で、元に戻すことはできません。",
       "buttons": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "キャンセル",
+        "delete": "削除"
       }
     },
     "deleteRepositoryModal": {
-      "title": "Delete Repository",
-      "description": "This action cannot be undone",
-      "warning": "Are you sure you want to delete the repository \"{{name}}\"? This action is permanent and cannot be undone.",
+      "title": "リポジトリを削除",
+      "description": "この操作は元に戻せません",
+      "warning": "リポジトリ「{{name}}」を削除してもよろしいですか？この操作は永続的で、元に戻すことはできません。",
       "buttons": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "キャンセル",
+        "delete": "削除"
       }
     },
     "cloneRepositoryModal": {
-      "title": "Repository already exists",
-      "description": "The destination folder already exists and is not empty",
-      "warning": "Warning: All unsaved local changes in that folder will be lost. Do you want to delete the existing folder and clone the repository again?",
+      "title": "リポジトリは既に存在します",
+      "description": "宛先フォルダは既に存在し、空ではありません",
+      "warning": "警告：そのフォルダ内のすべての未保存のローカル変更は失われます。既存のフォルダを削除してリポジトリを再度クローンしますか？",
       "buttons": {
-        "cancel": "Cancel",
-        "clone": "Clone"
+        "cancel": "キャンセル",
+        "clone": "クローン"
       }
     },
     "newRepositoryWizard": {
       "title": {
-        "new": "New Repository",
-        "edit": "Edit Repository"
+        "new": "新しいリポジトリ",
+        "edit": "リポジトリを編集"
       },
       "description": {
-        "new": "Add a new repository to your collection in a few steps",
-        "edit": "Modify repository data"
+        "new": "いくつかのステップでコレクションに新しいリポジトリを追加",
+        "edit": "リポジトリデータを変更"
       },
       "steps": {
-        "connection": "Connection",
-        "details": "Details",
-        "confirmation": "Confirmation"
+        "connection": "接続",
+        "details": "詳細",
+        "confirmation": "確認"
       },
       "step1": {
         "connection": {
-          "label": "Select a connection",
-          "required": "(required)",
-          "description": "Choose the Git connection where the repository is located",
-          "placeholder": "Select a connection...",
-          "noConnections": "No connections available"
+          "label": "接続を選択",
+          "required": "（必須）",
+          "description": "リポジトリが配置されているGit接続を選択",
+          "placeholder": "接続を選択...",
+          "noConnections": "利用可能な接続がありません"
         },
         "repository": {
-          "label": "Select a repository",
-          "required": "(required)",
-          "description": "Choose the repository you want to add",
-          "placeholder": "Select a repository...",
-          "selectConnectionFirst": "First select a connection",
-          "loading": "Loading repositories...",
-          "searchPlaceholder": "Search repositories...",
-          "noResults": "No repositories found",
-          "noRepositories": "No repositories available"
+          "label": "リポジトリを選択",
+          "required": "（必須）",
+          "description": "追加するリポジトリを選択",
+          "placeholder": "リポジトリを選択...",
+          "selectConnectionFirst": "まず接続を選択してください",
+          "loading": "リポジトリを読み込み中...",
+          "searchPlaceholder": "リポジトリを検索...",
+          "noResults": "リポジトリが見つかりません",
+          "noRepositories": "利用可能なリポジトリがありません"
         }
       },
       "step2": {
         "name": {
-          "label": "Repository Name",
-          "required": "(required)",
-          "description": "Enter a descriptive name to identify this repository",
-          "placeholder": "E.g: My project"
+          "label": "リポジトリ名",
+          "required": "（必須）",
+          "description": "このリポジトリを識別するための説明名を入力",
+          "placeholder": "例：私のプロジェクト"
         },
         "description": {
-          "label": "Description",
-          "optional": "(optional)",
-          "description": "Add a description for this repository",
-          "placeholder": "Repository description..."
+          "label": "説明",
+          "optional": "（オプション）",
+          "description": "このリポジトリの説明を追加",
+          "placeholder": "リポジトリの説明..."
         }
       },
       "step3": {
         "title": {
-          "new": "Confirm repository data",
-          "edit": "Confirm repository changes"
+          "new": "リポジトリデータを確認",
+          "edit": "リポジトリの変更を確認"
         },
         "description": {
-          "new": "Review the information before saving",
-          "edit": "Review changes before saving"
+          "new": "保存する前に情報を確認",
+          "edit": "保存する前に変更を確認"
         },
         "fields": {
-          "connection": "Connection:",
-          "provider": "Provider:",
-          "url": "URL:",
-          "repository": "Repository:",
-          "name": "Name:",
-          "description": "Description:"
+          "connection": "接続：",
+          "provider": "プロバイダー：",
+          "url": "URL：",
+          "repository": "リポジトリ：",
+          "name": "名前：",
+          "description": "説明："
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "previous": "Previous",
-        "next": "Next",
-        "save": "Save"
+        "cancel": "キャンセル",
+        "previous": "前へ",
+        "next": "次へ",
+        "save": "保存"
       },
       "errors": {
-        "selectConnection": "Please select a connection",
-        "selectRepository": "Please select a repository",
-        "enterName": "Please enter a name for the repository",
-        "duplicateName": "A repository with that name already exists in this location",
-        "repositoryNotFound": "Repository not found",
-        "loadError": "Error loading repositories: {{message}}",
-        "saveError": "Error saving repository: {{message}}",
-        "saveChangesError": "Error saving changes. The repository was removed from view but may not have been saved to the file."
+        "selectConnection": "接続を選択してください",
+        "selectRepository": "リポジトリを選択してください",
+        "enterName": "リポジトリの名前を入力してください",
+        "duplicateName": "この場所には既にその名前のリポジトリが存在します",
+        "repositoryNotFound": "リポジトリが見つかりません",
+        "loadError": "リポジトリの読み込みエラー：{{message}}",
+        "saveError": "リポジトリの保存エラー：{{message}}",
+        "saveChangesError": "変更の保存中にエラーが発生しました。リポジトリはビューから削除されましたが、ファイルに保存されていない可能性があります。"
       }
     },
-    "preparing": "Preparing...",
+    "preparing": "準備中...",
     "gitStatusPanel": {
       "unstagedChanges": {
-        "title": "Unstaged Changes",
-        "stageAll": "Stage All",
-        "noChanges": "No pending changes",
-        "allFilesSynced": "All files are synchronized",
-        "stageFile": "Stage file",
-        "stageFolder": "Stage folder"
+        "title": "ステージングされていない変更",
+        "stageAll": "すべてをステージング",
+        "noChanges": "保留中の変更はありません",
+        "allFilesSynced": "すべてのファイルが同期されています",
+        "stageFile": "ファイルをステージング",
+        "stageFolder": "フォルダをステージング"
       },
       "stagedChanges": {
-        "title": "Staged Changes",
-        "unstageAll": "Unstage All",
-        "noChanges": "No staged changes",
-        "stageFilesToCommit": "Stage files to prepare your commit",
-        "unstageFile": "Unstage file",
-        "unstageFolder": "Unstage folder"
+        "title": "ステージングされた変更",
+        "unstageAll": "すべてのステージングを解除",
+        "noChanges": "ステージングされた変更はありません",
+        "stageFilesToCommit": "コミットを準備するためにファイルをステージング",
+        "unstageFile": "ファイルのステージングを解除",
+        "unstageFolder": "フォルダのステージングを解除"
       },
       "commitMessage": {
-        "title": "Commit Message",
-        "placeholder": "Enter commit message...",
-        "placeholderNoStaged": "Stage files to be able to commit",
+        "title": "コミットメッセージ",
+        "placeholder": "コミットメッセージを入力...",
+        "placeholderNoStaged": "コミットできるようにファイルをステージング",
         "button": {
-          "commit": "Commit",
-          "commitToBranch": "Commit to '{{branch}}'",
-          "commitPush": "Commit + Push",
-          "commitPushToBranch": "Commit + Push to '{{branch}}'",
-          "commitSync": "Commit + Sync",
-          "commitSyncToBranch": "Commit + Sync to '{{branch}}'",
-          "committing": "Committing",
-          "committingToBranch": "Committing to '{{branch}}'...",
-          "committingPushing": "Committing & Pushing",
-          "committingPushingToBranch": "Committing & Pushing to '{{branch}}'...",
-          "committingSyncing": "Committing & Syncing",
-          "committingSyncingToBranch": "Committing & Syncing to '{{branch}}'..."
+          "commit": "コミット",
+          "commitToBranch": "'{{branch}}'にコミット",
+          "commitPush": "コミット + プッシュ",
+          "commitPushToBranch": "'{{branch}}'にコミット + プッシュ",
+          "commitSync": "コミット + 同期",
+          "commitSyncToBranch": "'{{branch}}'にコミット + 同期",
+          "committing": "コミット中",
+          "committingToBranch": "'{{branch}}'にコミット中...",
+          "committingPushing": "コミット & プッシュ中",
+          "committingPushingToBranch": "'{{branch}}'にコミット & プッシュ中...",
+          "committingSyncing": "コミット & 同期中",
+          "committingSyncingToBranch": "'{{branch}}'にコミット & 同期中..."
         },
         "errors": {
-          "pullFailedConflicts": "Commit completed successfully, but pull failed due to conflicts: {{message}}. Resolve conflicts manually.",
-          "pushFailedNeedPull": "Commit completed successfully, but push failed: {{message}}. You may need to pull first.",
-          "pushFailed": "Commit completed successfully, but push failed: {{message}}",
-          "additionalOperationFailed": "Commit completed successfully, but additional operation failed: {{message}}"
+          "pullFailedConflicts": "コミットは正常に完了しましたが、競合によりプルに失敗しました：{{message}}。手動で競合を解決してください。",
+          "pushFailedNeedPull": "コミットは正常に完了しましたが、プッシュに失敗しました：{{message}}。まずプルする必要があるかもしれません。",
+          "pushFailed": "コミットは正常に完了しましたが、プッシュに失敗しました：{{message}}",
+          "additionalOperationFailed": "コミットは正常に完了しましたが、追加の操作に失敗しました：{{message}}"
         }
       }
     },
     "menuItems": {
-      "newBranch": "New Branch",
-      "newTag": "New Tag",
-      "actions": "Actions"
+      "newBranch": "新しいブランチ",
+      "newTag": "新しいタグ",
+      "actions": "アクション"
     },
     "search": {
-      "placeholder": "Search commits (message, author, hash)...",
-      "clear": "Clear",
-      "commits": "commits"
+      "placeholder": "コミットを検索（メッセージ、作成者、ハッシュ）...",
+      "clear": "クリア",
+      "commits": "コミット"
     },
     "newBranchModal": {
-      "title": "New Branch",
-      "description": "Create a new branch from an existing branch",
+      "title": "新しいブランチ",
+      "description": "既存のブランチから新しいブランチを作成",
       "fields": {
         "branchName": {
-          "label": "New branch name",
-          "required": "(required)",
-          "hint": "The name must follow Git conventions (no spaces, use hyphens or underscores)",
-          "placeholder": "branch-name"
+          "label": "新しいブランチ名",
+          "required": "（必須）",
+          "hint": "名前はGitの規則に従う必要があります（スペースなし、ハイフンまたはアンダースコアを使用）",
+          "placeholder": "ブランチ名"
         },
         "createFrom": {
-          "label": "Create from",
-          "hint": "Select the branch from which the new branch will be created. The new branch will contain all commits from the selected branch.",
-          "placeholder": "Select a branch",
-          "current": "(current)",
-          "remotes": "Remotes",
-          "noBranches": "No branches available"
+          "label": "作成元",
+          "hint": "新しいブランチを作成する元のブランチを選択してください。新しいブランチには、選択したブランチのすべてのコミットが含まれます。",
+          "placeholder": "ブランチを選択",
+          "current": "（現在）",
+          "remotes": "リモート",
+          "noBranches": "利用可能なブランチがありません"
         }
       },
       "info": {
-        "willCreateFrom": "The new branch {{branchName}} will be created from {{fromBranch}}",
-        "currentBranch": " (your current branch)"
+        "willCreateFrom": "新しいブランチ{{branchName}}は{{fromBranch}}から作成されます",
+        "currentBranch": "（現在のブランチ）"
       },
       "buttons": {
-        "cancel": "Cancel",
-        "create": "Create",
-        "creating": "Creating..."
+        "cancel": "キャンセル",
+        "create": "作成",
+        "creating": "作成中..."
       },
       "errors": {
-        "createError": "Error creating branch"
+        "createError": "ブランチの作成エラー"
       }
     },
     "newTagModal": {
-      "title": "New Tag",
-      "description": "Create a new tag on the selected commit",
+      "title": "新しいタグ",
+      "description": "選択したコミットに新しいタグを作成",
       "fields": {
         "tagName": {
-          "label": "Tag name",
-          "required": "(required)",
-          "hint": "Use semantic conventions like v1.0.0, v2.1.3, etc. Tags help mark important points in the project history.",
+          "label": "タグ名",
+          "required": "（必須）",
+          "hint": "v1.0.0、v2.1.3などのセマンティック規則を使用してください。タグはプロジェクト履歴の重要なポイントをマークするのに役立ちます。",
           "placeholder": "v1.0.0"
         },
         "message": {
-          "label": "Message",
-          "optional": "(optional)",
-          "hint": "Provide a detailed description of the tag. This is useful for documenting releases, important changes, or project milestones.",
-          "placeholder": "Tag description..."
+          "label": "メッセージ",
+          "optional": "（オプション）",
+          "hint": "タグの詳細な説明を提供してください。これは、リリース、重要な変更、またはプロジェクトのマイルストーンを文書化するのに役立ちます。",
+          "placeholder": "タグの説明..."
         },
         "pushToRemotes": {
-          "label": "Push to all remotes",
-          "hint": "If enabled, the tag will be automatically sent to all configured remotes of the repository."
+          "label": "すべてのリモートにプッシュ",
+          "hint": "有効にすると、タグはリポジトリのすべての設定済みリモートに自動的に送信されます。"
         }
       },
       "info": {
-        "willCreateAt": "The tag {{tagName}} will be created at commit {{commitHash}}"
+        "willCreateAt": "タグ{{tagName}}はコミット{{commitHash}}で作成されます"
       },
       "buttons": {
-        "cancel": "Cancel",
-        "create": "Create",
-        "creating": "Creating..."
+        "cancel": "キャンセル",
+        "create": "作成",
+        "creating": "作成中..."
       },
       "success": {
-        "title": "Tag created successfully",
-        "description": "The tag \"{{tagName}}\" has been created",
-        "descriptionWithPush": "The tag \"{{tagName}}\" has been created and sent to all remotes"
+        "title": "タグが正常に作成されました",
+        "description": "タグ「{{tagName}}」が作成されました",
+        "descriptionWithPush": "タグ「{{tagName}}」が作成され、すべてのリモートに送信されました"
       },
       "errors": {
-        "createError": "Error creating tag",
-        "unknownError": "Unknown error"
+        "createError": "タグの作成エラー",
+        "unknownError": "不明なエラー"
       }
     },
     "stashModal": {
-      "title": "Create Stash",
-      "description": "Temporarily save your changes in Git stash",
+      "title": "スタッシュを作成",
+      "description": "変更をGitスタッシュに一時的に保存",
       "fields": {
         "message": {
-          "label": "Message",
-          "optional": "(optional)",
-          "hint": "Provide a descriptive message to identify this stash. If you don't specify a message, a default one will be used.",
-          "placeholder": "Stash message"
+          "label": "メッセージ",
+          "optional": "（オプション）",
+          "hint": "このスタッシュを識別するための説明メッセージを提供してください。メッセージを指定しない場合、デフォルトのメッセージが使用されます。",
+          "placeholder": "スタッシュメッセージ"
         },
         "includeUntracked": {
-          "label": "Include untracked files",
-          "hint": "Also saves new files that are not yet in the repository. Useful when you want to save changes in files that have not been added to the staging area."
+          "label": "追跡されていないファイルを含める",
+          "hint": "リポジトリにまだ追加されていない新しいファイルも保存します。ステージング領域に追加されていないファイルの変更を保存したい場合に便利です。"
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "create": "Create",
-        "saving": "Saving..."
+        "cancel": "キャンセル",
+        "create": "作成",
+        "saving": "保存中..."
       },
       "success": {
-        "title": "Stash completed",
-        "description": "Changes have been saved to stash",
-        "descriptionWithUntracked": "Changes and untracked files have been saved to stash"
+        "title": "スタッシュが完了しました",
+        "description": "変更がスタッシュに保存されました",
+        "descriptionWithUntracked": "変更と追跡されていないファイルがスタッシュに保存されました"
       },
       "errors": {
-        "title": "Error creating stash",
-        "description": "Could not complete the operation",
-        "unknownError": "An unexpected error occurred"
+        "title": "スタッシュの作成エラー",
+        "description": "操作を完了できませんでした",
+        "unknownError": "予期しないエラーが発生しました"
       }
     },
     "stashListModal": {
-      "title": "Stashes",
-      "description": "Select a stash to apply (pop) and restore your saved changes",
-      "loading": "Loading stashes...",
+      "title": "スタッシュ",
+      "description": "適用（pop）して保存した変更を復元するスタッシュを選択",
+      "loading": "スタッシュを読み込み中...",
       "empty": {
-        "title": "No stashes available",
-        "description": "Stashes allow you to temporarily save changes without committing. Create one from the stash menu."
+        "title": "利用可能なスタッシュがありません",
+        "description": "スタッシュを使用すると、コミットせずに変更を一時的に保存できます。スタッシュメニューから作成してください。"
       },
       "table": {
-        "reference": "Reference",
-        "message": "Message",
-        "date": "Date",
-        "actions": "Actions"
+        "reference": "参照",
+        "message": "メッセージ",
+        "date": "日付",
+        "actions": "アクション"
       },
       "buttons": {
-        "close": "Close",
-        "clearAll": "Clear All",
-        "apply": "Apply",
-        "applying": "Applying...",
-        "deleteStash": "Delete stash"
+        "close": "閉じる",
+        "clearAll": "すべてクリア",
+        "apply": "適用",
+        "applying": "適用中...",
+        "deleteStash": "スタッシュを削除"
       },
       "deleteConfirm": {
-        "title": "Confirm Deletion",
-        "description": "Are you sure you want to delete this stash?",
-        "warning": "This action cannot be undone. The stash will be permanently deleted.",
-        "cancel": "Cancel",
-        "delete": "Delete",
-        "deleting": "Deleting..."
+        "title": "削除の確認",
+        "description": "このスタッシュを削除してもよろしいですか？",
+        "warning": "この操作は元に戻せません。スタッシュは永続的に削除されます。",
+        "cancel": "キャンセル",
+        "delete": "削除",
+        "deleting": "削除中..."
       },
       "clearAllConfirm": {
-        "title": "Confirm Clear All",
-        "description": "Are you sure you want to delete all stashes?",
-        "warning": "{{count}} {{stash}} will be deleted.",
-        "stash": "stash",
-        "stashes": "stashes",
-        "permanentWarning": "This action cannot be undone. All stashes will be permanently deleted.",
-        "cancel": "Cancel",
-        "deleteAll": "Delete All",
-        "deleting": "Deleting..."
+        "title": "すべてクリアの確認",
+        "description": "すべてのスタッシュを削除してもよろしいですか？",
+        "warning": "{{count}}個の{{stash}}が削除されます。",
+        "stash": "スタッシュ",
+        "stashes": "スタッシュ",
+        "permanentWarning": "この操作は元に戻せません。すべてのスタッシュが永続的に削除されます。",
+        "cancel": "キャンセル",
+        "deleteAll": "すべて削除",
+        "deleting": "削除中..."
       },
       "toasts": {
         "selectStash": {
-          "title": "Select a stash",
-          "description": "Please select a stash to apply"
+          "title": "スタッシュを選択",
+          "description": "適用するスタッシュを選択してください"
         },
         "applied": {
-          "title": "Stash applied",
-          "description": "The stash has been applied and deleted successfully"
+          "title": "スタッシュが適用されました",
+          "description": "スタッシュが正常に適用され、削除されました"
         },
         "applyError": {
-          "title": "Error applying stash",
-          "description": "Could not apply the stash",
-          "unknownError": "An unexpected error occurred"
+          "title": "スタッシュの適用エラー",
+          "description": "スタッシュを適用できませんでした",
+          "unknownError": "予期しないエラーが発生しました"
         },
         "deleted": {
-          "title": "Stash deleted",
-          "description": "The stash has been deleted successfully"
+          "title": "スタッシュが削除されました",
+          "description": "スタッシュが正常に削除されました"
         },
         "deleteError": {
-          "title": "Error deleting stash",
-          "description": "Could not delete the stash",
-          "unknownError": "An unexpected error occurred"
+          "title": "スタッシュの削除エラー",
+          "description": "スタッシュを削除できませんでした",
+          "unknownError": "予期しないエラーが発生しました"
         },
         "cleared": {
-          "title": "Stashes deleted",
-          "description": "All stashes have been deleted successfully"
+          "title": "スタッシュが削除されました",
+          "description": "すべてのスタッシュが正常に削除されました"
         },
         "clearError": {
-          "title": "Error clearing stashes",
-          "description": "Could not delete the stashes",
-          "unknownError": "An unexpected error occurred"
+          "title": "スタッシュのクリアエラー",
+          "description": "スタッシュを削除できませんでした",
+          "unknownError": "予期しないエラーが発生しました"
         }
       }
     },
     "revertModal": {
-      "title": "Revert Commit",
-      "description": "Create a new commit that undoes the changes from this commit",
+      "title": "コミットを元に戻す",
+      "description": "このコミットの変更を元に戻す新しいコミットを作成",
       "fields": {
-        "commitToRevert": "Commit to revert"
+        "commitToRevert": "元に戻すコミット"
       },
-      "warning": "This will create a new commit that reverts the changes made in the selected commit. The original commit will remain in the history and will not be deleted.",
+      "warning": "これにより、選択したコミットで行われた変更を元に戻す新しいコミットが作成されます。元のコミットは履歴に残り、削除されません。",
       "buttons": {
-        "cancel": "Cancel",
-        "revert": "Revert",
-        "reverting": "Reverting..."
+        "cancel": "キャンセル",
+        "revert": "元に戻す",
+        "reverting": "元に戻し中..."
       },
       "toasts": {
         "success": {
-          "title": "Revert completed",
-          "description": "The commit has been successfully reverted"
+          "title": "元に戻すが完了しました",
+          "description": "コミットが正常に元に戻されました"
         },
         "error": {
-          "title": "Error reverting commit",
-          "description": "Could not complete the operation",
-          "unknownError": "An unexpected error occurred"
+          "title": "コミットの元に戻すエラー",
+          "description": "操作を完了できませんでした",
+          "unknownError": "予期しないエラーが発生しました"
         }
       }
     },
     "cherryPickModal": {
       "title": "Cherry Pick",
-      "description": "Apply changes from an individual commit to the current branch",
+      "description": "個別のコミットからの変更を現在のブランチに適用",
       "fields": {
-        "commitToApply": "Commit to apply",
+        "commitToApply": "適用するコミット",
         "commitChanges": {
-          "label": "Commit the changes",
-          "hint": "Automatically create a commit with the cherry-picked changes. If disabled, changes will remain in staging but no commit will be made, allowing you to review and modify them before committing."
+          "label": "変更をコミット",
+          "hint": "cherry-pickされた変更で自動的にコミットを作成します。無効にすると、変更はステージングに残りますが、コミットは作成されず、コミット前に確認および変更できます。"
         },
         "appendOrigin": {
-          "label": "Append origin to commit message",
-          "hint": "Add a reference to the original commit at the end of the commit message (e.g., \"(cherry picked from commit abc1234)\"). This helps track where the changes came from in the git history. Only available when \"Commit the changes\" is enabled."
+          "label": "コミットメッセージに元の参照を追加",
+          "hint": "コミットメッセージの末尾に元のコミットへの参照を追加します（例：「(cherry picked from commit abc1234)」）。これにより、git履歴で変更の出所を追跡できます。「変更をコミット」が有効な場合のみ使用できます。"
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "apply": "Apply",
-        "applying": "Applying..."
+        "cancel": "キャンセル",
+        "apply": "適用",
+        "applying": "適用中..."
       },
       "toasts": {
         "success": {
-          "title": "Cherry-pick completed",
-          "description": "The commit has been applied and committed successfully",
-          "descriptionNoCommit": "The commit has been applied (no commit)"
+          "title": "Cherry-pickが完了しました",
+          "description": "コミットが正常に適用され、コミットされました",
+          "descriptionNoCommit": "コミットが適用されました（コミットなし）"
         },
         "conflicts": {
-          "title": "Cherry-pick with conflicts",
-          "description": "There are conflicts that need to be resolved. Use the notification bar to resolve or abort the operation."
+          "title": "競合があるCherry-pick",
+          "description": "解決する必要がある競合があります。通知バーを使用して操作を解決または中止してください。"
         },
         "error": {
-          "title": "Error performing cherry-pick",
-          "description": "Could not complete the operation",
-          "unknownError": "An unexpected error occurred"
+          "title": "Cherry-pickの実行エラー",
+          "description": "操作を完了できませんでした",
+          "unknownError": "予期しないエラーが発生しました"
         }
       }
     },
     "commitDetails": {
       "tabs": {
-        "detail": "Commit Detail",
-        "modified": "Modified Files",
-        "tree": "Commit Tree"
+        "detail": "コミット詳細",
+        "modified": "変更されたファイル",
+        "tree": "コミットツリー"
       },
       "detail": {
         "sections": {
-          "description": "Description",
-          "author": "Author",
-          "date": "Date",
-          "committer": "Committer",
-          "commitDate": "Commit Date",
-          "commitHash": "Commit Hash",
-          "parentCommit": "Parent Commit",
-          "parentCommits": "Parent Commits",
-          "statistics": "Statistics"
+          "description": "説明",
+          "author": "作成者",
+          "date": "日付",
+          "committer": "コミッター",
+          "commitDate": "コミット日付",
+          "commitHash": "コミットハッシュ",
+          "parentCommit": "親コミット",
+          "parentCommits": "親コミット",
+          "statistics": "統計"
         },
         "stats": {
-          "files": "Files",
-          "insertions": "Insertions",
-          "deletions": "Deletions"
+          "files": "ファイル",
+          "insertions": "追加",
+          "deletions": "削除"
         },
         "copy": {
-          "copyHash": "Copy full hash",
-          "copyParentHash": "Copy parent hash"
+          "copyHash": "完全なハッシュをコピー",
+          "copyParentHash": "親ハッシュをコピー"
         },
         "timeAgo": {
-          "years": "{{count}} year ago",
-          "yearsPlural": "{{count}} years ago",
-          "months": "{{count}} month ago",
-          "monthsPlural": "{{count}} months ago",
-          "weeks": "{{count}} week ago",
-          "weeksPlural": "{{count}} weeks ago",
-          "days": "{{count}} day ago",
-          "daysPlural": "{{count}} days ago",
-          "hours": "{{count}} hour ago",
-          "hoursPlural": "{{count}} hours ago",
-          "minutes": "{{count}} minute ago",
-          "minutesPlural": "{{count}} minutes ago",
-          "seconds": "A few seconds ago"
+          "years": "{{count}}年前",
+          "yearsPlural": "{{count}}年前",
+          "months": "{{count}}ヶ月前",
+          "monthsPlural": "{{count}}ヶ月前",
+          "weeks": "{{count}}週間前",
+          "weeksPlural": "{{count}}週間前",
+          "days": "{{count}}日前",
+          "daysPlural": "{{count}}日前",
+          "hours": "{{count}}時間前",
+          "hoursPlural": "{{count}}時間前",
+          "minutes": "{{count}}分前",
+          "minutesPlural": "{{count}}分前",
+          "seconds": "数秒前"
         }
       },
       "modified": {
-        "loading": "Loading...",
-        "detail": "Detail",
-        "selectFile": "Select a file to view changes"
+        "loading": "読み込み中...",
+        "detail": "詳細",
+        "selectFile": "変更を表示するファイルを選択"
       },
       "tree": {
-        "loading": "Loading tree...",
-        "noFiles": "No files",
-        "content": "Content",
-        "noFileSelected": "No file selected",
-        "selectFileMessage": "Click on a file in the tree to view its content",
+        "loading": "ツリーを読み込み中...",
+        "noFiles": "ファイルなし",
+        "content": "コンテンツ",
+        "noFileSelected": "ファイルが選択されていません",
+        "selectFileMessage": "ツリー内のファイルをクリックしてコンテンツを表示",
         "errors": {
-          "loadTree": "Error loading tree",
-          "loadFile": "Error loading file"
+          "loadTree": "ツリーの読み込みエラー",
+          "loadFile": "ファイルの読み込みエラー"
         }
       }
     },
     "branchesDropdown": {
       "sections": {
-        "selectedCommit": "Selected Commit",
-        "local": "Local Branches",
-        "remote": "Remote Branches"
+        "selectedCommit": "選択されたコミット",
+        "local": "ローカルブランチ",
+        "remote": "リモートブランチ"
       },
       "actions": {
-        "checkoutHash": "Checkout Hash... {{hash}}",
-        "defaultBranch": "Branch"
+        "checkoutHash": "ハッシュをチェックアウト... {{hash}}",
+        "defaultBranch": "ブランチ"
       },
-      "empty": "No branches available",
+      "empty": "利用可能なブランチがありません",
       "toasts": {
         "checkoutSuccess": {
-          "title": "Checkout completed",
-          "description": "Switched to commit {{hash}}"
+          "title": "チェックアウトが完了しました",
+          "description": "コミット{{hash}}に切り替えました"
         },
         "checkoutError": {
-          "title": "Checkout error",
-          "description": "An unexpected error occurred"
+          "title": "チェックアウトエラー",
+          "description": "予期しないエラーが発生しました"
         },
         "resolveConflictError": {
-          "title": "Error resolving conflict",
-          "description": "An unexpected error occurred"
+          "title": "競合解決エラー",
+          "description": "予期しないエラーが発生しました"
         }
       },
-      "commitMessage": "Save files before switching to {{branch}}"
+      "commitMessage": "{{branch}}に切り替える前にファイルを保存してください"
     },
     "tooltips": {
-      "private": "Private",
-      "minimize": "Minimize",
-      "new": "New",
-      "stash": "Stash",
-      "moreStashOptions": "More stash options",
-      "refresh": "Refresh",
-      "close": "Close",
-      "middleClickToClose": "Middle click to close",
-      "uncommittedChanges": "uncommitted changes"
+      "private": "プライベート",
+      "minimize": "最小化",
+      "new": "新規",
+      "stash": "スタッシュ",
+      "moreStashOptions": "その他のスタッシュオプション",
+      "refresh": "更新",
+      "close": "閉じる",
+      "middleClickToClose": "中クリックで閉じる",
+      "uncommittedChanges": "コミットされていない変更"
     }
   }
 }
