@@ -2890,7 +2890,7 @@ function App() {
                         disabled={esUltimo}
                       >
                         {index === 0 && <FolderGit2 className="h-4 w-4" />}
-                        {item.nombre}
+                        {item.nombre === "Mis repositorios" ? t('repositories.myRepositories') : item.nombre}
                       </button>
                       {esUltimo && cantidadRepos > 0 && (
                         <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-muted text-muted-foreground border border-border">

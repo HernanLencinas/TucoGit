@@ -470,6 +470,7 @@
   },
   "repositories": {
     "title": "Repositories",
+    "myRepositories": "My repositories",
     "search": {
       "placeholder": "Search collections and repositories...",
       "clear": "Clear",
