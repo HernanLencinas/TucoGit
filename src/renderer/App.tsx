@@ -2606,23 +2606,22 @@ function App() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                       </span>
-                      Tu centro de control Git
+                      {t('home.welcome.subtitle')}
                     </div>
-                    <h2 className="text-3xl font-extrabold mb-3 tracking-tight text-foreground">Bienvenido a <span className="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">TucoGit</span></h2>
+                    <h2 className="text-3xl font-extrabold mb-3 tracking-tight text-foreground">{t('home.welcome.title')} <span className="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">TucoGit</span></h2>
                     <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">
-                      Organiza y gestiona todos tus repositorios Git en un solo lugar.
-                      Conecta tus servicios favoritos y mantén tu flujo de trabajo eficiente y ordenado.
+                      {t('home.welcome.description')}
                     </p>
 
                     <div className="flex flex-wrap items-center justify-center md:justify-start gap-6 mt-6 pt-6 border-t border-border/50">
                       <div className="flex flex-col">
                         <span className="text-2xl font-bold text-foreground">{totalConexiones}</span>
-                        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Conexiones</span>
+                        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{t('home.welcome.connections')}</span>
                       </div>
                       <div className="w-px h-8 bg-border/50 hidden sm:block" />
                       <div className="flex flex-col">
                         <span className="text-2xl font-bold text-foreground">{totalRepositorios}</span>
-                        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Repositorios</span>
+                        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{t('home.welcome.repositories')}</span>
                       </div>
                     </div>
                   </div>
@@ -2631,7 +2630,7 @@ function App() {
 
               <div className="px-8 pb-8">
                 <div className="pt-2">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4 px-1">Navegación Rápida</h3>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4 px-1">{t('home.quickNavigation.title').toUpperCase()}</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                     <button
                       onClick={() => setActiveTab("inicio")}
@@ -2647,8 +2646,8 @@ function App() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-foreground block">Inicio</span>
-                        <span className="text-[10px] text-muted-foreground">Vista general y estadísticas</span>
+                        <span className="text-sm font-bold text-foreground block">{t('home.quickNavigation.home.title')}</span>
+                        <span className="text-[10px] text-muted-foreground">{t('home.quickNavigation.home.description')}</span>
                       </div>
                     </button>
 
@@ -2666,8 +2665,8 @@ function App() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-foreground block">Repositorios</span>
-                        <span className="text-[10px] text-muted-foreground">Explora tus proyectos locales</span>
+                        <span className="text-sm font-bold text-foreground block">{t('home.quickNavigation.repositories.title')}</span>
+                        <span className="text-[10px] text-muted-foreground">{t('home.quickNavigation.repositories.description')}</span>
                       </div>
                     </button>
 
@@ -2685,8 +2684,8 @@ function App() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-foreground block">Conexiones</span>
-                        <span className="text-[10px] text-muted-foreground">Gestiona tus servicios Git</span>
+                        <span className="text-sm font-bold text-foreground block">{t('home.quickNavigation.connections.title')}</span>
+                        <span className="text-[10px] text-muted-foreground">{t('home.quickNavigation.connections.description')}</span>
                       </div>
                     </button>
 
@@ -2704,8 +2703,8 @@ function App() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-foreground block">Configuración</span>
-                        <span className="text-[10px] text-muted-foreground">Preferencias de la aplicación</span>
+                        <span className="text-sm font-bold text-foreground block">{t('home.quickNavigation.settings.title')}</span>
+                        <span className="text-[10px] text-muted-foreground">{t('home.quickNavigation.settings.description')}</span>
                       </div>
                     </button>
 
@@ -2726,8 +2725,8 @@ function App() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-foreground block">Configurar conexión</span>
-                        <span className="text-[10px] text-muted-foreground">Vincular una nueva cuenta de servicio Git</span>
+                        <span className="text-sm font-bold text-foreground block">{t('home.quickNavigation.configureConnection.title')}</span>
+                        <span className="text-[10px] text-muted-foreground">{t('home.quickNavigation.configureConnection.description')}</span>
                       </div>
                     </button>
                   </div>
@@ -2741,9 +2740,9 @@ function App() {
         <div className="w-full lg:w-1/2 space-y-4 flex-shrink-0">
           <Card className="bg-background border-0 shadow-none">
             <CardHeader className="p-4">
-              <CardTitle className="text-xl font-bold">Favoritos</CardTitle>
+              <CardTitle className="text-xl font-bold">{t('home.favorites.title')}</CardTitle>
               <CardDescription className="text-sm">
-                Acceso rápido a tus repositorios
+                {t('home.favorites.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 pt-0">
@@ -2774,7 +2773,7 @@ function App() {
                         {favorito.clonado && editorIDESeleccionado && (
                           <div className="relative group/tooltip mr-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                              Abrir en {editorIDESeleccionado}
+                              {t('home.favorites.openIn', { ide: editorIDESeleccionado })}
                               <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                             </div>
                             <Button
@@ -2799,7 +2798,7 @@ function App() {
                             toggleFavorito(favorito.id);
                           }}
                           className="h-6 w-6 flex items-center justify-center rounded-md hover:bg-background/50 transition-colors"
-                          title="Quitar de favoritos"
+                          title={t('home.favorites.removeFromFavorites')}
                         >
                           <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
                         </button>
@@ -2810,9 +2809,9 @@ function App() {
               ) : (
                 <div className="bg-secondary/30 rounded-lg border-0 p-8 flex flex-col items-center justify-center min-h-[300px]">
                   <Star className="h-12 w-12 text-muted-foreground/50 mb-4" strokeWidth="1.5" />
-                  <p className="text-sm font-medium text-foreground mb-1">No hay favoritos</p>
+                  <p className="text-sm font-medium text-foreground mb-1">{t('home.favorites.noFavorites')}</p>
                   <p className="text-xs text-muted-foreground text-center">
-                    Los repositorios que marques como favoritos aparecerán aquí
+                    {t('home.favorites.noFavoritesDescription')}
                   </p>
                 </div>
               )}

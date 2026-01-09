@@ -8,6 +8,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import type { TabType, ConfigTabType } from "@/renderer/types";
+import { useI18n } from "@/renderer/hooks/useI18n";
 
 /**
  * Propiedades del componente InicioView.
@@ -44,6 +45,8 @@ interface InicioViewProps {
  * ```
  */
 export const InicioView = ({ setActiveTab, setConfigTabActiva }: InicioViewProps) => {
+  const { t } = useI18n();
+  
   return (
     <div className="flex gap-4 h-full">
       {/* Panel izquierdo - Bienvenida y Accesos Rápidos */}
@@ -88,15 +91,15 @@ export const InicioView = ({ setActiveTab, setConfigTabActiva }: InicioViewProps
                 </svg>
               </div>
               <div className="flex-1">
-                <h2 className="text-2xl font-bold mb-2">Bienvenido a TucoGit</h2>
+                <h2 className="text-2xl font-bold mb-2">{t('home.welcome.title')}</h2>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Organiza y gestiona todos tus repositorios Git en un solo lugar. Conecta tus servicios favoritos y mantén todo organizado de manera eficiente.
+                  {t('home.welcome.description')}
                 </p>
               </div>
             </div>
             
             <div className="border-t pt-4 mt-4">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">ACCESOS RÁPIDOS</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">{t('home.quickNavigation.title').toUpperCase()}</h3>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <button
@@ -107,7 +110,7 @@ export const InicioView = ({ setActiveTab, setConfigTabActiva }: InicioViewProps
                       <kbd className="px-2 py-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded border border-border">⌘</kbd>
                       <kbd className="px-2 py-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded border border-border">1</kbd>
                     </div>
-                    <span className="text-sm text-foreground">Inicio</span>
+                    <span className="text-sm text-foreground">{t('home.quickNavigation.home.title')}</span>
                   </button>
                   <button
                     onClick={() => setActiveTab("conexiones")}
@@ -117,7 +120,7 @@ export const InicioView = ({ setActiveTab, setConfigTabActiva }: InicioViewProps
                       <kbd className="px-2 py-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded border border-border">⌘</kbd>
                       <kbd className="px-2 py-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded border border-border">3</kbd>
                     </div>
-                    <span className="text-sm text-foreground">Conexiones</span>
+                    <span className="text-sm text-foreground">{t('home.quickNavigation.connections.title')}</span>
                   </button>
                   <button
                     onClick={() => {
@@ -130,7 +133,7 @@ export const InicioView = ({ setActiveTab, setConfigTabActiva }: InicioViewProps
                       <kbd className="px-2 py-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded border border-border">⌘</kbd>
                       <kbd className="px-2 py-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded border border-border">N</kbd>
                     </div>
-                    <span className="text-sm text-foreground">Configurar la integración con Git</span>
+                    <span className="text-sm text-foreground">{t('home.quickNavigation.configureGit')}</span>
                   </button>
                 </div>
                 <div className="space-y-2">
@@ -142,7 +145,7 @@ export const InicioView = ({ setActiveTab, setConfigTabActiva }: InicioViewProps
                       <kbd className="px-2 py-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded border border-border">⌘</kbd>
                       <kbd className="px-2 py-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded border border-border">2</kbd>
                     </div>
-                    <span className="text-sm text-foreground">Repositorios</span>
+                    <span className="text-sm text-foreground">{t('home.quickNavigation.repositories.title')}</span>
                   </button>
                   <button
                     onClick={() => setActiveTab("configuracion")}
@@ -152,7 +155,7 @@ export const InicioView = ({ setActiveTab, setConfigTabActiva }: InicioViewProps
                       <kbd className="px-2 py-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded border border-border">⌘</kbd>
                       <kbd className="px-2 py-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded border border-border">4</kbd>
                     </div>
-                    <span className="text-sm text-foreground">Configuración</span>
+                    <span className="text-sm text-foreground">{t('home.quickNavigation.settings.title')}</span>
                   </button>
                 </div>
               </div>
@@ -165,17 +168,17 @@ export const InicioView = ({ setActiveTab, setConfigTabActiva }: InicioViewProps
       <div className="w-full lg:w-1/2 space-y-4 flex-shrink-0">
         <Card className="bg-background border-0 shadow-none">
           <CardHeader className="p-4">
-            <CardTitle className="text-xl font-bold">Favoritos</CardTitle>
+            <CardTitle className="text-xl font-bold">{t('home.favorites.title')}</CardTitle>
             <CardDescription className="text-sm">
-              Acceso rápido a tus repositorios
+              {t('home.favorites.description')}
             </CardDescription>
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <div className="bg-secondary/30 rounded-lg border-0 p-8 flex flex-col items-center justify-center min-h-[300px]">
               <Star className="h-12 w-12 text-muted-foreground/50 mb-4" strokeWidth="1.5" />
-              <p className="text-sm font-medium text-foreground mb-1">No hay favoritos</p>
+              <p className="text-sm font-medium text-foreground mb-1">{t('home.favorites.noFavorites')}</p>
               <p className="text-xs text-muted-foreground text-center">
-                Los repositorios que marques como favoritos aparecerán aquí
+                {t('home.favorites.noFavoritesDescription')}
               </p>
             </div>
           </CardContent>

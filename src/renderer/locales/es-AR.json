@@ -199,5 +199,127 @@
         "beta": "Beta"
       }
     }
+  },
+  "home": {
+    "title": "Inicio",
+    "welcome": {
+      "title": "Bienvenido a",
+      "subtitle": "Tu centro de control Git",
+      "description": "Organiza y gestiona todos tus repositorios Git en un solo lugar. Conecta tus servicios favoritos y mantén tu flujo de trabajo eficiente y ordenado.",
+      "connections": "Conexiones",
+      "repositories": "Repositorios"
+    },
+    "quickNavigation": {
+      "title": "Navegación Rápida",
+      "home": {
+        "title": "Inicio",
+        "description": "Vista general y estadísticas"
+      },
+      "repositories": {
+        "title": "Repositorios",
+        "description": "Explora tus proyectos locales"
+      },
+      "connections": {
+        "title": "Conexiones",
+        "description": "Gestiona tus servicios Git"
+      },
+      "settings": {
+        "title": "Configuración",
+        "description": "Preferencias de la aplicación"
+      },
+      "configureConnection": {
+        "title": "Configurar conexión",
+        "description": "Vincular una nueva cuenta de servicio Git"
+      },
+      "configureGit": "Configurar la integración con Git"
+    },
+    "favorites": {
+      "title": "Favoritos",
+      "description": "Acceso rápido a tus repositorios",
+      "noFavorites": "No hay favoritos",
+      "noFavoritesDescription": "Los repositorios que marques como favoritos aparecerán aquí",
+      "removeFromFavorites": "Quitar de favoritos",
+      "openIn": "Abrir en {{ide}}"
+    }
+  },
+  "wizard": {
+    "welcome": {
+      "title": "Bienvenido a Tuco",
+      "description": "La solución completa para gestionar tus repositorios Git",
+      "mainTitle": "Gestiona todos tus proyectos Git en un solo lugar",
+      "mainDescription": "Tuco es una herramienta profesional diseñada para simplificar la gestión de tus repositorios Git. Conecta múltiples servicios, organiza tus proyectos y optimiza tu flujo de trabajo de desarrollo.",
+      "features": {
+        "versionControl": "Control de Versiones",
+        "organization": "Organización",
+        "productivity": "Productividad"
+      }
+    },
+    "gitIdentity": {
+      "title": "Configura tu identidad Git",
+      "description": "Establece tu información de usuario para los commits",
+      "fullName": "Nombre completo",
+      "fullNamePlaceholder": "Ej: Juan Pérez",
+      "fullNameDescription": "Este nombre aparecerá como autor en todos tus commits de Git",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "Ej: juan.perez@ejemplo.com",
+      "emailDescription": "Utiliza el mismo correo asociado a tu cuenta de GitHub, GitLab u otros servicios",
+      "emailRequired": "El correo electrónico es requerido",
+      "emailInvalid": "Por favor ingresa un correo electrónico válido",
+      "info": "Esta información se configurará como tu identidad predeterminada de Git y se utilizará para firmar todos tus commits. Podrás modificarla más tarde en la configuración."
+    },
+    "repositoryManagement": {
+      "title": "Gestión de repositorios",
+      "description": "Organiza y administra todos tus proyectos Git de forma eficiente",
+      "customCollections": {
+        "title": "Colecciones personalizadas",
+        "description": "Agrupa tus repositorios en colecciones temáticas para mantener todo organizado y fácil de encontrar"
+      },
+      "directClone": {
+        "title": "Clonación directa",
+        "description": "Clona repositorios desde servicios remotos directamente desde la interfaz, sin necesidad de usar la terminal"
+      },
+      "realTimeStatus": {
+        "title": "Estado en tiempo real",
+        "description": "Visualiza el estado de tus repositorios, ramas, commits y cambios pendientes de forma instantánea"
+      },
+      "allInOne": "Todo en un solo lugar: Accede a todos tus proyectos Git desde una interfaz unificada y profesional"
+    },
+    "gitIntegration": {
+      "title": "Integración con servicios Git",
+      "description": "Conecta tus cuentas y sincroniza tus repositorios automáticamente",
+      "multipleProviders": {
+        "title": "Múltiples proveedores",
+        "description": "Conecta con GitHub, GitLab, Bitbucket, Gitea, Codeberg y otros servicios Git compatibles"
+      },
+      "autoSync": {
+        "title": "Sincronización automática",
+        "description": "Mantén tus repositorios actualizados automáticamente y accede a la información más reciente sin esfuerzo"
+      },
+      "multipleAccounts": {
+        "title": "Gestión de múltiples cuentas",
+        "description": "Administra varias cuentas y organizaciones desde un solo lugar con total seguridad"
+      },
+      "centralizedAccess": "Acceso centralizado: Todos tus repositorios remotos disponibles sin salir de la aplicación"
+    },
+    "customization": {
+      "title": "Personalización avanzada",
+      "description": "Adapta la aplicación a tu estilo de trabajo y preferencias",
+      "themes": {
+        "title": "Temas y apariencia",
+        "description": "Elige entre múltiples temas y personaliza la apariencia de la aplicación según tus preferencias visuales"
+      },
+      "ideIntegration": {
+        "title": "Integración con IDEs",
+        "description": "Configura tu editor de código favorito (VS Code, Cursor, IntelliJ, etc.) para abrir repositorios directamente"
+      },
+      "readyToStart": "Todo listo para comenzar",
+      "readyDescription": "Configura la aplicación según tus necesidades y comienza a gestionar tus repositorios de forma profesional"
+    },
+    "navigation": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "start": "Comenzar",
+      "step": "Paso {{current}} de {{total}}"
+    }
   }
 }
