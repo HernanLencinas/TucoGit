@@ -9,6 +9,7 @@ import { FolderItem } from "@/renderer/types";
 import { CommitGraph } from "./CommitGraph";
 import { CommitDetails } from "./CommitDetails";
 import { GitStatusPanel } from "./GitStatusPanel";
+import { useI18n } from "@/renderer/hooks/useI18n";
 
 interface RepositoryDetailsProps {
     repository: FolderItem;
@@ -18,6 +19,7 @@ interface RepositoryDetailsProps {
 }
 
 export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository, configPath, onBack, onMinimize }) => {
+    const { t } = useI18n();
     const { toast } = useToast();
     const [commits, setCommits] = useState<any[]>([]);
     const [selectedCommit, setSelectedCommit] = useState<any | null>(null);
@@ -583,8 +585,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const handleStashPop = async () => {
         if (!selectedStash) {
             toast({
-                title: "Selecciona un stash",
-                description: "Por favor selecciona un stash para aplicar",
+                title: t('repositories.stashListModal.toasts.selectStash.title'),
+                description: t('repositories.stashListModal.toasts.selectStash.description'),
                 variant: "destructive",
             });
             return;
@@ -596,8 +598,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitStashPop?.(repoPath, selectedStash);
             if (result?.success) {
                 toast({
-                    title: "Stash aplicado",
-                    description: "El stash ha sido aplicado y eliminado exitosamente",
+                    title: t('repositories.stashListModal.toasts.applied.title'),
+                    description: t('repositories.stashListModal.toasts.applied.description'),
                     variant: "success",
                 });
                 // Recargar la lista de stashes
@@ -609,16 +611,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadCommits(true);
             } else {
                 toast({
-                    title: "Error al aplicar stash",
-                    description: result?.error || "No se pudo aplicar el stash",
+                    title: t('repositories.stashListModal.toasts.applyError.title'),
+                    description: result?.error || t('repositories.stashListModal.toasts.applyError.description'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al aplicar stash
             toast({
-                title: "Error al aplicar stash",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.stashListModal.toasts.applyError.title'),
+                description: err?.message || t('repositories.stashListModal.toasts.applyError.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -636,8 +638,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitStashDrop?.(repoPath, stashToDelete.ref);
             if (result?.success) {
                 toast({
-                    title: "Stash eliminado",
-                    description: "El stash ha sido eliminado exitosamente",
+                    title: t('repositories.stashListModal.toasts.deleted.title'),
+                    description: t('repositories.stashListModal.toasts.deleted.description'),
                     variant: "success",
                 });
                 // Recargar la lista de stashes
@@ -651,16 +653,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setStashToDelete(null);
             } else {
                 toast({
-                    title: "Error al eliminar stash",
-                    description: result?.error || "No se pudo eliminar el stash",
+                    title: t('repositories.stashListModal.toasts.deleteError.title'),
+                    description: result?.error || t('repositories.stashListModal.toasts.deleteError.description'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al eliminar stash
             toast({
-                title: "Error al eliminar stash",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.stashListModal.toasts.deleteError.title'),
+                description: err?.message || t('repositories.stashListModal.toasts.deleteError.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -676,8 +678,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitStashClear?.(repoPath);
             if (result?.success) {
                 toast({
-                    title: "Stashes eliminados",
-                    description: "Todos los stashes han sido eliminados exitosamente",
+                    title: t('repositories.stashListModal.toasts.cleared.title'),
+                    description: t('repositories.stashListModal.toasts.cleared.description'),
                     variant: "success",
                 });
                 // Recargar la lista de stashes (debería estar vacía)
@@ -689,16 +691,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setShowClearAllConfirm(false);
             } else {
                 toast({
-                    title: "Error al limpiar stashes",
-                    description: result?.error || "No se pudieron eliminar los stashes",
+                    title: t('repositories.stashListModal.toasts.clearError.title'),
+                    description: result?.error || t('repositories.stashListModal.toasts.clearError.description'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al limpiar stashes
             toast({
-                title: "Error al limpiar stashes",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.stashListModal.toasts.clearError.title'),
+                description: err?.message || t('repositories.stashListModal.toasts.clearError.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -715,10 +717,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitStash?.(repoPath, stashIncludeUntracked, stashMessage || '');
             if (result?.success) {
                 toast({
-                    title: "Stash completado",
+                    title: t('repositories.stashModal.success.title'),
                     description: stashIncludeUntracked 
-                        ? "Los cambios y archivos sin trackear han sido guardados en el stash"
-                        : "Los cambios han sido guardados en el stash",
+                        ? t('repositories.stashModal.success.descriptionWithUntracked')
+                        : t('repositories.stashModal.success.description'),
                     variant: "success",
                 });
                 setShowStashModal(false);
@@ -726,16 +728,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadCommits(true);
             } else {
                 toast({
-                    title: "Error al hacer stash",
-                    description: result?.error || "No se pudo completar la operación",
+                    title: t('repositories.stashModal.errors.title'),
+                    description: result?.error || t('repositories.stashModal.errors.description'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al hacer stash
             toast({
-                title: "Error al hacer stash",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.stashModal.errors.title'),
+                description: err?.message || t('repositories.stashModal.errors.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -760,11 +762,11 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadBranches();
                 loadCommits(true);
             } else {
-                alert(result?.error || 'Error al crear el branch');
+                alert(result?.error || t('repositories.newBranchModal.errors.createError'));
             }
         } catch (err) {
             // Error al crear branch
-            alert('Error al crear el branch');
+            alert(t('repositories.newBranchModal.errors.createError'));
         } finally {
             setCreatingBranch(false);
         }
@@ -780,8 +782,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitRevert?.(repoPath, selectedCommit.hash);
             if (result?.success) {
                 toast({
-                    title: "Revert completado",
-                    description: "El commit ha sido revertido exitosamente",
+                    title: t('repositories.revertModal.toasts.success.title'),
+                    description: t('repositories.revertModal.toasts.success.description'),
                     variant: "success",
                 });
                 setShowRevertModal(false);
@@ -789,16 +791,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadBranches();
             } else {
                 toast({
-                    title: "Error al hacer revert",
-                    description: result?.error || "No se pudo completar la operación",
+                    title: t('repositories.revertModal.toasts.error.title'),
+                    description: result?.error || t('repositories.revertModal.toasts.error.description'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al hacer revert
             toast({
-                title: "Error al hacer revert",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.revertModal.toasts.error.title'),
+                description: err?.message || t('repositories.revertModal.toasts.error.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -816,10 +818,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitCherryPick?.(repoPath, selectedCommit.hash, cherryPickCommitChanges, cherryPickAppendOrigin);
             if (result?.success) {
                 toast({
-                    title: "Cherry-pick completado",
+                    title: t('repositories.cherryPickModal.toasts.success.title'),
                     description: cherryPickCommitChanges 
-                        ? "El commit ha sido aplicado y commiteado exitosamente"
-                        : "El commit ha sido aplicado (sin commit)",
+                        ? t('repositories.cherryPickModal.toasts.success.description')
+                        : t('repositories.cherryPickModal.toasts.success.descriptionNoCommit'),
                     variant: "success",
                 });
                 setShowCherryPickModal(false);
@@ -837,8 +839,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     setCherryPickAppendOrigin(false);
                     // Mostrar toaster informando sobre conflictos
                     toast({
-                        title: "Cherry-pick con conflictos",
-                        description: "Hay conflictos que necesitan ser resueltos. Usa la barra de notificaciones para resolver o abortar la operación.",
+                        title: t('repositories.cherryPickModal.toasts.conflicts.title'),
+                        description: t('repositories.cherryPickModal.toasts.conflicts.description'),
                         variant: "destructive",
                     });
                     // Recargar para que aparezca la barra de notificaciones
@@ -846,8 +848,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     loadBranches();
                 } else {
                     toast({
-                        title: "Error al hacer cherry-pick",
-                        description: errorMessage || "No se pudo completar la operación",
+                        title: t('repositories.cherryPickModal.toasts.error.title'),
+                        description: errorMessage || t('repositories.cherryPickModal.toasts.error.description'),
                         variant: "destructive",
                     });
                 }
@@ -863,8 +865,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setCherryPickAppendOrigin(false);
                 // Mostrar toaster informando sobre conflictos
                 toast({
-                    title: "Cherry-pick con conflictos",
-                    description: "Hay conflictos que necesitan ser resueltos. Usa la barra de notificaciones para resolver o abortar la operación.",
+                    title: t('repositories.cherryPickModal.toasts.conflicts.title'),
+                    description: t('repositories.cherryPickModal.toasts.conflicts.description'),
                     variant: "destructive",
                 });
                 // Recargar para que aparezca la barra de notificaciones
@@ -872,8 +874,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadBranches();
             } else {
                 toast({
-                    title: "Error al hacer cherry-pick",
-                    description: errorMessage || "Ocurrió un error inesperado",
+                    title: t('repositories.cherryPickModal.toasts.error.title'),
+                    description: errorMessage || t('repositories.cherryPickModal.toasts.error.unknownError'),
                     variant: "destructive",
                 });
             }
@@ -897,21 +899,23 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setPushToAllRemotes(false);
                 loadCommits(true);
                 toast({
-                    title: "Tag creado exitosamente",
-                    description: `El tag "${tagName.trim()}" ha sido creado${pushToAllRemotes ? ' y enviado a todos los remotes' : ''}`,
+                    title: t('repositories.newTagModal.success.title'),
+                    description: pushToAllRemotes 
+                        ? t('repositories.newTagModal.success.descriptionWithPush', { tagName: tagName.trim() })
+                        : t('repositories.newTagModal.success.description', { tagName: tagName.trim() }),
                 });
             } else {
                 toast({
-                    title: "Error al crear tag",
-                    description: result?.error || 'Error desconocido',
+                    title: t('repositories.newTagModal.errors.createError'),
+                    description: result?.error || t('repositories.newTagModal.errors.unknownError'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al crear tag
             toast({
-                title: "Error al crear tag",
-                description: err.message || 'Error desconocido',
+                title: t('repositories.newTagModal.errors.createError'),
+                description: err.message || t('repositories.newTagModal.errors.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -980,7 +984,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             setShowCheckoutConflictModal(true);
                         } else {
                             toast({
-                                title: "Error al hacer checkout",
+                                title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
                                 description: errorMessage,
                                 variant: "destructive",
                             });
@@ -989,8 +993,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 } catch (err: any) {
                     // Error al hacer checkout
                     toast({
-                        title: "Error al hacer checkout",
-                        description: err?.message || "Ocurrió un error inesperado",
+                        title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
+                        description: err?.message || t('repositories.branchesDropdown.toasts.checkoutError.description'),
                         variant: "destructive",
                     });
                 }
@@ -1015,7 +1019,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         setShowCheckoutConflictModal(true);
                     } else {
                         toast({
-                            title: "Error al hacer checkout",
+                            title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
                             description: errorMessage,
                             variant: "destructive",
                         });
@@ -1024,8 +1028,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             } catch (err: any) {
                 // Error al hacer checkout
                 toast({
-                    title: "Error al hacer checkout",
-                    description: err?.message || "Ocurrió un error inesperado",
+                    title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
+                    description: err?.message || t('repositories.branchesDropdown.toasts.checkoutError.description'),
                     variant: "destructive",
                 });
             }
@@ -1044,7 +1048,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     await (window as any).electronAPI.gitStage?.(pendingCheckoutRepoPath, file);
                 }
                 // Hacer commit de los archivos
-                const commitMessage = `Guardar archivos antes de cambiar a ${pendingCheckoutBranch}`;
+                const commitMessage = t('repositories.branchesDropdown.commitMessage', { branch: pendingCheckoutBranch });
                 const commitResult = await (window as any).electronAPI.gitCommit?.(pendingCheckoutRepoPath, commitMessage);
                 if (!commitResult?.success) {
                     throw new Error(commitResult?.error || 'Error al hacer commit');
@@ -1094,8 +1098,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         } catch (err: any) {
             // Error al resolver conflicto
             toast({
-                title: "Error al resolver conflicto",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.branchesDropdown.toasts.resolveConflictError.title'),
+                description: err?.message || t('repositories.branchesDropdown.toasts.resolveConflictError.description'),
                 variant: "destructive",
             });
         } finally {
@@ -1194,7 +1198,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             {repository.nombre}
                         </h2>
                         {repository.privado && (
-                            <span title="Privado" className="flex-shrink-0 pointer-events-auto">
+                            <span title={t('repositories.tooltips.private')} className="flex-shrink-0 pointer-events-auto">
                                 <Lock className="h-3 w-3 text-white/70" />
                             </span>
                         )}
@@ -1211,7 +1215,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 size="sm"
                                 onClick={onMinimize}
                                 className="text-white hover:text-white/80 hover:bg-white/20 h-6 w-6 p-0"
-                                title="Minimizar"
+                                title={t('repositories.tooltips.minimize')}
                             >
                                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
@@ -1230,7 +1234,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 <GitBranch className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
                                 <span>{repository.nombre}</span>
                                 {repository.privado && (
-                                    <span title="Privado" className="flex-shrink-0">
+                                    <span title={t('repositories.tooltips.private')} className="flex-shrink-0">
                                         <Lock className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400" />
                                     </span>
                                 )}
@@ -1245,7 +1249,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 size="sm"
                                 onClick={onMinimize}
                                 className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800"
-                                title="Minimizar"
+                                title={t('repositories.tooltips.minimize')}
                             >
                                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
@@ -1289,7 +1293,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 >
                                     <GitBranch className="h-3.5 w-3.5" />
                                     <span className="max-w-[100px] truncate">
-                                        {branches.current || (branches.headHash ? branches.headHash.substring(0, 7) : 'Branch')}
+                                        {branches.current || (branches.headHash ? branches.headHash.substring(0, 7) : t('repositories.branchesDropdown.actions.defaultBranch'))}
                                     </span>
                                     <ChevronDown className="h-3 w-3" />
                                 </Button>
@@ -1298,7 +1302,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {/* Commit Seleccionado */}
                                     {selectedCommit && (
                                         <div className="p-2 border-b border-slate-200 dark:border-slate-700">
-                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">Commit seleccionado</div>
+                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.selectedCommit')}</div>
                                             <button
                                                 onClick={async () => {
                                                     const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
@@ -1308,11 +1312,6 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                             loadBranches();
                                                             loadCommits(true);
                                                             setBranchesOpen(false);
-                                                            toast({
-                                                                title: "Checkout completado",
-                                                                description: `Cambiaste al commit ${selectedCommit.hash.substring(0, 7)}`,
-                                                                variant: "success",
-                                                            });
                                                         } else {
                                                             const errorMessage = result?.error || '';
                                                             if (errorMessage.includes('untracked working tree files would be overwritten') ||
@@ -1325,7 +1324,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                                 setShowCheckoutConflictModal(true);
                                                             } else {
                                                                 toast({
-                                                                    title: "Error al hacer checkout",
+                                                                    title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
                                                                     description: errorMessage,
                                                                     variant: "destructive",
                                                                 });
@@ -1334,8 +1333,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                     } catch (err: any) {
                                                         // Error al hacer checkout
                                                         toast({
-                                                            title: "Error al hacer checkout",
-                                                            description: err?.message || "Ocurrió un error inesperado",
+                                                            title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
+                                                            description: err?.message || t('repositories.branchesDropdown.toasts.checkoutError.description'),
                                                             variant: "destructive",
                                                         });
                                                     }
@@ -1346,7 +1345,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                 )}
                                             >
                                                 <GitBranch className="h-3 w-3" />
-                                                <span className="truncate">Checkout Hash... {selectedCommit.hash.substring(0, 7)}</span>
+                                                <span className="truncate">{t('repositories.branchesDropdown.actions.checkoutHash', { hash: selectedCommit.hash.substring(0, 7) })}</span>
                                                 {branches.headHash === selectedCommit.hash && (
                                                     <span className="ml-auto text-[10px] text-cyan-600 dark:text-cyan-400">●</span>
                                                 )}
@@ -1356,7 +1355,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {/* Branches Locales */}
                                     {branches.local.length > 0 && (
                                         <div className="p-2">
-                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">Locales</div>
+                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.local')}</div>
                                             {branches.local.map((branch) => (
                                                 <button
                                                     key={branch}
@@ -1378,7 +1377,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {/* Branches Remotos */}
                                     {branches.remote.length > 0 && (
                                         <div className="p-2 border-t border-slate-200 dark:border-slate-700">
-                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">Remotos</div>
+                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.remote')}</div>
                                             {branches.remote.map((branch) => (
                                                 <button
                                                     key={branch}
@@ -1393,7 +1392,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     )}
                                     {branches.local.length === 0 && branches.remote.length === 0 && !selectedCommit && (
                                         <div className="p-4 text-center text-xs text-slate-500 dark:text-slate-400">
-                                            No hay branches disponibles
+                                            {t('repositories.branchesDropdown.empty')}
                                         </div>
                                     )}
                                 </div>
@@ -1408,7 +1407,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         setNewBranchMenuOpen(!newBranchMenuOpen);
                                     }}
                                     className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm rounded-l-none"
-                                    title="Nuevo"
+                                    title={t('repositories.tooltips.new')}
                                 >
                                     <Plus className="h-4 w-4" />
                                 </Button>
@@ -1423,7 +1422,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         className="w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-600 dark:text-slate-400"
                                     >
                                         <GitBranch className="h-3.5 w-3.5" />
-                                        <span>Nuevo Branch</span>
+                                        <span>{t('repositories.menuItems.newBranch')}</span>
                                     </button>
                                     <button
                                         onClick={() => {
@@ -1439,7 +1438,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         )}
                                     >
                                         <Tag className="h-3.5 w-3.5" />
-                                        <span>Nuevo Tag</span>
+                                        <span>{t('repositories.menuItems.newTag')}</span>
                                     </button>
                                 </div>
                             )}
@@ -1645,7 +1644,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     setShowStashModal(true);
                                 }}
                                 className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm rounded-r-none"
-                                title="Stash"
+                                title={t('repositories.tooltips.stash')}
                             >
                                 <svg
                                     className="h-3.5 w-3.5"
@@ -1670,7 +1669,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     setStashMenuOpen(!stashMenuOpen);
                                 }}
                                 className="h-7 w-6 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm rounded-l-none border-l-0"
-                                title="Más opciones de stash"
+                                title={t('repositories.tooltips.moreStashOptions')}
                             >
                                 <ChevronDown className="h-3 w-3" />
                             </Button>
@@ -1735,7 +1734,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     setCherryPickMenuOpen(!cherryPickMenuOpen);
                                 }}
                                 className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm flex items-center gap-1.5"
-                                title="Acciones"
+                                title={t('repositories.menuItems.actions')}
                             >
                                 <svg 
                                     className="h-3.5 w-3.5" 
@@ -1753,7 +1752,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                <span>Acciones</span>
+                                <span>{t('repositories.menuItems.actions')}</span>
                             </Button>
                             {cherryPickMenuOpen && (
                                 <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
@@ -1805,7 +1804,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             onClick={() => loadCommits(true)}
                             className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
                             disabled={loading}
-                            title="Refrescar"
+                            title={t('repositories.tooltips.refresh')}
                         >
                             <RotateCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                         </Button>
@@ -1826,7 +1825,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-cyan-500 transition-colors z-10" />
                                     <input
                                         type="text"
-                                        placeholder="Buscar commits (mensaje, autor, hash)..."
+                                        placeholder={t('repositories.search.placeholder')}
                                         className={cn(
                                             "w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md py-1.5 pl-9 text-xs outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all shadow-sm",
                                             searchTerm ? "pr-28" : "pr-24"
@@ -1840,13 +1839,13 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             onClick={() => setSearchTerm("")}
                                             className="absolute right-20 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 transition-colors z-10"
                                         >
-                                            Limpiar
+                                            {t('repositories.search.clear')}
                                         </button>
                                     )}
                                     <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
                                         <div className="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
                                         <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">
-                                            {commits.length} commits
+                                            {commits.length} {t('repositories.search.commits')}
                                         </span>
                                     </div>
                                 </>
@@ -1858,7 +1857,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     <Search className="h-4 w-4 text-slate-400" />
                                     <div className="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
                                     <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">
-                                        {commits.length} commits
+                                        {commits.length} {t('repositories.search.commits')}
                                     </span>
                                 </div>
                             )}
@@ -2042,29 +2041,29 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Nuevo Branch
+                                    {t('repositories.newBranchModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Crea un nuevo branch a partir de otro branch existente
+                                    {t('repositories.newBranchModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-3">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                                    <span>Nombre del nuevo branch</span>
+                                    <span>{t('repositories.newBranchModal.fields.branchName.label')}</span>
                                     <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                                        (requerido)
+                                        {t('repositories.newBranchModal.fields.branchName.required')}
                                     </span>
                                 </label>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    El nombre debe seguir las convenciones de Git (sin espacios, usar guiones o guiones bajos)
+                                    {t('repositories.newBranchModal.fields.branchName.hint')}
                                 </p>
                                 <input
                                     type="text"
                                     value={newBranchName}
                                     onChange={(e) => setNewBranchName(e.target.value)}
-                                    placeholder="nombre-del-branch"
+                                    placeholder={t('repositories.newBranchModal.fields.branchName.placeholder')}
                                     className={cn(
                                         "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
                                         "bg-slate-50 dark:bg-slate-800/50",
@@ -2082,10 +2081,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             </div>
                             <div className="space-y-3">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                    Crear a partir de
+                                    {t('repositories.newBranchModal.fields.createFrom.label')}
                                 </label>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    Selecciona el branch desde el cual se creará el nuevo branch. El nuevo branch contendrá todos los commits del branch seleccionado.
+                                    {t('repositories.newBranchModal.fields.createFrom.hint')}
                                 </p>
                                 <div className="relative" ref={branchFromDropdownRef}>
                                     <button
@@ -2104,8 +2103,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     >
                                         <span className="block truncate">
                                             {newBranchFrom 
-                                                ? `${newBranchFrom}${newBranchFrom === branches.current ? ' (actual)' : ''}`
-                                                : 'Selecciona un branch'}
+                                                ? `${newBranchFrom}${newBranchFrom === branches.current ? ` ${t('repositories.newBranchModal.fields.createFrom.current')}` : ''}`
+                                                : t('repositories.newBranchModal.fields.createFrom.placeholder')}
                                         </span>
                                         <ChevronDown className={cn(
                                             "absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 dark:text-slate-400 transition-transform duration-200",
@@ -2134,7 +2133,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                             <div className="flex items-center justify-between">
                                                                 <span>{branch}</span>
                                                                 {branch === branches.current && (
-                                                                    <span className="text-xs text-slate-500 dark:text-slate-400 ml-2">(actual)</span>
+                                                                    <span className="text-xs text-slate-500 dark:text-slate-400 ml-2">{t('repositories.newBranchModal.fields.createFrom.current')}</span>
                                                                 )}
                                                             </div>
                                                         </button>
@@ -2144,7 +2143,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             {branches.remote.length > 0 && (
                                                 <>
                                                     <div className="px-4 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700">
-                                                        Remotos
+                                                        {t('repositories.newBranchModal.fields.createFrom.remotes')}
                                                     </div>
                                                     <div className="py-1">
                                                         {branches.remote.map((branch) => (
@@ -2170,7 +2169,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             )}
                                             {branches.local.length === 0 && branches.remote.length === 0 && (
                                                 <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 text-center">
-                                                    No hay branches disponibles
+                                                    {t('repositories.newBranchModal.fields.createFrom.noBranches')}
                                                 </div>
                                             )}
                                         </div>
@@ -2181,8 +2180,23 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         <p className="text-xs text-blue-800 dark:text-blue-300 flex items-start gap-2">
                                             <Info className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
                                             <span>
-                                                El nuevo branch <span className="font-semibold">{newBranchName || 'nuevo-branch'}</span> se creará a partir de <span className="font-semibold">{newBranchFrom}</span>
-                                                {newBranchFrom === branches.current && ' (tu branch actual)'}
+                                                {(() => {
+                                                    const template = t('repositories.newBranchModal.info.willCreateFrom', { 
+                                                        branchName: '{{branchName}}',
+                                                        fromBranch: '{{fromBranch}}'
+                                                    });
+                                                    const parts = template.split('{{branchName}}');
+                                                    return (
+                                                        <>
+                                                            {parts[0]}
+                                                            <span className="font-semibold">{newBranchName || 'nuevo-branch'}</span>
+                                                            {parts[1]?.split('{{fromBranch}}')[0]}
+                                                            <span className="font-semibold">{newBranchFrom}</span>
+                                                            {parts[1]?.split('{{fromBranch}}')[1]}
+                                                            {newBranchFrom === branches.current && t('repositories.newBranchModal.info.currentBranch')}
+                                                        </>
+                                                    );
+                                                })()}
                                             </span>
                                         </p>
                                     </div>
@@ -2201,7 +2215,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={creatingBranch}
                                 >
-                                    Cancelar
+                                    {t('repositories.newBranchModal.buttons.cancel')}
                                 </Button>
                                 <Button
                                     size="default"
@@ -2212,10 +2226,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {creatingBranch ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Creando...
+                                            {t('repositories.newBranchModal.buttons.creating')}
                                         </span>
                                     ) : (
-                                        "Crear"
+                                        t('repositories.newBranchModal.buttons.create')
                                     )}
                                 </Button>
                             </div>
@@ -2253,29 +2267,29 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Nuevo Tag
+                                    {t('repositories.newTagModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Crea un nuevo tag en el commit seleccionado
+                                    {t('repositories.newTagModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-3">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                                    <span>Nombre del tag</span>
+                                    <span>{t('repositories.newTagModal.fields.tagName.label')}</span>
                                     <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                                        (requerido)
+                                        {t('repositories.newTagModal.fields.tagName.required')}
                                     </span>
                                 </label>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    Usa convenciones semánticas como v1.0.0, v2.1.3, etc. Los tags ayudan a marcar puntos importantes en el historial del proyecto.
+                                    {t('repositories.newTagModal.fields.tagName.hint')}
                                 </p>
                                 <input
                                     type="text"
                                     value={tagName}
                                     onChange={(e) => setTagName(e.target.value)}
-                                    placeholder="v1.0.0"
+                                    placeholder={t('repositories.newTagModal.fields.tagName.placeholder')}
                                     className={cn(
                                         "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
                                         "bg-slate-50 dark:bg-slate-800/50",
@@ -2295,7 +2309,22 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         <p className="text-xs text-blue-800 dark:text-blue-300 flex items-start gap-2">
                                             <Info className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
                                             <span>
-                                                El tag <span className="font-semibold">{tagName}</span> se creará en el commit <span className="font-mono font-semibold">{selectedCommit.hash?.substring(0, 7)}</span>
+                                                {(() => {
+                                                    const template = t('repositories.newTagModal.info.willCreateAt', {
+                                                        tagName: '{{tagName}}',
+                                                        commitHash: '{{commitHash}}'
+                                                    });
+                                                    const parts = template.split('{{tagName}}');
+                                                    return (
+                                                        <>
+                                                            {parts[0]}
+                                                            <span className="font-semibold">{tagName}</span>
+                                                            {parts[1]?.split('{{commitHash}}')[0]}
+                                                            <span className="font-mono font-semibold">{selectedCommit.hash?.substring(0, 7)}</span>
+                                                            {parts[1]?.split('{{commitHash}}')[1]}
+                                                        </>
+                                                    );
+                                                })()}
                                             </span>
                                         </p>
                                     </div>
@@ -2303,18 +2332,18 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             </div>
                             <div className="space-y-3">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                    Mensaje
+                                    {t('repositories.newTagModal.fields.message.label')}
                                     <span className="text-xs font-normal text-slate-500 dark:text-slate-400 ml-2">
-                                        (opcional)
+                                        {t('repositories.newTagModal.fields.message.optional')}
                                     </span>
                                 </label>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    Proporciona una descripción detallada del tag. Esto es útil para documentar releases, cambios importantes o hitos del proyecto.
+                                    {t('repositories.newTagModal.fields.message.hint')}
                                 </p>
                                 <textarea
                                     value={tagMessage}
                                     onChange={(e) => setTagMessage(e.target.value)}
-                                    placeholder="Descripción del tag..."
+                                    placeholder={t('repositories.newTagModal.fields.message.placeholder')}
                                     rows={3}
                                     className={cn(
                                         "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 resize-none",
@@ -2329,7 +2358,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             <div className="space-y-3 py-2">
                                 <div className="flex items-center justify-between">
                                     <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 cursor-pointer" htmlFor="push-to-remotes">
-                                        Push a todos los remotes
+                                        {t('repositories.newTagModal.fields.pushToRemotes.label')}
                                     </label>
                                     <Switch
                                         id="push-to-remotes"
@@ -2339,7 +2368,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     />
                                 </div>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    Si está activado, el tag se enviará automáticamente a todos los remotes configurados del repositorio.
+                                    {t('repositories.newTagModal.fields.pushToRemotes.hint')}
                                 </p>
                             </div>
                             <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
@@ -2355,7 +2384,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={creatingTag}
                                 >
-                                    Cancelar
+                                    {t('repositories.newTagModal.buttons.cancel')}
                                 </Button>
                                 <Button
                                     size="default"
@@ -2366,10 +2395,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {creatingTag ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Creando...
+                                            {t('repositories.newTagModal.buttons.creating')}
                                         </span>
                                     ) : (
-                                        "Crear"
+                                        t('repositories.newTagModal.buttons.create')
                                     )}
                                 </Button>
                             </div>
@@ -2656,23 +2685,23 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Crear Stash
+                                    {t('repositories.stashModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Guarda temporalmente tus cambios en el stash de Git
+                                    {t('repositories.stashModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-3">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                    Mensaje
+                                    {t('repositories.stashModal.fields.message.label')}
                                     <span className="text-xs font-normal text-slate-500 dark:text-slate-400 ml-2">
-                                        (opcional)
+                                        {t('repositories.stashModal.fields.message.optional')}
                                     </span>
                                 </label>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    Proporciona un mensaje descriptivo para identificar este stash. Si no especificas un mensaje, se usará uno por defecto.
+                                    {t('repositories.stashModal.fields.message.hint')}
                                 </p>
                                 <input
                                     type="text"
@@ -2685,7 +2714,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
                                         stashing && "opacity-60 cursor-not-allowed"
                                     )}
-                                    placeholder="Mensaje para el stash"
+                                    placeholder={t('repositories.stashModal.fields.message.placeholder')}
                                     autoFocus
                                     disabled={stashing}
                                     onKeyDown={(e) => {
@@ -2699,7 +2728,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             <div className="space-y-3 py-2">
                                 <div className="flex items-center justify-between">
                                     <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 cursor-pointer" htmlFor="stash-untracked">
-                                        Incluir archivos sin trackear
+                                        {t('repositories.stashModal.fields.includeUntracked.label')}
                                     </label>
                                     <Switch
                                         id="stash-untracked"
@@ -2709,7 +2738,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     />
                                 </div>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    También guarda archivos nuevos que aún no están en el repositorio. Útil cuando quieres guardar cambios en archivos que no han sido agregados al staging area.
+                                    {t('repositories.stashModal.fields.includeUntracked.hint')}
                                 </p>
                             </div>
 
@@ -2725,7 +2754,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={stashing}
                                 >
-                                    Cancelar
+                                    {t('repositories.stashModal.buttons.cancel')}
                                 </Button>
                                 <Button
                                     size="default"
@@ -2736,10 +2765,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {stashing ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Guardando...
+                                            {t('repositories.stashModal.buttons.saving')}
                                         </span>
                                     ) : (
-                                        "Crear"
+                                        t('repositories.stashModal.buttons.create')
                                     )}
                                 </Button>
                             </div>
@@ -2775,10 +2804,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Stashes
+                                    {t('repositories.stashListModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Selecciona un stash para aplicarlo (pop) y restaurar tus cambios guardados
+                                    {t('repositories.stashListModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
@@ -2786,7 +2815,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             {loadingStashList ? (
                                 <div className="flex items-center justify-center py-12">
                                     <RefreshCw className="h-6 w-6 animate-spin text-primary" />
-                                    <span className="ml-3 text-sm text-slate-600 dark:text-slate-400 font-medium">Cargando stashes...</span>
+                                    <span className="ml-3 text-sm text-slate-600 dark:text-slate-400 font-medium">{t('repositories.stashListModal.loading')}</span>
                                 </div>
                             ) : stashList.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-16 px-4">
@@ -2794,10 +2823,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         <Archive className="h-10 w-10 text-primary" />
                                     </div>
                                     <p className="text-base font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                                        No hay stashes disponibles
+                                        {t('repositories.stashListModal.empty.title')}
                                     </p>
                                     <p className="text-sm text-slate-600 dark:text-slate-400 text-center max-w-sm">
-                                        Los stashes te permiten guardar temporalmente cambios sin hacer commit. Crea uno desde el menú de stashes.
+                                        {t('repositories.stashListModal.empty.description')}
                                     </p>
                                 </div>
                             ) : (
@@ -2807,10 +2836,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             <thead>
                                                 <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
                                                     <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider w-12"></th>
-                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Referencia</th>
-                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Mensaje</th>
-                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Fecha</th>
-                                                    <th className="text-center p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider w-20">Acciones</th>
+                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">{t('repositories.stashListModal.table.reference')}</th>
+                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">{t('repositories.stashListModal.table.message')}</th>
+                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">{t('repositories.stashListModal.table.date')}</th>
+                                                    <th className="text-center p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider w-20">{t('repositories.stashListModal.table.actions')}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -2862,7 +2891,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                                     setStashToDelete({ ref: stash.ref, message: stash.message });
                                                                 }}
                                                                 disabled={applyingStash !== null || deletingStash || clearingAllStashes}
-                                                                title="Eliminar stash"
+                                                                title={t('repositories.stashListModal.buttons.deleteStash')}
                                                             >
                                                                 <Trash2 className="h-4 w-4" />
                                                             </Button>
@@ -2887,7 +2916,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={applyingStash !== null || deletingStash || clearingAllStashes}
                                 >
-                                    Cerrar
+                                    {t('repositories.stashListModal.buttons.close')}
                                 </Button>
                                 {stashList.length > 0 && (
                                     <Button
@@ -2898,7 +2927,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         disabled={applyingStash !== null || deletingStash || clearingAllStashes}
                                     >
                                         <Trash2 className="h-4 w-4 mr-2" />
-                                        Limpiar Todos
+                                        {t('repositories.stashListModal.buttons.clearAll')}
                                     </Button>
                                 )}
                                 <Button
@@ -2910,10 +2939,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {applyingStash ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Aplicando...
+                                            {t('repositories.stashListModal.buttons.applying')}
                                         </span>
                                     ) : (
-                                        "Aplicar"
+                                        t('repositories.stashListModal.buttons.apply')
                                     )}
                                 </Button>
                             </div>
@@ -2934,9 +2963,9 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 >
                     <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
                         <CardHeader className="p-4">
-                            <CardTitle className="text-lg">Confirmar Eliminación</CardTitle>
+                            <CardTitle className="text-lg">{t('repositories.stashListModal.deleteConfirm.title')}</CardTitle>
                             <CardDescription className="text-sm">
-                                ¿Estás seguro de que deseas eliminar este stash?
+                                {t('repositories.stashListModal.deleteConfirm.description')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="p-4 pt-0 space-y-4">
@@ -2949,7 +2978,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </p>
                             </div>
                             <p className="text-xs text-slate-500 dark:text-slate-400">
-                                Esta acción no se puede deshacer. El stash será eliminado permanentemente.
+                                {t('repositories.stashListModal.deleteConfirm.warning')}
                             </p>
                             <div className="flex gap-2 pt-2">
                                 <Button
@@ -2959,7 +2988,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     onClick={() => setStashToDelete(null)}
                                     disabled={deletingStash}
                                 >
-                                    Cancelar
+                                    {t('repositories.stashListModal.deleteConfirm.cancel')}
                                 </Button>
                                 <Button
                                     size="sm"
@@ -2970,10 +2999,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {deletingStash ? (
                                         <>
                                             <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                                            Eliminando...
+                                            {t('repositories.stashListModal.deleteConfirm.deleting')}
                                         </>
                                     ) : (
-                                        'Eliminar'
+                                        t('repositories.stashListModal.deleteConfirm.delete')
                                     )}
                                 </Button>
                             </div>
@@ -2994,19 +3023,35 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 >
                     <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
                         <CardHeader className="p-4">
-                            <CardTitle className="text-lg">Confirmar Limpieza</CardTitle>
+                            <CardTitle className="text-lg">{t('repositories.stashListModal.clearAllConfirm.title')}</CardTitle>
                             <CardDescription className="text-sm">
-                                ¿Estás seguro de que deseas eliminar todos los stashes?
+                                {t('repositories.stashListModal.clearAllConfirm.description')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="p-4 pt-0 space-y-4">
                             <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
                                 <p className="text-sm text-slate-700 dark:text-slate-300 mb-1">
-                                    Se eliminarán <span className="font-semibold">{stashList.length}</span> {stashList.length === 1 ? 'stash' : 'stashes'}.
+                                    {(() => {
+                                        const template = t('repositories.stashListModal.clearAllConfirm.warning', {
+                                            count: stashList.length,
+                                            stash: stashList.length === 1 
+                                                ? t('repositories.stashListModal.clearAllConfirm.stash')
+                                                : t('repositories.stashListModal.clearAllConfirm.stashes')
+                                        });
+                                        // Reemplazar el número con una versión en negrita
+                                        const parts = template.split(String(stashList.length));
+                                        return (
+                                            <>
+                                                {parts[0]}
+                                                <span className="font-semibold">{stashList.length}</span>
+                                                {parts[1]}
+                                            </>
+                                        );
+                                    })()}
                                 </p>
                             </div>
                             <p className="text-xs text-slate-500 dark:text-slate-400">
-                                Esta acción no se puede deshacer. Todos los stashes serán eliminados permanentemente.
+                                {t('repositories.stashListModal.clearAllConfirm.permanentWarning')}
                             </p>
                             <div className="flex gap-2 pt-2">
                                 <Button
@@ -3016,7 +3061,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     onClick={() => setShowClearAllConfirm(false)}
                                     disabled={clearingAllStashes}
                                 >
-                                    Cancelar
+                                    {t('repositories.stashListModal.clearAllConfirm.cancel')}
                                 </Button>
                                 <Button
                                     size="sm"
@@ -3027,10 +3072,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {clearingAllStashes ? (
                                         <>
                                             <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                                            Eliminando...
+                                            {t('repositories.stashListModal.clearAllConfirm.deleting')}
                                         </>
                                     ) : (
-                                        'Eliminar Todos'
+                                        t('repositories.stashListModal.clearAllConfirm.deleteAll')
                                     )}
                                 </Button>
                             </div>
@@ -3062,16 +3107,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Revert Commit
+                                    {t('repositories.revertModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Crear un nuevo commit que deshace los cambios de este commit
+                                    {t('repositories.revertModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-3">
-                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Commit a revertir</label>
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('repositories.revertModal.fields.commitToRevert')}</label>
                                 <div className="px-4 py-3 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3 shadow-sm">
                                     <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
                                         <Undo2 className="h-4 w-4 text-orange-600 dark:text-orange-400" />
@@ -3089,7 +3134,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 <div className="flex items-start gap-3">
                                     <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
                                     <p className="text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
-                                        Esto creará un nuevo commit que revierte los cambios realizados en el commit seleccionado. El commit original permanecerá en el historial y no se eliminará.
+                                        {t('repositories.revertModal.warning')}
                                     </p>
                                 </div>
                             </div>
@@ -3104,21 +3149,21 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={reverting}
                                 >
-                                    Cancelar
+                                    {t('repositories.revertModal.buttons.cancel')}
                                 </Button>
                                 <Button
                                     size="default"
-                                    className="min-w-[120px] bg-orange-600 hover:bg-orange-700 text-white shadow-lg shadow-orange-600/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                                     onClick={handleRevert}
                                     disabled={reverting}
                                 >
                                     {reverting ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Revirtiendo...
+                                            {t('repositories.revertModal.buttons.reverting')}
                                         </span>
                                     ) : (
-                                        'Revertir'
+                                        t('repositories.revertModal.buttons.revert')
                                     )}
                                 </Button>
                             </div>
@@ -3154,16 +3199,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Cherry Pick
+                                    {t('repositories.cherryPickModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Aplicar cambios del commit individual al branch actual
+                                    {t('repositories.cherryPickModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-3">
-                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Commit a aplicar</label>
+                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('repositories.cherryPickModal.fields.commitToApply')}</label>
                                 <div className="px-4 py-3 text-sm border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center gap-3 shadow-sm">
                                     <div className="p-2 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg">
                                         <GitMerge className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
@@ -3182,10 +3227,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex-1 space-y-2">
                                             <label htmlFor="cherry-pick-commit" className="text-sm font-semibold text-slate-700 dark:text-slate-300 block cursor-pointer">
-                                                Hacer commit de los cambios
+                                                {t('repositories.cherryPickModal.fields.commitChanges.label')}
                                             </label>
                                             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                                                Crear automáticamente un commit con los cambios cherry-picked. Si está desactivado, los cambios quedarán en staging pero no se hará commit, permitiéndote revisarlos y modificarlos antes de hacer commit.
+                                                {t('repositories.cherryPickModal.fields.commitChanges.hint')}
                                             </p>
                                         </div>
                                         <div className="pt-0.5">
@@ -3213,7 +3258,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                     ? "text-slate-700 dark:text-slate-300 cursor-pointer" 
                                                     : "text-slate-500 dark:text-slate-500 cursor-not-allowed"
                                             )}>
-                                                Agregar origen al mensaje del commit
+                                                {t('repositories.cherryPickModal.fields.appendOrigin.label')}
                                             </label>
                                             <p className={cn(
                                                 "text-xs leading-relaxed",
@@ -3221,7 +3266,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                     ? "text-slate-600 dark:text-slate-400" 
                                                     : "text-slate-400 dark:text-slate-600"
                                             )}>
-                                                Agregar una referencia al commit original al final del mensaje del commit (ej: "(cherry picked from commit abc1234")"). Esto ayuda a rastrear de dónde vinieron los cambios en el historial de git. Solo disponible cuando "Hacer commit de los cambios" está habilitado.
+                                                {t('repositories.cherryPickModal.fields.appendOrigin.hint')}
                                             </p>
                                         </div>
                                         <div className="pt-0.5">
@@ -3248,7 +3293,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={cherryPicking}
                                 >
-                                    Cancelar
+                                    {t('repositories.cherryPickModal.buttons.cancel')}
                                 </Button>
                                 <Button
                                     size="default"
@@ -3259,10 +3304,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {cherryPicking ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Aplicando...
+                                            {t('repositories.cherryPickModal.buttons.applying')}
                                         </span>
                                     ) : (
-                                        'Aplicar'
+                                        t('repositories.cherryPickModal.buttons.apply')
                                     )}
                                 </Button>
                             </div>

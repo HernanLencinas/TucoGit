@@ -9,6 +9,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronRight, ChevronLeft, Check, Sparkles, FolderGit2, Settings, Link2, User, Mail, GitBranch, Zap, Shield, Palette, Code, Layers } from "lucide-react";
+import { useI18n } from "@/renderer/hooks/useI18n";
 
 /**
  * Propiedades del componente WelcomeWizard.
@@ -33,6 +34,7 @@ interface WelcomeWizardProps {
  * @returns {JSX.Element} Componente de wizard de bienvenida
  */
 export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
+  const { t } = useI18n();
   const [pasoActual, setPasoActual] = useState(1);
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [emailUsuario, setEmailUsuario] = useState("");
@@ -47,8 +49,8 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
 
   const pasos = [
     {
-      titulo: "Bienvenido a Tuco",
-      descripcion: "La solución completa para gestionar tus repositorios Git",
+      titulo: t('wizard.welcome.title'),
+      descripcion: t('wizard.welcome.description'),
       contenido: (
         <div className="space-y-8 py-4">
           <div className="flex justify-center">
@@ -76,23 +78,22 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
             </div>
           </div>
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-foreground">Gestiona todos tus proyectos Git en un solo lugar</h3>
+            <h3 className="text-2xl font-bold text-foreground">{t('wizard.welcome.mainTitle')}</h3>
             <p className="text-base text-muted-foreground leading-relaxed">
-              Tuco es una herramienta profesional diseñada para simplificar la gestión de tus repositorios Git. 
-              Conecta múltiples servicios, organiza tus proyectos y optimiza tu flujo de trabajo de desarrollo.
+              {t('wizard.welcome.mainDescription')}
             </p>
             <div className="grid grid-cols-3 gap-4 pt-4">
               <div className="flex flex-col items-center space-y-2 p-4 rounded-lg bg-secondary/30">
                 <GitBranch className="h-8 w-8 text-primary" />
-                <span className="text-xs font-medium text-center">Control de Versiones</span>
+                <span className="text-xs font-medium text-center">{t('wizard.welcome.features.versionControl')}</span>
               </div>
               <div className="flex flex-col items-center space-y-2 p-4 rounded-lg bg-secondary/30">
                 <Layers className="h-8 w-8 text-primary" />
-                <span className="text-xs font-medium text-center">Organización</span>
+                <span className="text-xs font-medium text-center">{t('wizard.welcome.features.organization')}</span>
               </div>
               <div className="flex flex-col items-center space-y-2 p-4 rounded-lg bg-secondary/30">
                 <Zap className="h-8 w-8 text-primary" />
-                <span className="text-xs font-medium text-center">Productividad</span>
+                <span className="text-xs font-medium text-center">{t('wizard.welcome.features.productivity')}</span>
               </div>
             </div>
           </div>
@@ -100,8 +101,8 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
       )
     },
     {
-      titulo: "Configura tu identidad Git",
-      descripcion: "Establece tu información de usuario para los commits",
+      titulo: t('wizard.gitIdentity.title'),
+      descripcion: t('wizard.gitIdentity.description'),
       contenido: (
         <div className="space-y-8 py-4">
           <div className="space-y-6 max-w-xl mx-auto">
@@ -109,24 +110,24 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
               <div className="space-y-3">
                 <label htmlFor="nombre-usuario" className="text-sm font-semibold flex items-center gap-2 text-foreground">
                   <User className="h-4 w-4 text-primary" />
-                  Nombre completo
+                  {t('wizard.gitIdentity.fullName')}
                 </label>
                 <input
                   id="nombre-usuario"
                   type="text"
                   value={nombreUsuario}
                   onChange={(e) => setNombreUsuario(e.target.value)}
-                  placeholder="Ej: Juan Pérez"
+                  placeholder={t('wizard.gitIdentity.fullNamePlaceholder')}
                   className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Este nombre aparecerá como autor en todos tus commits de Git
+                  {t('wizard.gitIdentity.fullNameDescription')}
                 </p>
               </div>
               <div className="space-y-3">
                 <label htmlFor="email-usuario" className="text-sm font-semibold flex items-center gap-2 text-foreground">
                   <Mail className="h-4 w-4 text-primary" />
-                  Correo electrónico
+                  {t('wizard.gitIdentity.email')}
                 </label>
                 <input
                   id="email-usuario"
@@ -135,19 +136,19 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
                   onChange={(e) => {
                     setEmailUsuario(e.target.value);
                     if (e.target.value.trim() && !validarEmail(e.target.value)) {
-                      setErrorEmail("Por favor ingresa un correo electrónico válido");
+                      setErrorEmail(t('wizard.gitIdentity.emailInvalid'));
                     } else {
                       setErrorEmail("");
                     }
                   }}
                   onBlur={(e) => {
                     if (e.target.value.trim() && !validarEmail(e.target.value)) {
-                      setErrorEmail("Por favor ingresa un correo electrónico válido");
+                      setErrorEmail(t('wizard.gitIdentity.emailInvalid'));
                     } else {
                       setErrorEmail("");
                     }
                   }}
-                  placeholder="Ej: juan.perez@ejemplo.com"
+                  placeholder={t('wizard.gitIdentity.emailPlaceholder')}
                   className={`w-full px-4 py-3 rounded-lg border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all ${
                     errorEmail ? "border-destructive focus:ring-destructive" : "border-input"
                   }`}
@@ -159,7 +160,7 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
                   </p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Utiliza el mismo correo asociado a tu cuenta de GitHub, GitLab u otros servicios
+                  {t('wizard.gitIdentity.emailDescription')}
                 </p>
               </div>
             </div>
@@ -167,8 +168,7 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
               <p className="text-sm text-foreground flex items-start gap-2">
                 <Shield className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
                 <span>
-                  Esta información se configurará como tu identidad predeterminada de Git y se utilizará 
-                  para firmar todos tus commits. Podrás modificarla más tarde en la configuración.
+                  {t('wizard.gitIdentity.info')}
                 </span>
               </p>
             </div>
@@ -177,8 +177,8 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
       )
     },
     {
-      titulo: "Gestión de repositorios",
-      descripcion: "Organiza y administra todos tus proyectos Git de forma eficiente",
+      titulo: t('wizard.repositoryManagement.title'),
+      descripcion: t('wizard.repositoryManagement.description'),
       contenido: (
         <div className="space-y-8 py-4">
           <div className="space-y-6 max-w-2xl mx-auto">
@@ -189,9 +189,9 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
                     <Layers className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">Colecciones personalizadas</h4>
+                    <h4 className="font-semibold text-foreground mb-1">{t('wizard.repositoryManagement.customCollections.title')}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Agrupa tus repositorios en colecciones temáticas para mantener todo organizado y fácil de encontrar
+                      {t('wizard.repositoryManagement.customCollections.description')}
                     </p>
                   </div>
                 </div>
@@ -202,9 +202,9 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
                     <Code className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">Clonación directa</h4>
+                    <h4 className="font-semibold text-foreground mb-1">{t('wizard.repositoryManagement.directClone.title')}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Clona repositorios desde servicios remotos directamente desde la interfaz, sin necesidad de usar la terminal
+                      {t('wizard.repositoryManagement.directClone.description')}
                     </p>
                   </div>
                 </div>
@@ -215,9 +215,9 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
                     <Zap className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">Estado en tiempo real</h4>
+                    <h4 className="font-semibold text-foreground mb-1">{t('wizard.repositoryManagement.realTimeStatus.title')}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Visualiza el estado de tus repositorios, ramas, commits y cambios pendientes de forma instantánea
+                      {t('wizard.repositoryManagement.realTimeStatus.description')}
                     </p>
                   </div>
                 </div>
@@ -225,7 +225,7 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
             </div>
             <div className="bg-muted/30 rounded-lg p-4 text-center">
               <p className="text-sm text-foreground">
-                <span className="font-semibold">Todo en un solo lugar:</span> Accede a todos tus proyectos Git desde una interfaz unificada y profesional
+                {t('wizard.repositoryManagement.allInOne')}
               </p>
             </div>
           </div>
@@ -233,8 +233,8 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
       )
     },
     {
-      titulo: "Integración con servicios Git",
-      descripcion: "Conecta tus cuentas y sincroniza tus repositorios automáticamente",
+      titulo: t('wizard.gitIntegration.title'),
+      descripcion: t('wizard.gitIntegration.description'),
       contenido: (
         <div className="space-y-8 py-4">
           <div className="space-y-6 max-w-2xl mx-auto">
@@ -245,9 +245,9 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
                     <Link2 className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">Múltiples proveedores</h4>
+                    <h4 className="font-semibold text-foreground mb-1">{t('wizard.gitIntegration.multipleProviders.title')}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Conecta con GitHub, GitLab, Bitbucket, Gitea, Codeberg y otros servicios Git compatibles
+                      {t('wizard.gitIntegration.multipleProviders.description')}
                     </p>
                   </div>
                 </div>
@@ -258,9 +258,9 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
                     <Zap className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">Sincronización automática</h4>
+                    <h4 className="font-semibold text-foreground mb-1">{t('wizard.gitIntegration.autoSync.title')}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Mantén tus repositorios actualizados automáticamente y accede a la información más reciente sin esfuerzo
+                      {t('wizard.gitIntegration.autoSync.description')}
                     </p>
                   </div>
                 </div>
@@ -271,9 +271,9 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
                     <Shield className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">Gestión de múltiples cuentas</h4>
+                    <h4 className="font-semibold text-foreground mb-1">{t('wizard.gitIntegration.multipleAccounts.title')}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Administra varias cuentas y organizaciones desde un solo lugar con total seguridad
+                      {t('wizard.gitIntegration.multipleAccounts.description')}
                     </p>
                   </div>
                 </div>
@@ -281,7 +281,7 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
             </div>
             <div className="bg-muted/30 rounded-lg p-4 text-center">
               <p className="text-sm text-foreground">
-                <span className="font-semibold">Acceso centralizado:</span> Todos tus repositorios remotos disponibles sin salir de la aplicación
+                {t('wizard.gitIntegration.centralizedAccess')}
               </p>
             </div>
           </div>
@@ -289,8 +289,8 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
       )
     },
     {
-      titulo: "Personalización avanzada",
-      descripcion: "Adapta la aplicación a tu estilo de trabajo y preferencias",
+      titulo: t('wizard.customization.title'),
+      descripcion: t('wizard.customization.description'),
       contenido: (
         <div className="space-y-8 py-4">
           <div className="space-y-6 max-w-2xl mx-auto">
@@ -301,9 +301,9 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
                     <Palette className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">Temas y apariencia</h4>
+                    <h4 className="font-semibold text-foreground mb-1">{t('wizard.customization.themes.title')}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Elige entre múltiples temas y personaliza la apariencia de la aplicación según tus preferencias visuales
+                      {t('wizard.customization.themes.description')}
                     </p>
                   </div>
                 </div>
@@ -314,9 +314,9 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
                     <Code className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">Integración con IDEs</h4>
+                    <h4 className="font-semibold text-foreground mb-1">{t('wizard.customization.ideIntegration.title')}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Configura tu editor de código favorito (VS Code, Cursor, IntelliJ, etc.) para abrir repositorios directamente
+                      {t('wizard.customization.ideIntegration.description')}
                     </p>
                   </div>
                 </div>
@@ -324,10 +324,10 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
             </div>
             <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-xl p-6 text-center">
               <p className="text-sm text-foreground mb-2">
-                <span className="font-semibold">Todo listo para comenzar</span>
+                <span className="font-semibold">{t('wizard.customization.readyToStart')}</span>
               </p>
               <p className="text-xs text-muted-foreground">
-                Configura la aplicación según tus necesidades y comienza a gestionar tus repositorios de forma profesional
+                {t('wizard.customization.readyDescription')}
               </p>
             </div>
           </div>
@@ -349,11 +349,11 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
         return; // No avanzar si falta el nombre
       }
       if (!emailUsuario.trim()) {
-        setErrorEmail("El correo electrónico es requerido");
+        setErrorEmail(t('wizard.gitIdentity.emailRequired'));
         return; // No avanzar si falta el email
       }
       if (!validarEmail(emailUsuario.trim())) {
-        setErrorEmail("Por favor ingresa un correo electrónico válido");
+        setErrorEmail(t('wizard.gitIdentity.emailInvalid'));
         return; // No avanzar si el email no es válido
       }
       setErrorEmail(""); // Limpiar error si todo está bien
@@ -403,11 +403,11 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
               className="flex items-center gap-2"
             >
               <ChevronLeft className="h-4 w-4" />
-              Anterior
+              {t('wizard.navigation.previous')}
             </Button>
             
             <div className="text-sm text-muted-foreground">
-              Paso {pasoActual} de {totalPasos}
+              {t('wizard.navigation.step', { current: pasoActual, total: totalPasos })}
             </div>
             
             <Button
@@ -418,11 +418,11 @@ export const WelcomeWizard = ({ onComplete }: WelcomeWizardProps) => {
               {pasoActual === totalPasos ? (
                 <>
                   <Sparkles className="h-4 w-4" />
-                  Comenzar
+                  {t('wizard.navigation.start')}
                 </>
               ) : (
                 <>
-                  Siguiente
+                  {t('wizard.navigation.next')}
                   <ChevronRight className="h-4 w-4" />
                 </>
               )}

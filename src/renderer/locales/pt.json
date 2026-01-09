@@ -1,0 +1,1151 @@
+{
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "search": "Pesquisar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "warning": "Aviso",
+    "info": "Informação",
+    "selected": "Selecionado",
+    "noAvailable": "Não disponível",
+    "loadingText": "Carregando...",
+    "default": "Padrão",
+    "actions": "Ações",
+    "fullName": "Nome completo",
+    "email": "E-mail",
+    "tabs": {
+      "home": "Início",
+      "repositories": "Repositórios",
+      "connections": "Conexões",
+      "settings": "Configurações"
+    },
+    "theme": {
+      "switchToLight": "Alternar para modo claro",
+      "switchToDark": "Alternar para modo escuro"
+    },
+    "loadingScreen": {
+      "messages": [
+        "Carregando Tuco...",
+        "Preparando o ambiente...",
+        "Inicializando repositórios...",
+        "Configurando conexões...",
+        "Carregando configuração...",
+        "Preparando tudo para você...",
+        "Só um momento, quase lá...",
+        "Organizando seus repositórios...",
+        "Carregando dados...",
+        "Preparando a interface...",
+        "Inicializando componentes...",
+        "Quase pronto...",
+        "Configurando Git...",
+        "Carregando preferências...",
+        "Preparando a experiência...",
+        "Procurando commits perdidos...",
+        "Sincronizando com o universo Git...",
+        "Carregando a mágica do código...",
+        "Preparando seu workspace...",
+        "Quase pronto, não vá embora...",
+        "Organizando a biblioteca de repositórios...",
+        "Carregando superpoderes Git...",
+        "Preparando o palco...",
+        "Toques finais...",
+        "Carregando a melhor experiência...",
+        "Preparando tudo para você brilhar...",
+        "Quase lá, aguarde um pouco mais...",
+        "Carregando sua próxima grande ideia...",
+        "Preparando o ambiente perfeito...",
+        "Toques mágicos finais...",
+        "Despertando os repositórios...",
+        "Carregando o poder do Git...",
+        "Preparando seu arsenal de código...",
+        "Sincronizando com as estrelas...",
+        "Carregando a sabedoria dos commits...",
+        "Preparando a jornada épica...",
+        "Carregando energia de desenvolvedor...",
+        "Organizando o caos criativo...",
+        "Preparando a revolução do código...",
+        "Carregando inspiração infinita...",
+        "Sintonizando na frequência Git...",
+        "Preparando seu momento de glória...",
+        "Carregando o motor de inovação...",
+        "Desbloqueando superpoderes do código...",
+        "Preparando o palco para o sucesso...",
+        "Carregando a fórmula secreta...",
+        "Sincronizando neurônios com Git...",
+        "Preparando a transformação digital...",
+        "Carregando o elixir perfeito do código...",
+        "Ativando modo desenvolvedor ninja...",
+        "Preparando a máquina do tempo Git...",
+        "Carregando a biblioteca infinita...",
+        "Sintonizando na matriz do código...",
+        "Preparando sua ascensão ao próximo nível...",
+        "Carregando a essência do desenvolvimento...",
+        "Despertando repositórios adormecidos..."
+      ]
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "tabs": {
+      "general": "Geral",
+      "data": "Dados",
+      "git": "Git",
+      "appearance": "Aparência",
+      "updates": "Atualizações",
+      "about": "Sobre"
+    },
+    "general": {
+      "title": "Configurações Gerais",
+      "description": "Personalize as opções gerais do aplicativo",
+      "preferredIDE": {
+        "title": "Editor IDE Preferido",
+        "description": "Selecione o editor que será usado para abrir repositórios a partir dos cartões",
+        "selected": "Selecionado",
+        "noEditorSelected": "Nenhum editor selecionado",
+        "selectEditor": "Selecione um editor IDE...",
+        "info": "Os repositórios serão abertos automaticamente com {{ide}} quando você clicar no botão de abrir.",
+        "noEditorsAvailable": "Nenhum editor disponível",
+        "installEditor": "Instale um editor IDE para vê-lo aqui",
+        "editorChanged": "Editor IDE alterado para {{ide}}",
+        "errorSaving": "Erro ao salvar configuração"
+      },
+      "uiLanguage": {
+        "title": "Idioma da Interface",
+        "description": "Selecione o idioma que será exibido na interface do usuário",
+        "english": "Inglês (Estados Unidos)",
+        "spanish": "Espanhol (Argentina)",
+        "german": "Alemão",
+        "french": "Francês",
+        "portuguese": "Português",
+        "selected": "Selecionado",
+        "changed": "Idioma alterado para {{language}}",
+        "error": "Erro ao salvar configuração"
+      }
+    },
+    "data": {
+      "title": "Gerenciamento de Dados",
+      "description": "Gerencie a localização e o backup da sua configuração",
+      "configLocation": {
+        "title": "Localização da Configuração",
+        "description": "Selecione a pasta onde o arquivo de configuração será salvo",
+        "selectFolder": "Selecionar Pasta"
+      },
+      "fileInfo": {
+        "title": "Informações do Arquivo",
+        "description": "Detalhes sobre o arquivo de configuração e última modificação",
+        "configFile": "Arquivo de Configuração",
+        "lastUpdate": "Última Atualização"
+      },
+      "management": {
+        "title": "Gerenciamento de Configuração",
+        "description": "Importe ou exporte seu arquivo de configuração para fazer backup ou restaurar suas configurações",
+        "import": "Importar",
+        "export": "Exportar",
+        "exportSuccess": "Configuração exportada com sucesso",
+        "exportError": "Erro ao exportar: {{error}}",
+        "noConfigToExport": "Nenhuma configuração para exportar",
+        "functionalityNotAvailable": "Funcionalidade não disponível",
+        "importSuccess": "Configuração importada com sucesso. Recarregando dados...",
+        "dataReloaded": "Dados recarregados com sucesso",
+        "importError": "Erro ao importar: {{error}}",
+        "importNotAvailable": "Funcionalidade de importação não disponível",
+        "invalidJson": "O arquivo selecionado não é um JSON válido",
+        "importConfigError": "Erro ao importar configuração: {{error}}"
+      },
+      "reset": {
+        "title": "Redefinir Configuração",
+        "description": "Exclui toda a configuração e restaura os valores padrão. Esta ação não pode ser desfeita.",
+        "warning": "Aviso",
+        "warningMessage": "Esta ação excluirá todas as suas configurações, conexões e preferências salvas.",
+        "restoreConfig": "Restaurar Configuração"
+      }
+    },
+    "git": {
+      "title": "Configuração Git",
+      "description": "Configure sua identidade e preferências de segurança para Git",
+      "identities": {
+        "title": "Identidades",
+        "description": "Gerencie múltiplas identidades de usuário para usar em diferentes repositórios",
+        "newIdentity": "Nova Identidade",
+        "noIdentities": "Nenhuma identidade configurada",
+        "addIdentity": "Adicione uma identidade para começar"
+      },
+      "commitBehavior": {
+        "title": "Comportamento do Botão Commit",
+        "description": "Selecione qual ação o botão commit executará no painel de status Git",
+        "buttonAction": "Ação do botão",
+        "commit": "Commit",
+        "commitPush": "Commit + Push",
+        "commitSync": "Commit + Sync",
+        "commitDescription": "Apenas faz commit dos arquivos em stage. Não sincroniza com o repositório remoto.",
+        "commitPushDescription": "Faz commit e depois envia as alterações para o repositório remoto. Não baixa alterações do remoto.",
+        "commitSyncDescription": "Faz commit, baixa alterações do remoto (fetch + pull) e depois envia alterações locais (push). Sincroniza completamente com o repositório remoto."
+      },
+      "security": {
+        "title": "Segurança e Rede",
+        "description": "Configurações de conexão e verificação de certificado SSL",
+        "sslVerify": "Verificação de Certificado SSL",
+        "activated": "ATIVADO",
+        "deactivated": "DESATIVADO",
+        "sslDescription": "Desative se tiver problemas com certificados autoassinados ou proxies corporativos. Equivalente a http.sslVerify=false",
+        "sslWarning": "A verificação SSL está desativada. Isso pode ser um risco de segurança.",
+        "sslActivated": "Verificação SSL ativada",
+        "sslDeactivated": "Verificação SSL desativada",
+        "sslError": "Erro ao salvar configuração SSL"
+      }
+    },
+    "appearance": {
+      "title": "Aparência",
+      "description": "Personalize o tema e o tamanho dos componentes do aplicativo",
+      "themes": {
+        "title": "Temas",
+        "description": "Selecione um estilo de tema para personalizar a aparência",
+        "dark": "Escuro",
+        "light": "Claro"
+      },
+      "componentSize": {
+        "title": "Tamanho dos Componentes",
+        "description": "Ajuste o zoom da interface para melhorar a legibilidade e o conforto",
+        "zoomLevel": "Nível de Zoom",
+        "zoomDescription": "Afeta o tamanho do texto, ícones e espaçamento de todos os componentes",
+        "zoomInfo": "O zoom é aplicado imediatamente. Recomendado: 100% para a melhor experiência."
+      }
+    },
+    "updates": {
+      "title": "Atualizações",
+      "description": "Informações sobre a versão atual e última modificação de configuração",
+      "currentVersion": {
+        "title": "Versão Atual",
+        "description": "Informações sobre a versão do aplicativo instalada",
+        "appVersion": "Versão do aplicativo",
+        "latestVersion": "Você está usando a versão mais recente disponível"
+      },
+      "lastUpdate": {
+        "title": "Última Atualização",
+        "description": "Data e hora da última modificação de configuração",
+        "configModified": "Configuração Modificada",
+        "autoUpdateInfo": "Esta data é atualizada automaticamente quando você modifica qualquer configuração do aplicativo."
+      },
+      "systemInfo": {
+        "title": "Informações do Sistema",
+        "description": "Versões das tecnologias usadas pelo aplicativo",
+        "platform": "Plataforma",
+        "electron": "Electron",
+        "chrome": "Chrome"
+      },
+      "aboutUpdates": {
+        "title": "Sobre Atualizações",
+        "description": "As atualizações do aplicativo são gerenciadas automaticamente. Quando uma nova versão estiver disponível, você receberá uma notificação."
+      }
+    },
+    "about": {
+      "title": "Sobre",
+      "appDescription": "Cliente Git projetado para simplificar o gerenciamento de repositórios e reduzir a complexidade do trabalho diário, alinhado com fluxos de trabalho modernos e as operações de controle de versão mais comuns.",
+      "developer": {
+        "title": "Desenvolvedor",
+        "description": "Informações de contato e perfil do desenvolvedor",
+        "fullStack": "Desenvolvedor Full Stack",
+        "bio": "Criador e mantenedor do TucoGit. Apaixonado por criar ferramentas que simplificam o trabalho diário dos desenvolvedores."
+      },
+      "support": {
+        "title": "Suporte e Comunidade",
+        "description": "Reporte problemas, compartilhe ideias e participe da comunidade",
+        "reportIssue": "Reportar um Problema",
+        "reportIssueDescription": "Abra uma issue no GitHub para reportar bugs ou solicitar funcionalidades",
+        "discussions": "Discussões",
+        "discussionsDescription": "Participe de discussões, compartilhe ideias e obtenha ajuda da comunidade"
+      },
+      "contact": {
+        "email": "E-mail",
+        "github": "GitHub"
+      },
+      "footer": {
+        "madeWith": "Feito com",
+        "openSource": "código aberto",
+        "openSourceBadge": "Código Aberto",
+        "beta": "Beta"
+      }
+    }
+  },
+  "home": {
+    "title": "Início",
+    "welcome": {
+      "title": "Bem-vindo ao",
+      "subtitle": "Seu centro de controle Git",
+      "description": "Organize e gerencie todos os seus repositórios Git em um só lugar. Conecte seus serviços favoritos e mantenha seu fluxo de trabalho eficiente e organizado.",
+      "connections": "Conexões",
+      "repositories": "Repositórios"
+    },
+    "quickNavigation": {
+      "title": "Navegação Rápida",
+      "home": {
+        "title": "Início",
+        "description": "Visão geral e estatísticas"
+      },
+      "repositories": {
+        "title": "Repositórios",
+        "description": "Explore seus projetos locais"
+      },
+      "connections": {
+        "title": "Conexões",
+        "description": "Gerencie seus serviços Git"
+      },
+      "settings": {
+        "title": "Configurações",
+        "description": "Preferências do aplicativo"
+      },
+      "configureConnection": {
+        "title": "Configurar conexão",
+        "description": "Vincular uma nova conta de serviço Git"
+      },
+      "configureGit": "Configurar integração Git"
+    },
+    "favorites": {
+      "title": "Favoritos",
+      "description": "Acesso rápido aos seus repositórios",
+      "noFavorites": "Nenhum favorito",
+      "noFavoritesDescription": "Os repositórios que você marcar como favoritos aparecerão aqui",
+      "removeFromFavorites": "Remover dos favoritos",
+      "openIn": "Abrir em {{ide}}"
+    }
+  },
+  "wizard": {
+    "welcome": {
+      "title": "Bem-vindo ao Tuco",
+      "description": "A solução completa para gerenciar seus repositórios Git",
+      "mainTitle": "Gerencie todos os seus projetos Git em um só lugar",
+      "mainDescription": "Tuco é uma ferramenta profissional projetada para simplificar o gerenciamento de seus repositórios Git. Conecte vários serviços, organize seus projetos e otimize seu fluxo de trabalho de desenvolvimento.",
+      "features": {
+        "versionControl": "Controle de Versão",
+        "organization": "Organização",
+        "productivity": "Produtividade"
+      }
+    },
+    "gitIdentity": {
+      "title": "Configure sua identidade Git",
+      "description": "Defina suas informações de usuário para commits",
+      "fullName": "Nome completo",
+      "fullNamePlaceholder": "Ex: João Silva",
+      "fullNameDescription": "Este nome aparecerá como autor em todos os seus commits Git",
+      "email": "E-mail",
+      "emailPlaceholder": "Ex: joao.silva@exemplo.com",
+      "emailDescription": "Use o mesmo e-mail associado às suas contas GitHub, GitLab ou outros serviços",
+      "emailRequired": "E-mail é obrigatório",
+      "emailInvalid": "Por favor, insira um endereço de e-mail válido",
+      "info": "Essas informações serão configuradas como sua identidade Git padrão e serão usadas para assinar todos os seus commits. Você pode modificá-las mais tarde nas configurações."
+    },
+    "repositoryManagement": {
+      "title": "Gerenciamento de repositórios",
+      "description": "Organize e gerencie todos os seus projetos Git com eficiência",
+      "customCollections": {
+        "title": "Coleções personalizadas",
+        "description": "Agrupe seus repositórios em coleções temáticas para manter tudo organizado e fácil de encontrar"
+      },
+      "directClone": {
+        "title": "Clonagem direta",
+        "description": "Clone repositórios de serviços remotos diretamente da interface, sem precisar usar o terminal"
+      },
+      "realTimeStatus": {
+        "title": "Status em tempo real",
+        "description": "Visualize o status de seus repositórios, branches, commits e alterações pendentes instantaneamente"
+      },
+      "allInOne": "Tudo em um só lugar: Acesse todos os seus projetos Git de uma interface unificada e profissional"
+    },
+    "gitIntegration": {
+      "title": "Integração de serviços Git",
+      "description": "Conecte suas contas e sincronize seus repositórios automaticamente",
+      "multipleProviders": {
+        "title": "Múltiplos provedores",
+        "description": "Conecte-se com GitHub, GitLab, Bitbucket, Gitea, Codeberg e outros serviços Git compatíveis"
+      },
+      "autoSync": {
+        "title": "Sincronização automática",
+        "description": "Mantenha seus repositórios atualizados automaticamente e acesse as informações mais recentes sem esforço"
+      },
+      "multipleAccounts": {
+        "title": "Gerenciamento de múltiplas contas",
+        "description": "Gerencie múltiplas contas e organizações de um só lugar com segurança completa"
+      },
+      "centralizedAccess": "Acesso centralizado: Todos os seus repositórios remotos disponíveis sem sair do aplicativo"
+    },
+    "customization": {
+      "title": "Personalização avançada",
+      "description": "Adapte o aplicativo ao seu estilo de trabalho e preferências",
+      "themes": {
+        "title": "Temas e aparência",
+        "description": "Escolha entre vários temas e personalize a aparência do aplicativo de acordo com suas preferências visuais"
+      },
+      "ideIntegration": {
+        "title": "Integração IDE",
+        "description": "Configure seu editor de código favorito (VS Code, Cursor, IntelliJ, etc.) para abrir repositórios diretamente"
+      },
+      "readyToStart": "Pronto para começar",
+      "readyDescription": "Configure o aplicativo de acordo com suas necessidades e comece a gerenciar seus repositórios profissionalmente"
+    },
+    "navigation": {
+      "previous": "Anterior",
+      "next": "Próximo",
+      "start": "Iniciar",
+      "step": "Etapa {{current}} de {{total}}"
+    }
+  },
+  "connections": {
+    "title": "Conexões",
+    "search": {
+      "placeholder": "Pesquisar conexões...",
+      "clear": "Limpar",
+      "clearSearch": "Limpar pesquisa",
+      "noResults": "Nenhum resultado encontrado para \"{{query}}\""
+    },
+    "sort": {
+      "title": "Ordenar",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "none": "Sem ordenação"
+    },
+    "actions": {
+      "refresh": "Atualizar",
+      "newConnection": "Nova Conexão",
+      "edit": "Editar",
+      "delete": "Excluir"
+    },
+    "empty": {
+      "title": "Nenhuma conexão definida",
+      "description": "Para começar, pressione o botão 'Nova Conexão' para criar sua primeira conexão com um provedor Git."
+    },
+    "status": {
+      "checking": "Verificando...",
+      "connected": "Conectado",
+      "expired": "Token expirado",
+      "disconnected": "Desconectado",
+      "noConnection": "Sem conexão",
+      "expiredMessage": "Atualize o token para ver informações",
+      "disconnectedMessage": "Não é possível conectar ao servidor",
+      "waiting": "Aguardando conexão..."
+    },
+    "stats": {
+      "remoteRepos": "Repositórios remotos",
+      "configuredLocally": "Configurado localmente",
+      "clonedLocally": "Clonado localmente",
+      "organizations": "Organizações:",
+      "noOrganizations": "Você não pertence a nenhuma organização"
+    },
+    "date": {
+      "notAvailable": "Data não disponível",
+      "justNow": "Criado agora mesmo",
+      "minutesAgo": "Criado há {{count}} {{count, plural, one {minuto} other {minutos}}}",
+      "hoursAgo": "Criado há {{count}} {{count, plural, one {hora} other {horas}}}",
+      "daysAgo": "Criado há {{count}} {{count, plural, one {dia} other {dias}}}",
+      "weeksAgo": "Criado há {{count}} {{count, plural, one {semana} other {semanas}}}",
+      "monthsAgo": "Criado há {{count}} {{count, plural, one {mês} other {meses}}}",
+      "yearsAgo": "Criado há {{count}} {{count, plural, one {ano} other {anos}}}"
+    }
+  },
+  "connectionWizard": {
+    "title": {
+      "new": "Nova Conexão",
+      "edit": "Editar Conexão"
+    },
+    "description": {
+      "new": "Configure uma nova conexão com seu provedor Git em algumas etapas",
+      "edit": "Modifique os dados da sua conexão Git"
+    },
+    "steps": {
+      "provider": "Provedor",
+      "authentication": "Autenticação",
+      "confirmation": "Confirmação"
+    },
+    "step1": {
+      "title": "Provedor Git",
+      "required": "*",
+      "description": "Selecione o provedor Git com o qual deseja se conectar",
+      "providers": {
+        "github": {
+          "name": "GitHub",
+          "description": "O mais popular para projetos open source"
+        },
+        "gitlab": {
+          "name": "GitLab",
+          "description": "Excelente para CI/CD integrado"
+        },
+        "gitea": {
+          "name": "Gitea",
+          "description": "Plataforma Git auto-hospedada"
+        },
+        "codeberg": {
+          "name": "Codeberg",
+          "description": "Alternativa gratuita e open source"
+        },
+        "gogs": {
+          "name": "Gogs",
+          "description": "Plataforma Git auto-hospedada"
+        }
+      }
+    },
+    "step2": {
+      "connectionName": {
+        "label": "Nome da Conexão",
+        "required": "(obrigatório)",
+        "description": "Digite um nome descritivo para identificar esta conexão",
+        "placeholder": "Ex: Minha conta GitHub"
+      },
+      "identity": {
+        "label": "Identidade Associada",
+        "description": "Selecione a identidade Git que será usada para esta conexão",
+        "select": "Selecionar identidade",
+        "default": "Padrão"
+      },
+      "token": {
+        "label": "Token de Acesso",
+        "required": "(obrigatório)",
+        "description": "Token de acesso pessoal",
+        "placeholder": "Digite seu token de acesso",
+        "validating": "Validando token e conectando ao servidor...",
+        "valid": "Token válido. Você pode continuar para a próxima etapa.",
+        "error": "Erro ao validar token",
+        "errorServerUrl": "Por favor, digite a URL do servidor",
+        "errorValidation": "Erro ao validar token",
+        "errorCannotValidate": "Erro: Não foi possível validar o token",
+        "errorUnexpected": "Erro inesperado ao validar token: {{message}}",
+        "errorInvalidOrInsufficient": "Token inválido ou permissões insuficientes"
+      },
+      "serverUrl": {
+        "label": "URL do Servidor",
+        "optional": "(opcional)",
+        "description": "URL base do servidor Git (apenas para servidores personalizados)"
+      }
+    },
+    "step3": {
+      "title": "Confirme os dados da sua conexão",
+      "description": "Revise as informações antes de salvar",
+      "fields": {
+        "provider": "Provedor:",
+        "name": "Nome:",
+        "url": "URL:",
+        "authType": "Tipo de Autenticação:",
+        "token": "Token:",
+        "authTypeValue": "Token"
+      }
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "previous": "Anterior",
+      "next": "Próximo",
+      "validating": "Validando...",
+      "save": "Salvar"
+    }
+  },
+  "repositories": {
+    "title": "Repositories",
+    "myRepositories": "My repositories",
+    "search": {
+      "placeholder": "Search collections and repositories...",
+      "clear": "Clear",
+      "clearSearch": "Clear search",
+      "noResults": "No results found for \"{{query}}\"",
+      "allCollections": "All collections"
+    },
+    "sort": {
+      "title": "Sort",
+      "ascending": "Ascending",
+      "descending": "Descending",
+      "none": "No sort"
+    },
+    "actions": {
+      "refresh": "Refresh",
+      "moreActions": "More actions",
+      "cloneAll": "Clone all",
+      "newCollection": "New Collection",
+      "newRepository": "New Repository",
+      "edit": "Edit",
+      "delete": "Delete",
+      "clone": "Clone",
+      "reclone": "Re-clone",
+      "openIn": "Open in {{ide}}",
+      "private": "Private"
+    },
+    "empty": {
+      "title": "No repositories defined",
+      "description": "To get started, click the \"New collection\" button to add your first collection.",
+      "newCollection": "New collection",
+      "newRepository": "New repository"
+    },
+    "collection": {
+      "element": "element",
+      "elements": "elements",
+      "collection": "collection",
+      "collections": "collections",
+      "repository": "repository",
+      "repositories": "repositories"
+    },
+    "repository": {
+      "notCloned": "Not cloned locally",
+      "gettingGitInfo": "Getting Git information...",
+      "currentBranch": "Current branch",
+      "uncommittedChanges": "Alterações locais não commitadas",
+      "pendingPush": "Pendente de envio (Push)",
+      "pendingPull": "Pendente de download (Pull)"
+    },
+    "newCollectionModal": {
+      "title": "Nova Coleção",
+      "description": "Organize seus repositórios em uma nova coleção personalizada",
+      "name": {
+        "label": "Nome da coleção",
+        "required": "(obrigatório)",
+        "placeholder": "Ex: Projetos Frontend, APIs Backend, etc.",
+        "errors": {
+          "required": "O nome é obrigatório",
+          "maxLength": "O nome não pode exceder 32 caracteres",
+          "duplicate": "Uma coleção com esse nome já existe",
+          "createError": "Erro ao criar coleção. Por favor, tente novamente."
+        }
+      },
+      "descriptionField": {
+        "label": "Descrição",
+        "optional": "(opcional)",
+        "placeholder": "Adicione uma descrição para identificar facilmente esta coleção...",
+        "errors": {
+          "maxLength": "A descrição não pode exceder 100 caracteres"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "creating": "Criando...",
+        "create": "Criar"
+      }
+    },
+    "editCollectionModal": {
+      "title": "Editar Coleção",
+      "description": "Modificar dados da coleção",
+      "name": {
+        "label": "Nome da coleção",
+        "required": "(obrigatório)",
+        "placeholder": "Nome da coleção",
+        "errors": {
+          "required": "O nome é obrigatório",
+          "maxLength": "O nome não pode exceder 32 caracteres",
+          "duplicate": "Uma coleção com esse nome já existe",
+          "duplicateLocation": "Uma coleção com esse nome já existe neste local",
+          "saveError": "Erro ao salvar coleção. Por favor, tente novamente."
+        }
+      },
+      "descriptionField": {
+        "label": "Descrição",
+        "optional": "(opcional)",
+        "placeholder": "Descrição opcional da coleção",
+        "errors": {
+          "maxLength": "A descrição não pode exceder 100 caracteres"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saving": "Salvando...",
+        "save": "Salvar"
+      }
+    },
+    "deleteCollectionModal": {
+      "title": "Excluir Coleção",
+      "description": "Esta ação não pode ser desfeita",
+      "warning": "Tem certeza de que deseja excluir esta coleção? Todos os repositórios dentro dela também serão excluídos. Esta ação é permanente e não pode ser desfeita.",
+      "buttons": {
+        "cancel": "Cancelar",
+        "delete": "Excluir"
+      }
+    },
+    "deleteRepositoryModal": {
+      "title": "Excluir Repositório",
+      "description": "Esta ação não pode ser desfeita",
+      "warning": "Tem certeza de que deseja excluir o repositório \"{{name}}\"? Esta ação é permanente e não pode ser desfeita.",
+      "buttons": {
+        "cancel": "Cancelar",
+        "delete": "Excluir"
+      }
+    },
+    "cloneRepositoryModal": {
+      "title": "Repositório já existe",
+      "description": "A pasta de destino já existe e não está vazia",
+      "warning": "Aviso: Todas as alterações locais não salvas nessa pasta serão perdidas. Deseja excluir a pasta existente e clonar o repositório novamente?",
+      "buttons": {
+        "cancel": "Cancelar",
+        "clone": "Clonar"
+      }
+    },
+    "newRepositoryWizard": {
+      "title": {
+        "new": "Novo Repositório",
+        "edit": "Editar Repositório"
+      },
+      "description": {
+        "new": "Adicione um novo repositório à sua coleção em algumas etapas",
+        "edit": "Modificar dados do repositório"
+      },
+      "steps": {
+        "connection": "Conexão",
+        "details": "Detalhes",
+        "confirmation": "Confirmação"
+      },
+      "step1": {
+        "connection": {
+          "label": "Selecione uma conexão",
+          "required": "(obrigatório)",
+          "description": "Escolha a conexão Git onde o repositório está localizado",
+          "placeholder": "Selecione uma conexão...",
+          "noConnections": "Nenhuma conexão disponível"
+        },
+        "repository": {
+          "label": "Selecione um repositório",
+          "required": "(obrigatório)",
+          "description": "Escolha o repositório que deseja adicionar",
+          "placeholder": "Selecione um repositório...",
+          "selectConnectionFirst": "Primeiro selecione uma conexão",
+          "loading": "Carregando repositórios...",
+          "searchPlaceholder": "Pesquisar repositórios...",
+          "noResults": "Nenhum repositório encontrado",
+          "noRepositories": "Nenhum repositório disponível"
+        }
+      },
+      "step2": {
+        "name": {
+          "label": "Nome do Repositório",
+          "required": "(obrigatório)",
+          "description": "Digite um nome descritivo para identificar este repositório",
+          "placeholder": "Ex: Meu projeto"
+        },
+        "description": {
+          "label": "Descrição",
+          "optional": "(opcional)",
+          "description": "Adicione uma descrição para este repositório",
+          "placeholder": "Descrição do repositório..."
+        }
+      },
+      "step3": {
+        "title": {
+          "new": "Confirmar dados do repositório",
+          "edit": "Confirmar alterações do repositório"
+        },
+        "description": {
+          "new": "Revise as informações antes de salvar",
+          "edit": "Revise as alterações antes de salvar"
+        },
+        "fields": {
+          "connection": "Conexão:",
+          "provider": "Provedor:",
+          "url": "URL:",
+          "repository": "Repositório:",
+          "name": "Nome:",
+          "description": "Descrição:"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "previous": "Anterior",
+        "next": "Próximo",
+        "save": "Salvar"
+      },
+      "errors": {
+        "selectConnection": "Por favor, selecione uma conexão",
+        "selectRepository": "Por favor, selecione um repositório",
+        "enterName": "Por favor, digite um nome para o repositório",
+        "duplicateName": "Um repositório com esse nome já existe neste local",
+        "repositoryNotFound": "Repositório não encontrado",
+        "loadError": "Erro ao carregar repositórios: {{message}}",
+        "saveError": "Erro ao salvar repositório: {{message}}",
+        "saveChangesError": "Erro ao salvar alterações. O repositório foi removido da visualização, mas pode não ter sido salvo no arquivo."
+      }
+    },
+    "preparing": "Preparando...",
+    "gitStatusPanel": {
+      "unstagedChanges": {
+        "title": "Alterações Não Preparadas",
+        "stageAll": "Preparar Tudo",
+        "noChanges": "Nenhuma alteração pendente",
+        "allFilesSynced": "Todos os arquivos estão sincronizados",
+        "stageFile": "Preparar arquivo",
+        "stageFolder": "Preparar pasta"
+      },
+      "stagedChanges": {
+        "title": "Alterações Preparadas",
+        "unstageAll": "Despreparar Tudo",
+        "noChanges": "Nenhuma alteração preparada",
+        "stageFilesToCommit": "Preparar arquivos para preparar seu commit",
+        "unstageFile": "Despreparar arquivo",
+        "unstageFolder": "Despreparar pasta"
+      },
+      "commitMessage": {
+        "title": "Mensagem de Commit",
+        "placeholder": "Digite a mensagem de commit...",
+        "placeholderNoStaged": "Preparar arquivos para poder fazer commit",
+        "button": {
+          "commit": "Commit",
+          "commitToBranch": "Commit para '{{branch}}'",
+          "commitPush": "Commit + Push",
+          "commitPushToBranch": "Commit + Push para '{{branch}}'",
+          "commitSync": "Commit + Sincronizar",
+          "commitSyncToBranch": "Commit + Sincronizar para '{{branch}}'",
+          "committing": "Fazendo commit",
+          "committingToBranch": "Fazendo commit para '{{branch}}'...",
+          "committingPushing": "Fazendo commit e push",
+          "committingPushingToBranch": "Fazendo commit e push para '{{branch}}'...",
+          "committingSyncing": "Fazendo commit e sincronizando",
+          "committingSyncingToBranch": "Fazendo commit e sincronizando para '{{branch}}'..."
+        },
+        "errors": {
+          "pullFailedConflicts": "Commit concluído com sucesso, mas o pull falhou devido a conflitos: {{message}}. Resolva os conflitos manualmente.",
+          "pushFailedNeedPull": "Commit concluído com sucesso, mas o push falhou: {{message}}. Você pode precisar fazer pull primeiro.",
+          "pushFailed": "Commit concluído com sucesso, mas o push falhou: {{message}}",
+          "additionalOperationFailed": "Commit concluído com sucesso, mas a operação adicional falhou: {{message}}"
+        }
+      }
+    },
+    "menuItems": {
+      "newBranch": "Nova Branch",
+      "newTag": "Nova Tag",
+      "actions": "Ações"
+    },
+    "search": {
+      "placeholder": "Pesquisar commits (mensagem, autor, hash)...",
+      "clear": "Limpar",
+      "commits": "commits"
+    },
+    "newBranchModal": {
+      "title": "Nova Branch",
+      "description": "Criar uma nova branch a partir de uma branch existente",
+      "fields": {
+        "branchName": {
+          "label": "Nome da nova branch",
+          "required": "(obrigatório)",
+          "hint": "O nome deve seguir as convenções do Git (sem espaços, use hífens ou underscores)",
+          "placeholder": "nome-branch"
+        },
+        "createFrom": {
+          "label": "Criar a partir de",
+          "hint": "Selecione a branch a partir da qual a nova branch será criada. A nova branch conterá todos os commits da branch selecionada.",
+          "placeholder": "Selecione uma branch",
+          "current": "(atual)",
+          "remotes": "Remotos",
+          "noBranches": "Nenhuma branch disponível"
+        }
+      },
+      "info": {
+        "willCreateFrom": "A nova branch {{branchName}} será criada a partir de {{fromBranch}}",
+        "currentBranch": " (sua branch atual)"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "create": "Criar",
+        "creating": "Criando..."
+      },
+      "errors": {
+        "createError": "Erro ao criar branch"
+      }
+    },
+    "newTagModal": {
+      "title": "Nova Tag",
+      "description": "Criar uma nova tag no commit selecionado",
+      "fields": {
+        "tagName": {
+          "label": "Nome da tag",
+          "required": "(obrigatório)",
+          "hint": "Use convenções semânticas como v1.0.0, v2.1.3, etc. As tags ajudam a marcar pontos importantes no histórico do projeto.",
+          "placeholder": "v1.0.0"
+        },
+        "message": {
+          "label": "Mensagem",
+          "optional": "(opcional)",
+          "hint": "Forneça uma descrição detalhada da tag. Isso é útil para documentar releases, alterações importantes ou marcos do projeto.",
+          "placeholder": "Descrição da tag..."
+        },
+        "pushToRemotes": {
+          "label": "Enviar para todos os remotos",
+          "hint": "Se habilitado, a tag será automaticamente enviada para todos os remotos configurados do repositório."
+        }
+      },
+      "info": {
+        "willCreateAt": "A tag {{tagName}} será criada no commit {{commitHash}}"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "create": "Criar",
+        "creating": "Criando..."
+      },
+      "success": {
+        "title": "Tag criada com sucesso",
+        "description": "A tag \"{{tagName}}\" foi criada",
+        "descriptionWithPush": "A tag \"{{tagName}}\" foi criada e enviada para todos os remotos"
+      },
+      "errors": {
+        "createError": "Erro ao criar tag",
+        "unknownError": "Erro desconhecido"
+      }
+    },
+    "stashModal": {
+      "title": "Criar Stash",
+      "description": "Salvar temporariamente suas alterações no stash do Git",
+      "fields": {
+        "message": {
+          "label": "Mensagem",
+          "optional": "(opcional)",
+          "hint": "Forneça uma mensagem descritiva para identificar este stash. Se você não especificar uma mensagem, uma padrão será usada.",
+          "placeholder": "Mensagem do stash"
+        },
+        "includeUntracked": {
+          "label": "Incluir arquivos não rastreados",
+          "hint": "Também salva novos arquivos que ainda não estão no repositório. Útil quando você deseja salvar alterações em arquivos que não foram adicionados à área de staging."
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "create": "Criar",
+        "saving": "Salvando..."
+      },
+      "success": {
+        "title": "Stash concluído",
+        "description": "As alterações foram salvas no stash",
+        "descriptionWithUntracked": "As alterações e arquivos não rastreados foram salvos no stash"
+      },
+      "errors": {
+        "title": "Erro ao criar stash",
+        "description": "Não foi possível concluir a operação",
+        "unknownError": "Ocorreu um erro inesperado"
+      }
+    },
+    "stashListModal": {
+      "title": "Stashes",
+      "description": "Selecione um stash para aplicar (pop) e restaurar suas alterações salvas",
+      "loading": "Carregando stashes...",
+      "empty": {
+        "title": "Nenhum stash disponível",
+        "description": "Os stashes permitem que você salve temporariamente alterações sem fazer commit. Crie um a partir do menu stash."
+      },
+      "table": {
+        "reference": "Referência",
+        "message": "Mensagem",
+        "date": "Data",
+        "actions": "Ações"
+      },
+      "buttons": {
+        "close": "Fechar",
+        "clearAll": "Limpar Tudo",
+        "apply": "Aplicar",
+        "applying": "Aplicando...",
+        "deleteStash": "Excluir stash"
+      },
+      "deleteConfirm": {
+        "title": "Confirmar Exclusão",
+        "description": "Tem certeza de que deseja excluir este stash?",
+        "warning": "Esta ação não pode ser desfeita. O stash será permanentemente excluído.",
+        "cancel": "Cancelar",
+        "delete": "Excluir",
+        "deleting": "Excluindo..."
+      },
+      "clearAllConfirm": {
+        "title": "Confirmar Limpar Tudo",
+        "description": "Tem certeza de que deseja excluir todos os stashes?",
+        "warning": "{{count}} {{stash}} será excluído.",
+        "stash": "stash",
+        "stashes": "stashes",
+        "permanentWarning": "Esta ação não pode ser desfeita. Todos os stashes serão permanentemente excluídos.",
+        "cancel": "Cancelar",
+        "deleteAll": "Excluir Tudo",
+        "deleting": "Excluindo..."
+      },
+      "toasts": {
+        "selectStash": {
+          "title": "Selecione um stash",
+          "description": "Por favor, selecione um stash para aplicar"
+        },
+        "applied": {
+          "title": "Stash aplicado",
+          "description": "O stash foi aplicado e excluído com sucesso"
+        },
+        "applyError": {
+          "title": "Erro ao aplicar stash",
+          "description": "Não foi possível aplicar o stash",
+          "unknownError": "Ocorreu um erro inesperado"
+        },
+        "deleted": {
+          "title": "Stash excluído",
+          "description": "O stash foi excluído com sucesso"
+        },
+        "deleteError": {
+          "title": "Erro ao excluir stash",
+          "description": "Não foi possível excluir o stash",
+          "unknownError": "Ocorreu um erro inesperado"
+        },
+        "cleared": {
+          "title": "Stashes excluídos",
+          "description": "Todos os stashes foram excluídos com sucesso"
+        },
+        "clearError": {
+          "title": "Erro ao limpar stashes",
+          "description": "Não foi possível excluir os stashes",
+          "unknownError": "Ocorreu um erro inesperado"
+        }
+      }
+    },
+    "revertModal": {
+      "title": "Reverter Commit",
+      "description": "Criar um novo commit que desfaz as alterações deste commit",
+      "fields": {
+        "commitToRevert": "Commit a reverter"
+      },
+      "warning": "Isso criará um novo commit que reverte as alterações feitas no commit selecionado. O commit original permanecerá no histórico e não será excluído.",
+      "buttons": {
+        "cancel": "Cancelar",
+        "revert": "Reverter",
+        "reverting": "Revertendo..."
+      },
+      "toasts": {
+        "success": {
+          "title": "Reversão concluída",
+          "description": "O commit foi revertido com sucesso"
+        },
+        "error": {
+          "title": "Erro ao reverter commit",
+          "description": "Não foi possível concluir a operação",
+          "unknownError": "Ocorreu um erro inesperado"
+        }
+      }
+    },
+    "cherryPickModal": {
+      "title": "Cherry Pick",
+      "description": "Aplicar alterações de um commit individual à branch atual",
+      "fields": {
+        "commitToApply": "Commit a aplicar",
+        "commitChanges": {
+          "label": "Fazer commit das alterações",
+          "hint": "Criar automaticamente um commit com as alterações cherry-pickadas. Se desabilitado, as alterações permanecerão em staging, mas nenhum commit será feito, permitindo que você as revise e modifique antes de fazer commit."
+        },
+        "appendOrigin": {
+          "label": "Anexar origem à mensagem de commit",
+          "hint": "Adicionar uma referência ao commit original no final da mensagem de commit (por exemplo, \"(cherry picked from commit abc1234)\"). Isso ajuda a rastrear de onde vieram as alterações no histórico git. Disponível apenas quando \"Fazer commit das alterações\" está habilitado."
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "apply": "Aplicar",
+        "applying": "Aplicando..."
+      },
+      "toasts": {
+        "success": {
+          "title": "Cherry-pick concluído",
+          "description": "O commit foi aplicado e commitado com sucesso",
+          "descriptionNoCommit": "O commit foi aplicado (sem commit)"
+        },
+        "conflicts": {
+          "title": "Cherry-pick com conflitos",
+          "description": "Há conflitos que precisam ser resolvidos. Use a barra de notificação para resolver ou abortar a operação."
+        },
+        "error": {
+          "title": "Erro ao executar cherry-pick",
+          "description": "Não foi possível concluir a operação",
+          "unknownError": "Ocorreu um erro inesperado"
+        }
+      }
+    },
+    "commitDetails": {
+      "tabs": {
+        "detail": "Detalhe do Commit",
+        "modified": "Arquivos Modificados",
+        "tree": "Árvore do Commit"
+      },
+      "detail": {
+        "sections": {
+          "description": "Descrição",
+          "author": "Autor",
+          "date": "Data",
+          "committer": "Committer",
+          "commitDate": "Data do Commit",
+          "commitHash": "Hash do Commit",
+          "parentCommit": "Commit Pai",
+          "parentCommits": "Commits Pais",
+          "statistics": "Estatísticas"
+        },
+        "stats": {
+          "files": "Arquivos",
+          "insertions": "Inserções",
+          "deletions": "Exclusões"
+        },
+        "copy": {
+          "copyHash": "Copiar hash completo",
+          "copyParentHash": "Copiar hash pai"
+        },
+        "timeAgo": {
+          "years": "há {{count}} ano",
+          "yearsPlural": "há {{count}} anos",
+          "months": "há {{count}} mês",
+          "monthsPlural": "há {{count}} meses",
+          "weeks": "há {{count}} semana",
+          "weeksPlural": "há {{count}} semanas",
+          "days": "há {{count}} dia",
+          "daysPlural": "há {{count}} dias",
+          "hours": "há {{count}} hora",
+          "hoursPlural": "há {{count}} horas",
+          "minutes": "há {{count}} minuto",
+          "minutesPlural": "há {{count}} minutos",
+          "seconds": "Há alguns segundos"
+        }
+      },
+      "modified": {
+        "loading": "Carregando...",
+        "detail": "Detalhe",
+        "selectFile": "Selecione um arquivo para ver as alterações"
+      },
+      "tree": {
+        "loading": "Carregando árvore...",
+        "noFiles": "Nenhum arquivo",
+        "content": "Conteúdo",
+        "noFileSelected": "Nenhum arquivo selecionado",
+        "selectFileMessage": "Clique em um arquivo na árvore para ver seu conteúdo",
+        "errors": {
+          "loadTree": "Erro ao carregar árvore",
+          "loadFile": "Erro ao carregar arquivo"
+        }
+      }
+    },
+    "branchesDropdown": {
+      "sections": {
+        "selectedCommit": "Commit Selecionado",
+        "local": "Branches Locais",
+        "remote": "Branches Remotos"
+      },
+      "actions": {
+        "checkoutHash": "Checkout Hash... {{hash}}",
+        "defaultBranch": "Branch"
+      },
+      "empty": "Nenhuma branch disponível",
+      "toasts": {
+        "checkoutSuccess": {
+          "title": "Checkout concluído",
+          "description": "Mudou para o commit {{hash}}"
+        },
+        "checkoutError": {
+          "title": "Erro no checkout",
+          "description": "Ocorreu um erro inesperado"
+        },
+        "resolveConflictError": {
+          "title": "Erro ao resolver conflito",
+          "description": "Ocorreu um erro inesperado"
+        }
+      },
+      "commitMessage": "Salve os arquivos antes de mudar para {{branch}}"
+    },
+    "tooltips": {
+      "private": "Privado",
+      "minimize": "Minimizar",
+      "new": "Novo",
+      "stash": "Stash",
+      "moreStashOptions": "Mais opções de stash",
+      "refresh": "Atualizar",
+      "close": "Fechar",
+      "middleClickToClose": "Clique do meio para fechar",
+      "uncommittedChanges": "alterações não commitadas"
+    }
+  }
+}

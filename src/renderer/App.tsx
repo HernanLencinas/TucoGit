@@ -5,12 +5,13 @@ import { Switch } from "@/components/ui/switch";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
-import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock, MoreVertical } from "lucide-react";
+import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock, MoreVertical, Globe } from "lucide-react";
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
 import type { Connection, FolderItem } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
 import { WelcomeWizard } from "@/renderer/components/WelcomeWizard";
 import { LoadingScreen } from "@/renderer/components/LoadingScreen";
+import { useI18n } from "@/renderer/hooks/useI18n";
 
 type TabType = "inicio" | "repositorios" | "conexiones" | "configuracion";
 type ConfigTabType = "general" | "datos" | "git" | "temas" | "actualizacion" | "acerca";
@@ -29,6 +30,7 @@ const IDENTIDAD_DEFAULT: GitIdentity = {
 };
 
 function App() {
+  const { t, changeLanguage, initializeLanguage, currentLanguage } = useI18n();
   const [activeTab, setActiveTab] = useState<TabType>("inicio");
   const [isDark, setIsDark] = useState(true);
   const [selectedTheme, setSelectedTheme] = useState<{ name: string; mode: "light" | "dark" }>({ name: "default", mode: "dark" });
@@ -138,6 +140,8 @@ function App() {
   const [gitUserEmail, setGitUserEmail] = useState<string>("");
   const [commitButtonBehavior, setCommitButtonBehavior] = useState<"commit" | "commit-push" | "commit-sync">("commit");
   const [mostrarMenuCommitBehavior, setMostrarMenuCommitBehavior] = useState(false);
+  const [uiLanguage, setUiLanguage] = useState<"en" | "es-AR" | "de" | "fr" | "pt" | "ja" | "zh-CN">("es-AR");
+  const [mostrarMenuIdioma, setMostrarMenuIdioma] = useState(false);
   const [mostrarModalRestablecerConfig, setMostrarModalRestablecerConfig] = useState(false);
   const [mostrarModalConfirmarReclon, setMostrarModalConfirmarReclon] = useState(false);
   const [repoAClonar, setRepoAClonar] = useState<FolderItem | null>(null);
@@ -333,7 +337,7 @@ function App() {
     }
 
     // Iniciar progreso en 0 con mensaje inicial
-    setClonandoRepositorios(prev => ({ ...prev, [item.id]: { progress: 0, message: "Preparando..." } }));
+    setClonandoRepositorios(prev => ({ ...prev, [item.id]: { progress: 0, message: t('repositories.preparing') } }));
 
     try {
       if (window.electronAPI?.cloneRepository) {
@@ -638,6 +642,15 @@ function App() {
               // Cargar comportamiento del botón de commit
               if (resultado.commitButtonBehavior !== undefined) {
                 setCommitButtonBehavior(resultado.commitButtonBehavior);
+              }
+
+              // Cargar idioma de UI
+              if (resultado.uiLanguage !== undefined) {
+                setUiLanguage(resultado.uiLanguage);
+                initializeLanguage(resultado.uiLanguage);
+              } else {
+                // Si no hay idioma guardado, usar el idioma actual de i18next
+                setUiLanguage(currentLanguage);
               }
 
               // Cargar identidades de Git
@@ -1111,7 +1124,7 @@ function App() {
       const urlServidorFinal = urlServidor || getUrlPorDefecto(proveedorSeleccionado);
 
       if (!urlServidorFinal) {
-        setErrorValidacionToken("Por favor, ingresa la URL del servidor");
+        setErrorValidacionToken(t('connectionWizard.step2.token.errorServerUrl'));
         setValidandoToken(false);
         return;
       }
@@ -1130,15 +1143,20 @@ function App() {
           // Avanzar al paso 3
           setPasoWizard(3);
         } else {
-          setErrorValidacionToken(resultado.error || "Error al validar el token");
+          // Traducir el mensaje de error si viene del backend
+          let errorMessage = resultado.error || t('connectionWizard.step2.token.errorValidation');
+          if (errorMessage === 'Token inválido o sin permisos suficientes') {
+            errorMessage = t('connectionWizard.step2.token.errorInvalidOrInsufficient');
+          }
+          setErrorValidacionToken(errorMessage);
           setTokenValidado(false);
         }
       } else {
-        setErrorValidacionToken("Error: No se pudo validar el token");
+        setErrorValidacionToken(t('connectionWizard.step2.token.errorCannotValidate'));
       }
     } catch (error) {
       // Error al validar token
-      setErrorValidacionToken("Error inesperado al validar el token: " + (error as Error).message);
+      setErrorValidacionToken(t('connectionWizard.step2.token.errorUnexpected', { message: (error as Error).message }));
       setTokenValidado(false);
     } finally {
       setValidandoToken(false);
@@ -1749,7 +1767,7 @@ function App() {
       setErrorNombre(null);
       setErrorDescripcion(null);
     } catch (error) {
-      setErrorNombre("Error al crear la colección. Por favor, intenta nuevamente.");
+      setErrorNombre(t('repositories.newCollectionModal.name.errors.createError'));
     } finally {
       setCreandoColeccion(false);
     }
@@ -1824,7 +1842,7 @@ function App() {
       setRepositoriosDisponibles([]);
       // Solo mostrar alert si se solicita explícitamente (cuando se está creando un nuevo repositorio)
       if (mostrarError) {
-        alert("Error al cargar repositorios: " + (error as Error).message);
+        alert(t('repositories.newRepositoryWizard.errors.loadError', { message: (error as Error).message }));
       }
       // Re-lanzar el error para que pueda ser manejado por el llamador si es necesario
       throw error;
@@ -2033,7 +2051,7 @@ function App() {
       // Si estamos editando, validar solo nombre
       if (editandoRepositorio && repositorioAEditar) {
         if (!nombreRepositorio.trim()) {
-          alert("Por favor ingresa un nombre para el repositorio");
+          alert(t('repositories.newRepositoryWizard.errors.enterName'));
           return;
         }
 
@@ -2059,7 +2077,7 @@ function App() {
             ?.filter((h) => h.id !== repositorioAEditar.id)
             .map((h) => h.nombre.toLowerCase()) || [];
           if (nombresExistentes.includes(nombreRepositorio.trim().toLowerCase())) {
-            alert("Ya existe un repositorio con ese nombre en esta ubicación");
+            alert(t('repositories.newRepositoryWizard.errors.duplicateName'));
             return;
           }
         }
@@ -2107,7 +2125,7 @@ function App() {
             setBusquedaRepositorio("");
           } else {
             // Error al guardar repositorio
-            alert("Error al guardar el repositorio: " + resultado.error);
+            alert(t('repositories.newRepositoryWizard.errors.saveError', { message: resultado.error }));
           }
         }
         return;
@@ -2121,7 +2139,7 @@ function App() {
 
       const repoSeleccionado = repositoriosDisponibles.find(r => r.id === repositorioSeleccionado);
       if (!repoSeleccionado) {
-        alert("Repositorio no encontrado");
+        alert(t('repositories.newRepositoryWizard.errors.repositoryNotFound'));
         return;
       }
 
@@ -2214,12 +2232,12 @@ function App() {
           setBusquedaRepositorio("");
         } else {
           // Error al guardar repositorio
-          alert("Error al guardar el repositorio: " + resultado.error);
+          alert(t('repositories.newRepositoryWizard.errors.saveError', { message: resultado.error }));
         }
       }
     } catch (error) {
       // Error al guardar repositorio
-      alert("Error al guardar el repositorio: " + (error as Error).message);
+      alert(t('repositories.newRepositoryWizard.errors.saveError', { message: (error as Error).message }));
     }
   };
 
@@ -2240,19 +2258,19 @@ function App() {
     // Validar que el nombre no esté vacío
     const nombreTrimmed = nombreEditarColeccion.trim();
     if (!nombreTrimmed) {
-      setErrorNombreEditar("El nombre es requerido");
+      setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.required'));
       return;
     }
 
     // Validar límites de caracteres
     if (nombreTrimmed.length > 32) {
-      setErrorNombreEditar("El nombre no puede exceder 32 caracteres");
+      setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.maxLength'));
       return;
     }
 
     const descripcionTrimmed = descripcionEditarColeccion.trim();
     if (descripcionTrimmed.length > 100) {
-      setErrorDescripcionEditar("La descripción no puede exceder 100 caracteres");
+      setErrorDescripcionEditar(t('repositories.editCollectionModal.descriptionField.errors.maxLength'));
       return;
     }
 
@@ -2278,7 +2296,7 @@ function App() {
         ?.filter((h) => h.id !== coleccionAEditar.id)
         .map((h) => h.nombre.toLowerCase()) || [];
       if (nombresExistentes.includes(nombreTrimmed.toLowerCase())) {
-        setErrorNombreEditar("Ya existe una colección con ese nombre en esta ubicación");
+        setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.duplicateLocation'));
         return;
       }
     }
@@ -2325,7 +2343,7 @@ function App() {
       setErrorNombreEditar(null);
       setErrorDescripcionEditar(null);
     } catch (error) {
-      setErrorNombreEditar("Error al guardar la colección. Por favor, intenta nuevamente.");
+      setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.saveError'));
     } finally {
       setEditandoColeccion(false);
     }
@@ -2438,12 +2456,12 @@ function App() {
         const resultado = await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
         if (!resultado.success) {
           // Error al guardar después de eliminar
-          alert('Error al guardar los cambios. El repositorio se eliminó de la vista pero puede no haberse guardado en el archivo.');
+          alert(t('repositories.newRepositoryWizard.errors.saveChangesError'));
         }
       }
     } catch (error) {
       // Error al guardar estructura después de eliminar
-      alert('Error al guardar los cambios. El repositorio se eliminó de la vista pero puede no haberse guardado en el archivo.');
+      alert(t('repositories.newRepositoryWizard.errors.saveChangesError'));
     }
 
     // Cerrar modal y limpiar estado
@@ -2593,23 +2611,22 @@ function App() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                       </span>
-                      Tu centro de control Git
+                      {t('home.welcome.subtitle')}
                     </div>
-                    <h2 className="text-3xl font-extrabold mb-3 tracking-tight text-foreground">Bienvenido a <span className="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">TucoGit</span></h2>
+                    <h2 className="text-3xl font-extrabold mb-3 tracking-tight text-foreground">{t('home.welcome.title')} <span className="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">TucoGit</span></h2>
                     <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">
-                      Organiza y gestiona todos tus repositorios Git en un solo lugar.
-                      Conecta tus servicios favoritos y mantén tu flujo de trabajo eficiente y ordenado.
+                      {t('home.welcome.description')}
                     </p>
 
                     <div className="flex flex-wrap items-center justify-center md:justify-start gap-6 mt-6 pt-6 border-t border-border/50">
                       <div className="flex flex-col">
                         <span className="text-2xl font-bold text-foreground">{totalConexiones}</span>
-                        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Conexiones</span>
+                        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{t('home.welcome.connections')}</span>
                       </div>
                       <div className="w-px h-8 bg-border/50 hidden sm:block" />
                       <div className="flex flex-col">
                         <span className="text-2xl font-bold text-foreground">{totalRepositorios}</span>
-                        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Repositorios</span>
+                        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{t('home.welcome.repositories')}</span>
                       </div>
                     </div>
                   </div>
@@ -2618,7 +2635,7 @@ function App() {
 
               <div className="px-8 pb-8">
                 <div className="pt-2">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4 px-1">Navegación Rápida</h3>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4 px-1">{t('home.quickNavigation.title').toUpperCase()}</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                     <button
                       onClick={() => setActiveTab("inicio")}
@@ -2634,8 +2651,8 @@ function App() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-foreground block">Inicio</span>
-                        <span className="text-[10px] text-muted-foreground">Vista general y estadísticas</span>
+                        <span className="text-sm font-bold text-foreground block">{t('home.quickNavigation.home.title')}</span>
+                        <span className="text-[10px] text-muted-foreground">{t('home.quickNavigation.home.description')}</span>
                       </div>
                     </button>
 
@@ -2653,8 +2670,8 @@ function App() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-foreground block">Repositorios</span>
-                        <span className="text-[10px] text-muted-foreground">Explora tus proyectos locales</span>
+                        <span className="text-sm font-bold text-foreground block">{t('home.quickNavigation.repositories.title')}</span>
+                        <span className="text-[10px] text-muted-foreground">{t('home.quickNavigation.repositories.description')}</span>
                       </div>
                     </button>
 
@@ -2672,8 +2689,8 @@ function App() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-foreground block">Conexiones</span>
-                        <span className="text-[10px] text-muted-foreground">Gestiona tus servicios Git</span>
+                        <span className="text-sm font-bold text-foreground block">{t('home.quickNavigation.connections.title')}</span>
+                        <span className="text-[10px] text-muted-foreground">{t('home.quickNavigation.connections.description')}</span>
                       </div>
                     </button>
 
@@ -2691,8 +2708,8 @@ function App() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-foreground block">Configuración</span>
-                        <span className="text-[10px] text-muted-foreground">Preferencias de la aplicación</span>
+                        <span className="text-sm font-bold text-foreground block">{t('home.quickNavigation.settings.title')}</span>
+                        <span className="text-[10px] text-muted-foreground">{t('home.quickNavigation.settings.description')}</span>
                       </div>
                     </button>
 
@@ -2713,8 +2730,8 @@ function App() {
                         </div>
                       </div>
                       <div>
-                        <span className="text-sm font-bold text-foreground block">Configurar conexión</span>
-                        <span className="text-[10px] text-muted-foreground">Vincular una nueva cuenta de servicio Git</span>
+                        <span className="text-sm font-bold text-foreground block">{t('home.quickNavigation.configureConnection.title')}</span>
+                        <span className="text-[10px] text-muted-foreground">{t('home.quickNavigation.configureConnection.description')}</span>
                       </div>
                     </button>
                   </div>
@@ -2728,9 +2745,9 @@ function App() {
         <div className="w-full lg:w-1/2 space-y-4 flex-shrink-0">
           <Card className="bg-background border-0 shadow-none">
             <CardHeader className="p-4">
-              <CardTitle className="text-xl font-bold">Favoritos</CardTitle>
+              <CardTitle className="text-xl font-bold">{t('home.favorites.title')}</CardTitle>
               <CardDescription className="text-sm">
-                Acceso rápido a tus repositorios
+                {t('home.favorites.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 pt-0">
@@ -2761,7 +2778,7 @@ function App() {
                         {favorito.clonado && editorIDESeleccionado && (
                           <div className="relative group/tooltip mr-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                              Abrir en {editorIDESeleccionado}
+                              {t('home.favorites.openIn', { ide: editorIDESeleccionado })}
                               <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                             </div>
                             <Button
@@ -2786,7 +2803,7 @@ function App() {
                             toggleFavorito(favorito.id);
                           }}
                           className="h-6 w-6 flex items-center justify-center rounded-md hover:bg-background/50 transition-colors"
-                          title="Quitar de favoritos"
+                          title={t('home.favorites.removeFromFavorites')}
                         >
                           <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
                         </button>
@@ -2797,9 +2814,9 @@ function App() {
               ) : (
                 <div className="bg-secondary/30 rounded-lg border-0 p-8 flex flex-col items-center justify-center min-h-[300px]">
                   <Star className="h-12 w-12 text-muted-foreground/50 mb-4" strokeWidth="1.5" />
-                  <p className="text-sm font-medium text-foreground mb-1">No hay favoritos</p>
+                  <p className="text-sm font-medium text-foreground mb-1">{t('home.favorites.noFavorites')}</p>
                   <p className="text-xs text-muted-foreground text-center">
-                    Los repositorios que marques como favoritos aparecerán aquí
+                    {t('home.favorites.noFavoritesDescription')}
                   </p>
                 </div>
               )}
@@ -2873,7 +2890,7 @@ function App() {
                         disabled={esUltimo}
                       >
                         {index === 0 && <FolderGit2 className="h-4 w-4" />}
-                        {item.nombre}
+                        {item.nombre === "Mis repositorios" ? t('repositories.myRepositories') : item.nombre}
                       </button>
                       {esUltimo && cantidadRepos > 0 && (
                         <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-muted text-muted-foreground border border-border">
@@ -2894,7 +2911,7 @@ function App() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="Buscar colecciones y repositorios..."
+                  placeholder={t('repositories.search.placeholder')}
                   value={terminoBusqueda}
                   onChange={(e) => setTerminoBusqueda(e.target.value)}
                   className={`w-full pl-9 ${terminoBusqueda ? 'pr-52' : 'pr-36'} py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:border-input`}
@@ -2906,7 +2923,7 @@ function App() {
                     onClick={() => setTerminoBusqueda("")}
                     className="absolute right-[165px] top-1/2 transform -translate-y-1/2 h-7 text-xs whitespace-nowrap"
                   >
-                    Limpiar
+                    {t('repositories.search.clear')}
                   </Button>
                 )}
                 {/* Checkbox para buscar en todas las colecciones - dentro del input */}
@@ -2936,7 +2953,7 @@ function App() {
                       setBuscarEnTodasLasColecciones(!buscarEnTodasLasColecciones);
                     }}
                   >
-                    Todas las colecciones
+                    {t('repositories.search.allCollections')}
                   </label>
                 </div>
               </div>
@@ -2947,7 +2964,7 @@ function App() {
                     variant="outline"
                     onClick={() => setMostrarMenuOrdenarRepos(!mostrarMenuOrdenarRepos)}
                     className="h-9 w-9"
-                    title="Ordenar"
+                    title={t('repositories.sort.title')}
                   >
                     <ArrowUpDown className="h-4 w-4" />
                   </Button>
@@ -2966,7 +2983,7 @@ function App() {
                           className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                         >
                           <ArrowUp className="h-4 w-4" />
-                          Ascendente
+                          {t('repositories.sort.ascending')}
                         </button>
                         <button
                           onClick={() => {
@@ -2976,7 +2993,7 @@ function App() {
                           className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                         >
                           <ArrowDown className="h-4 w-4" />
-                          Descendente
+                          {t('repositories.sort.descending')}
                         </button>
                         {ordenRepositorios && (
                           <button
@@ -2987,7 +3004,7 @@ function App() {
                             className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors text-muted-foreground"
                           >
                             <X className="h-4 w-4" />
-                            Sin orden
+                            {t('repositories.sort.none')}
                           </button>
                         )}
                       </div>
@@ -3000,7 +3017,7 @@ function App() {
                   onClick={refrescarRepositorios}
                   disabled={refrescandoRepositorios}
                   className="h-9 w-9 hover:bg-accent transition-colors"
-                  title="Refrescar"
+                  title={t('repositories.actions.refresh')}
                 >
                   <RefreshCw className={`h-4 w-4 transition-transform duration-500 ${refrescandoRepositorios ? 'animate-spin' : 'active:rotate-180'}`} />
                 </Button>
@@ -3010,7 +3027,7 @@ function App() {
                     variant="outline"
                     onClick={() => setMostrarMenuAccionesRepos(!mostrarMenuAccionesRepos)}
                     className="h-9 w-9 hover:bg-accent transition-colors"
-                    title="Más acciones"
+                    title={t('repositories.actions.moreActions')}
                   >
                     <MoreVertical className="h-4 w-4" />
                   </Button>
@@ -3029,7 +3046,7 @@ function App() {
                           className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                         >
                           <Download className="h-4 w-4" />
-                          Clonar todos
+                          {t('repositories.actions.cloneAll')}
                         </button>
                       </div>
                     </>
@@ -3056,14 +3073,14 @@ function App() {
                         className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                       >
                         <Folder className="h-4 w-4" />
-                        Nueva Colección
+                        {t('repositories.actions.newCollection')}
                       </button>
                       <button
                         onClick={abrirWizardNuevoRepositorio}
                         className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                       >
                         <GitBranch className="h-4 w-4" />
-                        Nuevo Repositorio
+                        {t('repositories.actions.newRepository')}
                       </button>
                     </div>
                   </>
@@ -3085,18 +3102,18 @@ function App() {
                         <GitBranch className="h-6 w-6 text-muted-foreground" strokeWidth="1.5" />
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold text-foreground mb-3">No hay repositorios definidos</h3>
+                    <h3 className="text-xl font-bold text-foreground mb-3">{t('repositories.empty.title')}</h3>
                     <p className="text-sm text-muted-foreground mb-4 max-w-md">
-                      Para comenzar, haz clic en el botón <span className="font-medium text-foreground">"Nueva colección"</span> para agregar tu primera colección.
+                      {t('repositories.empty.description')}
                     </p>
                     <div className="flex items-center gap-2">
                       <Button size="sm" variant="outline" onClick={abrirModalNuevaCarpeta}>
                         <Plus className="h-3.5 w-3.5 mr-1.5" />
-                        Nueva colección
+                        {t('repositories.empty.newCollection')}
                       </Button>
                       <Button size="sm" variant="outline" onClick={abrirWizardNuevoRepositorio}>
                         <GitBranch className="h-3.5 w-3.5 mr-1.5" />
-                        Nuevo repositorio
+                        {t('repositories.empty.newRepository')}
                       </Button>
                     </div>
                   </>
@@ -3104,11 +3121,11 @@ function App() {
                   <>
                     <Search className="h-12 w-12 text-muted-foreground mb-4" />
                     <p className="text-muted-foreground mb-2">
-                      No se encontraron resultados para "{terminoBusquedaDebounced}"
+                      {t('repositories.search.noResults', { query: terminoBusquedaDebounced })}
                     </p>
                     <Button size="sm" variant="outline" onClick={() => setTerminoBusqueda("")}>
                       <X className="h-3.5 w-3.5 mr-1" />
-                      Limpiar búsqueda
+                      {t('repositories.search.clearSearch')}
                     </Button>
                   </>
                 )}
@@ -3146,7 +3163,7 @@ function App() {
                               </CardTitle>
                             </div>
                             <CardDescription className="text-xs line-clamp-2">
-                              {item.descripcion || `${item.hijos?.length || 0} ${item.hijos?.length === 1 ? "elemento" : "elementos"}`}
+                              {item.descripcion || `${item.hijos?.length || 0} ${item.hijos?.length === 1 ? t('repositories.collection.element') : t('repositories.collection.elements')}`}
                             </CardDescription>
                           </CardHeader>
                           <CardContent className="p-4 pt-0 flex flex-col flex-1 min-h-0">
@@ -3154,13 +3171,19 @@ function App() {
                             <div className="mt-auto pt-2 border-t space-y-1">
                               <div className="flex items-center justify-between text-xs text-muted-foreground">
                                 <span>
-                                  {item.hijos?.filter((h) => h.tipo === "coleccion").length || 0} colección{(item.hijos?.filter((h) => h.tipo === "coleccion").length || 0) !== 1 ? "es" : ""}
+                                  {(() => {
+                                    const count = item.hijos?.filter((h) => h.tipo === "coleccion").length || 0;
+                                    return `${count} ${count === 1 ? t('repositories.collection.collection') : t('repositories.collection.collections')}`;
+                                  })()}
                                 </span>
                                 <Folder className="h-3 w-3" />
                               </div>
                               <div className="flex items-center justify-between text-xs text-muted-foreground">
                                 <span>
-                                  {item.hijos?.filter((h) => h.tipo === "archivo").length || 0} repositorio{(item.hijos?.filter((h) => h.tipo === "archivo").length || 0) !== 1 ? "s" : ""}
+                                  {(() => {
+                                    const count = item.hijos?.filter((h) => h.tipo === "archivo").length || 0;
+                                    return `${count} ${count === 1 ? t('repositories.collection.repository') : t('repositories.collection.repositories')}`;
+                                  })()}
                                 </span>
                                 <GitBranch className="h-3 w-3" />
                               </div>
@@ -3193,7 +3216,7 @@ function App() {
                                   {item.nombre}
                                 </CardTitle>
                                 {item.privado && (
-                                  <span title="Privado" className="flex-shrink-0">
+                                  <span title={t('repositories.actions.private')} className="flex-shrink-0">
                                     <Lock className="h-2.5 w-2.5 text-muted-foreground" />
                                   </span>
                                 )}
@@ -3213,7 +3236,7 @@ function App() {
                               {clonandoRepositorios[item.id] !== undefined ? (
                                 <div className="space-y-1.5">
                                   <div className="flex items-center justify-between text-[10px] text-muted-foreground/70">
-                                    <span className="truncate flex-1 mr-2">{clonandoRepositorios[item.id].message}</span>
+                                    <span className="truncate flex-1 mr-2">{clonandoRepositorios[item.id].message === "Preparando..." ? t('repositories.preparing') : clonandoRepositorios[item.id].message}</span>
                                     <span>{clonandoRepositorios[item.id].progress}%</span>
                                   </div>
                                   <div className="h-1 w-full bg-secondary rounded-full overflow-hidden">
@@ -3229,24 +3252,24 @@ function App() {
                                     <>
                                       {/* Info de Branch y Commits Pendientes */}
                                       <div className="flex items-center gap-1.5 flex-wrap">
-                                        <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-primary/10 border border-primary/20 text-[10px] font-medium text-primary" title="Rama actual">
+                                        <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-primary/10 border border-primary/20 text-[10px] font-medium text-primary" title={t('repositories.repository.currentBranch')}>
                                           <GitBranch className="h-3 w-3" />
                                           <span className="max-w-[120px] truncate">{gitInfoRepositorios[item.id].branch}</span>
                                         </div>
 
                                         {gitInfoRepositorios[item.id].uncommitted > 0 && (
-                                          <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-[10px] font-semibold text-amber-600 dark:text-amber-400" title="Cambios locales sin commitear">
+                                          <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-[10px] font-semibold text-amber-600 dark:text-amber-400" title={t('repositories.repository.uncommittedChanges')}>
                                             <div className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
                                             <span>{gitInfoRepositorios[item.id].uncommitted}</span>
                                           </div>
                                         )}
 
-                                        <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-medium ${gitInfoRepositorios[item.id].ahead > 0 ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400' : 'bg-secondary/50 border-border/50 text-muted-foreground'}`} title="Pendientes de subida (Push)">
+                                        <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-medium ${gitInfoRepositorios[item.id].ahead > 0 ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400' : 'bg-secondary/50 border-border/50 text-muted-foreground'}`} title={t('repositories.repository.pendingPush')}>
                                           <ArrowUp className="h-2.5 w-2.5" />
                                           <span>{gitInfoRepositorios[item.id].ahead}</span>
                                         </div>
 
-                                        <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-medium ${gitInfoRepositorios[item.id].behind > 0 ? 'bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400' : 'bg-secondary/50 border-border/50 text-muted-foreground'}`} title="Pendientes de bajada (Pull)">
+                                        <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-medium ${gitInfoRepositorios[item.id].behind > 0 ? 'bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400' : 'bg-secondary/50 border-border/50 text-muted-foreground'}`} title={t('repositories.repository.pendingPull')}>
                                           <ArrowDown className="h-2.5 w-2.5" />
                                           <span>{gitInfoRepositorios[item.id].behind}</span>
                                         </div>
@@ -3268,14 +3291,14 @@ function App() {
                                         <RefreshCw className="h-3 w-3 text-cyan-500 animate-spin" />
                                         <div className="absolute inset-0 h-3 w-3 rounded-full border border-cyan-500/30 animate-ping" />
                                       </div>
-                                      <span className="font-medium">Obteniendo información de Git...</span>
+                                      <span className="font-medium">{t('repositories.repository.gettingGitInfo')}</span>
                                     </div>
                                   )}
                                 </div>
                               ) : (
                                 <div className="flex items-center gap-2 text-[10px] text-muted-foreground/70">
                                   <div className="h-1.5 w-1.5 rounded-full bg-amber-500/50" />
-                                  <span>No clonado localmente</span>
+                                  <span>{t('repositories.repository.notCloned')}</span>
                                 </div>
                               )}
                             </div>
@@ -3291,7 +3314,7 @@ function App() {
                           <>
                             <div className="relative group/tooltip">
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                Editar
+                                {t('repositories.actions.edit')}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                               </div>
                               <Button
@@ -3309,7 +3332,7 @@ function App() {
 
                             <div className="relative group/tooltip">
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                Eliminar
+                                {t('repositories.actions.delete')}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                               </div>
                               <Button
@@ -3330,7 +3353,7 @@ function App() {
                             {item.clonado && gitInfoRepositorios[item.id] && editorIDESeleccionado && (
                               <div className="relative group/tooltip mr-1.5">
                                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                  Abrir en {editorIDESeleccionado}
+                                  {t('repositories.actions.openIn', { ide: editorIDESeleccionado })}
                                   <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                                 </div>
                                 <Button
@@ -3352,7 +3375,7 @@ function App() {
 
                             <div className="relative group/tooltip">
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                {item.clonado ? "Re-clonar" : "Clonar"}
+                                {item.clonado ? t('repositories.actions.reclone') : t('repositories.actions.clone')}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                               </div>
                               <Button
@@ -3373,7 +3396,7 @@ function App() {
 
                             <div className="relative group/tooltip">
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                Editar
+                                {t('repositories.actions.edit')}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                               </div>
                               <Button
@@ -3391,7 +3414,7 @@ function App() {
 
                             <div className="relative group/tooltip">
                               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                                Eliminar
+                                {t('repositories.actions.delete')}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                               </div>
                               <Button
@@ -3521,7 +3544,7 @@ function App() {
                 disabled
               >
                 <Plug className="h-4 w-4" />
-                Conexiones
+                {t('connections.title')}
               </button>
               <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-muted text-muted-foreground border border-border">
                 {conexionesGuardadas.length}
@@ -3537,7 +3560,7 @@ function App() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="Buscar conexiones..."
+                placeholder={t('connections.search.placeholder')}
                 value={terminoBusquedaConexiones}
                 onChange={(e) => setTerminoBusquedaConexiones(e.target.value)}
                 className={`w-full pl-9 ${terminoBusquedaConexiones ? 'pr-20' : 'pr-3'} py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:border-input`}
@@ -3549,7 +3572,7 @@ function App() {
                   onClick={() => setTerminoBusquedaConexiones("")}
                   className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 text-xs"
                 >
-                  Limpiar
+                  {t('connections.search.clear')}
                 </Button>
               )}
             </div>
@@ -3560,7 +3583,7 @@ function App() {
                   variant="outline"
                   onClick={() => setMostrarMenuOrdenar(!mostrarMenuOrdenar)}
                   className="h-9 w-9"
-                  title="Ordenar"
+                  title={t('connections.sort.title')}
                 >
                   <ArrowUpDown className="h-4 w-4" />
                 </Button>
@@ -3579,7 +3602,7 @@ function App() {
                         className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                       >
                         <ArrowUp className="h-4 w-4" />
-                        Ascendente
+                        {t('connections.sort.ascending')}
                       </button>
                       <button
                         onClick={() => {
@@ -3589,7 +3612,7 @@ function App() {
                         className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                       >
                         <ArrowDown className="h-4 w-4" />
-                        Descendente
+                        {t('connections.sort.descending')}
                       </button>
                       {ordenConexiones && (
                         <button
@@ -3600,7 +3623,7 @@ function App() {
                           className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors text-muted-foreground"
                         >
                           <X className="h-4 w-4" />
-                          Sin orden
+                          {t('connections.sort.none')}
                         </button>
                       )}
                     </div>
@@ -3613,7 +3636,7 @@ function App() {
                 onClick={refrescarConexiones}
                 disabled={refrescandoConexiones}
                 className="h-9 w-9 hover:bg-accent transition-colors"
-                title="Refrescar"
+                title={t('connections.actions.refresh')}
               >
                 <RefreshCw className={`h-4 w-4 transition-transform duration-500 ${refrescandoConexiones ? 'animate-spin' : 'active:rotate-180'}`} />
               </Button>
@@ -3643,7 +3666,7 @@ function App() {
                       className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground transition-colors"
                     >
                       <Link2 className="h-4 w-4" />
-                      Nueva Conexión
+                      {t('connections.actions.newConnection')}
                     </button>
                   </div>
                 </>
@@ -3658,20 +3681,20 @@ function App() {
               {terminoBusquedaConexionesDebounced.trim() === "" ? (
                 <>
                   <Plug className="h-16 w-16 text-muted-foreground mb-6 opacity-60" />
-                  <h3 className="text-xl font-semibold text-foreground mb-3">No hay conexiones definidas</h3>
+                  <h3 className="text-xl font-semibold text-foreground mb-3">{t('connections.empty.title')}</h3>
                   <p className="text-sm text-muted-foreground max-w-md">
-                    Para comenzar, presiona el botón 'Nueva Conexión' para crear tu primera conexión con un proveedor de Git.
+                    {t('connections.empty.description')}
                   </p>
                 </>
               ) : (
                 <>
                   <Search className="h-12 w-12 text-muted-foreground mb-4" />
                   <p className="text-muted-foreground mb-2">
-                    No se encontraron resultados para "{terminoBusquedaConexionesDebounced}"
+                    {t('connections.search.noResults', { query: terminoBusquedaConexionesDebounced })}
                   </p>
                   <Button size="sm" variant="outline" onClick={() => setTerminoBusquedaConexiones("")}>
                     <X className="h-3.5 w-3.5 mr-1" />
-                    Limpiar búsqueda
+                    {t('connections.search.clearSearch')}
                   </Button>
                 </>
               )}
@@ -3696,7 +3719,7 @@ function App() {
 
                 // Formatear fecha de creación de conexión
                 const formatearFechaConexion = (fechaISO: string | null): string => {
-                  if (!fechaISO) return "Fecha no disponible";
+                  if (!fechaISO) return t('connections.date.notAvailable');
                   const fecha = new Date(fechaISO);
                   const ahora = new Date();
                   const diffMs = ahora.getTime() - fecha.getTime();
@@ -3709,19 +3732,19 @@ function App() {
                   const diffAnos = Math.floor(diffDias / 365);
 
                   if (diffMinutos < 1) {
-                    return "Creado hace un momento";
+                    return t('connections.date.justNow');
                   } else if (diffMinutos < 60) {
-                    return `Creado hace ${diffMinutos} ${diffMinutos === 1 ? 'minuto' : 'minutos'}`;
+                    return t('connections.date.minutesAgo', { count: diffMinutos });
                   } else if (diffHoras < 24) {
-                    return `Creado hace ${diffHoras} ${diffHoras === 1 ? 'hora' : 'horas'}`;
+                    return t('connections.date.hoursAgo', { count: diffHoras });
                   } else if (diffDias < 7) {
-                    return `Creado hace ${diffDias} ${diffDias === 1 ? 'día' : 'días'}`;
+                    return t('connections.date.daysAgo', { count: diffDias });
                   } else if (diffSemanas < 4) {
-                    return `Creado hace ${diffSemanas} ${diffSemanas === 1 ? 'semana' : 'semanas'}`;
+                    return t('connections.date.weeksAgo', { count: diffSemanas });
                   } else if (diffMeses < 12) {
-                    return `Creado hace ${diffMeses} ${diffMeses === 1 ? 'mes' : 'meses'}`;
+                    return t('connections.date.monthsAgo', { count: diffMeses });
                   } else {
-                    return `Creado hace ${diffAnos} ${diffAnos === 1 ? 'año' : 'años'}`;
+                    return t('connections.date.yearsAgo', { count: diffAnos });
                   }
                 };
 
@@ -3777,7 +3800,7 @@ function App() {
                               return (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-muted text-muted-foreground">
                                   <RefreshCw className="h-2.5 w-2.5 animate-spin" />
-                                  Verificando...
+                                  {t('connections.status.checking')}
                                 </span>
                               );
                             }
@@ -3786,7 +3809,7 @@ function App() {
                               return (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-green-500/20 text-green-600 dark:text-green-400">
                                   <CheckCircle2 className="h-2.5 w-2.5" />
-                                  Conectado
+                                  {t('connections.status.connected')}
                                 </span>
                               );
                             }
@@ -3795,7 +3818,7 @@ function App() {
                               return (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-amber-500/20 text-amber-600 dark:text-amber-400">
                                   <AlertCircle className="h-2.5 w-2.5" />
-                                  Token expirado
+                                  {t('connections.status.expired')}
                                 </span>
                               );
                             }
@@ -3804,7 +3827,7 @@ function App() {
                               return (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-red-500/20 text-red-600 dark:text-red-400">
                                   <XCircle className="h-2.5 w-2.5" />
-                                  Desconectado
+                                  {t('connections.status.disconnected')}
                                 </span>
                               );
                             }
@@ -3824,12 +3847,12 @@ function App() {
                               <div className="flex flex-col items-center justify-center py-6 text-center">
                                 <AlertCircle className="h-8 w-8 text-muted-foreground/50 mb-2" />
                                 <p className="text-xs font-medium text-foreground mb-1">
-                                  {estadoConexion === 'expired' ? 'Token expirado' : 'Sin conexión'}
+                                  {estadoConexion === 'expired' ? t('connections.status.expired') : t('connections.status.noConnection')}
                                 </p>
                                 <p className="text-[10px] text-muted-foreground">
                                   {estadoConexion === 'expired'
-                                    ? 'Actualiza el token para ver la información'
-                                    : 'No se puede conectar al servidor'}
+                                    ? t('connections.status.expiredMessage')
+                                    : t('connections.status.disconnectedMessage')}
                                 </p>
                               </div>
                             );
@@ -3853,7 +3876,7 @@ function App() {
                                   <div className="flex items-center justify-between text-xs">
                                     <div className="flex items-center gap-1.5">
                                       <Cloud className="h-3 w-3 text-muted-foreground" />
-                                      <span className="text-muted-foreground">Repositorios remotos</span>
+                                      <span className="text-muted-foreground">{t('connections.stats.remoteRepos')}</span>
                                     </div>
                                     <span className="font-medium text-foreground">{detalles.totalRepos}</span>
                                   </div>
@@ -3862,7 +3885,7 @@ function App() {
                                   <div className="flex items-center justify-between text-xs">
                                     <div className="flex items-center gap-1.5">
                                       <Link2 className="h-3 w-3 text-muted-foreground" />
-                                      <span className="text-muted-foreground">Configurados localmente</span>
+                                      <span className="text-muted-foreground">{t('connections.stats.configuredLocally')}</span>
                                     </div>
                                     <span className="font-medium text-foreground">{reposLocales.configurados}</span>
                                   </div>
@@ -3871,7 +3894,7 @@ function App() {
                                   <div className="flex items-center justify-between text-xs">
                                     <div className="flex items-center gap-1.5">
                                       <CheckCircle2 className="h-3 w-3 text-green-500" />
-                                      <span className="text-green-500">Clonados localmente</span>
+                                      <span className="text-green-500">{t('connections.stats.clonedLocally')}</span>
                                     </div>
                                     <span className="font-medium text-green-500">{reposLocales.clonados}</span>
                                   </div>
@@ -3881,7 +3904,7 @@ function App() {
                                 <div className="pt-1 border-t border-border/50">
                                   <div className="flex items-center gap-1.5 mb-1.5">
                                     <Users className="h-3 w-3 text-muted-foreground" />
-                                    <span className="text-xs text-muted-foreground">Organizaciones:</span>
+                                    <span className="text-xs text-muted-foreground">{t('connections.stats.organizations')}</span>
                                   </div>
                                   {detalles.organizations && detalles.organizations.length > 0 ? (
                                     <div className="flex flex-wrap gap-1">
@@ -3902,7 +3925,7 @@ function App() {
                                     </div>
                                   ) : (
                                     <p className="text-[10px] text-muted-foreground/70 italic">
-                                      No perteneces a ninguna organización
+                                      {t('connections.stats.noOrganizations')}
                                     </p>
                                   )}
                                 </div>
@@ -3922,7 +3945,7 @@ function App() {
                           // Por defecto, mostrar mensaje de espera
                           return (
                             <div className="text-xs text-muted-foreground text-center py-4">
-                              Esperando conexión...
+                              {t('connections.status.waiting')}
                             </div>
                           );
                         })()}
@@ -3942,7 +3965,7 @@ function App() {
                       <div className="px-3 py-1.5 flex justify-end gap-1.5">
                         <div className="relative group/tooltip">
                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                            Editar
+                            {t('connections.actions.edit')}
                             <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                           </div>
                           <Button
@@ -3960,7 +3983,7 @@ function App() {
 
                         <div className="relative group/tooltip">
                           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-primary-foreground bg-primary rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
-                            Eliminar
+                            {t('connections.actions.delete')}
                             <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-primary" />
                           </div>
                           <Button
@@ -3997,10 +4020,10 @@ function App() {
               <div className="space-y-1">
                 <h3 className="text-xl font-bold flex items-center gap-2">
                   <Settings className="h-5 w-5 text-primary" />
-                  Configuración General
+                  {t('settings.general.title')}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Personaliza las opciones generales de la aplicación
+                  {t('settings.general.description')}
                 </p>
               </div>
 
@@ -4008,9 +4031,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Editor IDE Preferido</CardTitle>
+                    <CardTitle className="text-base">{t('settings.general.preferredIDE.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Selecciona el editor que se utilizará para abrir repositorios desde las tarjetas
+                      {t('settings.general.preferredIDE.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4030,7 +4053,7 @@ function App() {
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="font-semibold text-foreground truncate">{editorIDESeleccionado}</div>
-                                <div className="text-xs text-muted-foreground">Editor seleccionado</div>
+                                <div className="text-xs text-muted-foreground">{t('settings.general.preferredIDE.selected')}</div>
                               </div>
                             </>
                           ) : (
@@ -4039,8 +4062,8 @@ function App() {
                                 <Plug className="h-4 w-4 text-muted-foreground" />
                               </div>
                               <div>
-                                <div className="font-medium text-muted-foreground">Selecciona un editor IDE...</div>
-                                <div className="text-xs text-muted-foreground/70">Ningún editor seleccionado</div>
+                                <div className="font-medium text-muted-foreground">{t('settings.general.preferredIDE.selectEditor')}</div>
+                                <div className="text-xs text-muted-foreground/70">{t('settings.general.preferredIDE.noEditorSelected')}</div>
                               </div>
                             </div>
                           )}
@@ -4057,8 +4080,8 @@ function App() {
                             {idesPopulares.length === 0 ? (
                               <div className="p-4 text-sm text-muted-foreground text-center">
                                 <AlertCircle className="h-5 w-5 mx-auto mb-2 opacity-50" />
-                                <p>No hay editores disponibles</p>
-                                <p className="text-xs mt-1">Instala un editor IDE para verlo aquí</p>
+                                <p>{t('settings.general.preferredIDE.noEditorsAvailable')}</p>
+                                <p className="text-xs mt-1">{t('settings.general.preferredIDE.installEditor')}</p>
                               </div>
                             ) : (
                               <div className="p-1">
@@ -4071,10 +4094,9 @@ function App() {
                                       if (window.electronAPI?.writeConfig) {
                                         try {
                                           await window.electronAPI.writeConfig({ editorIDE: ide });
-                                          showToast(`Editor IDE cambiado a ${ide}`, 'success');
                                         } catch (error) {
                                           // Error al guardar editor IDE
-                                          showToast('Error al guardar la configuración', 'error');
+                                          showToast(t('settings.general.preferredIDE.errorSaving'), 'error');
                                         }
                                       }
                                     }}
@@ -4090,7 +4112,7 @@ function App() {
                                       {editorIDESeleccionado === ide && (
                                         <div className="text-xs text-primary mt-0.5 flex items-center gap-1">
                                           <Check className="h-3 w-3" />
-                                          Seleccionado
+                                          {t('settings.general.preferredIDE.selected')}
                                         </div>
                                       )}
                                     </div>
@@ -4110,10 +4132,91 @@ function App() {
                       <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
                         <Info className="h-4 w-4 text-primary flex-shrink-0" />
                         <p className="text-xs text-muted-foreground">
-                          Los repositorios se abrirán automáticamente con <span className="font-semibold text-foreground">{editorIDESeleccionado}</span> cuando hagas clic en el botón de abrir.
+                          {t('settings.general.preferredIDE.info', { ide: editorIDESeleccionado })}
                         </p>
                       </div>
                     )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Idioma de UI */}
+              <Card className="border-2">
+                <CardHeader className="pb-3">
+                  <div>
+                    <CardTitle className="text-base">{t('settings.general.uiLanguage.title')}</CardTitle>
+                    <CardDescription className="text-xs mt-1">
+                      {t('settings.general.uiLanguage.description')}
+                    </CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setMostrarMenuIdioma(!mostrarMenuIdioma)}
+                        className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background hover:border-primary/50 transition-all text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 group"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="flex-shrink-0 p-2 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                            <Globe className="h-4 w-4 text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-semibold text-foreground truncate">
+                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : uiLanguage === "fr" ? t('settings.general.uiLanguage.french') : uiLanguage === "pt" ? t('settings.general.uiLanguage.portuguese') : uiLanguage === "ja" ? t('settings.general.uiLanguage.japanese') : t('settings.general.uiLanguage.chinese')}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : uiLanguage === "fr" ? t('settings.general.uiLanguage.french') : uiLanguage === "pt" ? t('settings.general.uiLanguage.portuguese') : uiLanguage === "ja" ? t('settings.general.uiLanguage.japanese') : t('settings.general.uiLanguage.chinese')}
+                            </div>
+                          </div>
+                        </div>
+                        <ChevronRight className={`h-5 w-5 text-muted-foreground transition-all flex-shrink-0 ${mostrarMenuIdioma ? "rotate-90 text-primary" : ""}`} />
+                      </button>
+                      {mostrarMenuIdioma && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-10"
+                            onClick={() => setMostrarMenuIdioma(false)}
+                          />
+                          <div className="absolute z-20 w-full mt-2 rounded-lg border-2 bg-popover shadow-lg max-h-72 overflow-auto">
+                            <div className="p-1">
+                              {(["en", "es-AR", "de", "fr", "pt", "ja", "zh-CN"] as const).map((idioma) => (
+                                <button
+                                  key={idioma}
+                                  onClick={async () => {
+                                    setUiLanguage(idioma);
+                                    setMostrarMenuIdioma(false);
+                                    await changeLanguage(idioma);
+                                  }}
+                                  className={`w-full px-4 py-3 text-sm text-left rounded-md hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ${
+                                    uiLanguage === idioma ? 'bg-primary/10 border border-primary/20' : ''
+                                  }`}
+                                >
+                                  <div className="flex-shrink-0 p-1.5 rounded-md bg-background">
+                                    <Globe className="h-4 w-4 text-muted-foreground" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="font-semibold">
+                                      {idioma === "en" ? t('settings.general.uiLanguage.english') : idioma === "es-AR" ? t('settings.general.uiLanguage.spanish') : idioma === "de" ? t('settings.general.uiLanguage.german') : idioma === "fr" ? t('settings.general.uiLanguage.french') : idioma === "pt" ? t('settings.general.uiLanguage.portuguese') : idioma === "ja" ? t('settings.general.uiLanguage.japanese') : t('settings.general.uiLanguage.chinese')}
+                                    </div>
+                                    {uiLanguage === idioma && (
+                                      <div className="text-xs text-primary mt-0.5 flex items-center gap-1">
+                                        <Check className="h-3 w-3" />
+                                        {t('settings.general.uiLanguage.selected')}
+                                      </div>
+                                    )}
+                                  </div>
+                                  {uiLanguage === idioma && (
+                                    <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                                  )}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -4156,20 +4259,20 @@ function App() {
                   const contenido = JSON.stringify(resultado.config, null, 2);
                   const saveResult = await window.electronAPI.saveFile(contenido, 'tuco-settings.json');
                   if (saveResult?.success) {
-                    showToast('Configuración exportada exitosamente', 'success');
+                    showToast(t('settings.data.management.exportSuccess'), 'success');
                   } else if (saveResult?.error && saveResult.error !== 'Operación cancelada') {
-                    showToast(`Error al exportar: ${saveResult.error}`, 'error');
+                    showToast(t('settings.data.management.exportError', { error: saveResult.error }), 'error');
                   }
                   // Si fue cancelado, no mostrar mensaje
                 } else {
-                  showToast('No hay configuración para exportar', 'error');
+                  showToast(t('settings.data.management.noConfigToExport'), 'error');
                 }
               } else {
-                showToast('Funcionalidad no disponible', 'error');
+                showToast(t('settings.data.management.functionalityNotAvailable'), 'error');
               }
             } catch (error) {
               // Error al exportar configuración
-              showToast(`Error al exportar configuración: ${(error as Error).message}`, 'error');
+              showToast(t('settings.data.management.exportError', { error: (error as Error).message }), 'error');
             }
           };
 
@@ -4282,15 +4385,15 @@ function App() {
                   if (window.electronAPI?.importConfig) {
                     const resultado = await window.electronAPI.importConfig(config);
                     if (resultado?.success) {
-                      showToast('Configuración importada exitosamente. Recargando datos...', 'success');
+                      showToast(t('settings.data.management.importSuccess'), 'success');
                       // Recargar los datos sin recargar la página
                       await recargarDatosConfiguracion();
-                      showToast('Datos recargados correctamente', 'success');
+                      showToast(t('settings.data.management.dataReloaded'), 'success');
                     } else {
-                      showToast(`Error al importar: ${resultado?.error || 'Error desconocido'}`, 'error');
+                      showToast(t('settings.data.management.importError', { error: resultado?.error || 'Error desconocido' }), 'error');
                     }
                   } else {
-                    showToast('Funcionalidad de importar no disponible', 'error');
+                    showToast(t('settings.data.management.importNotAvailable'), 'error');
                   }
                 } else {
                   // Usuario canceló la operación, no mostrar error
@@ -4300,9 +4403,9 @@ function App() {
               // Error al importar configuración
               const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
               if (errorMessage.includes('JSON') || errorMessage.includes('parse')) {
-                showToast('El archivo seleccionado no es un JSON válido', 'error');
+                showToast(t('settings.data.management.invalidJson'), 'error');
               } else {
-                showToast(`Error al importar configuración: ${errorMessage}`, 'error');
+                showToast(t('settings.data.management.importConfigError', { error: errorMessage }), 'error');
               }
             }
           };
@@ -4313,10 +4416,10 @@ function App() {
               <div className="space-y-1">
                 <h3 className="text-xl font-bold flex items-center gap-2">
                   <Database className="h-5 w-5 text-primary" />
-                  Gestión de Datos
+                  {t('settings.data.title')}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Administra la ubicación y respaldo de tu configuración
+                  {t('settings.data.description')}
                 </p>
               </div>
 
@@ -4324,9 +4427,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Ubicación de Configuración</CardTitle>
+                    <CardTitle className="text-base">{t('settings.data.configLocation.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Selecciona la carpeta donde se guardará el archivo de configuración
+                      {t('settings.data.configLocation.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4335,11 +4438,11 @@ function App() {
                     <div className="flex items-center gap-2">
                       <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-lg border-2 bg-background">
                         <Folder className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                        <span className="text-sm truncate font-mono">{rutaConfiguracion || "Cargando..."}</span>
+                        <span className="text-sm truncate font-mono">{rutaConfiguracion || t('common.loadingText')}</span>
                       </div>
                       <Button onClick={seleccionarCarpeta} className="flex-shrink-0">
                         <FolderUp className="h-4 w-4 mr-2" />
-                        Seleccionar Carpeta
+                        {t('settings.data.configLocation.selectFolder')}
                       </Button>
                     </div>
                   </div>
@@ -4350,9 +4453,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Información del Archivo</CardTitle>
+                    <CardTitle className="text-base">{t('settings.data.fileInfo.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Detalles sobre el archivo de configuración y última modificación
+                      {t('settings.data.fileInfo.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4363,9 +4466,9 @@ function App() {
                         <File className="h-4 w-4 text-muted-foreground" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs font-semibold text-foreground mb-1">Archivo de Configuración</div>
+                        <div className="text-xs font-semibold text-foreground mb-1">{t('settings.data.fileInfo.configFile')}</div>
                         <div className="text-xs font-mono text-muted-foreground break-all">
-                          {rutaConfiguracion ? `${rutaConfiguracion}/tuco-settings.json` : "Cargando..."}
+                          {rutaConfiguracion ? `${rutaConfiguracion}/tuco-settings.json` : t('common.loadingText')}
                         </div>
                       </div>
                     </div>
@@ -4374,9 +4477,9 @@ function App() {
                         <Clock className="h-4 w-4 text-muted-foreground" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs font-semibold text-foreground mb-1">Última Actualización</div>
+                        <div className="text-xs font-semibold text-foreground mb-1">{t('settings.data.fileInfo.lastUpdate')}</div>
                         <div className="text-xs text-muted-foreground">
-                          {ultimaActualizacion || "No disponible"}
+                          {ultimaActualizacion || t('common.noAvailable')}
                         </div>
                       </div>
                     </div>
@@ -4388,9 +4491,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Gestión de Configuración</CardTitle>
+                    <CardTitle className="text-base">{t('settings.data.management.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Importa o exporta tu archivo de configuración para respaldar o restaurar tus ajustes
+                      {t('settings.data.management.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4401,14 +4504,14 @@ function App() {
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                     >
                       <Download className="h-4 w-4 mr-2" />
-                      Importar
+                      {t('settings.data.management.import')}
                     </Button>
                     <Button 
                       onClick={exportarConfiguracion} 
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                     >
                       <Upload className="h-4 w-4 mr-2" />
-                      Exportar
+                      {t('settings.data.management.export')}
                     </Button>
                   </div>
                 </CardContent>
@@ -4422,9 +4525,9 @@ function App() {
                       <Sliders className="h-5 w-5 text-destructive" />
                     </div>
                     <div>
-                      <CardTitle className="text-base">Restablecer Configuración</CardTitle>
+                      <CardTitle className="text-base">{t('settings.data.reset.title')}</CardTitle>
                       <CardDescription className="text-xs mt-1">
-                        Elimina toda la configuración y restablece los valores predeterminados. Esta acción no se puede deshacer.
+                        {t('settings.data.reset.description')}
                       </CardDescription>
                     </div>
                   </div>
@@ -4433,9 +4536,9 @@ function App() {
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-destructive/5 border border-destructive/10">
                     <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-foreground mb-1">Advertencia</p>
+                      <p className="text-sm font-medium text-foreground mb-1">{t('settings.data.reset.warning')}</p>
                       <p className="text-xs text-muted-foreground">
-                        Esta acción eliminará todas tus configuraciones, conexiones y preferencias guardadas.
+                        {t('settings.data.reset.warningMessage')}
                       </p>
                     </div>
                   </div>
@@ -4445,7 +4548,7 @@ function App() {
                     className="w-full mt-4"
                   >
                     <Sliders className="h-4 w-4 mr-2" />
-                    Restaurar Configuración
+                    {t('settings.data.reset.restoreConfig')}
                   </Button>
                 </CardContent>
               </Card>
@@ -4458,10 +4561,10 @@ function App() {
               <div className="space-y-1">
                 <h3 className="text-xl font-bold flex items-center gap-2">
                   <GitBranch className="h-5 w-5 text-primary" />
-                  Configuración de Git
+                  {t('settings.git.title')}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Configura tu identidad y preferencias de seguridad para Git
+                  {t('settings.git.description')}
                 </p>
               </div>
 
@@ -4470,9 +4573,9 @@ function App() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-base">Identidades</CardTitle>
+                      <CardTitle className="text-base">{t('settings.git.identities.title')}</CardTitle>
                       <CardDescription className="text-xs mt-1">
-                        Gestiona múltiples identidades de usuario para usar en diferentes repositorios
+                        {t('settings.git.identities.description')}
                       </CardDescription>
                     </div>
                     <Button
@@ -4485,7 +4588,7 @@ function App() {
                       size="sm"
                     >
                       <Plus className="h-3.5 w-3.5 mr-1.5" />
-                      Nueva Identidad
+                      {t('settings.git.identities.newIdentity')}
                     </Button>
                   </div>
                 </CardHeader>
@@ -4493,17 +4596,17 @@ function App() {
                   {gitIdentities.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
                       <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                      <p className="text-sm">No hay identidades configuradas</p>
-                      <p className="text-xs mt-1">Agrega una identidad para comenzar</p>
+                      <p className="text-sm">{t('settings.git.identities.noIdentities')}</p>
+                      <p className="text-xs mt-1">{t('settings.git.identities.addIdentity')}</p>
                     </div>
                   ) : (
                     <div className="overflow-x-auto">
                       <table className="w-full">
                         <thead>
                           <tr className="border-b border-border">
-                            <th className="text-left py-3 px-4 text-sm font-semibold">Nombre Completo</th>
-                            <th className="text-left py-3 px-4 text-sm font-semibold">Correo Electrónico</th>
-                            <th className="text-right py-3 px-4 text-sm font-semibold">Acciones</th>
+                            <th className="text-left py-3 px-4 text-sm font-semibold">{t('common.fullName')}</th>
+                            <th className="text-left py-3 px-4 text-sm font-semibold">{t('common.email')}</th>
+                            <th className="text-right py-3 px-4 text-sm font-semibold">{t('common.actions')}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -4515,7 +4618,7 @@ function App() {
                                   <span>{identidad.nombre}</span>
                                   {identidad.id === IDENTIDAD_DEFAULT_ID && (
                                     <span className="px-1 py-0.5 text-[8px] font-semibold rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                                      Default
+                                      {t('common.default')}
                                     </span>
                                   )}
                                 </div>
@@ -4564,9 +4667,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Comportamiento del Botón de Commit</CardTitle>
+                    <CardTitle className="text-base">{t('settings.git.commitBehavior.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Selecciona qué acción realizará el botón de commit en el panel de estado de Git
+                      {t('settings.git.commitBehavior.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4574,7 +4677,7 @@ function App() {
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <label className="text-sm font-semibold">
-                        Acción del botón
+                        {t('settings.git.commitBehavior.buttonAction')}
                       </label>
                       <div className="relative">
                         <button
@@ -4583,9 +4686,9 @@ function App() {
                           className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all hover:border-primary/50"
                         >
                           <span className={commitButtonBehavior ? "text-foreground" : "text-muted-foreground"}>
-                            {commitButtonBehavior === "commit" && "Commit"}
-                            {commitButtonBehavior === "commit-push" && "Commit + Push"}
-                            {commitButtonBehavior === "commit-sync" && "Commit + Sync"}
+                            {commitButtonBehavior === "commit" && t('settings.git.commitBehavior.commit')}
+                            {commitButtonBehavior === "commit-push" && t('settings.git.commitBehavior.commitPush')}
+                            {commitButtonBehavior === "commit-sync" && t('settings.git.commitBehavior.commitSync')}
                           </span>
                           <ChevronRight className={`h-4 w-4 transition-transform flex-shrink-0 ${mostrarMenuCommitBehavior ? "rotate-90" : ""}`} />
                         </button>
@@ -4614,7 +4717,7 @@ function App() {
                                 }`}
                               >
                                 <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit" ? "opacity-100" : "opacity-0"}`} />
-                                <span>Commit</span>
+                                <span>{t('settings.git.commitBehavior.commit')}</span>
                               </button>
                               <button
                                 onClick={async () => {
@@ -4634,7 +4737,7 @@ function App() {
                                 }`}
                               >
                                 <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit-push" ? "opacity-100" : "opacity-0"}`} />
-                                <span>Commit + Push</span>
+                                <span>{t('settings.git.commitBehavior.commitPush')}</span>
                               </button>
                               <button
                                 onClick={async () => {
@@ -4654,7 +4757,7 @@ function App() {
                                 }`}
                               >
                                 <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit-sync" ? "opacity-100" : "opacity-0"}`} />
-                                <span>Commit + Sync</span>
+                                <span>{t('settings.git.commitBehavior.commitSync')}</span>
                               </button>
                             </div>
                           </>
@@ -4665,28 +4768,28 @@ function App() {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <div className={`h-2 w-2 rounded-full ${commitButtonBehavior === "commit" ? "bg-primary" : "bg-muted-foreground/30"}`} />
-                          <span className="text-sm font-semibold">Commit</span>
+                          <span className="text-sm font-semibold">{t('settings.git.commitBehavior.commit')}</span>
                         </div>
                         <p className="text-xs text-muted-foreground ml-4">
-                          Realiza únicamente el commit de los archivos en stage. No sincroniza con el repositorio remoto.
+                          {t('settings.git.commitBehavior.commitDescription')}
                         </p>
                       </div>
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <div className={`h-2 w-2 rounded-full ${commitButtonBehavior === "commit-push" ? "bg-primary" : "bg-muted-foreground/30"}`} />
-                          <span className="text-sm font-semibold">Commit + Push</span>
+                          <span className="text-sm font-semibold">{t('settings.git.commitBehavior.commitPush')}</span>
                         </div>
                         <p className="text-xs text-muted-foreground ml-4">
-                          Realiza el commit y luego envía los cambios al repositorio remoto. No descarga cambios del remoto.
+                          {t('settings.git.commitBehavior.commitPushDescription')}
                         </p>
                       </div>
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <div className={`h-2 w-2 rounded-full ${commitButtonBehavior === "commit-sync" ? "bg-primary" : "bg-muted-foreground/30"}`} />
-                          <span className="text-sm font-semibold">Commit + Sync</span>
+                          <span className="text-sm font-semibold">{t('settings.git.commitBehavior.commitSync')}</span>
                         </div>
                         <p className="text-xs text-muted-foreground ml-4">
-                          Realiza el commit, descarga los cambios del remoto (fetch + pull) y luego envía los cambios locales (push). Sincroniza completamente con el repositorio remoto.
+                          {t('settings.git.commitBehavior.commitSyncDescription')}
                         </p>
                       </div>
                     </div>
@@ -4698,9 +4801,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Seguridad y Red</CardTitle>
+                    <CardTitle className="text-base">{t('settings.git.security.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Ajustes de conexión y verificación de certificados SSL
+                      {t('settings.git.security.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4709,24 +4812,23 @@ function App() {
                     <div className="flex items-start justify-between gap-4 p-4 rounded-lg bg-muted/50 border">
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center gap-2">
-                          <label className="text-sm font-semibold">Verificación de certificado SSL</label>
+                          <label className="text-sm font-semibold">{t('settings.git.security.sslVerify')}</label>
                           <div className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                             gitSslVerify 
                               ? 'bg-green-500/10 text-green-600 dark:text-green-400' 
                               : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
                           }`}>
-                            {gitSslVerify ? 'ACTIVADO' : 'DESACTIVADO'}
+                            {gitSslVerify ? t('settings.git.security.activated') : t('settings.git.security.deactivated')}
                           </div>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          Desactivar si tienes problemas con certificados auto-firmados o proxies corporativos. 
-                          Equivalente a <code className="px-1 py-0.5 rounded bg-background text-xs font-mono">http.sslVerify=false</code>
+                          {t('settings.git.security.sslDescription')}
                         </p>
                         {!gitSslVerify && (
                           <div className="flex items-start gap-2 mt-2 p-2 rounded-md bg-amber-500/10 border border-amber-500/20">
                             <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                             <p className="text-xs text-amber-700 dark:text-amber-300">
-                              La verificación SSL está desactivada. Esto puede ser un riesgo de seguridad.
+                              {t('settings.git.security.sslWarning')}
                             </p>
                           </div>
                         )}
@@ -4740,12 +4842,12 @@ function App() {
                             try {
                               await window.electronAPI.writeConfig({ gitSslVerify: nuevoValor });
                               showToast(
-                                `Verificación SSL ${nuevoValor ? 'activada' : 'desactivada'}`,
+                                nuevoValor ? t('settings.git.security.sslActivated') : t('settings.git.security.sslDeactivated'),
                                 nuevoValor ? 'success' : 'warning'
                               );
                             } catch (error) {
                               // Error al guardar SSL verify
-                              showToast('Error al guardar configuración SSL', 'error');
+                              showToast(t('settings.git.security.sslError'), 'error');
                             }
                           }
                         }}
@@ -4772,10 +4874,10 @@ function App() {
               <div className="space-y-1">
                 <h3 className="text-xl font-bold flex items-center gap-2">
                   <Palette className="h-5 w-5 text-primary" />
-                  Apariencia
+                  {t('settings.appearance.title')}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Personaliza el tema y el tamaño de los componentes de la aplicación
+                  {t('settings.appearance.description')}
                 </p>
               </div>
 
@@ -4784,9 +4886,9 @@ function App() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-base">Temas</CardTitle>
+                      <CardTitle className="text-base">{t('settings.appearance.themes.title')}</CardTitle>
                       <CardDescription className="text-xs mt-1">
-                        Selecciona un estilo de tema para personalizar la apariencia
+                        {t('settings.appearance.themes.description')}
                       </CardDescription>
                     </div>
                     <div className="flex items-center gap-2">
@@ -4800,12 +4902,12 @@ function App() {
                         {isDark ? (
                           <>
                             <Moon className="h-3.5 w-3.5 mr-1.5" />
-                            Oscuro
+                            {t('settings.appearance.themes.dark')}
                           </>
                         ) : (
                           <>
                             <Sun className="h-3.5 w-3.5 mr-1.5" />
-                            Claro
+                            {t('settings.appearance.themes.light')}
                           </>
                         )}
                       </Button>
@@ -4852,9 +4954,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Tamaño de Componentes</CardTitle>
+                    <CardTitle className="text-base">{t('settings.appearance.componentSize.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Ajusta el zoom de la interfaz para mejorar la legibilidad y comodidad
+                      {t('settings.appearance.componentSize.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4863,13 +4965,13 @@ function App() {
                     <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50 border">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <label className="text-sm font-semibold">Nivel de Zoom</label>
+                          <label className="text-sm font-semibold">{t('settings.appearance.componentSize.zoomLevel')}</label>
                           <div className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">
                             {tempZoomLevel}%
                           </div>
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          Afecta el tamaño de texto, iconos y espaciado de todos los componentes
+                          {t('settings.appearance.componentSize.zoomDescription')}
                         </p>
                       </div>
                     </div>
@@ -4934,7 +5036,7 @@ function App() {
                     <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
                       <Info className="h-4 w-4 text-primary flex-shrink-0" />
                       <p className="text-xs text-muted-foreground">
-                        El zoom se aplica inmediatamente. Recomendado: <span className="font-semibold text-foreground">100%</span> para la mejor experiencia.
+                        {t('settings.appearance.componentSize.zoomInfo')}
                       </p>
                     </div>
                   </div>
@@ -4949,10 +5051,10 @@ function App() {
               <div className="space-y-1">
                 <h3 className="text-xl font-bold flex items-center gap-2">
                   <RefreshCw className="h-5 w-5 text-primary" />
-                  Actualizaciones
+                  {t('settings.updates.title')}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Información sobre la versión actual y última modificación de la configuración
+                  {t('settings.updates.description')}
                 </p>
               </div>
 
@@ -4960,9 +5062,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Versión Actual</CardTitle>
+                    <CardTitle className="text-base">{t('settings.updates.currentVersion.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Información sobre la versión instalada de la aplicación
+                      {t('settings.updates.currentVersion.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4975,7 +5077,7 @@ function App() {
                         </div>
                         <div>
                           <div className="text-sm font-semibold text-foreground">TucoGit</div>
-                          <div className="text-xs text-muted-foreground">Versión de la aplicación</div>
+                          <div className="text-xs text-muted-foreground">{t('settings.updates.currentVersion.appVersion')}</div>
                         </div>
                       </div>
                       <div className="px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
@@ -4985,7 +5087,7 @@ function App() {
                     <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
                       <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
                       <p className="text-xs text-muted-foreground">
-                        Estás usando la última versión disponible
+                        {t('settings.updates.currentVersion.latestVersion')}
                       </p>
                     </div>
                   </div>
@@ -4996,9 +5098,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Última Actualización</CardTitle>
+                    <CardTitle className="text-base">{t('settings.updates.lastUpdate.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Fecha y hora de la última modificación de la configuración
+                      {t('settings.updates.lastUpdate.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -5009,9 +5111,9 @@ function App() {
                         <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div className="flex-1">
-                        <div className="text-sm font-semibold text-foreground mb-1">Configuración Modificada</div>
+                        <div className="text-sm font-semibold text-foreground mb-1">{t('settings.updates.lastUpdate.configModified')}</div>
                         <div className="text-xs font-mono text-muted-foreground">
-                          {ultimaActualizacion || "No disponible"}
+                          {ultimaActualizacion || t('common.noAvailable')}
                         </div>
                       </div>
                     </div>
@@ -5019,7 +5121,7 @@ function App() {
                       <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
                         <Info className="h-4 w-4 text-primary flex-shrink-0" />
                         <p className="text-xs text-muted-foreground">
-                          Esta fecha se actualiza automáticamente cuando modificas cualquier configuración de la aplicación.
+                          {t('settings.updates.lastUpdate.autoUpdateInfo')}
                         </p>
                       </div>
                     )}
@@ -5032,24 +5134,24 @@ function App() {
                 <Card className="border-2">
                   <CardHeader className="pb-3">
                     <div>
-                      <CardTitle className="text-base">Información del Sistema</CardTitle>
+                      <CardTitle className="text-base">{t('settings.updates.systemInfo.title')}</CardTitle>
                       <CardDescription className="text-xs mt-1">
-                        Versiones de las tecnologías utilizadas por la aplicación
+                        {t('settings.updates.systemInfo.description')}
                       </CardDescription>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">Plataforma</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.platform')}</div>
                         <div className="text-sm font-semibold font-mono">{window.electronAPI.platform || 'N/A'}</div>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">Electron</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.electron')}</div>
                         <div className="text-sm font-semibold font-mono">v{window.electronAPI.versions.electron || 'N/A'}</div>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">Chrome</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.chrome')}</div>
                         <div className="text-sm font-semibold font-mono">v{window.electronAPI.versions.chrome || 'N/A'}</div>
                       </div>
                     </div>
@@ -5063,10 +5165,9 @@ function App() {
                   <div className="flex items-start gap-3">
                     <Info className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                     <div className="space-y-1">
-                      <p className="text-sm font-semibold text-foreground">Sobre las Actualizaciones</p>
+                      <p className="text-sm font-semibold text-foreground">{t('settings.updates.aboutUpdates.title')}</p>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        Las actualizaciones de la aplicación se gestionan automáticamente. 
-                        Cuando haya una nueva versión disponible, recibirás una notificación.
+                        {t('settings.updates.aboutUpdates.description')}
                       </p>
                     </div>
                   </div>
@@ -5106,7 +5207,7 @@ function App() {
                               <span className="text-xs font-semibold text-primary">v1.0.0</span>
                             </div>
                             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
-                              <span className="text-xs font-medium text-blue-600 dark:text-blue-400">Beta</span>
+                              <span className="text-xs font-medium text-blue-600 dark:text-blue-400">{t('settings.about.footer.beta')}</span>
                             </div>
                           </div>
                         </div>
@@ -5115,7 +5216,7 @@ function App() {
                       {/* Descripción */}
                       <div className="max-w-2xl mx-auto px-4">
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                          Cliente Git diseñado para simplificar la gestión de repositorios y reducir la complejidad del trabajo diario, alineado con flujos de trabajo modernos y las operaciones más comunes de control de versiones.
+                          {t('settings.about.appDescription')}
                         </p>
                       </div>
                     </div>
@@ -5127,9 +5228,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Desarrollador</CardTitle>
+                    <CardTitle className="text-base">{t('settings.about.developer.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Información de contacto y perfil del desarrollador
+                      {t('settings.about.developer.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -5143,10 +5244,10 @@ function App() {
                       <div className="flex-1 space-y-1">
                         <div>
                           <div className="text-base font-bold text-foreground mb-0.5">Hernan Lencinas</div>
-                          <div className="text-xs text-muted-foreground">Desarrollador Full Stack</div>
+                          <div className="text-xs text-muted-foreground">{t('settings.about.developer.fullStack')}</div>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          Creador y mantenedor de TucoGit. Apasionado por crear herramientas que simplifiquen el trabajo diario de los desarrolladores.
+                          {t('settings.about.developer.bio')}
                         </p>
                       </div>
                     </div>
@@ -5161,7 +5262,7 @@ function App() {
                           <Mail className="h-4 w-4 text-blue-500" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-xs font-semibold text-foreground mb-0.5">Email</div>
+                          <div className="text-xs font-semibold text-foreground mb-0.5">{t('settings.about.contact.email')}</div>
                           <div className="text-xs text-muted-foreground truncate font-mono">lencinas.hernan@gmail.com</div>
                         </div>
                         <ExternalLink className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
@@ -5176,7 +5277,7 @@ function App() {
                           <GitBranch className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-xs font-semibold text-foreground mb-0.5">GitHub</div>
+                          <div className="text-xs font-semibold text-foreground mb-0.5">{t('settings.about.contact.github')}</div>
                           <div className="text-xs text-muted-foreground truncate">@HernanLencinas</div>
                         </div>
                         <ExternalLink className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
@@ -5190,9 +5291,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Soporte y Comunidad</CardTitle>
+                    <CardTitle className="text-base">{t('settings.about.support.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Reporta problemas, comparte ideas y participa en la comunidad
+                      {t('settings.about.support.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -5208,8 +5309,8 @@ function App() {
                         <AlertCircle className="h-5 w-5 text-red-500" />
                       </div>
                       <div className="flex-1">
-                        <div className="text-sm font-semibold text-foreground mb-1">Reportar un Problema</div>
-                        <div className="text-xs text-muted-foreground">Abre un issue en GitHub para reportar bugs o solicitar características</div>
+                        <div className="text-sm font-semibold text-foreground mb-1">{t('settings.about.support.reportIssue')}</div>
+                        <div className="text-xs text-muted-foreground">{t('settings.about.support.reportIssueDescription')}</div>
                       </div>
                       <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     </a>
@@ -5223,8 +5324,8 @@ function App() {
                         <Users className="h-5 w-5 text-blue-500" />
                       </div>
                       <div className="flex-1">
-                        <div className="text-sm font-semibold text-foreground mb-1">Foro de Discusión</div>
-                        <div className="text-xs text-muted-foreground">Participa en discusiones, comparte ideas y obtén ayuda de la comunidad</div>
+                        <div className="text-sm font-semibold text-foreground mb-1">{t('settings.about.support.discussions')}</div>
+                        <div className="text-xs text-muted-foreground">{t('settings.about.support.discussionsDescription')}</div>
                       </div>
                       <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     </a>
@@ -5243,8 +5344,8 @@ function App() {
                       </p>
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Heart className="h-3 w-3 text-red-500 fill-red-500" />
-                        <span>Hecho con tecnologías</span>
-                        <span className="font-medium text-primary">open source</span>
+                        <span>{t('settings.about.footer.madeWith')}</span>
+                        <span className="font-medium text-primary">{t('settings.about.footer.openSource')}</span>
                       </div>
                     </div>
 
@@ -5256,7 +5357,7 @@ function App() {
                       </div>
                       <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/5 border border-blue-500/10">
                         <Star className="h-3.5 w-3.5 text-blue-500 fill-blue-500" />
-                        <span className="text-xs font-medium text-blue-600 dark:text-blue-400">Open Source</span>
+                        <span className="text-xs font-medium text-blue-600 dark:text-blue-400">{t('settings.about.footer.openSourceBadge')}</span>
                       </div>
                     </div>
                   </div>
@@ -5274,12 +5375,12 @@ function App() {
         {/* Sidebar de configuración */}
         <div className="w-48 flex-shrink-0 border-r pr-4 py-4 space-y-1">
           {[
-            { id: "general", label: "General", icon: <Settings className="h-4 w-4" /> },
-            { id: "datos", label: "Datos", icon: <Database className="h-4 w-4" /> },
-            { id: "git", label: "Git", icon: <GitBranch className="h-4 w-4" /> },
-            { id: "temas", label: "Apariencia", icon: <Palette className="h-4 w-4" /> },
-            { id: "actualizacion", label: "Actualización", icon: <RefreshCw className="h-4 w-4" /> },
-            { id: "acerca", label: "Acerca de", icon: <Info className="h-4 w-4" /> },
+            { id: "general", labelKey: "settings.tabs.general", icon: <Settings className="h-4 w-4" /> },
+            { id: "datos", labelKey: "settings.tabs.data", icon: <Database className="h-4 w-4" /> },
+            { id: "git", labelKey: "settings.tabs.git", icon: <GitBranch className="h-4 w-4" /> },
+            { id: "temas", labelKey: "settings.tabs.appearance", icon: <Palette className="h-4 w-4" /> },
+            { id: "actualizacion", labelKey: "settings.tabs.updates", icon: <RefreshCw className="h-4 w-4" /> },
+            { id: "acerca", labelKey: "settings.tabs.about", icon: <Info className="h-4 w-4" /> },
           ].map((item) => (
             <button
               key={item.id}
@@ -5287,7 +5388,7 @@ function App() {
               className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${configTabActiva === item.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"}`}
             >
               {item.icon}
-              {item.label}
+              {t(item.labelKey)}
             </button>
           ))}
         </div>
@@ -5389,7 +5490,7 @@ function App() {
                         "flex items-center gap-1.5 flex-1 min-w-0 text-xs transition-colors",
                         esActivo ? "text-foreground font-medium" : "text-muted-foreground group-hover:text-foreground"
                       )}
-                      title={`${repo.nombre}${gitInfo?.branch ? ` - ${gitInfo.branch}` : ''}${tieneCambios ? ' (cambios sin commit)' : ''}\nClick medio para cerrar`}
+                      title={`${repo.nombre}${gitInfo?.branch ? ` - ${gitInfo.branch}` : ''}${tieneCambios ? ` (${t('repositories.tooltips.uncommittedChanges')})` : ''}\n${t('repositories.tooltips.middleClickToClose')}`}
                     >
                       <GitBranch className={cn(
                         "h-3.5 w-3.5 flex-shrink-0",
@@ -5425,7 +5526,7 @@ function App() {
                           ? "hover:bg-muted/80 text-foreground/70 hover:text-foreground"
                           : "hover:bg-muted/60 text-muted-foreground/50 group-hover:text-foreground/70"
                       )}
-                      title="Cerrar"
+                      title={t('repositories.tooltips.close')}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'scale(1.1)';
                       }}
@@ -5456,7 +5557,7 @@ function App() {
                 className="h-8 px-3 text-xs"
               >
                 <Home className="mr-1.5 h-3.5 w-3.5" />
-                Inicio
+                {t('common.tabs.home')}
               </Button>
               <Button
                 variant={activeTab === "repositorios" ? "default" : "ghost"}
@@ -5472,7 +5573,7 @@ function App() {
                 className="h-8 px-3 text-xs"
               >
                 <FolderGit2 className="mr-1.5 h-3.5 w-3.5" />
-                Repositorios
+                {t('common.tabs.repositories')}
               </Button>
               <Button
                 variant={activeTab === "conexiones" ? "default" : "ghost"}
@@ -5489,13 +5590,14 @@ function App() {
                   <path d="M25.6,25.6,22.2,29,19,25.8l3.4-3.4a2,2,0,0,0-2.8-2.8L16.2,23l-1.3-1.3a1.9,1.9,0,0,0-2.8,0l-3,3a9.8,9.8,0,0,0-3,7,9.1,9.1,0,0,0,1.8,5.6L4.6,40.6a1.9,1.9,0,0,0,0,2.8,1.9,1.9,0,0,0,2.8,0l3.2-3.2a10.1,10.1,0,0,0,5.9,1.9,10.2,10.2,0,0,0,7.1-2.9l3-3a2,2,0,0,0,.6-1.4,1.7,1.7,0,0,0-.6-1.4L25,31.8l3.4-3.4a2,2,0,0,0-2.8-2.8ZM20.8,36.4a6.1,6.1,0,0,1-8.5,0l-.4-.4a6.4,6.4,0,0,1-1.8-4.3,6,6,0,0,1,1.8-4.2l1.6-1.6,8.8,8.9Z" />
                   <path d="M43.4,4.6a1.9,1.9,0,0,0-2.8,0L37.2,8a10,10,0,0,0-13,.9l-3,3a2,2,0,0,0-.6,1.4,1.7,1.7,0,0,0,.6,1.4L32.9,26.4a1.9,1.9,0,0,0,2.8,0l3-2.9a9.9,9.9,0,0,0,2.9-7.1A10.4,10.4,0,0,0,40,10.9l3.4-3.5A1.9,1.9,0,0,0,43.4,4.6Zm-7.5,16-1.6,1.6-8.9-8.9L27,11.8a5.9,5.9,0,0,1,8.5,0l.4.3a6.3,6.3,0,0,1,1.7,4.3A5.9,5.9,0,0,1,35.9,20.6Z" />
                 </svg>
-                Conexiones
+                {t('common.tabs.connections')}
               </Button>
               <Button
                 variant={activeTab === "configuracion" ? "default" : "ghost"}
                 onClick={() => setActiveTab("configuracion")}
                 size="icon"
                 className="h-8 w-8"
+                aria-label={t('common.tabs.settings')}
               >
                 <Settings className="h-3.5 w-3.5" />
               </Button>
@@ -5507,7 +5609,7 @@ function App() {
               size="icon"
               onClick={toggleTheme}
               className="h-8 w-8 relative"
-              aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              aria-label={isDark ? t('common.theme.switchToLight') : t('common.theme.switchToDark')}
             >
               <Sun
                 className={`h-3.5 w-3.5 absolute transition-all duration-300 ${isDark ? "rotate-90 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"
@@ -5550,12 +5652,12 @@ function App() {
                 <div className="mb-6">
                   <div className="flex-1">
                     <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                      {editandoConexion ? "Editar Conexión" : "Nueva Conexión"}
+                      {editandoConexion ? t('connectionWizard.title.edit') : t('connectionWizard.title.new')}
                     </CardTitle>
                     <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
                       {editandoConexion
-                        ? "Modifica los datos de tu conexión Git"
-                        : "Configura una nueva conexión con tu proveedor de Git en pocos pasos"}
+                        ? t('connectionWizard.description.edit')
+                        : t('connectionWizard.description.new')}
                     </CardDescription>
                   </div>
                 </div>
@@ -5568,7 +5670,7 @@ function App() {
                       {pasoWizard > 1 ? <Check className="w-4 h-4" /> : "1"}
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizard >= 1 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Proveedor
+                      {t('connectionWizard.steps.provider')}
                     </span>
                   </div>
                   <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizard >= 2 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
@@ -5578,7 +5680,7 @@ function App() {
                       {pasoWizard > 2 ? <Check className="w-4 h-4" /> : "2"}
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizard >= 2 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Autenticación
+                      {t('connectionWizard.steps.authentication')}
                     </span>
                   </div>
                   <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizard >= 3 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
@@ -5588,7 +5690,7 @@ function App() {
                       3
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizard >= 3 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Confirmación
+                      {t('connectionWizard.steps.confirmation')}
                     </span>
                   </div>
                 </div>
@@ -5601,10 +5703,10 @@ function App() {
                   <div className="space-y-6 min-h-[300px]">
                     <div>
                       <label className="text-sm font-semibold mb-2 block">
-                        Proveedor de Git <span className="text-destructive">*</span>
+                        {t('connectionWizard.step1.title')} <span className="text-destructive">{t('connectionWizard.step1.required')}</span>
                       </label>
                       <p className="text-sm text-muted-foreground mb-4">
-                        Selecciona el proveedor de Git con el que deseas conectar
+                        {t('connectionWizard.step1.description')}
                       </p>
                       <div className="grid grid-cols-3 gap-3 auto-rows-fr">
                         {/* GitHub */}
@@ -5624,9 +5726,9 @@ function App() {
                               </svg>
                             </div>
                             <div className="text-center">
-                              <div className="font-semibold text-sm">GitHub</div>
+                              <div className="font-semibold text-sm">{t('connectionWizard.step1.providers.github.name')}</div>
                               <div className="text-xs text-muted-foreground mt-0.5">
-                                El más popular para proyectos open source
+                                {t('connectionWizard.step1.providers.github.description')}
                               </div>
                             </div>
                           </div>
@@ -5647,9 +5749,9 @@ function App() {
                               </svg>
                             </div>
                             <div className="text-center">
-                              <div className="font-semibold text-sm">GitLab</div>
+                              <div className="font-semibold text-sm">{t('connectionWizard.step1.providers.gitlab.name')}</div>
                               <div className="text-xs text-muted-foreground mt-0.5">
-                                Excelente para CI/CD integrado
+                                {t('connectionWizard.step1.providers.gitlab.description')}
                               </div>
                             </div>
                           </div>
@@ -5670,9 +5772,9 @@ function App() {
                               </svg>
                             </div>
                             <div className="text-center">
-                              <div className="font-semibold text-sm">Gitea</div>
+                              <div className="font-semibold text-sm">{t('connectionWizard.step1.providers.gitea.name')}</div>
                               <div className="text-xs text-muted-foreground mt-0.5">
-                                Plataforma Git auto-hospedada
+                                {t('connectionWizard.step1.providers.gitea.description')}
                               </div>
                             </div>
                           </div>
@@ -5701,9 +5803,9 @@ function App() {
                               </svg>
                             </div>
                             <div className="text-center">
-                              <div className="font-semibold text-sm">Codeberg</div>
+                              <div className="font-semibold text-sm">{t('connectionWizard.step1.providers.codeberg.name')}</div>
                               <div className="text-xs text-muted-foreground mt-0.5">
-                                Alternativa libre y open source
+                                {t('connectionWizard.step1.providers.codeberg.description')}
                               </div>
                             </div>
                           </div>
@@ -5724,9 +5826,9 @@ function App() {
                               </svg>
                             </div>
                             <div className="text-center">
-                              <div className="font-semibold text-sm">Gogs</div>
+                              <div className="font-semibold text-sm">{t('connectionWizard.step1.providers.gogs.name')}</div>
                               <div className="text-xs text-muted-foreground mt-0.5">
-                                Plataforma Git auto-hospedada
+                                {t('connectionWizard.step1.providers.gogs.description')}
                               </div>
                             </div>
                           </div>
@@ -5742,20 +5844,20 @@ function App() {
                     {/* Nombre de la Conexión */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Nombre de la Conexión</span>
+                        <span>{t('connectionWizard.step2.connectionName.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (requerido)
+                          {t('connectionWizard.step2.connectionName.required')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Ingresa un nombre descriptivo para identificar esta conexión
+                        {t('connectionWizard.step2.connectionName.description')}
                       </p>
                       <div className="relative">
                         <input
                           type="text"
                           value={nombreConexion}
                           onChange={(e) => setNombreConexion(e.target.value)}
-                          placeholder="Ej: Mi cuenta de GitHub"
+                          placeholder={t('connectionWizard.step2.connectionName.placeholder')}
                           maxLength={32}
                           className={cn(
                             "w-full px-4 py-3 pr-16 text-sm rounded-xl border transition-all duration-200",
@@ -5778,10 +5880,10 @@ function App() {
                     {/* Identidad Asociada */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                        Identidad Asociada
+                        {t('connectionWizard.step2.identity.label')}
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Selecciona la identidad de Git que se usará para esta conexión
+                        {t('connectionWizard.step2.identity.description')}
                       </p>
                       <div className="relative">
                         <button
@@ -5797,8 +5899,8 @@ function App() {
                         >
                           <span className={identidadSeleccionada ? "text-foreground" : "text-muted-foreground"}>
                             {identidadSeleccionada
-                              ? gitIdentities.find(id => id.id === identidadSeleccionada)?.nombre || "Seleccionar identidad"
-                              : "Seleccionar identidad"}
+                              ? gitIdentities.find(id => id.id === identidadSeleccionada)?.nombre || t('connectionWizard.step2.identity.select')
+                              : t('connectionWizard.step2.identity.select')}
                           </span>
                           <ChevronRight className={`h-4 w-4 transition-transform flex-shrink-0 ${mostrarMenuIdentidad ? "rotate-90" : ""}`} />
                         </button>
@@ -5826,7 +5928,7 @@ function App() {
                                       {identidad.nombre}
                                       {identidad.id === IDENTIDAD_DEFAULT_ID && (
                                         <span className="px-0.5 py-0 text-[6px] font-semibold leading-none rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                                          Default
+                                          {t('connectionWizard.step2.identity.default')}
                                         </span>
                                       )}
                                     </div>
@@ -5843,20 +5945,20 @@ function App() {
                     {/* Token de Acceso */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Token de Acceso</span>
+                        <span>{t('connectionWizard.step2.token.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (requerido)
+                          {t('connectionWizard.step2.token.required')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Token personal de acceso
+                        {t('connectionWizard.step2.token.description')}
                       </p>
                       <div className="relative">
                         <input
                           type={mostrarToken ? "text" : "password"}
                           value={tokenAcceso}
                           onChange={(e) => setTokenAcceso(e.target.value)}
-                          placeholder="Ingresa tu token de acceso"
+                          placeholder={t('connectionWizard.step2.token.placeholder')}
                           className={cn(
                             "w-full px-4 py-3 pr-10 text-sm rounded-xl border transition-all duration-200",
                             "bg-slate-50 dark:bg-slate-800/50",
@@ -5888,7 +5990,7 @@ function App() {
                         <div className="flex items-center gap-2 p-3 rounded-md bg-blue-500/10 border border-blue-500/20 mt-2">
                           <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                           <p className="text-xs text-blue-600 dark:text-blue-400">
-                            Validando token y conectando con el servidor...
+                            {t('connectionWizard.step2.token.validating')}
                           </p>
                         </div>
                       )}
@@ -5904,7 +6006,7 @@ function App() {
                         <div className="flex items-center gap-2 p-3 rounded-md bg-green-500/10 border border-green-500/20 mt-2">
                           <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
                           <p className="text-xs text-green-600 dark:text-green-400">
-                            Token válido. Puedes continuar al siguiente paso.
+                            {t('connectionWizard.step2.token.valid')}
                           </p>
                         </div>
                       )}
@@ -5913,13 +6015,13 @@ function App() {
                     {/* URL del Servidor */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>URL del Servidor</span>
+                        <span>{t('connectionWizard.step2.serverUrl.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (opcional)
+                          {t('connectionWizard.step2.serverUrl.optional')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        URL base del servidor Git (solo para servidores personalizados)
+                        {t('connectionWizard.step2.serverUrl.description')}
                       </p>
                       <input
                         type="text"
@@ -5942,31 +6044,31 @@ function App() {
                   <div className="space-y-6 min-h-[300px]">
                     <div>
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
-                        Confirma los datos de tu conexión
+                        {t('connectionWizard.step3.title')}
                       </label>
                       <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                        Revisa la información antes de guardar
+                        {t('connectionWizard.step3.description')}
                       </p>
                       <Card className="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
                         <CardContent className="p-4 space-y-2">
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Proveedor:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('connectionWizard.step3.fields.provider')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{getNombreProveedor(proveedorSeleccionado)}</span>
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Nombre:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('connectionWizard.step3.fields.name')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{nombreConexion || "-"}</span>
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">URL:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('connectionWizard.step3.fields.url')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 break-all text-right max-w-[60%]">{urlServidor || "-"}</span>
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Tipo de Autenticación:</span>
-                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">Token</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('connectionWizard.step3.fields.authType')}</span>
+                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{t('connectionWizard.step3.fields.authTypeValue')}</span>
                           </div>
                           <div className="flex items-center justify-between py-2">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Token:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('connectionWizard.step3.fields.token')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 font-mono">
                               {ocultarToken(tokenAcceso)}
                             </span>
@@ -5987,7 +6089,7 @@ function App() {
                       limpiarWizardConexion();
                     }}
                   >
-                    Cancelar
+                    {t('connectionWizard.actions.cancel')}
                   </Button>
                   <div className="flex gap-2">
                     {pasoWizard > 1 && (
@@ -5999,7 +6101,7 @@ function App() {
                           setPasoWizard((prev) => (prev - 1) as 1 | 2 | 3);
                         }}
                       >
-                        Anterior
+                        {t('connectionWizard.actions.previous')}
                       </Button>
                     )}
                     {pasoWizard === 3 ? (
@@ -6009,7 +6111,7 @@ function App() {
                         onClick={guardarConexion}
                       >
                         <Check className="w-4 h-4" />
-                        Guardar
+                        {t('connectionWizard.actions.save')}
                       </Button>
                     ) : (
                       <Button
@@ -6031,11 +6133,11 @@ function App() {
                         {validandoToken ? (
                           <>
                             <RefreshCw className="w-4 h-4 animate-spin" />
-                            Validando...
+                            {t('connectionWizard.actions.validating')}
                           </>
                         ) : (
                           <>
-                            Siguiente
+                            {t('connectionWizard.actions.next')}
                             <ChevronRight className="w-4 h-4" />
                           </>
                         )}
@@ -6090,18 +6192,18 @@ function App() {
               }}
             >
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                <div className="mb-6">
-                  <div className="flex-1">
-                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                      {editandoRepositorio ? "Editar Repositorio" : "Nuevo Repositorio"}
-                    </CardTitle>
-                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                      {editandoRepositorio
-                        ? "Modifica los datos del repositorio"
-                        : "Agrega un nuevo repositorio a tu colección en pocos pasos"}
-                    </CardDescription>
+                  <div className="mb-6">
+                    <div className="flex-1">
+                      <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                        {editandoRepositorio ? t('repositories.newRepositoryWizard.title.edit') : t('repositories.newRepositoryWizard.title.new')}
+                      </CardTitle>
+                      <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                        {editandoRepositorio
+                          ? t('repositories.newRepositoryWizard.description.edit')
+                          : t('repositories.newRepositoryWizard.description.new')}
+                      </CardDescription>
+                    </div>
                   </div>
-                </div>
 
                 {/* Barra de progreso */}
                 <div className="flex items-center justify-between">
@@ -6111,7 +6213,7 @@ function App() {
                       {pasoWizardRepositorio > 1 ? <Check className="w-4 h-4" /> : "1"}
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizardRepositorio >= 1 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Conexión
+                      {t('repositories.newRepositoryWizard.steps.connection')}
                     </span>
                   </div>
                   <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizardRepositorio >= 2 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
@@ -6121,7 +6223,7 @@ function App() {
                       {pasoWizardRepositorio > 2 ? <Check className="w-4 h-4" /> : "2"}
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizardRepositorio >= 2 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Detalles
+                      {t('repositories.newRepositoryWizard.steps.details')}
                     </span>
                   </div>
                   <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizardRepositorio >= 3 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
@@ -6131,7 +6233,7 @@ function App() {
                       3
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizardRepositorio >= 3 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Confirmación
+                      {t('repositories.newRepositoryWizard.steps.confirmation')}
                     </span>
                   </div>
                 </div>
@@ -6144,13 +6246,13 @@ function App() {
                     {/* Seleccionar Conexión */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Selecciona una conexión</span>
+                        <span>{t('repositories.newRepositoryWizard.step1.connection.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (requerido)
+                          {t('repositories.newRepositoryWizard.step1.connection.required')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Elige la conexión Git donde se encuentra el repositorio
+                        {t('repositories.newRepositoryWizard.step1.connection.description')}
                       </p>
                       <div className="relative">
                         <button
@@ -6171,7 +6273,7 @@ function App() {
                               </div>
                             )}
                             <span className={conexionSeleccionada ? "text-foreground truncate" : "text-muted-foreground"}>
-                              {conexionSeleccionada ? conexionSeleccionada.nombre : "Selecciona una conexión..."}
+                              {conexionSeleccionada ? conexionSeleccionada.nombre : t('repositories.newRepositoryWizard.step1.connection.placeholder')}
                             </span>
                           </div>
                           <ChevronRight className={`h-4 w-4 transition-transform flex-shrink-0 ${mostrarMenuConexion ? "rotate-90" : ""}`} />
@@ -6185,7 +6287,7 @@ function App() {
                             <div className="absolute z-20 w-full mt-1 rounded-md border bg-popover shadow-md max-h-60 overflow-auto">
                               {conexionesGuardadas.length === 0 ? (
                                 <div className="p-3 text-sm text-muted-foreground text-center">
-                                  No hay conexiones disponibles
+                                  {t('repositories.newRepositoryWizard.step1.connection.noConnections')}
                                 </div>
                               ) : (
                                 [...conexionesGuardadas]
@@ -6219,13 +6321,13 @@ function App() {
                     {/* Seleccionar Repositorio */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Selecciona un repositorio</span>
+                        <span>{t('repositories.newRepositoryWizard.step1.repository.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (requerido)
+                          {t('repositories.newRepositoryWizard.step1.repository.required')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Elige el repositorio que deseas agregar
+                        {t('repositories.newRepositoryWizard.step1.repository.description')}
                       </p>
                       <div className="relative">
                         <button
@@ -6258,13 +6360,13 @@ function App() {
                             {cargandoRepositorios ? (
                               <>
                                 <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                                <span>Cargando repositorios...</span>
+                                <span>{t('repositories.newRepositoryWizard.step1.repository.loading')}</span>
                               </>
                             ) : !conexionSeleccionada
-                              ? "Primero selecciona una conexión"
+                              ? t('repositories.newRepositoryWizard.step1.repository.selectConnectionFirst')
                               : repositorioSeleccionado
                                 ? repositoriosDisponibles.find(r => r.id === repositorioSeleccionado)?.full_name || repositorioSeleccionado
-                                : "Selecciona un repositorio..."}
+                                : t('repositories.newRepositoryWizard.step1.repository.placeholder')}
                           </span>
                           <ChevronRight className={`h-4 w-4 transition-transform ${mostrarMenuRepositorio ? "rotate-90" : ""}`} />
                         </button>
@@ -6294,7 +6396,7 @@ function App() {
                                     type="text"
                                     value={busquedaRepositorio}
                                     onChange={(e) => setBusquedaRepositorio(e.target.value)}
-                                    placeholder="Buscar repositorios..."
+                                    placeholder={t('repositories.newRepositoryWizard.step1.repository.searchPlaceholder')}
                                     className="w-full pl-7 pr-2 py-1.5 text-xs rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
                                     onClick={(e) => e.stopPropagation()}
                                     onKeyDown={(e) => {
@@ -6323,7 +6425,7 @@ function App() {
                                 {cargandoRepositorios ? (
                                   <div className="p-6 flex flex-col items-center justify-center gap-2">
                                     <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                                    <p className="text-xs text-muted-foreground">Cargando repositorios...</p>
+                                    <p className="text-xs text-muted-foreground">{t('repositories.newRepositoryWizard.step1.repository.loading')}</p>
                                   </div>
                                 ) : (() => {
                                   // Filtrar repositorios basado en la búsqueda
@@ -6339,7 +6441,7 @@ function App() {
                                   if (repositoriosFiltrados.length === 0) {
                                     return (
                                       <div className="p-3 text-sm text-muted-foreground text-center">
-                                        {busquedaRepositorio ? "No se encontraron repositorios" : "No hay repositorios disponibles"}
+                                        {busquedaRepositorio ? t('repositories.newRepositoryWizard.step1.repository.noResults') : t('repositories.newRepositoryWizard.step1.repository.noRepositories')}
                                       </div>
                                     );
                                   }
@@ -6391,20 +6493,20 @@ function App() {
                     {/* Nombre del Repositorio */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Nombre del Repositorio</span>
+                        <span>{t('repositories.newRepositoryWizard.step2.name.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (requerido)
+                          {t('repositories.newRepositoryWizard.step2.name.required')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Ingresa un nombre descriptivo para identificar este repositorio
+                        {t('repositories.newRepositoryWizard.step2.name.description')}
                       </p>
                       <div className="relative">
                         <input
                           type="text"
                           value={nombreRepositorio}
                           onChange={(e) => setNombreRepositorio(e.target.value)}
-                          placeholder="Ej: Mi proyecto"
+                          placeholder={t('repositories.newRepositoryWizard.step2.name.placeholder')}
                           maxLength={32}
                           className={cn(
                             "w-full px-4 py-3 pr-16 text-sm rounded-xl border transition-all duration-200",
@@ -6427,19 +6529,19 @@ function App() {
                     {/* Descripción */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Descripción</span>
+                        <span>{t('repositories.newRepositoryWizard.step2.description.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (opcional)
+                          {t('repositories.newRepositoryWizard.step2.description.optional')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Agrega una descripción para este repositorio
+                        {t('repositories.newRepositoryWizard.step2.description.description')}
                       </p>
                       <div className="relative">
                         <textarea
                           value={descripcionRepositorio}
                           onChange={(e) => setDescripcionRepositorio(e.target.value)}
-                          placeholder="Descripción del repositorio..."
+                          placeholder={t('repositories.newRepositoryWizard.step2.description.placeholder')}
                           rows={4}
                           maxLength={100}
                           className={cn(
@@ -6468,42 +6570,42 @@ function App() {
                   <div className="space-y-6 min-h-[300px]">
                     <div>
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
-                        {editandoRepositorio ? "Confirma los cambios del repositorio" : "Confirma los datos del repositorio"}
+                        {editandoRepositorio ? t('repositories.newRepositoryWizard.step3.title.edit') : t('repositories.newRepositoryWizard.step3.title.new')}
                       </label>
                       <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                        {editandoRepositorio ? "Revisa los cambios antes de guardar" : "Revisa la información antes de guardar"}
+                        {editandoRepositorio ? t('repositories.newRepositoryWizard.step3.description.edit') : t('repositories.newRepositoryWizard.step3.description.new')}
                       </p>
                       <Card className="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
                         <CardContent className="p-4 space-y-2">
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Conexión:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.connection')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{conexionSeleccionada?.nombre || "-"}</span>
                           </div>
                           {conexionSeleccionada && (
                             <>
                               <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Proveedor:</span>
+                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.provider')}</span>
                                 <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{conexionSeleccionada.tipo || "-"}</span>
                               </div>
                               <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">URL:</span>
+                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.url')}</span>
                                 <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 break-all text-right max-w-[60%]">{conexionSeleccionada.host || "-"}</span>
                               </div>
                             </>
                           )}
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Repositorio:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.repository')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 break-all text-right max-w-[60%]">
                               {repositoriosDisponibles.find(r => r.id === repositorioSeleccionado)?.full_name || repositorioAEditar?.nombre || "-"}
                             </span>
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Nombre:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.name')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{nombreRepositorio || "-"}</span>
                           </div>
                           {descripcionRepositorio && (
                             <div className="flex items-start justify-between py-2">
-                              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Descripción:</span>
+                              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.description')}</span>
                               <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 text-right max-w-[60%] break-words">
                                 {descripcionRepositorio}
                               </span>
@@ -6538,7 +6640,7 @@ function App() {
                       }
                     }}
                   >
-                    {(pasoWizardRepositorio === 1 || (pasoWizardRepositorio === 2 && editandoRepositorio)) ? "Cancelar" : "Anterior"}
+                    {(pasoWizardRepositorio === 1 || (pasoWizardRepositorio === 2 && editandoRepositorio)) ? t('repositories.newRepositoryWizard.buttons.cancel') : t('repositories.newRepositoryWizard.buttons.previous')}
                   </Button>
                   {pasoWizardRepositorio === 3 ? (
                     <Button
@@ -6548,7 +6650,7 @@ function App() {
                       disabled={!nombreRepositorio.trim()}
                     >
                       <Check className="w-4 h-4" />
-                      Guardar
+                      {t('repositories.newRepositoryWizard.buttons.save')}
                     </Button>
                   ) : (
                     <Button
@@ -6557,16 +6659,16 @@ function App() {
                       onClick={() => {
                         if (pasoWizardRepositorio === 1) {
                           if (!conexionSeleccionada) {
-                            alert("Por favor selecciona una conexión");
+                            alert(t('repositories.newRepositoryWizard.errors.selectConnection'));
                             return;
                           }
                           if (!repositorioSeleccionado) {
-                            alert("Por favor selecciona un repositorio");
+                            alert(t('repositories.newRepositoryWizard.errors.selectRepository'));
                             return;
                           }
                         } else if (pasoWizardRepositorio === 2) {
                           if (!nombreRepositorio.trim()) {
-                            alert("Por favor ingresa un nombre para el repositorio");
+                            alert(t('repositories.newRepositoryWizard.errors.enterName'));
                             return;
                           }
                           // Si estamos editando, ir al paso 3 (Confirmación)
@@ -6581,7 +6683,7 @@ function App() {
                         (pasoWizardRepositorio === 2 && !nombreRepositorio.trim())
                       }
                     >
-                      Siguiente
+                      {t('repositories.newRepositoryWizard.buttons.next')}
                       <ChevronRight className="w-4 h-4" />
                     </Button>
                   )}
@@ -6703,19 +6805,19 @@ function App() {
             <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
               <div className="flex-1">
                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                  Nueva Colección
+                  {t('repositories.newCollectionModal.title')}
                 </CardTitle>
                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                  Organiza tus repositorios en una nueva colección personalizada
+                  {t('repositories.newCollectionModal.description')}
                 </CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Nombre de la colección</span>
+                  <span>{t('repositories.newCollectionModal.name.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
+                    {t('repositories.newCollectionModal.name.required')}
                   </span>
                 </label>
                 <div className="relative">
@@ -6732,15 +6834,15 @@ function App() {
                     onBlur={() => {
                       const nombreTrimmed = nombreNuevaCarpeta.trim();
                       if (!nombreTrimmed) {
-                        setErrorNombre("El nombre es requerido");
+                        setErrorNombre(t('repositories.newCollectionModal.name.errors.required'));
                       } else if (nombreTrimmed.length > 32) {
-                        setErrorNombre("El nombre no puede exceder 32 caracteres");
+                        setErrorNombre(t('repositories.newCollectionModal.name.errors.maxLength'));
                       } else {
                         const carpetaActual = obtenerCarpetaActual();
                         if (carpetaActual) {
                           const nombresExistentes = carpetaActual.hijos?.map((h) => h.nombre.toLowerCase()) || [];
                           if (nombresExistentes.includes(nombreTrimmed.toLowerCase())) {
-                            setErrorNombre("Ya existe una colección con ese nombre");
+                            setErrorNombre(t('repositories.newCollectionModal.name.errors.duplicate'));
                           } else {
                             setErrorNombre(null);
                           }
@@ -6756,7 +6858,7 @@ function App() {
                         : "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
                       creandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
-                    placeholder="Ej: Proyectos Frontend, Backend APIs, etc."
+                    placeholder={t('repositories.newCollectionModal.name.placeholder')}
                     autoFocus
                     maxLength={32}
                     disabled={creandoColeccion}
@@ -6780,9 +6882,9 @@ function App() {
 
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Descripción</span>
+                  <span>{t('repositories.newCollectionModal.descriptionField.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (opcional)
+                    {t('repositories.newCollectionModal.descriptionField.optional')}
                   </span>
                 </label>
                 <div className="relative">
@@ -6797,7 +6899,7 @@ function App() {
                     }}
                     onBlur={() => {
                       if (descripcionNuevaCarpeta.trim().length > 100) {
-                        setErrorDescripcion("La descripción no puede exceder 100 caracteres");
+                        setErrorDescripcion(t('repositories.newCollectionModal.descriptionField.errors.maxLength'));
                       } else {
                         setErrorDescripcion(null);
                       }
@@ -6812,7 +6914,7 @@ function App() {
                       "min-h-[110px] resize-none",
                       creandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
-                    placeholder="Agrega una descripción para identificar fácilmente esta colección..."
+                    placeholder={t('repositories.newCollectionModal.descriptionField.placeholder')}
                     maxLength={100}
                     disabled={creandoColeccion}
                   />
@@ -6849,7 +6951,7 @@ function App() {
                   }}
                   disabled={creandoColeccion}
                 >
-                  Cancelar
+                  {t('repositories.newCollectionModal.buttons.cancel')}
                 </Button>
                 <Button 
                   size="default"
@@ -6860,10 +6962,10 @@ function App() {
                   {creandoColeccion ? (
                     <span className="flex items-center gap-2">
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      Creando...
+                      {t('repositories.newCollectionModal.buttons.creating')}
                     </span>
                   ) : (
-                    "Crear"
+                    t('repositories.newCollectionModal.buttons.create')
                   )}
                 </Button>
               </div>
@@ -6916,19 +7018,19 @@ function App() {
             <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
               <div className="flex-1">
                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                  Editar Colección
+                  {t('repositories.editCollectionModal.title')}
                 </CardTitle>
                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                  Modifica los datos de la colección
+                  {t('repositories.editCollectionModal.description')}
                 </CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Nombre de la colección</span>
+                  <span>{t('repositories.editCollectionModal.name.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
+                    {t('repositories.editCollectionModal.name.required')}
                   </span>
                 </label>
                 <div className="relative">
@@ -6945,9 +7047,9 @@ function App() {
                     onBlur={() => {
                       const nombreTrimmed = nombreEditarColeccion.trim();
                       if (!nombreTrimmed) {
-                        setErrorNombreEditar("El nombre es requerido");
+                        setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.required'));
                       } else if (nombreTrimmed.length > 32) {
-                        setErrorNombreEditar("El nombre no puede exceder 32 caracteres");
+                        setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.maxLength'));
                       } else {
                         // Validar que el nombre no se repita
                         const encontrarPadre = (items: FolderItem[], targetId: string, parent: FolderItem | null = null): FolderItem | null => {
@@ -6968,7 +7070,7 @@ function App() {
                             ?.filter((h) => h.id !== coleccionAEditar.id)
                             .map((h) => h.nombre.toLowerCase()) || [];
                           if (nombresExistentes.includes(nombreTrimmed.toLowerCase())) {
-                            setErrorNombreEditar("Ya existe una colección con ese nombre");
+                            setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.duplicate'));
                           } else {
                             setErrorNombreEditar(null);
                           }
@@ -6984,7 +7086,7 @@ function App() {
                         : "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
                       editandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
-                    placeholder="Nombre de la colección"
+                    placeholder={t('repositories.editCollectionModal.name.placeholder')}
                     autoFocus
                     maxLength={32}
                     disabled={editandoColeccion}
@@ -7008,9 +7110,9 @@ function App() {
 
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Descripción</span>
+                  <span>{t('repositories.editCollectionModal.descriptionField.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (opcional)
+                    {t('repositories.editCollectionModal.descriptionField.optional')}
                   </span>
                 </label>
                 <div className="relative">
@@ -7025,7 +7127,7 @@ function App() {
                     }}
                     onBlur={() => {
                       if (descripcionEditarColeccion.trim().length > 100) {
-                        setErrorDescripcionEditar("La descripción no puede exceder 100 caracteres");
+                        setErrorDescripcionEditar(t('repositories.editCollectionModal.descriptionField.errors.maxLength'));
                       } else {
                         setErrorDescripcionEditar(null);
                       }
@@ -7040,7 +7142,7 @@ function App() {
                       "min-h-[110px] resize-none",
                       editandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
-                    placeholder="Descripción opcional de la colección"
+                    placeholder={t('repositories.editCollectionModal.descriptionField.placeholder')}
                     maxLength={100}
                     disabled={editandoColeccion}
                   />
@@ -7078,7 +7180,7 @@ function App() {
                   }}
                   disabled={editandoColeccion}
                 >
-                  Cancelar
+                  {t('repositories.editCollectionModal.buttons.cancel')}
                 </Button>
                 <Button 
                   size="default"
@@ -7089,10 +7191,10 @@ function App() {
                   {editandoColeccion ? (
                     <span className="flex items-center gap-2">
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      Guardando...
+                      {t('repositories.editCollectionModal.buttons.saving')}
                     </span>
                   ) : (
-                    "Guardar"
+                    t('repositories.editCollectionModal.buttons.save')
                   )}
                 </Button>
               </div>
@@ -7135,10 +7237,10 @@ function App() {
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                 <div className="flex-1">
                   <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                    El repositorio ya existe
+                    {t('repositories.cloneRepositoryModal.title')}
                   </CardTitle>
                   <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                    La carpeta de destino ya existe y no está vacía
+                    {t('repositories.cloneRepositoryModal.description')}
                   </CardDescription>
                 </div>
               </CardHeader>
@@ -7147,7 +7249,7 @@ function App() {
                   <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
                     <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
                     <span>
-                      <span className="font-semibold">Atención:</span> Se perderán todos los cambios locales no guardados en esa carpeta. ¿Deseas eliminar la carpeta existente y volver a clonar el repositorio?
+                      {t('repositories.cloneRepositoryModal.warning')}
                     </span>
                   </p>
                 </div>
@@ -7162,7 +7264,7 @@ function App() {
                       setRutaDestinoAClonar("");
                     }}
                   >
-                    Cancelar
+                    {t('repositories.cloneRepositoryModal.buttons.cancel')}
                   </Button>
                   <Button
                     size="default"
@@ -7180,7 +7282,7 @@ function App() {
                     }}
                   >
                     <Download className="w-4 h-4" />
-                    Clonar
+                    {t('repositories.cloneRepositoryModal.buttons.clone')}
                   </Button>
                 </div>
               </CardContent>
@@ -7321,10 +7423,10 @@ function App() {
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                 <div className="flex-1">
                   <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                    Eliminar Colección
+                    {t('repositories.deleteCollectionModal.title')}
                   </CardTitle>
                   <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                    Esta acción no se puede deshacer
+                    {t('repositories.deleteCollectionModal.description')}
                   </CardDescription>
                 </div>
               </CardHeader>
@@ -7333,7 +7435,7 @@ function App() {
                   <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
                     <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
                     <span>
-                      ¿Estás seguro de que deseas eliminar esta colección? Todos los repositorios dentro de ella también serán eliminados. Esta acción es permanente y no se puede deshacer.
+                      {t('repositories.deleteCollectionModal.warning')}
                     </span>
                   </p>
                 </div>
@@ -7347,7 +7449,7 @@ function App() {
                       setColeccionAEliminar(null);
                     }}
                   >
-                    Cancelar
+                    {t('repositories.deleteCollectionModal.buttons.cancel')}
                   </Button>
                   <Button
                     size="default"
@@ -7382,7 +7484,7 @@ function App() {
                       setColeccionAEliminar(null);
                     }}
                   >
-                    Eliminar
+                    {t('repositories.deleteCollectionModal.buttons.delete')}
                   </Button>
                 </div>
               </CardContent>
@@ -7529,10 +7631,10 @@ function App() {
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                 <div className="flex-1">
                   <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                    Eliminar Repositorio
+                    {t('repositories.deleteRepositoryModal.title')}
                   </CardTitle>
                   <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                    Esta acción no se puede deshacer
+                    {t('repositories.deleteRepositoryModal.description')}
                   </CardDescription>
                 </div>
               </CardHeader>
@@ -7541,7 +7643,7 @@ function App() {
                   <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
                     <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
                     <span>
-                      ¿Estás seguro de que deseas eliminar el repositorio <span className="font-semibold">"{repositorioAEliminar.nombre}"</span>? Esta acción es permanente y no se puede deshacer.
+                      {t('repositories.deleteRepositoryModal.warning', { name: repositorioAEliminar.nombre })}
                     </span>
                   </p>
                 </div>
@@ -7555,7 +7657,7 @@ function App() {
                       setRepositorioAEliminar(null);
                     }}
                   >
-                    Cancelar
+                    {t('repositories.deleteRepositoryModal.buttons.cancel')}
                   </Button>
                   <Button
                     size="default"
@@ -7590,7 +7692,7 @@ function App() {
                       setRepositorioAEliminar(null);
                     }}
                   >
-                    Eliminar
+                    {t('repositories.deleteRepositoryModal.buttons.delete')}
                   </Button>
                 </div>
               </CardContent>
