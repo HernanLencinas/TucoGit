@@ -5,16 +5,13 @@ import { Switch } from "@/components/ui/switch";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
-import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, HardDrive, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock, MoreVertical, Globe } from "lucide-react";
+import { Home, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock, MoreVertical, Globe } from "lucide-react";
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
-import type { Connection, FolderItem } from "@/renderer/types";
+import type { Connection, FolderItem, TabType, ConfigTabType } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
 import { WelcomeWizard } from "@/renderer/components/WelcomeWizard";
 import { LoadingScreen } from "@/renderer/components/LoadingScreen";
 import { useI18n } from "@/renderer/hooks/useI18n";
-
-type TabType = "inicio" | "repositorios" | "conexiones" | "configuracion";
-type ConfigTabType = "general" | "datos" | "git" | "temas" | "actualizacion" | "acerca";
 
 // Constantes para identidades de Git
 type GitIdentity = {
