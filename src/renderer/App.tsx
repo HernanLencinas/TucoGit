@@ -3443,10 +3443,6 @@ function App() {
             <RepositoryDetails
               repository={repo}
               configPath={rutaConfiguracion}
-              onBack={() => {
-                setViewMode("list");
-                setActiveRepository(null);
-              }}
               onMinimize={() => {
                 setActiveRepository(null);
                 setViewMode("list");

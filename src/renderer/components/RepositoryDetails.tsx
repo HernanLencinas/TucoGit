@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, GitBranch, RotateCw, Search, X, Download, Upload, GitPullRequest, ChevronDown, Plus, ArrowUp, ArrowDown, Trash2, Archive, Tag, Settings, Undo2, GitMerge, AlertCircle, RefreshCw, Lock, Info } from 'lucide-react';
+import { GitBranch, RotateCw, Search, Download, Upload, ChevronDown, Plus, Trash2, Archive, Tag, Undo2, GitMerge, AlertCircle, RefreshCw, Lock, Info } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -14,11 +14,10 @@ import { useI18n } from "@/renderer/hooks/useI18n";
 interface RepositoryDetailsProps {
     repository: FolderItem;
     configPath: string;
-    onBack: () => void;
     onMinimize?: () => void;
 }
 
-export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository, configPath, onBack, onMinimize }) => {
+export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository, configPath, onMinimize }) => {
     const { t } = useI18n();
     const { toast } = useToast();
     const [commits, setCommits] = useState<any[]>([]);
@@ -89,7 +88,6 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const [cherryPickAppendOrigin, setCherryPickAppendOrigin] = useState(false);
     const [cherryPicking, setCherryPicking] = useState(false);
     const [pendingOperation, setPendingOperation] = useState<{ operation: string; commitHash?: string } | null>(null);
-    const [checkingPendingOperation, setCheckingPendingOperation] = useState(false);
     const [resolvingPendingOperation, setResolvingPendingOperation] = useState(false);
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
     const [commitPanelHeight, setCommitPanelHeight] = useState(40); // Porcentaje inicial
@@ -467,7 +465,6 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${orgPath}${repoName}`;
         
         const checkPendingOperation = async () => {
-            setCheckingPendingOperation(true);
             try {
                 const result = await (window as any).electronAPI.getPendingOperation?.(repoPath);
                 if (result?.success && result.hasPendingOperation) {
@@ -481,8 +478,6 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             } catch (err) {
                 // Error al verificar operaciones pendientes
                 setPendingOperation(null);
-            } finally {
-                setCheckingPendingOperation(false);
             }
         };
         

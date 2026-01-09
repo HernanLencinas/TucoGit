@@ -7,7 +7,7 @@
  */
 
 import React, { useEffect, useState, useMemo } from 'react';
-import { FileCode, FilePlus, FileMinus, FileDiff, X, GitBranch, File, Folder, RefreshCw, FileJson, ChevronRight, ChevronDown, FolderOpen, Info, AlertCircle, Copy, Check, TrendingUp, TrendingDown, FileText } from 'lucide-react';
+import { FileCode, FilePlus, FileMinus, FileDiff, X, GitBranch, File, Folder, RefreshCw, FileJson, ChevronRight, ChevronDown, FolderOpen, Info, AlertCircle, Copy, Check, FileText } from 'lucide-react';
 import { getAvatarUrl } from '@/renderer/utils/avatar';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/renderer/hooks/useI18n';
