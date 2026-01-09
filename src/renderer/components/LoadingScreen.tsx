@@ -5,16 +5,58 @@
  * la configuración y se cargan los datos de la aplicación.
  */
 
+import { useState, useEffect } from 'react';
+import { useI18n } from '@/renderer/hooks/useI18n';
+
 /**
  * Componente de pantalla de carga.
  * 
  * @description
  * Muestra un spinner animado centrado en la pantalla mientras
  * se carga la información inicial de la aplicación.
+ * Las frases de carga cambian periódicamente para hacer la espera más amena.
  * 
  * @returns {JSX.Element} Componente de pantalla de carga
  */
 export const LoadingScreen = () => {
+  const { t, i18n } = useI18n();
+  const [currentMessage, setCurrentMessage] = useState('');
+
+  useEffect(() => {
+    // Obtener los mensajes de traducción
+    const getMessages = () => {
+      try {
+        const messages = i18n.getResourceBundle(i18n.language, 'translation')?.common?.loadingScreen?.messages;
+        if (Array.isArray(messages) && messages.length > 0) {
+          return messages;
+        }
+      } catch (error) {
+        console.error('Error loading loading screen messages:', error);
+      }
+      // Fallback
+      return [t('common.loading', { defaultValue: 'Cargando...' })];
+    };
+
+    const messages = getMessages();
+    
+    // Seleccionar un mensaje inicial aleatorio
+    const selectRandomMessage = () => {
+      const randomIndex = Math.floor(Math.random() * messages.length);
+      return messages[randomIndex];
+    };
+
+    // Establecer el mensaje inicial
+    setCurrentMessage(selectRandomMessage());
+
+    // Cambiar el mensaje cada 2.5 segundos
+    const interval = setInterval(() => {
+      setCurrentMessage(selectRandomMessage());
+    }, 2500);
+
+    // Limpiar el intervalo al desmontar
+    return () => clearInterval(interval);
+  }, [t, i18n]);
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background">
       <div className="relative">
@@ -37,9 +79,9 @@ export const LoadingScreen = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-primary animate-pulse"></div>
       </div>
       
-      {/* Texto de carga */}
-      <p className="mt-6 text-sm text-muted-foreground font-medium animate-pulse">
-        Cargando Tuco...
+      {/* Texto de carga con transición suave */}
+      <p className="mt-6 text-sm text-muted-foreground font-medium animate-pulse transition-opacity duration-300">
+        {currentMessage}
       </p>
     </div>
   );
