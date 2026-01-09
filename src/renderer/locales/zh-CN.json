@@ -1,546 +1,546 @@
 {
   "common": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "close": "Close",
-    "confirm": "Confirm",
-    "search": "Search",
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "warning": "Warning",
-    "info": "Info",
-    "selected": "Selected",
-    "noAvailable": "Not available",
-    "loadingText": "Loading...",
-    "default": "Default",
-    "actions": "Actions",
-    "fullName": "Full Name",
-    "email": "Email",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "close": "关闭",
+    "confirm": "确认",
+    "search": "搜索",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "warning": "警告",
+    "info": "信息",
+    "selected": "已选择",
+    "noAvailable": "不可用",
+    "loadingText": "加载中...",
+    "default": "默认",
+    "actions": "操作",
+    "fullName": "全名",
+    "email": "电子邮件",
     "tabs": {
-      "home": "Home",
-      "repositories": "Repositories",
-      "connections": "Connections",
-      "settings": "Settings"
+      "home": "首页",
+      "repositories": "仓库",
+      "connections": "连接",
+      "settings": "设置"
     },
     "theme": {
-      "switchToLight": "Switch to light mode",
-      "switchToDark": "Switch to dark mode"
+      "switchToLight": "切换到浅色模式",
+      "switchToDark": "切换到深色模式"
     },
     "loadingScreen": {
       "messages": [
-        "Loading Tuco...",
-        "Preparing the environment...",
-        "Initializing repositories...",
-        "Configuring connections...",
-        "Loading configuration...",
-        "Getting everything ready for you...",
-        "Just a moment, almost there...",
-        "Organizing your repositories...",
-        "Loading data...",
-        "Preparing the interface...",
-        "Initializing components...",
-        "Almost done...",
-        "Configuring Git...",
-        "Loading preferences...",
-        "Preparing the experience...",
-        "Searching for lost commits...",
-        "Syncing with the Git universe...",
-        "Loading code magic...",
-        "Preparing your workspace...",
-        "Almost ready, don't go away...",
-        "Organizing the repo library...",
-        "Loading Git superpowers...",
-        "Setting the stage...",
-        "Final touches...",
-        "Loading the best experience...",
-        "Getting everything ready for you to shine...",
-        "Almost there, hang on a bit more...",
-        "Loading your next big idea...",
-        "Preparing the perfect environment...",
-        "Final magical touches...",
-        "Waking up the repositories...",
-        "Loading the power of Git...",
-        "Preparing your code arsenal...",
-        "Syncing with the stars...",
-        "Loading commit wisdom...",
-        "Preparing the epic journey...",
-        "Loading developer energy...",
-        "Organizing creative chaos...",
-        "Preparing the code revolution...",
-        "Loading infinite inspiration...",
-        "Tuning to Git frequency...",
-        "Preparing your moment of glory...",
-        "Loading the innovation engine...",
-        "Unlocking code superpowers...",
-        "Setting the stage for success...",
-        "Loading the secret formula...",
-        "Syncing neurons with Git...",
-        "Preparing the digital transformation...",
-        "Loading the perfect code elixir...",
-        "Activating ninja developer mode...",
-        "Preparing the Git time machine...",
-        "Loading the infinite library...",
-        "Tuning to the code matrix...",
-        "Preparing your ascent to the next level...",
-        "Loading the essence of development...",
-        "Waking up sleeping repositories..."
+        "正在加载 Tuco...",
+        "正在准备环境...",
+        "正在初始化仓库...",
+        "正在配置连接...",
+        "正在加载配置...",
+        "正在为您准备一切...",
+        "稍等片刻，马上就好...",
+        "正在整理您的仓库...",
+        "正在加载数据...",
+        "正在准备界面...",
+        "正在初始化组件...",
+        "快完成了...",
+        "正在配置 Git...",
+        "正在加载偏好设置...",
+        "正在准备体验...",
+        "正在搜索丢失的提交...",
+        "正在与 Git 宇宙同步...",
+        "正在加载代码魔法...",
+        "正在准备您的工作区...",
+        "快准备好了，请稍候...",
+        "正在整理仓库库...",
+        "正在加载 Git 超能力...",
+        "正在搭建舞台...",
+        "最后润色...",
+        "正在加载最佳体验...",
+        "正在为您准备一切，让您大放异彩...",
+        "快到了，再坚持一下...",
+        "正在加载您的下一个大创意...",
+        "正在准备完美环境...",
+        "最后的魔法润色...",
+        "正在唤醒仓库...",
+        "正在加载 Git 的力量...",
+        "正在准备您的代码武器库...",
+        "正在与星星同步...",
+        "正在加载提交智慧...",
+        "正在准备史诗般的旅程...",
+        "正在加载开发者能量...",
+        "正在整理创意混乱...",
+        "正在准备代码革命...",
+        "正在加载无限灵感...",
+        "正在调频到 Git 频率...",
+        "正在准备您的荣耀时刻...",
+        "正在加载创新引擎...",
+        "正在解锁代码超能力...",
+        "正在为成功搭建舞台...",
+        "正在加载秘密公式...",
+        "正在将神经元与 Git 同步...",
+        "正在准备数字化转型...",
+        "正在加载完美的代码灵药...",
+        "正在激活忍者开发者模式...",
+        "正在准备 Git 时间机器...",
+        "正在加载无限图书馆...",
+        "正在调频到代码矩阵...",
+        "正在准备您向下一级的攀登...",
+        "正在加载开发的精髓...",
+        "正在唤醒沉睡的仓库..."
       ]
     }
   },
   "settings": {
-    "title": "Settings",
+    "title": "设置",
     "tabs": {
-      "general": "General",
-      "data": "Data",
+      "general": "常规",
+      "data": "数据",
       "git": "Git",
-      "appearance": "Appearance",
-      "updates": "Updates",
-      "about": "About"
+      "appearance": "外观",
+      "updates": "更新",
+      "about": "关于"
     },
     "general": {
-      "title": "General Settings",
-      "description": "Customize general application options",
+      "title": "常规设置",
+      "description": "自定义应用程序的常规选项",
       "preferredIDE": {
-        "title": "Preferred IDE Editor",
-        "description": "Select the editor that will be used to open repositories from cards",
-        "selected": "Selected",
-        "noEditorSelected": "No editor selected",
-        "selectEditor": "Select an IDE editor...",
-        "info": "Repositories will automatically open with {{ide}} when you click the open button.",
-        "noEditorsAvailable": "No editors available",
-        "installEditor": "Install an IDE editor to see it here",
-        "editorChanged": "IDE editor changed to {{ide}}",
-        "errorSaving": "Error saving configuration"
+        "title": "首选IDE编辑器",
+        "description": "选择将用于从卡片打开仓库的编辑器",
+        "selected": "已选择",
+        "noEditorSelected": "未选择编辑器",
+        "selectEditor": "选择IDE编辑器...",
+        "info": "当您单击打开按钮时，仓库将自动使用 {{ide}} 打开。",
+        "noEditorsAvailable": "没有可用的编辑器",
+        "installEditor": "安装IDE编辑器以在此处查看",
+        "editorChanged": "IDE编辑器已更改为 {{ide}}",
+        "errorSaving": "保存配置时出错"
       },
       "uiLanguage": {
-        "title": "Interface Language",
-        "description": "Select the language that will be displayed in the user interface",
-        "english": "English (United States)",
-        "spanish": "Spanish (Argentina)",
-        "german": "German",
-        "french": "French",
-        "portuguese": "Portuguese",
-        "japanese": "Japanese",
-        "chinese": "Chinese (Simplified)",
-        "selected": "Selected",
-        "changed": "Language changed to {{language}}",
-        "error": "Error saving configuration"
+        "title": "界面语言",
+        "description": "选择将在用户界面中显示的语言",
+        "english": "英语（美国）",
+        "spanish": "西班牙语（阿根廷）",
+        "german": "德语",
+        "french": "法语",
+        "portuguese": "葡萄牙语",
+        "japanese": "日语",
+        "chinese": "中文（简体）",
+        "selected": "已选择",
+        "changed": "语言已更改为 {{language}}",
+        "error": "保存配置时出错"
       }
     },
     "data": {
-      "title": "Data Management",
-      "description": "Manage the location and backup of your configuration",
+      "title": "数据管理",
+      "description": "管理配置的位置和备份",
       "configLocation": {
-        "title": "Configuration Location",
-        "description": "Select the folder where the configuration file will be saved",
-        "selectFolder": "Select Folder"
+        "title": "配置位置",
+        "description": "选择将保存配置文件的文件夹",
+        "selectFolder": "选择文件夹"
       },
       "fileInfo": {
-        "title": "File Information",
-        "description": "Details about the configuration file and last modification",
-        "configFile": "Configuration File",
-        "lastUpdate": "Last Update"
+        "title": "文件信息",
+        "description": "关于配置文件和最后修改的详细信息",
+        "configFile": "配置文件",
+        "lastUpdate": "最后更新"
       },
       "management": {
-        "title": "Configuration Management",
-        "description": "Import or export your configuration file to backup or restore your settings",
-        "import": "Import",
-        "export": "Export",
-        "exportSuccess": "Configuration exported successfully",
-        "exportError": "Error exporting: {{error}}",
-        "noConfigToExport": "No configuration to export",
-        "functionalityNotAvailable": "Functionality not available",
-        "importSuccess": "Configuration imported successfully. Reloading data...",
-        "dataReloaded": "Data reloaded successfully",
-        "importError": "Error importing: {{error}}",
-        "importNotAvailable": "Import functionality not available",
-        "invalidJson": "The selected file is not a valid JSON",
-        "importConfigError": "Error importing configuration: {{error}}"
+        "title": "配置管理",
+        "description": "导入或导出配置文件以备份或恢复您的设置",
+        "import": "导入",
+        "export": "导出",
+        "exportSuccess": "配置导出成功",
+        "exportError": "导出错误: {{error}}",
+        "noConfigToExport": "没有要导出的配置",
+        "functionalityNotAvailable": "功能不可用",
+        "importSuccess": "配置导入成功。正在重新加载数据...",
+        "dataReloaded": "数据重新加载成功",
+        "importError": "导入错误: {{error}}",
+        "importNotAvailable": "导入功能不可用",
+        "invalidJson": "所选文件不是有效的 JSON",
+        "importConfigError": "导入配置错误: {{error}}"
       },
       "reset": {
-        "title": "Reset Configuration",
-        "description": "Deletes all configuration and restores default values. This action cannot be undone.",
-        "warning": "Warning",
-        "warningMessage": "This action will delete all your configurations, connections and saved preferences.",
-        "restoreConfig": "Restore Configuration"
+        "title": "重置配置",
+        "description": "删除所有配置并恢复默认值。此操作无法撤销。",
+        "warning": "警告",
+        "warningMessage": "此操作将删除您的所有配置、连接和保存的偏好设置。",
+        "restoreConfig": "恢复配置"
       }
     },
     "git": {
-      "title": "Git Configuration",
-      "description": "Configure your identity and security preferences for Git",
+      "title": "Git 配置",
+      "description": "配置您的 Git 身份和安全偏好设置",
       "identities": {
-        "title": "Identities",
-        "description": "Manage multiple user identities to use in different repositories",
-        "newIdentity": "New Identity",
-        "noIdentities": "No identities configured",
-        "addIdentity": "Add an identity to get started"
+        "title": "身份",
+        "description": "管理多个用户身份以在不同仓库中使用",
+        "newIdentity": "新身份",
+        "noIdentities": "未配置身份",
+        "addIdentity": "添加身份以开始"
       },
       "commitBehavior": {
-        "title": "Commit Button Behavior",
-        "description": "Select what action the commit button will perform in the Git status panel",
-        "buttonAction": "Button action",
-        "commit": "Commit",
-        "commitPush": "Commit + Push",
-        "commitSync": "Commit + Sync",
-        "commitDescription": "Only commits files in stage. Does not sync with remote repository.",
-        "commitPushDescription": "Commits and then sends changes to remote repository. Does not download changes from remote.",
-        "commitSyncDescription": "Commits, downloads changes from remote (fetch + pull) and then sends local changes (push). Fully syncs with remote repository."
+        "title": "提交按钮行为",
+        "description": "选择提交按钮在 Git 状态面板中执行的操作",
+        "buttonAction": "按钮操作",
+        "commit": "提交",
+        "commitPush": "提交 + 推送",
+        "commitSync": "提交 + 同步",
+        "commitDescription": "仅提交暂存区中的文件。不与远程仓库同步。",
+        "commitPushDescription": "提交然后将更改发送到远程仓库。不从远程下载更改。",
+        "commitSyncDescription": "提交，从远程下载更改（fetch + pull），然后发送本地更改（push）。与远程仓库完全同步。"
       },
       "security": {
-        "title": "Security and Network",
-        "description": "Connection settings and SSL certificate verification",
-        "sslVerify": "SSL Certificate Verification",
-        "activated": "ACTIVATED",
-        "deactivated": "DEACTIVATED",
-        "sslDescription": "Disable if you have problems with self-signed certificates or corporate proxies. Equivalent to http.sslVerify=false",
-        "sslWarning": "SSL verification is disabled. This may be a security risk.",
-        "sslActivated": "SSL verification activated",
-        "sslDeactivated": "SSL verification deactivated",
-        "sslError": "Error saving SSL configuration"
+        "title": "安全和网络",
+        "description": "连接设置和 SSL 证书验证",
+        "sslVerify": "SSL 证书验证",
+        "activated": "已激活",
+        "deactivated": "已停用",
+        "sslDescription": "如果您在使用自签名证书或企业代理时遇到问题，请禁用。等同于 http.sslVerify=false",
+        "sslWarning": "SSL 验证已禁用。这可能存在安全风险。",
+        "sslActivated": "SSL 验证已激活",
+        "sslDeactivated": "SSL 验证已停用",
+        "sslError": "保存 SSL 配置时出错"
       }
     },
     "appearance": {
-      "title": "Appearance",
-      "description": "Customize the theme and size of application components",
+      "title": "外观",
+      "description": "自定义应用程序组件的主题和大小",
       "themes": {
-        "title": "Themes",
-        "description": "Select a theme style to customize the appearance",
-        "dark": "Dark",
-        "light": "Light"
+        "title": "主题",
+        "description": "选择主题样式以自定义外观",
+        "dark": "深色",
+        "light": "浅色"
       },
       "componentSize": {
-        "title": "Component Size",
-        "description": "Adjust the interface zoom to improve readability and comfort",
-        "zoomLevel": "Zoom Level",
-        "zoomDescription": "Affects the size of text, icons and spacing of all components",
-        "zoomInfo": "Zoom is applied immediately. Recommended: 100% for the best experience."
+        "title": "组件大小",
+        "description": "调整界面缩放以改善可读性和舒适度",
+        "zoomLevel": "缩放级别",
+        "zoomDescription": "影响所有组件的文本、图标和间距大小",
+        "zoomInfo": "缩放会立即应用。推荐：100% 以获得最佳体验。"
       }
     },
     "updates": {
-      "title": "Updates",
-      "description": "Information about the current version and last configuration modification",
+      "title": "更新",
+      "description": "关于当前版本和最后配置修改的信息",
       "currentVersion": {
-        "title": "Current Version",
-        "description": "Information about the installed application version",
-        "appVersion": "Application version",
-        "latestVersion": "You are using the latest available version"
+        "title": "当前版本",
+        "description": "关于已安装应用程序版本的信息",
+        "appVersion": "应用程序版本",
+        "latestVersion": "您正在使用最新可用版本"
       },
       "lastUpdate": {
-        "title": "Last Update",
-        "description": "Date and time of the last configuration modification",
-        "configModified": "Configuration Modified",
-        "autoUpdateInfo": "This date is automatically updated when you modify any application configuration."
+        "title": "最后更新",
+        "description": "最后配置修改的日期和时间",
+        "configModified": "配置已修改",
+        "autoUpdateInfo": "当您修改任何应用程序配置时，此日期会自动更新。"
       },
       "systemInfo": {
-        "title": "System Information",
-        "description": "Versions of technologies used by the application",
-        "platform": "Platform",
+        "title": "系统信息",
+        "description": "应用程序使用的技术版本",
+        "platform": "平台",
         "electron": "Electron",
         "chrome": "Chrome"
       },
       "aboutUpdates": {
-        "title": "About Updates",
-        "description": "Application updates are managed automatically. When a new version is available, you will receive a notification."
+        "title": "关于更新",
+        "description": "应用程序更新会自动管理。当有新版本可用时，您将收到通知。"
       }
     },
     "about": {
-      "title": "About",
-      "appDescription": "Git client designed to simplify repository management and reduce the complexity of daily work, aligned with modern workflows and the most common version control operations.",
+      "title": "关于",
+      "appDescription": "旨在简化仓库管理并减少日常工作复杂性的 Git 客户端，符合现代工作流程和最常见的版本控制操作。",
       "developer": {
-        "title": "Developer",
-        "description": "Contact information and developer profile",
-        "fullStack": "Full Stack Developer",
-        "bio": "Creator and maintainer of TucoGit. Passionate about creating tools that simplify developers' daily work."
+        "title": "开发者",
+        "description": "联系信息和开发者简介",
+        "fullStack": "全栈开发者",
+        "bio": "TucoGit 的创建者和维护者。热衷于创建简化开发者日常工作的工具。"
       },
       "support": {
-        "title": "Support and Community",
-        "description": "Report issues, share ideas and participate in the community",
-        "reportIssue": "Report an Issue",
-        "reportIssueDescription": "Open an issue on GitHub to report bugs or request features",
-        "discussions": "Discussions",
-        "discussionsDescription": "Participate in discussions, share ideas and get help from the community"
+        "title": "支持和社区",
+        "description": "报告问题、分享想法并参与社区",
+        "reportIssue": "报告问题",
+        "reportIssueDescription": "在 GitHub 上打开问题以报告错误或请求功能",
+        "discussions": "讨论",
+        "discussionsDescription": "参与讨论、分享想法并从社区获得帮助"
       },
       "contact": {
-        "email": "Email",
+        "email": "电子邮件",
         "github": "GitHub"
       },
       "footer": {
-        "madeWith": "Made with",
-        "openSource": "open source",
-        "openSourceBadge": "Open Source",
-        "beta": "Beta"
+        "madeWith": "使用",
+        "openSource": "开源",
+        "openSourceBadge": "开源",
+        "beta": "测试版"
       }
     }
   },
   "home": {
-    "title": "Home",
+    "title": "首页",
     "welcome": {
-      "title": "Welcome to",
-      "subtitle": "Your Git control center",
-      "description": "Organize and manage all your Git repositories in one place. Connect your favorite services and keep your workflow efficient and organized.",
-      "connections": "Connections",
-      "repositories": "Repositories"
+      "title": "欢迎使用",
+      "subtitle": "您的 Git 控制中心",
+      "description": "在一个地方组织和管理您的所有 Git 仓库。连接您喜欢的服务，保持工作流程高效有序。",
+      "connections": "连接",
+      "repositories": "仓库"
     },
     "quickNavigation": {
-      "title": "Quick Navigation",
+      "title": "快速导航",
       "home": {
-        "title": "Home",
-        "description": "Overview and statistics"
+        "title": "首页",
+        "description": "概览和统计"
       },
       "repositories": {
-        "title": "Repositories",
-        "description": "Explore your local projects"
+        "title": "仓库",
+        "description": "探索您的本地项目"
       },
       "connections": {
-        "title": "Connections",
-        "description": "Manage your Git services"
+        "title": "连接",
+        "description": "管理您的 Git 服务"
       },
       "settings": {
-        "title": "Settings",
-        "description": "Application preferences"
+        "title": "设置",
+        "description": "应用程序偏好设置"
       },
       "configureConnection": {
-        "title": "Configure connection",
-        "description": "Link a new Git service account"
+        "title": "配置连接",
+        "description": "链接新的 Git 服务账户"
       },
-      "configureGit": "Configure Git integration"
+      "configureGit": "配置 Git 集成"
     },
     "favorites": {
-      "title": "Favorites",
-      "description": "Quick access to your repositories",
-      "noFavorites": "No favorites",
-      "noFavoritesDescription": "Repositories you mark as favorites will appear here",
-      "removeFromFavorites": "Remove from favorites",
-      "openIn": "Open in {{ide}}"
+      "title": "收藏",
+      "description": "快速访问您的仓库",
+      "noFavorites": "没有收藏",
+      "noFavoritesDescription": "您标记为收藏的仓库将显示在这里",
+      "removeFromFavorites": "从收藏中移除",
+      "openIn": "在 {{ide}} 中打开"
     }
   },
   "wizard": {
     "welcome": {
-      "title": "Welcome to Tuco",
-      "description": "The complete solution for managing your Git repositories",
-      "mainTitle": "Manage all your Git projects in one place",
-      "mainDescription": "Tuco is a professional tool designed to simplify the management of your Git repositories. Connect multiple services, organize your projects and optimize your development workflow.",
+      "title": "欢迎使用 Tuco",
+      "description": "管理 Git 仓库的完整解决方案",
+      "mainTitle": "在一个地方管理您的所有 Git 项目",
+      "mainDescription": "Tuco 是一个专业工具，旨在简化 Git 仓库的管理。连接多个服务，组织您的项目并优化您的开发工作流程。",
       "features": {
-        "versionControl": "Version Control",
-        "organization": "Organization",
-        "productivity": "Productivity"
+        "versionControl": "版本控制",
+        "organization": "组织",
+        "productivity": "生产力"
       }
     },
     "gitIdentity": {
-      "title": "Configure your Git identity",
-      "description": "Set your user information for commits",
-      "fullName": "Full name",
-      "fullNamePlaceholder": "E.g: John Doe",
-      "fullNameDescription": "This name will appear as author in all your Git commits",
-      "email": "Email",
-      "emailPlaceholder": "E.g: john.doe@example.com",
-      "emailDescription": "Use the same email associated with your GitHub, GitLab or other service accounts",
-      "emailRequired": "Email is required",
-      "emailInvalid": "Please enter a valid email address",
-      "info": "This information will be configured as your default Git identity and will be used to sign all your commits. You can modify it later in settings."
+      "title": "配置您的 Git 身份",
+      "description": "设置您的提交用户信息",
+      "fullName": "全名",
+      "fullNamePlaceholder": "例如：张三",
+      "fullNameDescription": "此名称将作为作者出现在您的所有 Git 提交中",
+      "email": "电子邮件",
+      "emailPlaceholder": "例如：zhangsan@example.com",
+      "emailDescription": "使用与您的 GitHub、GitLab 或其他服务账户关联的相同电子邮件",
+      "emailRequired": "电子邮件是必需的",
+      "emailInvalid": "请输入有效的电子邮件地址",
+      "info": "此信息将配置为您的默认 Git 身份，并将用于签署您的所有提交。您稍后可以在设置中修改它。"
     },
     "repositoryManagement": {
-      "title": "Repository management",
-      "description": "Organize and manage all your Git projects efficiently",
+      "title": "仓库管理",
+      "description": "高效地组织和管理您的所有 Git 项目",
       "customCollections": {
-        "title": "Custom collections",
-        "description": "Group your repositories into themed collections to keep everything organized and easy to find"
+        "title": "自定义集合",
+        "description": "将您的仓库分组到主题集合中，以保持一切有序且易于查找"
       },
       "directClone": {
-        "title": "Direct cloning",
-        "description": "Clone repositories from remote services directly from the interface, without needing to use the terminal"
+        "title": "直接克隆",
+        "description": "从界面直接克隆远程服务的仓库，无需使用终端"
       },
       "realTimeStatus": {
-        "title": "Real-time status",
-        "description": "View the status of your repositories, branches, commits and pending changes instantly"
+        "title": "实时状态",
+        "description": "即时查看您的仓库、分支、提交和待处理更改的状态"
       },
-      "allInOne": "All in one place: Access all your Git projects from a unified and professional interface"
+      "allInOne": "一切尽在一处：从统一且专业的界面访问您的所有 Git 项目"
     },
     "gitIntegration": {
-      "title": "Git service integration",
-      "description": "Connect your accounts and sync your repositories automatically",
+      "title": "Git 服务集成",
+      "description": "连接您的账户并自动同步您的仓库",
       "multipleProviders": {
-        "title": "Multiple providers",
-        "description": "Connect with GitHub, GitLab, Bitbucket, Gitea, Codeberg and other compatible Git services"
+        "title": "多个提供商",
+        "description": "与 GitHub、GitLab、Bitbucket、Gitea、Codeberg 和其他兼容的 Git 服务连接"
       },
       "autoSync": {
-        "title": "Automatic synchronization",
-        "description": "Keep your repositories updated automatically and access the latest information effortlessly"
+        "title": "自动同步",
+        "description": "自动保持仓库更新，轻松访问最新信息"
       },
       "multipleAccounts": {
-        "title": "Multiple account management",
-        "description": "Manage multiple accounts and organizations from one place with complete security"
+        "title": "多账户管理",
+        "description": "在一个地方以完全安全性管理多个账户和组织"
       },
-      "centralizedAccess": "Centralized access: All your remote repositories available without leaving the application"
+      "centralizedAccess": "集中访问：所有远程仓库都可用，无需离开应用程序"
     },
     "customization": {
-      "title": "Advanced customization",
-      "description": "Adapt the application to your work style and preferences",
+      "title": "高级自定义",
+      "description": "使应用程序适应您的工作风格和偏好",
       "themes": {
-        "title": "Themes and appearance",
-        "description": "Choose from multiple themes and customize the application's appearance according to your visual preferences"
+        "title": "主题和外观",
+        "description": "从多个主题中选择，并根据您的视觉偏好自定义应用程序的外观"
       },
       "ideIntegration": {
-        "title": "IDE integration",
-        "description": "Configure your favorite code editor (VS Code, Cursor, IntelliJ, etc.) to open repositories directly"
+        "title": "IDE 集成",
+        "description": "配置您喜欢的代码编辑器（VS Code、Cursor、IntelliJ 等）以直接打开仓库"
       },
-      "readyToStart": "Ready to start",
-      "readyDescription": "Configure the application according to your needs and start managing your repositories professionally"
+      "readyToStart": "准备开始",
+      "readyDescription": "根据您的需求配置应用程序，并开始专业地管理您的仓库"
     },
     "navigation": {
-      "previous": "Previous",
-      "next": "Next",
-      "start": "Start",
-      "step": "Step {{current}} of {{total}}"
+      "previous": "上一步",
+      "next": "下一步",
+      "start": "开始",
+      "step": "步骤 {{current}} / {{total}}"
     }
   },
   "connections": {
-    "title": "Connections",
+    "title": "连接",
     "search": {
-      "placeholder": "Search connections...",
-      "clear": "Clear",
-      "clearSearch": "Clear search",
-      "noResults": "No results found for \"{{query}}\""
+      "placeholder": "搜索连接...",
+      "clear": "清除",
+      "clearSearch": "清除搜索",
+      "noResults": "未找到 \"{{query}}\" 的结果"
     },
     "sort": {
-      "title": "Sort",
-      "ascending": "Ascending",
-      "descending": "Descending",
-      "none": "No sort"
+      "title": "排序",
+      "ascending": "升序",
+      "descending": "降序",
+      "none": "不排序"
     },
     "actions": {
-      "refresh": "Refresh",
-      "newConnection": "New Connection",
-      "edit": "Edit",
-      "delete": "Delete"
+      "refresh": "刷新",
+      "newConnection": "新建连接",
+      "edit": "编辑",
+      "delete": "删除"
     },
     "empty": {
-      "title": "No connections defined",
-      "description": "To get started, press the 'New Connection' button to create your first connection with a Git provider."
+      "title": "未定义连接",
+      "description": "要开始，请按「新建连接」按钮创建与 Git 提供商的第一个连接。"
     },
     "status": {
-      "checking": "Checking...",
-      "connected": "Connected",
-      "expired": "Token expired",
-      "disconnected": "Disconnected",
-      "noConnection": "No connection",
-      "expiredMessage": "Update the token to see information",
-      "disconnectedMessage": "Cannot connect to server",
-      "waiting": "Waiting for connection..."
+      "checking": "检查中...",
+      "connected": "已连接",
+      "expired": "令牌已过期",
+      "disconnected": "已断开",
+      "noConnection": "无连接",
+      "expiredMessage": "更新令牌以查看信息",
+      "disconnectedMessage": "无法连接到服务器",
+      "waiting": "等待连接中..."
     },
     "stats": {
-      "remoteRepos": "Remote repositories",
-      "configuredLocally": "Configured locally",
-      "clonedLocally": "Cloned locally",
-      "organizations": "Organizations:",
-      "noOrganizations": "You don't belong to any organization"
+      "remoteRepos": "远程仓库",
+      "configuredLocally": "本地已配置",
+      "clonedLocally": "本地已克隆",
+      "organizations": "组织:",
+      "noOrganizations": "您不属于任何组织"
     },
     "date": {
-      "notAvailable": "Date not available",
-      "justNow": "Created just now",
-      "minutesAgo": "Created {{count}} {{count, plural, one {minute} other {minutes}}} ago",
-      "hoursAgo": "Created {{count}} {{count, plural, one {hour} other {hours}}} ago",
-      "daysAgo": "Created {{count}} {{count, plural, one {day} other {days}}} ago",
-      "weeksAgo": "Created {{count}} {{count, plural, one {week} other {weeks}}} ago",
-      "monthsAgo": "Created {{count}} {{count, plural, one {month} other {months}}} ago",
-      "yearsAgo": "Created {{count}} {{count, plural, one {year} other {years}}} ago"
+      "notAvailable": "日期不可用",
+      "justNow": "刚刚创建",
+      "minutesAgo": "{{count}}{{count, plural, one {分钟} other {分钟}}}前创建",
+      "hoursAgo": "{{count}}{{count, plural, one {小时} other {小时}}}前创建",
+      "daysAgo": "{{count}}{{count, plural, one {天} other {天}}}前创建",
+      "weeksAgo": "{{count}}{{count, plural, one {周} other {周}}}前创建",
+      "monthsAgo": "{{count}}{{count, plural, one {个月} other {个月}}}前创建",
+      "yearsAgo": "{{count}}{{count, plural, one {年} other {年}}}前创建"
     }
   },
   "connectionWizard": {
     "title": {
-      "new": "New Connection",
-      "edit": "Edit Connection"
+      "new": "新建连接",
+      "edit": "编辑连接"
     },
     "description": {
-      "new": "Configure a new connection with your Git provider in a few steps",
-      "edit": "Modify your Git connection data"
+      "new": "在几个步骤中配置与 Git 提供商的新连接",
+      "edit": "修改您的 Git 连接数据"
     },
     "steps": {
-      "provider": "Provider",
-      "authentication": "Authentication",
-      "confirmation": "Confirmation"
+      "provider": "提供商",
+      "authentication": "身份验证",
+      "confirmation": "确认"
     },
     "step1": {
-      "title": "Git Provider",
+      "title": "Git 提供商",
       "required": "*",
-      "description": "Select the Git provider you want to connect with",
+      "description": "选择要连接的 Git 提供商",
       "providers": {
         "github": {
           "name": "GitHub",
-          "description": "The most popular for open source projects"
+          "description": "开源项目最受欢迎"
         },
         "gitlab": {
           "name": "GitLab",
-          "description": "Excellent for integrated CI/CD"
+          "description": "集成 CI/CD 的优秀选择"
         },
         "gitea": {
           "name": "Gitea",
-          "description": "Self-hosted Git platform"
+          "description": "自托管 Git 平台"
         },
         "codeberg": {
           "name": "Codeberg",
-          "description": "Free and open source alternative"
+          "description": "免费的开源替代品"
         },
         "gogs": {
           "name": "Gogs",
-          "description": "Self-hosted Git platform"
+          "description": "自托管 Git 平台"
         }
       }
     },
     "step2": {
       "connectionName": {
-        "label": "Connection Name",
-        "required": "(required)",
-        "description": "Enter a descriptive name to identify this connection",
-        "placeholder": "E.g: My GitHub account"
+        "label": "连接名称",
+        "required": "（必需）",
+        "description": "输入描述性名称以标识此连接",
+        "placeholder": "例如：我的 GitHub 账户"
       },
       "identity": {
-        "label": "Associated Identity",
-        "description": "Select the Git identity that will be used for this connection",
-        "select": "Select identity",
-        "default": "Default"
+        "label": "关联身份",
+        "description": "选择将用于此连接的 Git 身份",
+        "select": "选择身份",
+        "default": "默认"
       },
       "token": {
-        "label": "Access Token",
-        "required": "(required)",
-        "description": "Personal access token",
-        "placeholder": "Enter your access token",
-        "validating": "Validating token and connecting to server...",
-        "valid": "Token valid. You can continue to the next step.",
-        "error": "Error validating token",
-        "errorServerUrl": "Please enter the server URL",
-        "errorValidation": "Error validating token",
-        "errorCannotValidate": "Error: Could not validate token",
-        "errorUnexpected": "Unexpected error validating token: {{message}}",
-        "errorInvalidOrInsufficient": "Invalid token or insufficient permissions"
+        "label": "访问令牌",
+        "required": "（必需）",
+        "description": "个人访问令牌",
+        "placeholder": "输入您的访问令牌",
+        "validating": "正在验证令牌并连接到服务器...",
+        "valid": "令牌有效。您可以继续下一步。",
+        "error": "验证令牌时出错",
+        "errorServerUrl": "请输入服务器 URL",
+        "errorValidation": "验证令牌时出错",
+        "errorCannotValidate": "错误：无法验证令牌",
+        "errorUnexpected": "验证令牌时发生意外错误: {{message}}",
+        "errorInvalidOrInsufficient": "令牌无效或权限不足"
       },
       "serverUrl": {
-        "label": "Server URL",
-        "optional": "(optional)",
-        "description": "Base URL of the Git server (only for custom servers)"
+        "label": "服务器 URL",
+        "optional": "（可选）",
+        "description": "Git 服务器的基 URL（仅用于自定义服务器）"
       }
     },
     "step3": {
-      "title": "Confirm your connection data",
-      "description": "Review the information before saving",
+      "title": "确认您的连接数据",
+      "description": "保存前请检查信息",
       "fields": {
-        "provider": "Provider:",
-        "name": "Name:",
+        "provider": "提供商:",
+        "name": "名称:",
         "url": "URL:",
-        "authType": "Authentication Type:",
-        "token": "Token:",
-        "authTypeValue": "Token"
+        "authType": "身份验证类型:",
+        "token": "令牌:",
+        "authTypeValue": "令牌"
       }
     },
     "actions": {
-      "cancel": "Cancel",
-      "previous": "Previous",
-      "next": "Next",
-      "validating": "Validating...",
-      "save": "Save"
+      "cancel": "取消",
+      "previous": "上一步",
+      "next": "下一步",
+      "validating": "验证中...",
+      "save": "保存"
     }
   },
   "repositories": {

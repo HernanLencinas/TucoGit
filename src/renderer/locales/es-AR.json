@@ -124,6 +124,7 @@
         "french": "Français",
         "portuguese": "Português",
         "japanese": "日本語",
+        "chinese": "中文（简体）",
         "selected": "Seleccionado",
         "changed": "Idioma cambiado a {{language}}",
         "error": "Error al guardar la configuración"

@@ -6,6 +6,7 @@ import deTranslations from '../locales/de.json';
 import frTranslations from '../locales/fr.json';
 import ptTranslations from '../locales/pt.json';
 import jaTranslations from '../locales/ja.json';
+import zhCNTranslations from '../locales/zh-CN.json';
 
 // Recursos de traducción
 const resources = {
@@ -26,6 +27,9 @@ const resources = {
   },
   ja: {
     translation: jaTranslations,
+  },
+  'zh-CN': {
+    translation: zhCNTranslations,
   },
 };
 
