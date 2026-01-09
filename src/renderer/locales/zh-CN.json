@@ -544,610 +544,610 @@
     }
   },
   "repositories": {
-    "title": "Repositories",
-    "myRepositories": "My repositories",
+    "title": "仓库",
+    "myRepositories": "我的仓库",
     "search": {
-      "placeholder": "Search collections and repositories...",
-      "clear": "Clear",
-      "clearSearch": "Clear search",
-      "noResults": "No results found for \"{{query}}\"",
-      "allCollections": "All collections"
+      "placeholder": "搜索集合和仓库...",
+      "clear": "清除",
+      "clearSearch": "清除搜索",
+      "noResults": "未找到 \"{{query}}\" 的结果",
+      "allCollections": "所有集合"
     },
     "sort": {
-      "title": "Sort",
-      "ascending": "Ascending",
-      "descending": "Descending",
-      "none": "No sort"
+      "title": "排序",
+      "ascending": "升序",
+      "descending": "降序",
+      "none": "不排序"
     },
     "actions": {
-      "refresh": "Refresh",
-      "moreActions": "More actions",
-      "cloneAll": "Clone all",
-      "newCollection": "New Collection",
-      "newRepository": "New Repository",
-      "edit": "Edit",
-      "delete": "Delete",
-      "clone": "Clone",
-      "reclone": "Re-clone",
-      "openIn": "Open in {{ide}}",
-      "private": "Private"
+      "refresh": "刷新",
+      "moreActions": "更多操作",
+      "cloneAll": "全部克隆",
+      "newCollection": "新建集合",
+      "newRepository": "新建仓库",
+      "edit": "编辑",
+      "delete": "删除",
+      "clone": "克隆",
+      "reclone": "重新克隆",
+      "openIn": "在 {{ide}} 中打开",
+      "private": "私有"
     },
     "empty": {
-      "title": "No repositories defined",
-      "description": "To get started, click the \"New collection\" button to add your first collection.",
-      "newCollection": "New collection",
-      "newRepository": "New repository"
+      "title": "未定义仓库",
+      "description": "要开始，请单击「新建集合」按钮添加您的第一个集合。",
+      "newCollection": "新建集合",
+      "newRepository": "新建仓库"
     },
     "collection": {
-      "element": "element",
-      "elements": "elements",
-      "collection": "collection",
-      "collections": "collections",
-      "repository": "repository",
-      "repositories": "repositories"
+      "element": "元素",
+      "elements": "元素",
+      "collection": "集合",
+      "collections": "集合",
+      "repository": "仓库",
+      "repositories": "仓库"
     },
     "repository": {
-      "notCloned": "Not cloned locally",
-      "gettingGitInfo": "Getting Git information...",
-      "currentBranch": "Current branch",
-      "uncommittedChanges": "Uncommitted local changes",
-      "pendingPush": "Pending upload (Push)",
-      "pendingPull": "Pending download (Pull)"
+      "notCloned": "未在本地克隆",
+      "gettingGitInfo": "正在获取 Git 信息...",
+      "currentBranch": "当前分支",
+      "uncommittedChanges": "未提交的本地更改",
+      "pendingPush": "待上传（推送）",
+      "pendingPull": "待下载（拉取）"
     },
     "newCollectionModal": {
-      "title": "New Collection",
-      "description": "Organize your repositories in a new custom collection",
+      "title": "新建集合",
+      "description": "将您的仓库组织到新的自定义集合中",
       "name": {
-        "label": "Collection name",
-        "required": "(required)",
-        "placeholder": "E.g: Frontend Projects, Backend APIs, etc.",
+        "label": "集合名称",
+        "required": "（必需）",
+        "placeholder": "例如：前端项目、后端 API 等",
         "errors": {
-          "required": "Name is required",
-          "maxLength": "Name cannot exceed 32 characters",
-          "duplicate": "A collection with that name already exists",
-          "createError": "Error creating collection. Please try again."
+          "required": "名称是必需的",
+          "maxLength": "名称不能超过 32 个字符",
+          "duplicate": "已存在同名集合",
+          "createError": "创建集合时出错。请重试。"
         }
       },
       "descriptionField": {
-        "label": "Description",
-        "optional": "(optional)",
-        "placeholder": "Add a description to easily identify this collection...",
+        "label": "描述",
+        "optional": "（可选）",
+        "placeholder": "添加描述以轻松识别此集合...",
         "errors": {
-          "maxLength": "Description cannot exceed 100 characters"
+          "maxLength": "描述不能超过 100 个字符"
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "creating": "Creating...",
-        "create": "Create"
+        "cancel": "取消",
+        "creating": "创建中...",
+        "create": "创建"
       }
     },
     "editCollectionModal": {
-      "title": "Edit Collection",
-      "description": "Modify collection data",
+      "title": "编辑集合",
+      "description": "修改集合数据",
       "name": {
-        "label": "Collection name",
-        "required": "(required)",
-        "placeholder": "Collection name",
+        "label": "集合名称",
+        "required": "（必需）",
+        "placeholder": "集合名称",
         "errors": {
-          "required": "Name is required",
-          "maxLength": "Name cannot exceed 32 characters",
-          "duplicate": "A collection with that name already exists",
-          "duplicateLocation": "A collection with that name already exists in this location",
-          "saveError": "Error saving collection. Please try again."
+          "required": "名称是必需的",
+          "maxLength": "名称不能超过 32 个字符",
+          "duplicate": "已存在同名集合",
+          "duplicateLocation": "此位置已存在同名集合",
+          "saveError": "保存集合时出错。请重试。"
         }
       },
       "descriptionField": {
-        "label": "Description",
-        "optional": "(optional)",
-        "placeholder": "Optional collection description",
+        "label": "描述",
+        "optional": "（可选）",
+        "placeholder": "可选的集合描述",
         "errors": {
-          "maxLength": "Description cannot exceed 100 characters"
+          "maxLength": "描述不能超过 100 个字符"
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "saving": "Saving...",
-        "save": "Save"
+        "cancel": "取消",
+        "saving": "保存中...",
+        "save": "保存"
       }
     },
     "deleteCollectionModal": {
-      "title": "Delete Collection",
-      "description": "This action cannot be undone",
-      "warning": "Are you sure you want to delete this collection? All repositories within it will also be deleted. This action is permanent and cannot be undone.",
+      "title": "删除集合",
+      "description": "此操作无法撤销",
+      "warning": "您确定要删除此集合吗？其中的所有仓库也将被删除。此操作是永久性的，无法撤销。",
       "buttons": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "取消",
+        "delete": "删除"
       }
     },
     "deleteRepositoryModal": {
-      "title": "Delete Repository",
-      "description": "This action cannot be undone",
-      "warning": "Are you sure you want to delete the repository \"{{name}}\"? This action is permanent and cannot be undone.",
+      "title": "删除仓库",
+      "description": "此操作无法撤销",
+      "warning": "您确定要删除仓库「{{name}}」吗？此操作是永久性的，无法撤销。",
       "buttons": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "取消",
+        "delete": "删除"
       }
     },
     "cloneRepositoryModal": {
-      "title": "Repository already exists",
-      "description": "The destination folder already exists and is not empty",
-      "warning": "Warning: All unsaved local changes in that folder will be lost. Do you want to delete the existing folder and clone the repository again?",
+      "title": "仓库已存在",
+      "description": "目标文件夹已存在且不为空",
+      "warning": "警告：该文件夹中所有未保存的本地更改将丢失。您要删除现有文件夹并重新克隆仓库吗？",
       "buttons": {
-        "cancel": "Cancel",
-        "clone": "Clone"
+        "cancel": "取消",
+        "clone": "克隆"
       }
     },
     "newRepositoryWizard": {
       "title": {
-        "new": "New Repository",
-        "edit": "Edit Repository"
+        "new": "新建仓库",
+        "edit": "编辑仓库"
       },
       "description": {
-        "new": "Add a new repository to your collection in a few steps",
-        "edit": "Modify repository data"
+        "new": "在几个步骤中将新仓库添加到您的集合",
+        "edit": "修改仓库数据"
       },
       "steps": {
-        "connection": "Connection",
-        "details": "Details",
-        "confirmation": "Confirmation"
+        "connection": "连接",
+        "details": "详细信息",
+        "confirmation": "确认"
       },
       "step1": {
         "connection": {
-          "label": "Select a connection",
-          "required": "(required)",
-          "description": "Choose the Git connection where the repository is located",
-          "placeholder": "Select a connection...",
-          "noConnections": "No connections available"
+          "label": "选择连接",
+          "required": "（必需）",
+          "description": "选择仓库所在的 Git 连接",
+          "placeholder": "选择连接...",
+          "noConnections": "没有可用连接"
         },
         "repository": {
-          "label": "Select a repository",
-          "required": "(required)",
-          "description": "Choose the repository you want to add",
-          "placeholder": "Select a repository...",
-          "selectConnectionFirst": "First select a connection",
-          "loading": "Loading repositories...",
-          "searchPlaceholder": "Search repositories...",
-          "noResults": "No repositories found",
-          "noRepositories": "No repositories available"
+          "label": "选择仓库",
+          "required": "（必需）",
+          "description": "选择要添加的仓库",
+          "placeholder": "选择仓库...",
+          "selectConnectionFirst": "请先选择连接",
+          "loading": "正在加载仓库...",
+          "searchPlaceholder": "搜索仓库...",
+          "noResults": "未找到仓库",
+          "noRepositories": "没有可用仓库"
         }
       },
       "step2": {
         "name": {
-          "label": "Repository Name",
-          "required": "(required)",
-          "description": "Enter a descriptive name to identify this repository",
-          "placeholder": "E.g: My project"
+          "label": "仓库名称",
+          "required": "（必需）",
+          "description": "输入描述性名称以识别此仓库",
+          "placeholder": "例如：我的项目"
         },
         "description": {
-          "label": "Description",
-          "optional": "(optional)",
-          "description": "Add a description for this repository",
-          "placeholder": "Repository description..."
+          "label": "描述",
+          "optional": "（可选）",
+          "description": "为此仓库添加描述",
+          "placeholder": "仓库描述..."
         }
       },
       "step3": {
         "title": {
-          "new": "Confirm repository data",
-          "edit": "Confirm repository changes"
+          "new": "确认仓库数据",
+          "edit": "确认仓库更改"
         },
         "description": {
-          "new": "Review the information before saving",
-          "edit": "Review changes before saving"
+          "new": "保存前请检查信息",
+          "edit": "保存前请检查更改"
         },
         "fields": {
-          "connection": "Connection:",
-          "provider": "Provider:",
-          "url": "URL:",
-          "repository": "Repository:",
-          "name": "Name:",
-          "description": "Description:"
+          "connection": "连接：",
+          "provider": "提供商：",
+          "url": "URL：",
+          "repository": "仓库：",
+          "name": "名称：",
+          "description": "描述："
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "previous": "Previous",
-        "next": "Next",
-        "save": "Save"
+        "cancel": "取消",
+        "previous": "上一步",
+        "next": "下一步",
+        "save": "保存"
       },
       "errors": {
-        "selectConnection": "Please select a connection",
-        "selectRepository": "Please select a repository",
-        "enterName": "Please enter a name for the repository",
-        "duplicateName": "A repository with that name already exists in this location",
-        "repositoryNotFound": "Repository not found",
-        "loadError": "Error loading repositories: {{message}}",
-        "saveError": "Error saving repository: {{message}}",
-        "saveChangesError": "Error saving changes. The repository was removed from view but may not have been saved to the file."
+        "selectConnection": "请选择连接",
+        "selectRepository": "请选择仓库",
+        "enterName": "请输入仓库名称",
+        "duplicateName": "此位置已存在同名仓库",
+        "repositoryNotFound": "未找到仓库",
+        "loadError": "加载仓库时出错：{{message}}",
+        "saveError": "保存仓库时出错：{{message}}",
+        "saveChangesError": "保存更改时出错。仓库已从视图中移除，但可能未保存到文件。"
       }
     },
-    "preparing": "Preparing...",
+    "preparing": "准备中...",
     "gitStatusPanel": {
       "unstagedChanges": {
-        "title": "Unstaged Changes",
-        "stageAll": "Stage All",
-        "noChanges": "No pending changes",
-        "allFilesSynced": "All files are synchronized",
-        "stageFile": "Stage file",
-        "stageFolder": "Stage folder"
+        "title": "未暂存的更改",
+        "stageAll": "全部暂存",
+        "noChanges": "没有待处理的更改",
+        "allFilesSynced": "所有文件已同步",
+        "stageFile": "暂存文件",
+        "stageFolder": "暂存文件夹"
       },
       "stagedChanges": {
-        "title": "Staged Changes",
-        "unstageAll": "Unstage All",
-        "noChanges": "No staged changes",
-        "stageFilesToCommit": "Stage files to prepare your commit",
-        "unstageFile": "Unstage file",
-        "unstageFolder": "Unstage folder"
+        "title": "已暂存的更改",
+        "unstageAll": "全部取消暂存",
+        "noChanges": "没有已暂存的更改",
+        "stageFilesToCommit": "暂存文件以准备提交",
+        "unstageFile": "取消暂存文件",
+        "unstageFolder": "取消暂存文件夹"
       },
       "commitMessage": {
-        "title": "Commit Message",
-        "placeholder": "Enter commit message...",
-        "placeholderNoStaged": "Stage files to be able to commit",
+        "title": "提交消息",
+        "placeholder": "输入提交消息...",
+        "placeholderNoStaged": "暂存文件后才能提交",
         "button": {
-          "commit": "Commit",
-          "commitToBranch": "Commit to '{{branch}}'",
-          "commitPush": "Commit + Push",
-          "commitPushToBranch": "Commit + Push to '{{branch}}'",
-          "commitSync": "Commit + Sync",
-          "commitSyncToBranch": "Commit + Sync to '{{branch}}'",
-          "committing": "Committing",
-          "committingToBranch": "Committing to '{{branch}}'...",
-          "committingPushing": "Committing & Pushing",
-          "committingPushingToBranch": "Committing & Pushing to '{{branch}}'...",
-          "committingSyncing": "Committing & Syncing",
-          "committingSyncingToBranch": "Committing & Syncing to '{{branch}}'..."
+          "commit": "提交",
+          "commitToBranch": "提交到 '{{branch}}'",
+          "commitPush": "提交 + 推送",
+          "commitPushToBranch": "提交 + 推送到 '{{branch}}'",
+          "commitSync": "提交 + 同步",
+          "commitSyncToBranch": "提交 + 同步到 '{{branch}}'",
+          "committing": "提交中",
+          "committingToBranch": "提交到 '{{branch}}' 中...",
+          "committingPushing": "提交并推送中",
+          "committingPushingToBranch": "提交并推送到 '{{branch}}' 中...",
+          "committingSyncing": "提交并同步中",
+          "committingSyncingToBranch": "提交并同步到 '{{branch}}' 中..."
         },
         "errors": {
-          "pullFailedConflicts": "Commit completed successfully, but pull failed due to conflicts: {{message}}. Resolve conflicts manually.",
-          "pushFailedNeedPull": "Commit completed successfully, but push failed: {{message}}. You may need to pull first.",
-          "pushFailed": "Commit completed successfully, but push failed: {{message}}",
-          "additionalOperationFailed": "Commit completed successfully, but additional operation failed: {{message}}"
+          "pullFailedConflicts": "提交成功完成，但由于冲突导致拉取失败：{{message}}。请手动解决冲突。",
+          "pushFailedNeedPull": "提交成功完成，但推送失败：{{message}}。您可能需要先拉取。",
+          "pushFailed": "提交成功完成，但推送失败：{{message}}",
+          "additionalOperationFailed": "提交成功完成，但附加操作失败：{{message}}"
         }
       }
     },
     "menuItems": {
-      "newBranch": "New Branch",
-      "newTag": "New Tag",
-      "actions": "Actions"
+      "newBranch": "新建分支",
+      "newTag": "新建标签",
+      "actions": "操作"
     },
     "search": {
-      "placeholder": "Search commits (message, author, hash)...",
-      "clear": "Clear",
-      "commits": "commits"
+      "placeholder": "搜索提交（消息、作者、哈希）...",
+      "clear": "清除",
+      "commits": "提交"
     },
     "newBranchModal": {
-      "title": "New Branch",
-      "description": "Create a new branch from an existing branch",
+      "title": "新建分支",
+      "description": "从现有分支创建新分支",
       "fields": {
         "branchName": {
-          "label": "New branch name",
-          "required": "(required)",
-          "hint": "The name must follow Git conventions (no spaces, use hyphens or underscores)",
-          "placeholder": "branch-name"
+          "label": "新分支名称",
+          "required": "（必需）",
+          "hint": "名称必须遵循 Git 约定（无空格，使用连字符或下划线）",
+          "placeholder": "分支名称"
         },
         "createFrom": {
-          "label": "Create from",
-          "hint": "Select the branch from which the new branch will be created. The new branch will contain all commits from the selected branch.",
-          "placeholder": "Select a branch",
-          "current": "(current)",
-          "remotes": "Remotes",
-          "noBranches": "No branches available"
+          "label": "从创建",
+          "hint": "选择将从中创建新分支的分支。新分支将包含所选分支的所有提交。",
+          "placeholder": "选择分支",
+          "current": "（当前）",
+          "remotes": "远程",
+          "noBranches": "没有可用分支"
         }
       },
       "info": {
-        "willCreateFrom": "The new branch {{branchName}} will be created from {{fromBranch}}",
-        "currentBranch": " (your current branch)"
+        "willCreateFrom": "新分支 {{branchName}} 将从 {{fromBranch}} 创建",
+        "currentBranch": "（您当前的分支）"
       },
       "buttons": {
-        "cancel": "Cancel",
-        "create": "Create",
-        "creating": "Creating..."
+        "cancel": "取消",
+        "create": "创建",
+        "creating": "创建中..."
       },
       "errors": {
-        "createError": "Error creating branch"
+        "createError": "创建分支时出错"
       }
     },
     "newTagModal": {
-      "title": "New Tag",
-      "description": "Create a new tag on the selected commit",
+      "title": "新建标签",
+      "description": "在选定的提交上创建新标签",
       "fields": {
         "tagName": {
-          "label": "Tag name",
-          "required": "(required)",
-          "hint": "Use semantic conventions like v1.0.0, v2.1.3, etc. Tags help mark important points in the project history.",
+          "label": "标签名称",
+          "required": "（必需）",
+          "hint": "使用语义约定，如 v1.0.0、v2.1.3 等。标签有助于标记项目历史中的重要点。",
           "placeholder": "v1.0.0"
         },
         "message": {
-          "label": "Message",
-          "optional": "(optional)",
-          "hint": "Provide a detailed description of the tag. This is useful for documenting releases, important changes, or project milestones.",
-          "placeholder": "Tag description..."
+          "label": "消息",
+          "optional": "（可选）",
+          "hint": "提供标签的详细描述。这对于记录发布、重要更改或项目里程碑很有用。",
+          "placeholder": "标签描述..."
         },
         "pushToRemotes": {
-          "label": "Push to all remotes",
-          "hint": "If enabled, the tag will be automatically sent to all configured remotes of the repository."
+          "label": "推送到所有远程",
+          "hint": "如果启用，标签将自动发送到仓库的所有已配置远程。"
         }
       },
       "info": {
-        "willCreateAt": "The tag {{tagName}} will be created at commit {{commitHash}}"
+        "willCreateAt": "标签 {{tagName}} 将在提交 {{commitHash}} 处创建"
       },
       "buttons": {
-        "cancel": "Cancel",
-        "create": "Create",
-        "creating": "Creating..."
+        "cancel": "取消",
+        "create": "创建",
+        "creating": "创建中..."
       },
       "success": {
-        "title": "Tag created successfully",
-        "description": "The tag \"{{tagName}}\" has been created",
-        "descriptionWithPush": "The tag \"{{tagName}}\" has been created and sent to all remotes"
+        "title": "标签创建成功",
+        "description": "标签「{{tagName}}」已创建",
+        "descriptionWithPush": "标签「{{tagName}}」已创建并发送到所有远程"
       },
       "errors": {
-        "createError": "Error creating tag",
-        "unknownError": "Unknown error"
+        "createError": "创建标签时出错",
+        "unknownError": "未知错误"
       }
     },
     "stashModal": {
-      "title": "Create Stash",
-      "description": "Temporarily save your changes in Git stash",
+      "title": "创建存储",
+      "description": "在 Git 存储中临时保存您的更改",
       "fields": {
         "message": {
-          "label": "Message",
-          "optional": "(optional)",
-          "hint": "Provide a descriptive message to identify this stash. If you don't specify a message, a default one will be used.",
-          "placeholder": "Stash message"
+          "label": "消息",
+          "optional": "（可选）",
+          "hint": "提供描述性消息以识别此存储。如果您不指定消息，将使用默认消息。",
+          "placeholder": "存储消息"
         },
         "includeUntracked": {
-          "label": "Include untracked files",
-          "hint": "Also saves new files that are not yet in the repository. Useful when you want to save changes in files that have not been added to the staging area."
+          "label": "包含未跟踪的文件",
+          "hint": "还保存尚未在仓库中的新文件。当您想保存尚未添加到暂存区的文件中的更改时很有用。"
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "create": "Create",
-        "saving": "Saving..."
+        "cancel": "取消",
+        "create": "创建",
+        "saving": "保存中..."
       },
       "success": {
-        "title": "Stash completed",
-        "description": "Changes have been saved to stash",
-        "descriptionWithUntracked": "Changes and untracked files have been saved to stash"
+        "title": "存储完成",
+        "description": "更改已保存到存储",
+        "descriptionWithUntracked": "更改和未跟踪的文件已保存到存储"
       },
       "errors": {
-        "title": "Error creating stash",
-        "description": "Could not complete the operation",
-        "unknownError": "An unexpected error occurred"
+        "title": "创建存储时出错",
+        "description": "无法完成操作",
+        "unknownError": "发生意外错误"
       }
     },
     "stashListModal": {
-      "title": "Stashes",
-      "description": "Select a stash to apply (pop) and restore your saved changes",
-      "loading": "Loading stashes...",
+      "title": "存储",
+      "description": "选择要应用（弹出）的存储并恢复您保存的更改",
+      "loading": "正在加载存储...",
       "empty": {
-        "title": "No stashes available",
-        "description": "Stashes allow you to temporarily save changes without committing. Create one from the stash menu."
+        "title": "没有可用存储",
+        "description": "存储允许您在不提交的情况下临时保存更改。从存储菜单创建一个。"
       },
       "table": {
-        "reference": "Reference",
-        "message": "Message",
-        "date": "Date",
-        "actions": "Actions"
+        "reference": "引用",
+        "message": "消息",
+        "date": "日期",
+        "actions": "操作"
       },
       "buttons": {
-        "close": "Close",
-        "clearAll": "Clear All",
-        "apply": "Apply",
-        "applying": "Applying...",
-        "deleteStash": "Delete stash"
+        "close": "关闭",
+        "clearAll": "全部清除",
+        "apply": "应用",
+        "applying": "应用中...",
+        "deleteStash": "删除存储"
       },
       "deleteConfirm": {
-        "title": "Confirm Deletion",
-        "description": "Are you sure you want to delete this stash?",
-        "warning": "This action cannot be undone. The stash will be permanently deleted.",
-        "cancel": "Cancel",
-        "delete": "Delete",
-        "deleting": "Deleting..."
+        "title": "确认删除",
+        "description": "您确定要删除此存储吗？",
+        "warning": "此操作无法撤销。存储将被永久删除。",
+        "cancel": "取消",
+        "delete": "删除",
+        "deleting": "删除中..."
       },
       "clearAllConfirm": {
-        "title": "Confirm Clear All",
-        "description": "Are you sure you want to delete all stashes?",
-        "warning": "{{count}} {{stash}} will be deleted.",
-        "stash": "stash",
-        "stashes": "stashes",
-        "permanentWarning": "This action cannot be undone. All stashes will be permanently deleted.",
-        "cancel": "Cancel",
-        "deleteAll": "Delete All",
-        "deleting": "Deleting..."
+        "title": "确认全部清除",
+        "description": "您确定要删除所有存储吗？",
+        "warning": "将删除 {{count}} 个{{stash}}。",
+        "stash": "存储",
+        "stashes": "存储",
+        "permanentWarning": "此操作无法撤销。所有存储将被永久删除。",
+        "cancel": "取消",
+        "deleteAll": "全部删除",
+        "deleting": "删除中..."
       },
       "toasts": {
         "selectStash": {
-          "title": "Select a stash",
-          "description": "Please select a stash to apply"
+          "title": "选择存储",
+          "description": "请选择要应用的存储"
         },
         "applied": {
-          "title": "Stash applied",
-          "description": "The stash has been applied and deleted successfully"
+          "title": "存储已应用",
+          "description": "存储已成功应用并删除"
         },
         "applyError": {
-          "title": "Error applying stash",
-          "description": "Could not apply the stash",
-          "unknownError": "An unexpected error occurred"
+          "title": "应用存储时出错",
+          "description": "无法应用存储",
+          "unknownError": "发生意外错误"
         },
         "deleted": {
-          "title": "Stash deleted",
-          "description": "The stash has been deleted successfully"
+          "title": "存储已删除",
+          "description": "存储已成功删除"
         },
         "deleteError": {
-          "title": "Error deleting stash",
-          "description": "Could not delete the stash",
-          "unknownError": "An unexpected error occurred"
+          "title": "删除存储时出错",
+          "description": "无法删除存储",
+          "unknownError": "发生意外错误"
         },
         "cleared": {
-          "title": "Stashes deleted",
-          "description": "All stashes have been deleted successfully"
+          "title": "存储已删除",
+          "description": "所有存储已成功删除"
         },
         "clearError": {
-          "title": "Error clearing stashes",
-          "description": "Could not delete the stashes",
-          "unknownError": "An unexpected error occurred"
+          "title": "清除存储时出错",
+          "description": "无法删除存储",
+          "unknownError": "发生意外错误"
         }
       }
     },
     "revertModal": {
-      "title": "Revert Commit",
-      "description": "Create a new commit that undoes the changes from this commit",
+      "title": "还原提交",
+      "description": "创建一个新提交，撤销此提交的更改",
       "fields": {
-        "commitToRevert": "Commit to revert"
+        "commitToRevert": "要还原的提交"
       },
-      "warning": "This will create a new commit that reverts the changes made in the selected commit. The original commit will remain in the history and will not be deleted.",
+      "warning": "这将创建一个新提交，还原所选提交中进行的更改。原始提交将保留在历史记录中，不会被删除。",
       "buttons": {
-        "cancel": "Cancel",
-        "revert": "Revert",
-        "reverting": "Reverting..."
+        "cancel": "取消",
+        "revert": "还原",
+        "reverting": "还原中..."
       },
       "toasts": {
         "success": {
-          "title": "Revert completed",
-          "description": "The commit has been successfully reverted"
+          "title": "还原完成",
+          "description": "提交已成功还原"
         },
         "error": {
-          "title": "Error reverting commit",
-          "description": "Could not complete the operation",
-          "unknownError": "An unexpected error occurred"
+          "title": "还原提交时出错",
+          "description": "无法完成操作",
+          "unknownError": "发生意外错误"
         }
       }
     },
     "cherryPickModal": {
       "title": "Cherry Pick",
-      "description": "Apply changes from an individual commit to the current branch",
+      "description": "将单个提交的更改应用到当前分支",
       "fields": {
-        "commitToApply": "Commit to apply",
+        "commitToApply": "要应用的提交",
         "commitChanges": {
-          "label": "Commit the changes",
-          "hint": "Automatically create a commit with the cherry-picked changes. If disabled, changes will remain in staging but no commit will be made, allowing you to review and modify them before committing."
+          "label": "提交更改",
+          "hint": "使用 cherry-pick 的更改自动创建提交。如果禁用，更改将保留在暂存区中，但不会创建提交，允许您在提交前查看和修改它们。"
         },
         "appendOrigin": {
-          "label": "Append origin to commit message",
-          "hint": "Add a reference to the original commit at the end of the commit message (e.g., \"(cherry picked from commit abc1234)\"). This helps track where the changes came from in the git history. Only available when \"Commit the changes\" is enabled."
+          "label": "在提交消息中附加来源",
+          "hint": "在提交消息的末尾添加对原始提交的引用（例如，「(cherry picked from commit abc1234)」）。这有助于跟踪 git 历史中更改的来源。仅在启用「提交更改」时可用。"
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "apply": "Apply",
-        "applying": "Applying..."
+        "cancel": "取消",
+        "apply": "应用",
+        "applying": "应用中..."
       },
       "toasts": {
         "success": {
-          "title": "Cherry-pick completed",
-          "description": "The commit has been applied and committed successfully",
-          "descriptionNoCommit": "The commit has been applied (no commit)"
+          "title": "Cherry-pick 完成",
+          "description": "提交已成功应用并提交",
+          "descriptionNoCommit": "提交已应用（无提交）"
         },
         "conflicts": {
-          "title": "Cherry-pick with conflicts",
-          "description": "There are conflicts that need to be resolved. Use the notification bar to resolve or abort the operation."
+          "title": "Cherry-pick 存在冲突",
+          "description": "有需要解决的冲突。使用通知栏解决或中止操作。"
         },
         "error": {
-          "title": "Error performing cherry-pick",
-          "description": "Could not complete the operation",
-          "unknownError": "An unexpected error occurred"
+          "title": "执行 cherry-pick 时出错",
+          "description": "无法完成操作",
+          "unknownError": "发生意外错误"
         }
       }
     },
     "commitDetails": {
       "tabs": {
-        "detail": "Commit Detail",
-        "modified": "Modified Files",
-        "tree": "Commit Tree"
+        "detail": "提交详情",
+        "modified": "修改的文件",
+        "tree": "提交树"
       },
       "detail": {
         "sections": {
-          "description": "Description",
-          "author": "Author",
-          "date": "Date",
-          "committer": "Committer",
-          "commitDate": "Commit Date",
-          "commitHash": "Commit Hash",
-          "parentCommit": "Parent Commit",
-          "parentCommits": "Parent Commits",
-          "statistics": "Statistics"
+          "description": "描述",
+          "author": "作者",
+          "date": "日期",
+          "committer": "提交者",
+          "commitDate": "提交日期",
+          "commitHash": "提交哈希",
+          "parentCommit": "父提交",
+          "parentCommits": "父提交",
+          "statistics": "统计"
         },
         "stats": {
-          "files": "Files",
-          "insertions": "Insertions",
-          "deletions": "Deletions"
+          "files": "文件",
+          "insertions": "插入",
+          "deletions": "删除"
         },
         "copy": {
-          "copyHash": "Copy full hash",
-          "copyParentHash": "Copy parent hash"
+          "copyHash": "复制完整哈希",
+          "copyParentHash": "复制父哈希"
         },
         "timeAgo": {
-          "years": "{{count}} year ago",
-          "yearsPlural": "{{count}} years ago",
-          "months": "{{count}} month ago",
-          "monthsPlural": "{{count}} months ago",
-          "weeks": "{{count}} week ago",
-          "weeksPlural": "{{count}} weeks ago",
-          "days": "{{count}} day ago",
-          "daysPlural": "{{count}} days ago",
-          "hours": "{{count}} hour ago",
-          "hoursPlural": "{{count}} hours ago",
-          "minutes": "{{count}} minute ago",
-          "minutesPlural": "{{count}} minutes ago",
-          "seconds": "A few seconds ago"
+          "years": "{{count}} 年前",
+          "yearsPlural": "{{count}} 年前",
+          "months": "{{count}} 个月前",
+          "monthsPlural": "{{count}} 个月前",
+          "weeks": "{{count}} 周前",
+          "weeksPlural": "{{count}} 周前",
+          "days": "{{count}} 天前",
+          "daysPlural": "{{count}} 天前",
+          "hours": "{{count}} 小时前",
+          "hoursPlural": "{{count}} 小时前",
+          "minutes": "{{count}} 分钟前",
+          "minutesPlural": "{{count}} 分钟前",
+          "seconds": "几秒前"
         }
       },
       "modified": {
-        "loading": "Loading...",
-        "detail": "Detail",
-        "selectFile": "Select a file to view changes"
+        "loading": "加载中...",
+        "detail": "详情",
+        "selectFile": "选择文件以查看更改"
       },
       "tree": {
-        "loading": "Loading tree...",
-        "noFiles": "No files",
-        "content": "Content",
-        "noFileSelected": "No file selected",
-        "selectFileMessage": "Click on a file in the tree to view its content",
+        "loading": "正在加载树...",
+        "noFiles": "没有文件",
+        "content": "内容",
+        "noFileSelected": "未选择文件",
+        "selectFileMessage": "单击树中的文件以查看其内容",
         "errors": {
-          "loadTree": "Error loading tree",
-          "loadFile": "Error loading file"
+          "loadTree": "加载树时出错",
+          "loadFile": "加载文件时出错"
         }
       }
     },
     "branchesDropdown": {
       "sections": {
-        "selectedCommit": "Selected Commit",
-        "local": "Local Branches",
-        "remote": "Remote Branches"
+        "selectedCommit": "选定的提交",
+        "local": "本地分支",
+        "remote": "远程分支"
       },
       "actions": {
-        "checkoutHash": "Checkout Hash... {{hash}}",
-        "defaultBranch": "Branch"
+        "checkoutHash": "检出哈希... {{hash}}",
+        "defaultBranch": "分支"
       },
-      "empty": "No branches available",
+      "empty": "没有可用分支",
       "toasts": {
         "checkoutSuccess": {
-          "title": "Checkout completed",
-          "description": "Switched to commit {{hash}}"
+          "title": "检出完成",
+          "description": "已切换到提交 {{hash}}"
         },
         "checkoutError": {
-          "title": "Checkout error",
-          "description": "An unexpected error occurred"
+          "title": "检出错误",
+          "description": "发生意外错误"
         },
         "resolveConflictError": {
-          "title": "Error resolving conflict",
-          "description": "An unexpected error occurred"
+          "title": "解决冲突时出错",
+          "description": "发生意外错误"
         }
       },
-      "commitMessage": "Save files before switching to {{branch}}"
+      "commitMessage": "切换到 {{branch}} 之前保存文件"
     },
     "tooltips": {
-      "private": "Private",
-      "minimize": "Minimize",
-      "new": "New",
-      "stash": "Stash",
-      "moreStashOptions": "More stash options",
-      "refresh": "Refresh",
-      "close": "Close",
-      "middleClickToClose": "Middle click to close",
-      "uncommittedChanges": "uncommitted changes"
+      "private": "私有",
+      "minimize": "最小化",
+      "new": "新建",
+      "stash": "存储",
+      "moreStashOptions": "更多存储选项",
+      "refresh": "刷新",
+      "close": "关闭",
+      "middleClickToClose": "中键单击关闭",
+      "uncommittedChanges": "未提交的更改"
     }
   }
 }
