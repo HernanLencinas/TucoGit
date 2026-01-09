@@ -142,7 +142,7 @@ function App() {
   const [mostrarModalRestablecerConfig, setMostrarModalRestablecerConfig] = useState(false);
   const [mostrarModalConfirmarReclon, setMostrarModalConfirmarReclon] = useState(false);
   const [repoAClonar, setRepoAClonar] = useState<FolderItem | null>(null);
-  const [setRutaDestinoAClonar] = useState<string>("");
+  const [rutaDestinoAClonar, setRutaDestinoAClonar] = useState<string>("");
 
   // Estado para identidades de Git
   const [gitIdentities, setGitIdentities] = useState<GitIdentity[]>([]);
@@ -303,10 +303,10 @@ function App() {
     }
   }, []);
 
-  const clonarRepositorio = async (item: FolderItem, saltarConfirmacion: boolean = false) => {
+  const clonarRepositorio = async (item: FolderItem, saltarConfirmacion: boolean = false, suppressToasts: boolean = false): Promise<{ success: boolean; error?: string }> => {
     if (!item.urlClon) {
-      showToast("No se encontró la URL de clonación para este repositorio", 'error');
-      return;
+      if (!suppressToasts) showToast("No se encontró la URL de clonación para este repositorio", 'error');
+      return { success: false, error: "No se encontró URL de clonación" };
     }
 
     const orgPath = item.organizacion ? `${item.organizacion}/` : "";
@@ -320,7 +320,7 @@ function App() {
         setRepoAClonar(item);
         setRutaDestinoAClonar(destPath);
         setMostrarModalConfirmarReclon(true);
-        return;
+        return { success: false, error: "Esperando confirmación de usuario" };
       }
     }
 
@@ -328,8 +328,8 @@ function App() {
     if (saltarConfirmacion && window.electronAPI?.deletePath) {
       const resultadoEliminar = await window.electronAPI.deletePath(destPath);
       if (!resultadoEliminar.success) {
-        showToast(`No se pudo eliminar la carpeta existente: ${resultadoEliminar.error}`, 'error');
-        return;
+        if (!suppressToasts) showToast(`No se pudo eliminar la carpeta existente: ${resultadoEliminar.error}`, 'error');
+        return { success: false, error: `Error limpiando carpeta: ${resultadoEliminar.error}` };
       }
     }
 
@@ -384,13 +384,18 @@ function App() {
 
           // Cargar info de git inmediatamente después de clonar
           await cargarGitInfo(item);
+          return { success: true };
         } else {
-          showToast(`Error al clonar: ${resultado.error}`, 'error');
+          if (!suppressToasts) showToast(`Error al clonar: ${resultado.error}`, 'error');
+          return { success: false, error: resultado.error };
         }
       }
+      return { success: false, error: "API no disponible" };
     } catch (error) {
       // Error al clonar repositorio
-      showToast(`Error al clonar: ${(error as Error).message}`, 'error');
+      const errorMessage = (error as Error).message;
+      if (!suppressToasts) showToast(`Error al clonar: ${errorMessage}`, 'error');
+      return { success: false, error: errorMessage };
     } finally {
       // Quitar de la lista de clonando
       setClonandoRepositorios(prev => {
@@ -400,6 +405,7 @@ function App() {
       });
     }
   };
+
 
   const clonarTodosLosRepositorios = async (forzarReclonado: boolean) => {
     const carpetaActual = obtenerCarpetaActual();
@@ -470,13 +476,21 @@ function App() {
         }
 
         // Clonar el repositorio (si forzarReclonado es true, saltará la confirmación y eliminará la carpeta)
-        // Esperar a que la clonación termine completamente
-        await clonarRepositorio(repo, forzarReclonado);
+        // Esperar a que la clonación termine completamente. Pasamos suppressToasts = true
+        const resultado = await clonarRepositorio(repo, forzarReclonado, true);
+
+        if (resultado.success) {
+          exitosos++;
+        } else {
+          fallidos++;
+          if (resultado.error && resultado.error !== "Esperando confirmación de usuario") {
+            errores.push(`${repo.nombre}: ${resultado.error}`);
+          }
+        }
 
         // Esperar un momento adicional para asegurar que el estado se haya actualizado
         await new Promise(resolve => setTimeout(resolve, 200));
 
-        exitosos++;
       } catch (error) {
         fallidos++;
         errores.push(`${repo.nombre}: ${(error as Error).message}`);
@@ -3129,7 +3143,10 @@ function App() {
                 {itemsFiltrados.map((item) => (
                   <Card
                     key={item.id}
-                    className={`relative bg-secondary/40 hover:bg-secondary/60 hover:shadow-lg transition-all duration-300 hover:border-primary/50 group border-border/80 backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px] w-full`}
+                    className={`relative ${item.tipo === "coleccion"
+                        ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20"
+                        : "bg-secondary/40 hover:bg-secondary/60 border-border/80"
+                      } hover:shadow-lg transition-all duration-300 hover:border-primary/50 group backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px] w-full`}
                   >
                     <div
                       className="flex-1 flex flex-col min-h-0 cursor-pointer"
