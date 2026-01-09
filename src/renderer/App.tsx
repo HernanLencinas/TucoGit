@@ -4043,7 +4043,7 @@ function App() {
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="font-semibold text-foreground truncate">{editorIDESeleccionado}</div>
-                                <div className="text-xs text-muted-foreground">Editor seleccionado</div>
+                                <div className="text-xs text-muted-foreground">{t('settings.general.preferredIDE.selected')}</div>
                               </div>
                             </>
                           ) : (
@@ -4070,8 +4070,8 @@ function App() {
                             {idesPopulares.length === 0 ? (
                               <div className="p-4 text-sm text-muted-foreground text-center">
                                 <AlertCircle className="h-5 w-5 mx-auto mb-2 opacity-50" />
-                                <p>No hay editores disponibles</p>
-                                <p className="text-xs mt-1">Instala un editor IDE para verlo aquí</p>
+                                <p>{t('settings.general.preferredIDE.noEditorsAvailable')}</p>
+                                <p className="text-xs mt-1">{t('settings.general.preferredIDE.installEditor')}</p>
                               </div>
                             ) : (
                               <div className="p-1">
@@ -4084,10 +4084,10 @@ function App() {
                                       if (window.electronAPI?.writeConfig) {
                                         try {
                                           await window.electronAPI.writeConfig({ editorIDE: ide });
-                                          showToast(`Editor IDE cambiado a ${ide}`, 'success');
+                                          showToast(t('settings.general.preferredIDE.editorChanged', { ide }), 'success');
                                         } catch (error) {
                                           // Error al guardar editor IDE
-                                          showToast('Error al guardar la configuración', 'error');
+                                          showToast(t('settings.general.preferredIDE.errorSaving'), 'error');
                                         }
                                       }
                                     }}
@@ -4179,13 +4179,6 @@ function App() {
                                     setUiLanguage(idioma);
                                     setMostrarMenuIdioma(false);
                                     await changeLanguage(idioma);
-                                    const languageName = idioma === "en" 
-                                      ? t('settings.general.uiLanguage.english') 
-                                      : t('settings.general.uiLanguage.spanish');
-                                    showToast(
-                                      t('settings.general.uiLanguage.changed', { language: languageName }),
-                                      'success'
-                                    );
                                   }}
                                   className={`w-full px-4 py-3 text-sm text-left rounded-md hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ${
                                     uiLanguage === idioma ? 'bg-primary/10 border border-primary/20' : ''
@@ -4257,20 +4250,20 @@ function App() {
                   const contenido = JSON.stringify(resultado.config, null, 2);
                   const saveResult = await window.electronAPI.saveFile(contenido, 'tuco-settings.json');
                   if (saveResult?.success) {
-                    showToast('Configuración exportada exitosamente', 'success');
+                    showToast(t('settings.data.management.exportSuccess'), 'success');
                   } else if (saveResult?.error && saveResult.error !== 'Operación cancelada') {
-                    showToast(`Error al exportar: ${saveResult.error}`, 'error');
+                    showToast(t('settings.data.management.exportError', { error: saveResult.error }), 'error');
                   }
                   // Si fue cancelado, no mostrar mensaje
                 } else {
-                  showToast('No hay configuración para exportar', 'error');
+                  showToast(t('settings.data.management.noConfigToExport'), 'error');
                 }
               } else {
-                showToast('Funcionalidad no disponible', 'error');
+                showToast(t('settings.data.management.functionalityNotAvailable'), 'error');
               }
             } catch (error) {
               // Error al exportar configuración
-              showToast(`Error al exportar configuración: ${(error as Error).message}`, 'error');
+              showToast(t('settings.data.management.exportError', { error: (error as Error).message }), 'error');
             }
           };
 
@@ -4383,15 +4376,15 @@ function App() {
                   if (window.electronAPI?.importConfig) {
                     const resultado = await window.electronAPI.importConfig(config);
                     if (resultado?.success) {
-                      showToast('Configuración importada exitosamente. Recargando datos...', 'success');
+                      showToast(t('settings.data.management.importSuccess'), 'success');
                       // Recargar los datos sin recargar la página
                       await recargarDatosConfiguracion();
-                      showToast('Datos recargados correctamente', 'success');
+                      showToast(t('settings.data.management.dataReloaded'), 'success');
                     } else {
-                      showToast(`Error al importar: ${resultado?.error || 'Error desconocido'}`, 'error');
+                      showToast(t('settings.data.management.importError', { error: resultado?.error || 'Error desconocido' }), 'error');
                     }
                   } else {
-                    showToast('Funcionalidad de importar no disponible', 'error');
+                    showToast(t('settings.data.management.importNotAvailable'), 'error');
                   }
                 } else {
                   // Usuario canceló la operación, no mostrar error
@@ -4401,9 +4394,9 @@ function App() {
               // Error al importar configuración
               const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
               if (errorMessage.includes('JSON') || errorMessage.includes('parse')) {
-                showToast('El archivo seleccionado no es un JSON válido', 'error');
+                showToast(t('settings.data.management.invalidJson'), 'error');
               } else {
-                showToast(`Error al importar configuración: ${errorMessage}`, 'error');
+                showToast(t('settings.data.management.importConfigError', { error: errorMessage }), 'error');
               }
             }
           };
@@ -4414,10 +4407,10 @@ function App() {
               <div className="space-y-1">
                 <h3 className="text-xl font-bold flex items-center gap-2">
                   <Database className="h-5 w-5 text-primary" />
-                  Gestión de Datos
+                  {t('settings.data.title')}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Administra la ubicación y respaldo de tu configuración
+                  {t('settings.data.description')}
                 </p>
               </div>
 
@@ -4425,9 +4418,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Ubicación de Configuración</CardTitle>
+                    <CardTitle className="text-base">{t('settings.data.configLocation.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Selecciona la carpeta donde se guardará el archivo de configuración
+                      {t('settings.data.configLocation.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4436,11 +4429,11 @@ function App() {
                     <div className="flex items-center gap-2">
                       <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-lg border-2 bg-background">
                         <Folder className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                        <span className="text-sm truncate font-mono">{rutaConfiguracion || "Cargando..."}</span>
+                        <span className="text-sm truncate font-mono">{rutaConfiguracion || t('common.loadingText')}</span>
                       </div>
                       <Button onClick={seleccionarCarpeta} className="flex-shrink-0">
                         <FolderUp className="h-4 w-4 mr-2" />
-                        Seleccionar Carpeta
+                        {t('settings.data.configLocation.selectFolder')}
                       </Button>
                     </div>
                   </div>
@@ -4451,9 +4444,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Información del Archivo</CardTitle>
+                    <CardTitle className="text-base">{t('settings.data.fileInfo.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Detalles sobre el archivo de configuración y última modificación
+                      {t('settings.data.fileInfo.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4464,9 +4457,9 @@ function App() {
                         <File className="h-4 w-4 text-muted-foreground" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs font-semibold text-foreground mb-1">Archivo de Configuración</div>
+                        <div className="text-xs font-semibold text-foreground mb-1">{t('settings.data.fileInfo.configFile')}</div>
                         <div className="text-xs font-mono text-muted-foreground break-all">
-                          {rutaConfiguracion ? `${rutaConfiguracion}/tuco-settings.json` : "Cargando..."}
+                          {rutaConfiguracion ? `${rutaConfiguracion}/tuco-settings.json` : t('common.loadingText')}
                         </div>
                       </div>
                     </div>
@@ -4475,9 +4468,9 @@ function App() {
                         <Clock className="h-4 w-4 text-muted-foreground" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs font-semibold text-foreground mb-1">Última Actualización</div>
+                        <div className="text-xs font-semibold text-foreground mb-1">{t('settings.data.fileInfo.lastUpdate')}</div>
                         <div className="text-xs text-muted-foreground">
-                          {ultimaActualizacion || "No disponible"}
+                          {ultimaActualizacion || t('common.noAvailable')}
                         </div>
                       </div>
                     </div>
@@ -4489,9 +4482,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Gestión de Configuración</CardTitle>
+                    <CardTitle className="text-base">{t('settings.data.management.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Importa o exporta tu archivo de configuración para respaldar o restaurar tus ajustes
+                      {t('settings.data.management.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4502,14 +4495,14 @@ function App() {
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                     >
                       <Download className="h-4 w-4 mr-2" />
-                      Importar
+                      {t('settings.data.management.import')}
                     </Button>
                     <Button 
                       onClick={exportarConfiguracion} 
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                     >
                       <Upload className="h-4 w-4 mr-2" />
-                      Exportar
+                      {t('settings.data.management.export')}
                     </Button>
                   </div>
                 </CardContent>
@@ -4523,9 +4516,9 @@ function App() {
                       <Sliders className="h-5 w-5 text-destructive" />
                     </div>
                     <div>
-                      <CardTitle className="text-base">Restablecer Configuración</CardTitle>
+                      <CardTitle className="text-base">{t('settings.data.reset.title')}</CardTitle>
                       <CardDescription className="text-xs mt-1">
-                        Elimina toda la configuración y restablece los valores predeterminados. Esta acción no se puede deshacer.
+                        {t('settings.data.reset.description')}
                       </CardDescription>
                     </div>
                   </div>
@@ -4534,9 +4527,9 @@ function App() {
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-destructive/5 border border-destructive/10">
                     <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-foreground mb-1">Advertencia</p>
+                      <p className="text-sm font-medium text-foreground mb-1">{t('settings.data.reset.warning')}</p>
                       <p className="text-xs text-muted-foreground">
-                        Esta acción eliminará todas tus configuraciones, conexiones y preferencias guardadas.
+                        {t('settings.data.reset.warningMessage')}
                       </p>
                     </div>
                   </div>
@@ -4546,7 +4539,7 @@ function App() {
                     className="w-full mt-4"
                   >
                     <Sliders className="h-4 w-4 mr-2" />
-                    Restaurar Configuración
+                    {t('settings.data.reset.restoreConfig')}
                   </Button>
                 </CardContent>
               </Card>
@@ -4559,10 +4552,10 @@ function App() {
               <div className="space-y-1">
                 <h3 className="text-xl font-bold flex items-center gap-2">
                   <GitBranch className="h-5 w-5 text-primary" />
-                  Configuración de Git
+                  {t('settings.git.title')}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Configura tu identidad y preferencias de seguridad para Git
+                  {t('settings.git.description')}
                 </p>
               </div>
 
@@ -4571,9 +4564,9 @@ function App() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-base">Identidades</CardTitle>
+                      <CardTitle className="text-base">{t('settings.git.identities.title')}</CardTitle>
                       <CardDescription className="text-xs mt-1">
-                        Gestiona múltiples identidades de usuario para usar en diferentes repositorios
+                        {t('settings.git.identities.description')}
                       </CardDescription>
                     </div>
                     <Button
@@ -4586,7 +4579,7 @@ function App() {
                       size="sm"
                     >
                       <Plus className="h-3.5 w-3.5 mr-1.5" />
-                      Nueva Identidad
+                      {t('settings.git.identities.newIdentity')}
                     </Button>
                   </div>
                 </CardHeader>
@@ -4594,17 +4587,17 @@ function App() {
                   {gitIdentities.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
                       <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                      <p className="text-sm">No hay identidades configuradas</p>
-                      <p className="text-xs mt-1">Agrega una identidad para comenzar</p>
+                      <p className="text-sm">{t('settings.git.identities.noIdentities')}</p>
+                      <p className="text-xs mt-1">{t('settings.git.identities.addIdentity')}</p>
                     </div>
                   ) : (
                     <div className="overflow-x-auto">
                       <table className="w-full">
                         <thead>
                           <tr className="border-b border-border">
-                            <th className="text-left py-3 px-4 text-sm font-semibold">Nombre Completo</th>
-                            <th className="text-left py-3 px-4 text-sm font-semibold">Correo Electrónico</th>
-                            <th className="text-right py-3 px-4 text-sm font-semibold">Acciones</th>
+                            <th className="text-left py-3 px-4 text-sm font-semibold">{t('common.fullName')}</th>
+                            <th className="text-left py-3 px-4 text-sm font-semibold">{t('common.email')}</th>
+                            <th className="text-right py-3 px-4 text-sm font-semibold">{t('common.actions')}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -4616,7 +4609,7 @@ function App() {
                                   <span>{identidad.nombre}</span>
                                   {identidad.id === IDENTIDAD_DEFAULT_ID && (
                                     <span className="px-1 py-0.5 text-[8px] font-semibold rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                                      Default
+                                      {t('common.default')}
                                     </span>
                                   )}
                                 </div>
@@ -4665,9 +4658,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Comportamiento del Botón de Commit</CardTitle>
+                    <CardTitle className="text-base">{t('settings.git.commitBehavior.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Selecciona qué acción realizará el botón de commit en el panel de estado de Git
+                      {t('settings.git.commitBehavior.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4675,7 +4668,7 @@ function App() {
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <label className="text-sm font-semibold">
-                        Acción del botón
+                        {t('settings.git.commitBehavior.buttonAction')}
                       </label>
                       <div className="relative">
                         <button
@@ -4684,9 +4677,9 @@ function App() {
                           className="w-full px-4 py-3 text-sm rounded-lg border-2 border-input bg-background text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all hover:border-primary/50"
                         >
                           <span className={commitButtonBehavior ? "text-foreground" : "text-muted-foreground"}>
-                            {commitButtonBehavior === "commit" && "Commit"}
-                            {commitButtonBehavior === "commit-push" && "Commit + Push"}
-                            {commitButtonBehavior === "commit-sync" && "Commit + Sync"}
+                            {commitButtonBehavior === "commit" && t('settings.git.commitBehavior.commit')}
+                            {commitButtonBehavior === "commit-push" && t('settings.git.commitBehavior.commitPush')}
+                            {commitButtonBehavior === "commit-sync" && t('settings.git.commitBehavior.commitSync')}
                           </span>
                           <ChevronRight className={`h-4 w-4 transition-transform flex-shrink-0 ${mostrarMenuCommitBehavior ? "rotate-90" : ""}`} />
                         </button>
@@ -4715,7 +4708,7 @@ function App() {
                                 }`}
                               >
                                 <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit" ? "opacity-100" : "opacity-0"}`} />
-                                <span>Commit</span>
+                                <span>{t('settings.git.commitBehavior.commit')}</span>
                               </button>
                               <button
                                 onClick={async () => {
@@ -4735,7 +4728,7 @@ function App() {
                                 }`}
                               >
                                 <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit-push" ? "opacity-100" : "opacity-0"}`} />
-                                <span>Commit + Push</span>
+                                <span>{t('settings.git.commitBehavior.commitPush')}</span>
                               </button>
                               <button
                                 onClick={async () => {
@@ -4755,7 +4748,7 @@ function App() {
                                 }`}
                               >
                                 <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit-sync" ? "opacity-100" : "opacity-0"}`} />
-                                <span>Commit + Sync</span>
+                                <span>{t('settings.git.commitBehavior.commitSync')}</span>
                               </button>
                             </div>
                           </>
@@ -4766,28 +4759,28 @@ function App() {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <div className={`h-2 w-2 rounded-full ${commitButtonBehavior === "commit" ? "bg-primary" : "bg-muted-foreground/30"}`} />
-                          <span className="text-sm font-semibold">Commit</span>
+                          <span className="text-sm font-semibold">{t('settings.git.commitBehavior.commit')}</span>
                         </div>
                         <p className="text-xs text-muted-foreground ml-4">
-                          Realiza únicamente el commit de los archivos en stage. No sincroniza con el repositorio remoto.
+                          {t('settings.git.commitBehavior.commitDescription')}
                         </p>
                       </div>
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <div className={`h-2 w-2 rounded-full ${commitButtonBehavior === "commit-push" ? "bg-primary" : "bg-muted-foreground/30"}`} />
-                          <span className="text-sm font-semibold">Commit + Push</span>
+                          <span className="text-sm font-semibold">{t('settings.git.commitBehavior.commitPush')}</span>
                         </div>
                         <p className="text-xs text-muted-foreground ml-4">
-                          Realiza el commit y luego envía los cambios al repositorio remoto. No descarga cambios del remoto.
+                          {t('settings.git.commitBehavior.commitPushDescription')}
                         </p>
                       </div>
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <div className={`h-2 w-2 rounded-full ${commitButtonBehavior === "commit-sync" ? "bg-primary" : "bg-muted-foreground/30"}`} />
-                          <span className="text-sm font-semibold">Commit + Sync</span>
+                          <span className="text-sm font-semibold">{t('settings.git.commitBehavior.commitSync')}</span>
                         </div>
                         <p className="text-xs text-muted-foreground ml-4">
-                          Realiza el commit, descarga los cambios del remoto (fetch + pull) y luego envía los cambios locales (push). Sincroniza completamente con el repositorio remoto.
+                          {t('settings.git.commitBehavior.commitSyncDescription')}
                         </p>
                       </div>
                     </div>
@@ -4799,9 +4792,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Seguridad y Red</CardTitle>
+                    <CardTitle className="text-base">{t('settings.git.security.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Ajustes de conexión y verificación de certificados SSL
+                      {t('settings.git.security.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4810,24 +4803,23 @@ function App() {
                     <div className="flex items-start justify-between gap-4 p-4 rounded-lg bg-muted/50 border">
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center gap-2">
-                          <label className="text-sm font-semibold">Verificación de certificado SSL</label>
+                          <label className="text-sm font-semibold">{t('settings.git.security.sslVerify')}</label>
                           <div className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                             gitSslVerify 
                               ? 'bg-green-500/10 text-green-600 dark:text-green-400' 
                               : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
                           }`}>
-                            {gitSslVerify ? 'ACTIVADO' : 'DESACTIVADO'}
+                            {gitSslVerify ? t('settings.git.security.activated') : t('settings.git.security.deactivated')}
                           </div>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          Desactivar si tienes problemas con certificados auto-firmados o proxies corporativos. 
-                          Equivalente a <code className="px-1 py-0.5 rounded bg-background text-xs font-mono">http.sslVerify=false</code>
+                          {t('settings.git.security.sslDescription')}
                         </p>
                         {!gitSslVerify && (
                           <div className="flex items-start gap-2 mt-2 p-2 rounded-md bg-amber-500/10 border border-amber-500/20">
                             <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                             <p className="text-xs text-amber-700 dark:text-amber-300">
-                              La verificación SSL está desactivada. Esto puede ser un riesgo de seguridad.
+                              {t('settings.git.security.sslWarning')}
                             </p>
                           </div>
                         )}
@@ -4841,12 +4833,12 @@ function App() {
                             try {
                               await window.electronAPI.writeConfig({ gitSslVerify: nuevoValor });
                               showToast(
-                                `Verificación SSL ${nuevoValor ? 'activada' : 'desactivada'}`,
+                                nuevoValor ? t('settings.git.security.sslActivated') : t('settings.git.security.sslDeactivated'),
                                 nuevoValor ? 'success' : 'warning'
                               );
                             } catch (error) {
                               // Error al guardar SSL verify
-                              showToast('Error al guardar configuración SSL', 'error');
+                              showToast(t('settings.git.security.sslError'), 'error');
                             }
                           }
                         }}
@@ -4873,10 +4865,10 @@ function App() {
               <div className="space-y-1">
                 <h3 className="text-xl font-bold flex items-center gap-2">
                   <Palette className="h-5 w-5 text-primary" />
-                  Apariencia
+                  {t('settings.appearance.title')}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Personaliza el tema y el tamaño de los componentes de la aplicación
+                  {t('settings.appearance.description')}
                 </p>
               </div>
 
@@ -4885,9 +4877,9 @@ function App() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-base">Temas</CardTitle>
+                      <CardTitle className="text-base">{t('settings.appearance.themes.title')}</CardTitle>
                       <CardDescription className="text-xs mt-1">
-                        Selecciona un estilo de tema para personalizar la apariencia
+                        {t('settings.appearance.themes.description')}
                       </CardDescription>
                     </div>
                     <div className="flex items-center gap-2">
@@ -4901,12 +4893,12 @@ function App() {
                         {isDark ? (
                           <>
                             <Moon className="h-3.5 w-3.5 mr-1.5" />
-                            Oscuro
+                            {t('settings.appearance.themes.dark')}
                           </>
                         ) : (
                           <>
                             <Sun className="h-3.5 w-3.5 mr-1.5" />
-                            Claro
+                            {t('settings.appearance.themes.light')}
                           </>
                         )}
                       </Button>
@@ -4953,9 +4945,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Tamaño de Componentes</CardTitle>
+                    <CardTitle className="text-base">{t('settings.appearance.componentSize.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Ajusta el zoom de la interfaz para mejorar la legibilidad y comodidad
+                      {t('settings.appearance.componentSize.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4964,13 +4956,13 @@ function App() {
                     <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50 border">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <label className="text-sm font-semibold">Nivel de Zoom</label>
+                          <label className="text-sm font-semibold">{t('settings.appearance.componentSize.zoomLevel')}</label>
                           <div className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">
                             {tempZoomLevel}%
                           </div>
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          Afecta el tamaño de texto, iconos y espaciado de todos los componentes
+                          {t('settings.appearance.componentSize.zoomDescription')}
                         </p>
                       </div>
                     </div>
@@ -5035,7 +5027,7 @@ function App() {
                     <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
                       <Info className="h-4 w-4 text-primary flex-shrink-0" />
                       <p className="text-xs text-muted-foreground">
-                        El zoom se aplica inmediatamente. Recomendado: <span className="font-semibold text-foreground">100%</span> para la mejor experiencia.
+                        {t('settings.appearance.componentSize.zoomInfo')}
                       </p>
                     </div>
                   </div>
@@ -5050,10 +5042,10 @@ function App() {
               <div className="space-y-1">
                 <h3 className="text-xl font-bold flex items-center gap-2">
                   <RefreshCw className="h-5 w-5 text-primary" />
-                  Actualizaciones
+                  {t('settings.updates.title')}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Información sobre la versión actual y última modificación de la configuración
+                  {t('settings.updates.description')}
                 </p>
               </div>
 
@@ -5061,9 +5053,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Versión Actual</CardTitle>
+                    <CardTitle className="text-base">{t('settings.updates.currentVersion.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Información sobre la versión instalada de la aplicación
+                      {t('settings.updates.currentVersion.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -5076,7 +5068,7 @@ function App() {
                         </div>
                         <div>
                           <div className="text-sm font-semibold text-foreground">TucoGit</div>
-                          <div className="text-xs text-muted-foreground">Versión de la aplicación</div>
+                          <div className="text-xs text-muted-foreground">{t('settings.updates.currentVersion.appVersion')}</div>
                         </div>
                       </div>
                       <div className="px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
@@ -5086,7 +5078,7 @@ function App() {
                     <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
                       <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
                       <p className="text-xs text-muted-foreground">
-                        Estás usando la última versión disponible
+                        {t('settings.updates.currentVersion.latestVersion')}
                       </p>
                     </div>
                   </div>
@@ -5097,9 +5089,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Última Actualización</CardTitle>
+                    <CardTitle className="text-base">{t('settings.updates.lastUpdate.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Fecha y hora de la última modificación de la configuración
+                      {t('settings.updates.lastUpdate.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -5110,9 +5102,9 @@ function App() {
                         <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div className="flex-1">
-                        <div className="text-sm font-semibold text-foreground mb-1">Configuración Modificada</div>
+                        <div className="text-sm font-semibold text-foreground mb-1">{t('settings.updates.lastUpdate.configModified')}</div>
                         <div className="text-xs font-mono text-muted-foreground">
-                          {ultimaActualizacion || "No disponible"}
+                          {ultimaActualizacion || t('common.noAvailable')}
                         </div>
                       </div>
                     </div>
@@ -5120,7 +5112,7 @@ function App() {
                       <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
                         <Info className="h-4 w-4 text-primary flex-shrink-0" />
                         <p className="text-xs text-muted-foreground">
-                          Esta fecha se actualiza automáticamente cuando modificas cualquier configuración de la aplicación.
+                          {t('settings.updates.lastUpdate.autoUpdateInfo')}
                         </p>
                       </div>
                     )}
@@ -5133,24 +5125,24 @@ function App() {
                 <Card className="border-2">
                   <CardHeader className="pb-3">
                     <div>
-                      <CardTitle className="text-base">Información del Sistema</CardTitle>
+                      <CardTitle className="text-base">{t('settings.updates.systemInfo.title')}</CardTitle>
                       <CardDescription className="text-xs mt-1">
-                        Versiones de las tecnologías utilizadas por la aplicación
+                        {t('settings.updates.systemInfo.description')}
                       </CardDescription>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">Plataforma</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.platform')}</div>
                         <div className="text-sm font-semibold font-mono">{window.electronAPI.platform || 'N/A'}</div>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">Electron</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.electron')}</div>
                         <div className="text-sm font-semibold font-mono">v{window.electronAPI.versions.electron || 'N/A'}</div>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">Chrome</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.chrome')}</div>
                         <div className="text-sm font-semibold font-mono">v{window.electronAPI.versions.chrome || 'N/A'}</div>
                       </div>
                     </div>
@@ -5164,10 +5156,9 @@ function App() {
                   <div className="flex items-start gap-3">
                     <Info className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                     <div className="space-y-1">
-                      <p className="text-sm font-semibold text-foreground">Sobre las Actualizaciones</p>
+                      <p className="text-sm font-semibold text-foreground">{t('settings.updates.aboutUpdates.title')}</p>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        Las actualizaciones de la aplicación se gestionan automáticamente. 
-                        Cuando haya una nueva versión disponible, recibirás una notificación.
+                        {t('settings.updates.aboutUpdates.description')}
                       </p>
                     </div>
                   </div>
@@ -5207,7 +5198,7 @@ function App() {
                               <span className="text-xs font-semibold text-primary">v1.0.0</span>
                             </div>
                             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
-                              <span className="text-xs font-medium text-blue-600 dark:text-blue-400">Beta</span>
+                              <span className="text-xs font-medium text-blue-600 dark:text-blue-400">{t('settings.about.footer.beta')}</span>
                             </div>
                           </div>
                         </div>
@@ -5216,7 +5207,7 @@ function App() {
                       {/* Descripción */}
                       <div className="max-w-2xl mx-auto px-4">
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                          Cliente Git diseñado para simplificar la gestión de repositorios y reducir la complejidad del trabajo diario, alineado con flujos de trabajo modernos y las operaciones más comunes de control de versiones.
+                          {t('settings.about.appDescription')}
                         </p>
                       </div>
                     </div>
@@ -5228,9 +5219,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Desarrollador</CardTitle>
+                    <CardTitle className="text-base">{t('settings.about.developer.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Información de contacto y perfil del desarrollador
+                      {t('settings.about.developer.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -5244,10 +5235,10 @@ function App() {
                       <div className="flex-1 space-y-1">
                         <div>
                           <div className="text-base font-bold text-foreground mb-0.5">Hernan Lencinas</div>
-                          <div className="text-xs text-muted-foreground">Desarrollador Full Stack</div>
+                          <div className="text-xs text-muted-foreground">{t('settings.about.developer.fullStack')}</div>
                         </div>
                         <p className="text-xs text-muted-foreground leading-relaxed">
-                          Creador y mantenedor de TucoGit. Apasionado por crear herramientas que simplifiquen el trabajo diario de los desarrolladores.
+                          {t('settings.about.developer.bio')}
                         </p>
                       </div>
                     </div>
@@ -5262,7 +5253,7 @@ function App() {
                           <Mail className="h-4 w-4 text-blue-500" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-xs font-semibold text-foreground mb-0.5">Email</div>
+                          <div className="text-xs font-semibold text-foreground mb-0.5">{t('settings.about.contact.email')}</div>
                           <div className="text-xs text-muted-foreground truncate font-mono">lencinas.hernan@gmail.com</div>
                         </div>
                         <ExternalLink className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
@@ -5277,7 +5268,7 @@ function App() {
                           <GitBranch className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-xs font-semibold text-foreground mb-0.5">GitHub</div>
+                          <div className="text-xs font-semibold text-foreground mb-0.5">{t('settings.about.contact.github')}</div>
                           <div className="text-xs text-muted-foreground truncate">@HernanLencinas</div>
                         </div>
                         <ExternalLink className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
@@ -5291,9 +5282,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Soporte y Comunidad</CardTitle>
+                    <CardTitle className="text-base">{t('settings.about.support.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Reporta problemas, comparte ideas y participa en la comunidad
+                      {t('settings.about.support.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -5309,8 +5300,8 @@ function App() {
                         <AlertCircle className="h-5 w-5 text-red-500" />
                       </div>
                       <div className="flex-1">
-                        <div className="text-sm font-semibold text-foreground mb-1">Reportar un Problema</div>
-                        <div className="text-xs text-muted-foreground">Abre un issue en GitHub para reportar bugs o solicitar características</div>
+                        <div className="text-sm font-semibold text-foreground mb-1">{t('settings.about.support.reportIssue')}</div>
+                        <div className="text-xs text-muted-foreground">{t('settings.about.support.reportIssueDescription')}</div>
                       </div>
                       <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     </a>
@@ -5324,8 +5315,8 @@ function App() {
                         <Users className="h-5 w-5 text-blue-500" />
                       </div>
                       <div className="flex-1">
-                        <div className="text-sm font-semibold text-foreground mb-1">Foro de Discusión</div>
-                        <div className="text-xs text-muted-foreground">Participa en discusiones, comparte ideas y obtén ayuda de la comunidad</div>
+                        <div className="text-sm font-semibold text-foreground mb-1">{t('settings.about.support.discussions')}</div>
+                        <div className="text-xs text-muted-foreground">{t('settings.about.support.discussionsDescription')}</div>
                       </div>
                       <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     </a>
@@ -5344,8 +5335,8 @@ function App() {
                       </p>
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Heart className="h-3 w-3 text-red-500 fill-red-500" />
-                        <span>Hecho con tecnologías</span>
-                        <span className="font-medium text-primary">open source</span>
+                        <span>{t('settings.about.footer.madeWith')}</span>
+                        <span className="font-medium text-primary">{t('settings.about.footer.openSource')}</span>
                       </div>
                     </div>
 
@@ -5357,7 +5348,7 @@ function App() {
                       </div>
                       <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/5 border border-blue-500/10">
                         <Star className="h-3.5 w-3.5 text-blue-500 fill-blue-500" />
-                        <span className="text-xs font-medium text-blue-600 dark:text-blue-400">Open Source</span>
+                        <span className="text-xs font-medium text-blue-600 dark:text-blue-400">{t('settings.about.footer.openSourceBadge')}</span>
                       </div>
                     </div>
                   </div>
@@ -5375,12 +5366,12 @@ function App() {
         {/* Sidebar de configuración */}
         <div className="w-48 flex-shrink-0 border-r pr-4 py-4 space-y-1">
           {[
-            { id: "general", label: "General", icon: <Settings className="h-4 w-4" /> },
-            { id: "datos", label: "Datos", icon: <Database className="h-4 w-4" /> },
-            { id: "git", label: "Git", icon: <GitBranch className="h-4 w-4" /> },
-            { id: "temas", label: "Apariencia", icon: <Palette className="h-4 w-4" /> },
-            { id: "actualizacion", label: "Actualización", icon: <RefreshCw className="h-4 w-4" /> },
-            { id: "acerca", label: "Acerca de", icon: <Info className="h-4 w-4" /> },
+            { id: "general", labelKey: "settings.tabs.general", icon: <Settings className="h-4 w-4" /> },
+            { id: "datos", labelKey: "settings.tabs.data", icon: <Database className="h-4 w-4" /> },
+            { id: "git", labelKey: "settings.tabs.git", icon: <GitBranch className="h-4 w-4" /> },
+            { id: "temas", labelKey: "settings.tabs.appearance", icon: <Palette className="h-4 w-4" /> },
+            { id: "actualizacion", labelKey: "settings.tabs.updates", icon: <RefreshCw className="h-4 w-4" /> },
+            { id: "acerca", labelKey: "settings.tabs.about", icon: <Info className="h-4 w-4" /> },
           ].map((item) => (
             <button
               key={item.id}
@@ -5388,7 +5379,7 @@ function App() {
               className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${configTabActiva === item.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"}`}
             >
               {item.icon}
-              {item.label}
+              {t(item.labelKey)}
             </button>
           ))}
         </div>

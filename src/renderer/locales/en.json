@@ -11,10 +11,25 @@
     "error": "Error",
     "success": "Success",
     "warning": "Warning",
-    "info": "Info"
+    "info": "Info",
+    "selected": "Selected",
+    "noAvailable": "Not available",
+    "loadingText": "Loading...",
+    "default": "Default",
+    "actions": "Actions",
+    "fullName": "Full Name",
+    "email": "Email"
   },
   "settings": {
     "title": "Settings",
+    "tabs": {
+      "general": "General",
+      "data": "Data",
+      "git": "Git",
+      "appearance": "Appearance",
+      "updates": "Updates",
+      "about": "About"
+    },
     "general": {
       "title": "General Settings",
       "description": "Customize general application options",
@@ -24,7 +39,11 @@
         "selected": "Selected",
         "noEditorSelected": "No editor selected",
         "selectEditor": "Select an IDE editor...",
-        "info": "Repositories will automatically open with {{ide}} when you click the open button."
+        "info": "Repositories will automatically open with {{ide}} when you click the open button.",
+        "noEditorsAvailable": "No editors available",
+        "installEditor": "Install an IDE editor to see it here",
+        "editorChanged": "IDE editor changed to {{ide}}",
+        "errorSaving": "Error saving configuration"
       },
       "uiLanguage": {
         "title": "Interface Language",
@@ -34,6 +53,150 @@
         "selected": "Selected",
         "changed": "Language changed to {{language}}",
         "error": "Error saving configuration"
+      }
+    },
+    "data": {
+      "title": "Data Management",
+      "description": "Manage the location and backup of your configuration",
+      "configLocation": {
+        "title": "Configuration Location",
+        "description": "Select the folder where the configuration file will be saved",
+        "selectFolder": "Select Folder"
+      },
+      "fileInfo": {
+        "title": "File Information",
+        "description": "Details about the configuration file and last modification",
+        "configFile": "Configuration File",
+        "lastUpdate": "Last Update"
+      },
+      "management": {
+        "title": "Configuration Management",
+        "description": "Import or export your configuration file to backup or restore your settings",
+        "import": "Import",
+        "export": "Export",
+        "exportSuccess": "Configuration exported successfully",
+        "exportError": "Error exporting: {{error}}",
+        "noConfigToExport": "No configuration to export",
+        "functionalityNotAvailable": "Functionality not available",
+        "importSuccess": "Configuration imported successfully. Reloading data...",
+        "dataReloaded": "Data reloaded successfully",
+        "importError": "Error importing: {{error}}",
+        "importNotAvailable": "Import functionality not available",
+        "invalidJson": "The selected file is not a valid JSON",
+        "importConfigError": "Error importing configuration: {{error}}"
+      },
+      "reset": {
+        "title": "Reset Configuration",
+        "description": "Deletes all configuration and restores default values. This action cannot be undone.",
+        "warning": "Warning",
+        "warningMessage": "This action will delete all your configurations, connections and saved preferences.",
+        "restoreConfig": "Restore Configuration"
+      }
+    },
+    "git": {
+      "title": "Git Configuration",
+      "description": "Configure your identity and security preferences for Git",
+      "identities": {
+        "title": "Identities",
+        "description": "Manage multiple user identities to use in different repositories",
+        "newIdentity": "New Identity",
+        "noIdentities": "No identities configured",
+        "addIdentity": "Add an identity to get started"
+      },
+      "commitBehavior": {
+        "title": "Commit Button Behavior",
+        "description": "Select what action the commit button will perform in the Git status panel",
+        "buttonAction": "Button action",
+        "commit": "Commit",
+        "commitPush": "Commit + Push",
+        "commitSync": "Commit + Sync",
+        "commitDescription": "Only commits files in stage. Does not sync with remote repository.",
+        "commitPushDescription": "Commits and then sends changes to remote repository. Does not download changes from remote.",
+        "commitSyncDescription": "Commits, downloads changes from remote (fetch + pull) and then sends local changes (push). Fully syncs with remote repository."
+      },
+      "security": {
+        "title": "Security and Network",
+        "description": "Connection settings and SSL certificate verification",
+        "sslVerify": "SSL Certificate Verification",
+        "activated": "ACTIVATED",
+        "deactivated": "DEACTIVATED",
+        "sslDescription": "Disable if you have problems with self-signed certificates or corporate proxies. Equivalent to http.sslVerify=false",
+        "sslWarning": "SSL verification is disabled. This may be a security risk.",
+        "sslActivated": "SSL verification activated",
+        "sslDeactivated": "SSL verification deactivated",
+        "sslError": "Error saving SSL configuration"
+      }
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Customize the theme and size of application components",
+      "themes": {
+        "title": "Themes",
+        "description": "Select a theme style to customize the appearance",
+        "dark": "Dark",
+        "light": "Light"
+      },
+      "componentSize": {
+        "title": "Component Size",
+        "description": "Adjust the interface zoom to improve readability and comfort",
+        "zoomLevel": "Zoom Level",
+        "zoomDescription": "Affects the size of text, icons and spacing of all components",
+        "zoomInfo": "Zoom is applied immediately. Recommended: 100% for the best experience."
+      }
+    },
+    "updates": {
+      "title": "Updates",
+      "description": "Information about the current version and last configuration modification",
+      "currentVersion": {
+        "title": "Current Version",
+        "description": "Information about the installed application version",
+        "appVersion": "Application version",
+        "latestVersion": "You are using the latest available version"
+      },
+      "lastUpdate": {
+        "title": "Last Update",
+        "description": "Date and time of the last configuration modification",
+        "configModified": "Configuration Modified",
+        "autoUpdateInfo": "This date is automatically updated when you modify any application configuration."
+      },
+      "systemInfo": {
+        "title": "System Information",
+        "description": "Versions of technologies used by the application",
+        "platform": "Platform",
+        "electron": "Electron",
+        "chrome": "Chrome"
+      },
+      "aboutUpdates": {
+        "title": "About Updates",
+        "description": "Application updates are managed automatically. When a new version is available, you will receive a notification."
+      }
+    },
+    "about": {
+      "title": "About",
+      "appDescription": "Git client designed to simplify repository management and reduce the complexity of daily work, aligned with modern workflows and the most common version control operations.",
+      "developer": {
+        "title": "Developer",
+        "description": "Contact information and developer profile",
+        "fullStack": "Full Stack Developer",
+        "bio": "Creator and maintainer of TucoGit. Passionate about creating tools that simplify developers' daily work."
+      },
+      "support": {
+        "title": "Support and Community",
+        "description": "Report issues, share ideas and participate in the community",
+        "reportIssue": "Report an Issue",
+        "reportIssueDescription": "Open an issue on GitHub to report bugs or request features",
+        "discussions": "Discussions",
+        "discussionsDescription": "Participate in discussions, share ideas and get help from the community"
+      },
+      "contact": {
+        "email": "Email",
+        "github": "GitHub"
+      },
+      "footer": {
+        "madeWith": "Made with",
+        "openSource": "open source",
+        "openSourceBadge": "Open Source",
+        "beta": "Beta"
       }
     }
   }

@@ -11,10 +11,25 @@
     "error": "Error",
     "success": "Éxito",
     "warning": "Advertencia",
-    "info": "Información"
+    "info": "Información",
+    "selected": "Seleccionado",
+    "noAvailable": "No disponible",
+    "loadingText": "Cargando...",
+    "default": "Default",
+    "actions": "Acciones",
+    "fullName": "Nombre Completo",
+    "email": "Correo Electrónico"
   },
   "settings": {
     "title": "Configuración",
+    "tabs": {
+      "general": "General",
+      "data": "Datos",
+      "git": "Git",
+      "appearance": "Apariencia",
+      "updates": "Actualización",
+      "about": "Acerca de"
+    },
     "general": {
       "title": "Configuración General",
       "description": "Personaliza las opciones generales de la aplicación",
@@ -24,7 +39,11 @@
         "selected": "Seleccionado",
         "noEditorSelected": "Ningún editor seleccionado",
         "selectEditor": "Selecciona un editor IDE...",
-        "info": "Los repositorios se abrirán automáticamente con {{ide}} cuando hagas clic en el botón de abrir."
+        "info": "Los repositorios se abrirán automáticamente con {{ide}} cuando hagas clic en el botón de abrir.",
+        "noEditorsAvailable": "No hay editores disponibles",
+        "installEditor": "Instala un editor IDE para verlo aquí",
+        "editorChanged": "Editor IDE cambiado a {{ide}}",
+        "errorSaving": "Error al guardar la configuración"
       },
       "uiLanguage": {
         "title": "Idioma de Interfaz",
@@ -34,6 +53,150 @@
         "selected": "Seleccionado",
         "changed": "Idioma cambiado a {{language}}",
         "error": "Error al guardar la configuración"
+      }
+    },
+    "data": {
+      "title": "Gestión de Datos",
+      "description": "Administra la ubicación y respaldo de tu configuración",
+      "configLocation": {
+        "title": "Ubicación de Configuración",
+        "description": "Selecciona la carpeta donde se guardará el archivo de configuración",
+        "selectFolder": "Seleccionar Carpeta"
+      },
+      "fileInfo": {
+        "title": "Información del Archivo",
+        "description": "Detalles sobre el archivo de configuración y última modificación",
+        "configFile": "Archivo de Configuración",
+        "lastUpdate": "Última Actualización"
+      },
+      "management": {
+        "title": "Gestión de Configuración",
+        "description": "Importa o exporta tu archivo de configuración para respaldar o restaurar tus ajustes",
+        "import": "Importar",
+        "export": "Exportar",
+        "exportSuccess": "Configuración exportada exitosamente",
+        "exportError": "Error al exportar: {{error}}",
+        "noConfigToExport": "No hay configuración para exportar",
+        "functionalityNotAvailable": "Funcionalidad no disponible",
+        "importSuccess": "Configuración importada exitosamente. Recargando datos...",
+        "dataReloaded": "Datos recargados correctamente",
+        "importError": "Error al importar: {{error}}",
+        "importNotAvailable": "Funcionalidad de importar no disponible",
+        "invalidJson": "El archivo seleccionado no es un JSON válido",
+        "importConfigError": "Error al importar configuración: {{error}}"
+      },
+      "reset": {
+        "title": "Restablecer Configuración",
+        "description": "Elimina toda la configuración y restablece los valores predeterminados. Esta acción no se puede deshacer.",
+        "warning": "Advertencia",
+        "warningMessage": "Esta acción eliminará todas tus configuraciones, conexiones y preferencias guardadas.",
+        "restoreConfig": "Restaurar Configuración"
+      }
+    },
+    "git": {
+      "title": "Configuración de Git",
+      "description": "Configura tu identidad y preferencias de seguridad para Git",
+      "identities": {
+        "title": "Identidades",
+        "description": "Gestiona múltiples identidades de usuario para usar en diferentes repositorios",
+        "newIdentity": "Nueva Identidad",
+        "noIdentities": "No hay identidades configuradas",
+        "addIdentity": "Agrega una identidad para comenzar"
+      },
+      "commitBehavior": {
+        "title": "Comportamiento del Botón de Commit",
+        "description": "Selecciona qué acción realizará el botón de commit en el panel de estado de Git",
+        "buttonAction": "Acción del botón",
+        "commit": "Commit",
+        "commitPush": "Commit + Push",
+        "commitSync": "Commit + Sync",
+        "commitDescription": "Realiza únicamente el commit de los archivos en stage. No sincroniza con el repositorio remoto.",
+        "commitPushDescription": "Realiza el commit y luego envía los cambios al repositorio remoto. No descarga cambios del remoto.",
+        "commitSyncDescription": "Realiza el commit, descarga los cambios del remoto (fetch + pull) y luego envía los cambios locales (push). Sincroniza completamente con el repositorio remoto."
+      },
+      "security": {
+        "title": "Seguridad y Red",
+        "description": "Ajustes de conexión y verificación de certificados SSL",
+        "sslVerify": "Verificación de certificado SSL",
+        "activated": "ACTIVADO",
+        "deactivated": "DESACTIVADO",
+        "sslDescription": "Desactivar si tienes problemas con certificados auto-firmados o proxies corporativos. Equivalente a http.sslVerify=false",
+        "sslWarning": "La verificación SSL está desactivada. Esto puede ser un riesgo de seguridad.",
+        "sslActivated": "Verificación SSL activada",
+        "sslDeactivated": "Verificación SSL desactivada",
+        "sslError": "Error al guardar configuración SSL"
+      }
+    },
+    "appearance": {
+      "title": "Apariencia",
+      "description": "Personaliza el tema y el tamaño de los componentes de la aplicación",
+      "themes": {
+        "title": "Temas",
+        "description": "Selecciona un estilo de tema para personalizar la apariencia",
+        "dark": "Oscuro",
+        "light": "Claro"
+      },
+      "componentSize": {
+        "title": "Tamaño de Componentes",
+        "description": "Ajusta el zoom de la interfaz para mejorar la legibilidad y comodidad",
+        "zoomLevel": "Nivel de Zoom",
+        "zoomDescription": "Afecta el tamaño de texto, iconos y espaciado de todos los componentes",
+        "zoomInfo": "El zoom se aplica inmediatamente. Recomendado: 100% para la mejor experiencia."
+      }
+    },
+    "updates": {
+      "title": "Actualizaciones",
+      "description": "Información sobre la versión actual y última modificación de la configuración",
+      "currentVersion": {
+        "title": "Versión Actual",
+        "description": "Información sobre la versión instalada de la aplicación",
+        "appVersion": "Versión de la aplicación",
+        "latestVersion": "Estás usando la última versión disponible"
+      },
+      "lastUpdate": {
+        "title": "Última Actualización",
+        "description": "Fecha y hora de la última modificación de la configuración",
+        "configModified": "Configuración Modificada",
+        "autoUpdateInfo": "Esta fecha se actualiza automáticamente cuando modificas cualquier configuración de la aplicación."
+      },
+      "systemInfo": {
+        "title": "Información del Sistema",
+        "description": "Versiones de las tecnologías utilizadas por la aplicación",
+        "platform": "Plataforma",
+        "electron": "Electron",
+        "chrome": "Chrome"
+      },
+      "aboutUpdates": {
+        "title": "Sobre las Actualizaciones",
+        "description": "Las actualizaciones de la aplicación se gestionan automáticamente. Cuando haya una nueva versión disponible, recibirás una notificación."
+      }
+    },
+    "about": {
+      "title": "Acerca de",
+      "appDescription": "Cliente Git diseñado para simplificar la gestión de repositorios y reducir la complejidad del trabajo diario, alineado con flujos de trabajo modernos y las operaciones más comunes de control de versiones.",
+      "developer": {
+        "title": "Desarrollador",
+        "description": "Información de contacto y perfil del desarrollador",
+        "fullStack": "Desarrollador Full Stack",
+        "bio": "Creador y mantenedor de TucoGit. Apasionado por crear herramientas que simplifiquen el trabajo diario de los desarrolladores."
+      },
+      "support": {
+        "title": "Soporte y Comunidad",
+        "description": "Reporta problemas, comparte ideas y participa en la comunidad",
+        "reportIssue": "Reportar un Problema",
+        "reportIssueDescription": "Abre un issue en GitHub para reportar bugs o solicitar características",
+        "discussions": "Discusiones",
+        "discussionsDescription": "Participa en discusiones, comparte ideas y obtén ayuda de la comunidad"
+      },
+      "contact": {
+        "email": "Email",
+        "github": "GitHub"
+      },
+      "footer": {
+        "madeWith": "Hecho con tecnologías",
+        "openSource": "open source",
+        "openSourceBadge": "Open Source",
+        "beta": "Beta"
       }
     }
   }
