@@ -546,6 +546,35 @@
         "create": "Crear"
       }
     },
+    "editCollectionModal": {
+      "title": "Editar Colección",
+      "description": "Modifica los datos de la colección",
+      "name": {
+        "label": "Nombre de la colección",
+        "required": "(requerido)",
+        "placeholder": "Nombre de la colección",
+        "errors": {
+          "required": "El nombre es requerido",
+          "maxLength": "El nombre no puede exceder 32 caracteres",
+          "duplicate": "Ya existe una colección con ese nombre",
+          "duplicateLocation": "Ya existe una colección con ese nombre en esta ubicación",
+          "saveError": "Error al guardar la colección. Por favor, intenta nuevamente."
+        }
+      },
+      "descriptionField": {
+        "label": "Descripción",
+        "optional": "(opcional)",
+        "placeholder": "Descripción opcional de la colección",
+        "errors": {
+          "maxLength": "La descripción no puede exceder 100 caracteres"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saving": "Guardando...",
+        "save": "Guardar"
+      }
+    },
     "newRepositoryWizard": {
       "title": {
         "new": "Nuevo Repositorio",

@@ -2258,19 +2258,19 @@ function App() {
     // Validar que el nombre no esté vacío
     const nombreTrimmed = nombreEditarColeccion.trim();
     if (!nombreTrimmed) {
-      setErrorNombreEditar("El nombre es requerido");
+      setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.required'));
       return;
     }
 
     // Validar límites de caracteres
     if (nombreTrimmed.length > 32) {
-      setErrorNombreEditar("El nombre no puede exceder 32 caracteres");
+      setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.maxLength'));
       return;
     }
 
     const descripcionTrimmed = descripcionEditarColeccion.trim();
     if (descripcionTrimmed.length > 100) {
-      setErrorDescripcionEditar("La descripción no puede exceder 100 caracteres");
+      setErrorDescripcionEditar(t('repositories.editCollectionModal.descriptionField.errors.maxLength'));
       return;
     }
 
@@ -2296,7 +2296,7 @@ function App() {
         ?.filter((h) => h.id !== coleccionAEditar.id)
         .map((h) => h.nombre.toLowerCase()) || [];
       if (nombresExistentes.includes(nombreTrimmed.toLowerCase())) {
-        setErrorNombreEditar("Ya existe una colección con ese nombre en esta ubicación");
+        setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.duplicateLocation'));
         return;
       }
     }
@@ -2343,7 +2343,7 @@ function App() {
       setErrorNombreEditar(null);
       setErrorDescripcionEditar(null);
     } catch (error) {
-      setErrorNombreEditar("Error al guardar la colección. Por favor, intenta nuevamente.");
+      setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.saveError'));
     } finally {
       setEditandoColeccion(false);
     }
@@ -7018,19 +7018,19 @@ function App() {
             <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
               <div className="flex-1">
                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                  Editar Colección
+                  {t('repositories.editCollectionModal.title')}
                 </CardTitle>
                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                  Modifica los datos de la colección
+                  {t('repositories.editCollectionModal.description')}
                 </CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Nombre de la colección</span>
+                  <span>{t('repositories.editCollectionModal.name.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
+                    {t('repositories.editCollectionModal.name.required')}
                   </span>
                 </label>
                 <div className="relative">
@@ -7047,9 +7047,9 @@ function App() {
                     onBlur={() => {
                       const nombreTrimmed = nombreEditarColeccion.trim();
                       if (!nombreTrimmed) {
-                        setErrorNombreEditar("El nombre es requerido");
+                        setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.required'));
                       } else if (nombreTrimmed.length > 32) {
-                        setErrorNombreEditar("El nombre no puede exceder 32 caracteres");
+                        setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.maxLength'));
                       } else {
                         // Validar que el nombre no se repita
                         const encontrarPadre = (items: FolderItem[], targetId: string, parent: FolderItem | null = null): FolderItem | null => {
@@ -7070,7 +7070,7 @@ function App() {
                             ?.filter((h) => h.id !== coleccionAEditar.id)
                             .map((h) => h.nombre.toLowerCase()) || [];
                           if (nombresExistentes.includes(nombreTrimmed.toLowerCase())) {
-                            setErrorNombreEditar("Ya existe una colección con ese nombre");
+                            setErrorNombreEditar(t('repositories.editCollectionModal.name.errors.duplicate'));
                           } else {
                             setErrorNombreEditar(null);
                           }
@@ -7086,7 +7086,7 @@ function App() {
                         : "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
                       editandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
-                    placeholder="Nombre de la colección"
+                    placeholder={t('repositories.editCollectionModal.name.placeholder')}
                     autoFocus
                     maxLength={32}
                     disabled={editandoColeccion}
@@ -7110,9 +7110,9 @@ function App() {
 
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Descripción</span>
+                  <span>{t('repositories.editCollectionModal.descriptionField.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (opcional)
+                    {t('repositories.editCollectionModal.descriptionField.optional')}
                   </span>
                 </label>
                 <div className="relative">
@@ -7127,7 +7127,7 @@ function App() {
                     }}
                     onBlur={() => {
                       if (descripcionEditarColeccion.trim().length > 100) {
-                        setErrorDescripcionEditar("La descripción no puede exceder 100 caracteres");
+                        setErrorDescripcionEditar(t('repositories.editCollectionModal.descriptionField.errors.maxLength'));
                       } else {
                         setErrorDescripcionEditar(null);
                       }
@@ -7142,7 +7142,7 @@ function App() {
                       "min-h-[110px] resize-none",
                       editandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
-                    placeholder="Descripción opcional de la colección"
+                    placeholder={t('repositories.editCollectionModal.descriptionField.placeholder')}
                     maxLength={100}
                     disabled={editandoColeccion}
                   />
@@ -7180,7 +7180,7 @@ function App() {
                   }}
                   disabled={editandoColeccion}
                 >
-                  Cancelar
+                  {t('repositories.editCollectionModal.buttons.cancel')}
                 </Button>
                 <Button 
                   size="default"
@@ -7191,10 +7191,10 @@ function App() {
                   {editandoColeccion ? (
                     <span className="flex items-center gap-2">
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      Guardando...
+                      {t('repositories.editCollectionModal.buttons.saving')}
                     </span>
                   ) : (
-                    "Guardar"
+                    t('repositories.editCollectionModal.buttons.save')
                   )}
                 </Button>
               </div>
