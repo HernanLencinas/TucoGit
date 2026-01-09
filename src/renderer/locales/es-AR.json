@@ -1,0 +1,40 @@
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "search": "Buscar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "info": "Información"
+  },
+  "settings": {
+    "title": "Configuración",
+    "general": {
+      "title": "Configuración General",
+      "description": "Personaliza las opciones generales de la aplicación",
+      "preferredIDE": {
+        "title": "Editor IDE Preferido",
+        "description": "Selecciona el editor que se utilizará para abrir repositorios desde las tarjetas",
+        "selected": "Seleccionado",
+        "noEditorSelected": "Ningún editor seleccionado",
+        "selectEditor": "Selecciona un editor IDE...",
+        "info": "Los repositorios se abrirán automáticamente con {{ide}} cuando hagas clic en el botón de abrir."
+      },
+      "uiLanguage": {
+        "title": "Idioma de Interfaz",
+        "description": "Selecciona el idioma que se mostrará en la interfaz de usuario",
+        "english": "English",
+        "spanish": "Español (Argentina)",
+        "selected": "Seleccionado",
+        "changed": "Idioma cambiado a {{language}}",
+        "error": "Error al guardar la configuración"
+      }
+    }
+  }
+}

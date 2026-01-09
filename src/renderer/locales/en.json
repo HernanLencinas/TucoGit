@@ -1,0 +1,40 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Info"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": {
+      "title": "General Settings",
+      "description": "Customize general application options",
+      "preferredIDE": {
+        "title": "Preferred IDE Editor",
+        "description": "Select the editor that will be used to open repositories from cards",
+        "selected": "Selected",
+        "noEditorSelected": "No editor selected",
+        "selectEditor": "Select an IDE editor...",
+        "info": "Repositories will automatically open with {{ide}} when you click the open button."
+      },
+      "uiLanguage": {
+        "title": "Interface Language",
+        "description": "Select the language that will be displayed in the user interface",
+        "english": "English",
+        "spanish": "Spanish (Argentina)",
+        "selected": "Selected",
+        "changed": "Language changed to {{language}}",
+        "error": "Error saving configuration"
+      }
+    }
+  }
+}

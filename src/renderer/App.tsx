@@ -11,6 +11,7 @@ import type { Connection, FolderItem } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
 import { WelcomeWizard } from "@/renderer/components/WelcomeWizard";
 import { LoadingScreen } from "@/renderer/components/LoadingScreen";
+import { useI18n } from "@/renderer/hooks/useI18n";
 
 type TabType = "inicio" | "repositorios" | "conexiones" | "configuracion";
 type ConfigTabType = "general" | "datos" | "git" | "temas" | "actualizacion" | "acerca";
@@ -29,6 +30,7 @@ const IDENTIDAD_DEFAULT: GitIdentity = {
 };
 
 function App() {
+  const { t, changeLanguage, initializeLanguage, currentLanguage } = useI18n();
   const [activeTab, setActiveTab] = useState<TabType>("inicio");
   const [isDark, setIsDark] = useState(true);
   const [selectedTheme, setSelectedTheme] = useState<{ name: string; mode: "light" | "dark" }>({ name: "default", mode: "dark" });
@@ -645,6 +647,10 @@ function App() {
               // Cargar idioma de UI
               if (resultado.uiLanguage !== undefined) {
                 setUiLanguage(resultado.uiLanguage);
+                initializeLanguage(resultado.uiLanguage);
+              } else {
+                // Si no hay idioma guardado, usar el idioma actual de i18next
+                setUiLanguage(currentLanguage);
               }
 
               // Cargar identidades de Git
@@ -4004,10 +4010,10 @@ function App() {
               <div className="space-y-1">
                 <h3 className="text-xl font-bold flex items-center gap-2">
                   <Settings className="h-5 w-5 text-primary" />
-                  Configuración General
+                  {t('settings.general.title')}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Personaliza las opciones generales de la aplicación
+                  {t('settings.general.description')}
                 </p>
               </div>
 
@@ -4015,9 +4021,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Editor IDE Preferido</CardTitle>
+                    <CardTitle className="text-base">{t('settings.general.preferredIDE.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Selecciona el editor que se utilizará para abrir repositorios desde las tarjetas
+                      {t('settings.general.preferredIDE.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4046,8 +4052,8 @@ function App() {
                                 <Plug className="h-4 w-4 text-muted-foreground" />
                               </div>
                               <div>
-                                <div className="font-medium text-muted-foreground">Selecciona un editor IDE...</div>
-                                <div className="text-xs text-muted-foreground/70">Ningún editor seleccionado</div>
+                                <div className="font-medium text-muted-foreground">{t('settings.general.preferredIDE.selectEditor')}</div>
+                                <div className="text-xs text-muted-foreground/70">{t('settings.general.preferredIDE.noEditorSelected')}</div>
                               </div>
                             </div>
                           )}
@@ -4097,7 +4103,7 @@ function App() {
                                       {editorIDESeleccionado === ide && (
                                         <div className="text-xs text-primary mt-0.5 flex items-center gap-1">
                                           <Check className="h-3 w-3" />
-                                          Seleccionado
+                                          {t('settings.general.preferredIDE.selected')}
                                         </div>
                                       )}
                                     </div>
@@ -4117,7 +4123,7 @@ function App() {
                       <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
                         <Info className="h-4 w-4 text-primary flex-shrink-0" />
                         <p className="text-xs text-muted-foreground">
-                          Los repositorios se abrirán automáticamente con <span className="font-semibold text-foreground">{editorIDESeleccionado}</span> cuando hagas clic en el botón de abrir.
+                          {t('settings.general.preferredIDE.info', { ide: editorIDESeleccionado })}
                         </p>
                       </div>
                     )}
@@ -4129,9 +4135,9 @@ function App() {
               <Card className="border-2">
                 <CardHeader className="pb-3">
                   <div>
-                    <CardTitle className="text-base">Idioma de Interfaz</CardTitle>
+                    <CardTitle className="text-base">{t('settings.general.uiLanguage.title')}</CardTitle>
                     <CardDescription className="text-xs mt-1">
-                      Selecciona el idioma que se mostrará en la interfaz de usuario
+                      {t('settings.general.uiLanguage.description')}
                     </CardDescription>
                   </div>
                 </CardHeader>
@@ -4149,10 +4155,10 @@ function App() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="font-semibold text-foreground truncate">
-                              {uiLanguage === "en" ? "English" : "Español (Argentina)"}
+                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : t('settings.general.uiLanguage.spanish')}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {uiLanguage === "en" ? "English" : "Español (Argentina)"}
+                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : t('settings.general.uiLanguage.spanish')}
                             </div>
                           </div>
                         </div>
@@ -4172,19 +4178,14 @@ function App() {
                                   onClick={async () => {
                                     setUiLanguage(idioma);
                                     setMostrarMenuIdioma(false);
-                                    if (window.electronAPI?.writeConfig) {
-                                      try {
-                                        await window.electronAPI.writeConfig({ uiLanguage: idioma });
-                                        showToast(
-                                          idioma === "en" 
-                                            ? "Language changed to English" 
-                                            : "Idioma cambiado a Español (Argentina)",
-                                          'success'
-                                        );
-                                      } catch (error) {
-                                        showToast('Error al guardar la configuración', 'error');
-                                      }
-                                    }
+                                    await changeLanguage(idioma);
+                                    const languageName = idioma === "en" 
+                                      ? t('settings.general.uiLanguage.english') 
+                                      : t('settings.general.uiLanguage.spanish');
+                                    showToast(
+                                      t('settings.general.uiLanguage.changed', { language: languageName }),
+                                      'success'
+                                    );
                                   }}
                                   className={`w-full px-4 py-3 text-sm text-left rounded-md hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ${
                                     uiLanguage === idioma ? 'bg-primary/10 border border-primary/20' : ''
@@ -4195,12 +4196,12 @@ function App() {
                                   </div>
                                   <div className="flex-1 min-w-0">
                                     <div className="font-semibold">
-                                      {idioma === "en" ? "English" : "Español (Argentina)"}
+                                      {idioma === "en" ? t('settings.general.uiLanguage.english') : t('settings.general.uiLanguage.spanish')}
                                     </div>
                                     {uiLanguage === idioma && (
                                       <div className="text-xs text-primary mt-0.5 flex items-center gap-1">
                                         <Check className="h-3 w-3" />
-                                        Seleccionado
+                                        {t('settings.general.uiLanguage.selected')}
                                       </div>
                                     )}
                                   </div>

@@ -1,0 +1,31 @@
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import enTranslations from '../locales/en.json';
+import esARTranslations from '../locales/es-AR.json';
+
+// Recursos de traducción
+const resources = {
+  en: {
+    translation: enTranslations,
+  },
+  'es-AR': {
+    translation: esARTranslations,
+  },
+};
+
+// Configuración de i18next
+i18n
+  .use(initReactI18next)
+  .init({
+    resources,
+    lng: 'es-AR', // Idioma por defecto
+    fallbackLng: 'es-AR', // Idioma de respaldo
+    interpolation: {
+      escapeValue: false, // React ya escapa los valores
+    },
+    react: {
+      useSuspense: false, // No usar Suspense para evitar problemas con Electron
+    },
+  });
+
+export default i18n;
