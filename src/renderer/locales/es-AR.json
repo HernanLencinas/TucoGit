@@ -575,6 +575,15 @@
         "save": "Guardar"
       }
     },
+    "deleteCollectionModal": {
+      "title": "Eliminar Colección",
+      "description": "Esta acción no se puede deshacer",
+      "warning": "¿Estás seguro de que deseas eliminar esta colección? Todos los repositorios dentro de ella también serán eliminados. Esta acción es permanente y no se puede deshacer.",
+      "buttons": {
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+      }
+    },
     "newRepositoryWizard": {
       "title": {
         "new": "Nuevo Repositorio",

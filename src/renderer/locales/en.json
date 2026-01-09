@@ -575,6 +575,15 @@
         "save": "Save"
       }
     },
+    "deleteCollectionModal": {
+      "title": "Delete Collection",
+      "description": "This action cannot be undone",
+      "warning": "Are you sure you want to delete this collection? All repositories within it will also be deleted. This action is permanent and cannot be undone.",
+      "buttons": {
+        "cancel": "Cancel",
+        "delete": "Delete"
+      }
+    },
     "newRepositoryWizard": {
       "title": {
         "new": "New Repository",
