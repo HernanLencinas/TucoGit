@@ -118,7 +118,7 @@
       "uiLanguage": {
         "title": "Interface Language",
         "description": "Select the language that will be displayed in the user interface",
-        "english": "English",
+        "english": "English (United States)",
         "spanish": "Spanish (Argentina)",
         "selected": "Selected",
         "changed": "Language changed to {{language}}",

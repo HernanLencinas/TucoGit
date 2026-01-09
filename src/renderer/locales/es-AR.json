@@ -118,7 +118,7 @@
       "uiLanguage": {
         "title": "Idioma de Interfaz",
         "description": "Selecciona el idioma que se mostrará en la interfaz de usuario",
-        "english": "English",
+        "english": "English (United States)",
         "spanish": "Español (Argentina)",
         "selected": "Seleccionado",
         "changed": "Idioma cambiado a {{language}}",
