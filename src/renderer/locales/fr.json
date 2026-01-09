@@ -587,564 +587,564 @@
       "notCloned": "Not cloned locally",
       "gettingGitInfo": "Getting Git information...",
       "currentBranch": "Current branch",
-      "uncommittedChanges": "Uncommitted local changes",
-      "pendingPush": "Pending upload (Push)",
-      "pendingPull": "Pending download (Pull)"
+      "uncommittedChanges": "Modifications locales non validées",
+      "pendingPush": "En attente d'envoi (Push)",
+      "pendingPull": "En attente de téléchargement (Pull)"
     },
     "newCollectionModal": {
-      "title": "New Collection",
-      "description": "Organize your repositories in a new custom collection",
+      "title": "Nouvelle collection",
+      "description": "Organisez vos dépôts dans une nouvelle collection personnalisée",
       "name": {
-        "label": "Collection name",
-        "required": "(required)",
-        "placeholder": "E.g: Frontend Projects, Backend APIs, etc.",
+        "label": "Nom de la collection",
+        "required": "(requis)",
+        "placeholder": "Ex: Projets Frontend, APIs Backend, etc.",
         "errors": {
-          "required": "Name is required",
-          "maxLength": "Name cannot exceed 32 characters",
-          "duplicate": "A collection with that name already exists",
-          "createError": "Error creating collection. Please try again."
+          "required": "Le nom est requis",
+          "maxLength": "Le nom ne peut pas dépasser 32 caractères",
+          "duplicate": "Une collection avec ce nom existe déjà",
+          "createError": "Erreur lors de la création de la collection. Veuillez réessayer."
         }
       },
       "descriptionField": {
         "label": "Description",
-        "optional": "(optional)",
-        "placeholder": "Add a description to easily identify this collection...",
+        "optional": "(optionnel)",
+        "placeholder": "Ajoutez une description pour identifier facilement cette collection...",
         "errors": {
-          "maxLength": "Description cannot exceed 100 characters"
+          "maxLength": "La description ne peut pas dépasser 100 caractères"
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "creating": "Creating...",
-        "create": "Create"
+        "cancel": "Annuler",
+        "creating": "Création...",
+        "create": "Créer"
       }
     },
     "editCollectionModal": {
-      "title": "Edit Collection",
-      "description": "Modify collection data",
+      "title": "Modifier la collection",
+      "description": "Modifier les données de la collection",
       "name": {
-        "label": "Collection name",
-        "required": "(required)",
-        "placeholder": "Collection name",
+        "label": "Nom de la collection",
+        "required": "(requis)",
+        "placeholder": "Nom de la collection",
         "errors": {
-          "required": "Name is required",
-          "maxLength": "Name cannot exceed 32 characters",
-          "duplicate": "A collection with that name already exists",
-          "duplicateLocation": "A collection with that name already exists in this location",
-          "saveError": "Error saving collection. Please try again."
+          "required": "Le nom est requis",
+          "maxLength": "Le nom ne peut pas dépasser 32 caractères",
+          "duplicate": "Une collection avec ce nom existe déjà",
+          "duplicateLocation": "Une collection avec ce nom existe déjà à cet emplacement",
+          "saveError": "Erreur lors de l'enregistrement de la collection. Veuillez réessayer."
         }
       },
       "descriptionField": {
         "label": "Description",
-        "optional": "(optional)",
-        "placeholder": "Optional collection description",
+        "optional": "(optionnel)",
+        "placeholder": "Description optionnelle de la collection",
         "errors": {
-          "maxLength": "Description cannot exceed 100 characters"
+          "maxLength": "La description ne peut pas dépasser 100 caractères"
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "saving": "Saving...",
-        "save": "Save"
+        "cancel": "Annuler",
+        "saving": "Enregistrement...",
+        "save": "Enregistrer"
       }
     },
     "deleteCollectionModal": {
-      "title": "Delete Collection",
-      "description": "This action cannot be undone",
-      "warning": "Are you sure you want to delete this collection? All repositories within it will also be deleted. This action is permanent and cannot be undone.",
+      "title": "Supprimer la collection",
+      "description": "Cette action ne peut pas être annulée",
+      "warning": "Êtes-vous sûr de vouloir supprimer cette collection ? Tous les dépôts qu'elle contient seront également supprimés. Cette action est permanente et ne peut pas être annulée.",
       "buttons": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "Annuler",
+        "delete": "Supprimer"
       }
     },
     "deleteRepositoryModal": {
-      "title": "Delete Repository",
-      "description": "This action cannot be undone",
-      "warning": "Are you sure you want to delete the repository \"{{name}}\"? This action is permanent and cannot be undone.",
+      "title": "Supprimer le dépôt",
+      "description": "Cette action ne peut pas être annulée",
+      "warning": "Êtes-vous sûr de vouloir supprimer le dépôt \"{{name}}\" ? Cette action est permanente et ne peut pas être annulée.",
       "buttons": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "Annuler",
+        "delete": "Supprimer"
       }
     },
     "cloneRepositoryModal": {
-      "title": "Repository already exists",
-      "description": "The destination folder already exists and is not empty",
-      "warning": "Warning: All unsaved local changes in that folder will be lost. Do you want to delete the existing folder and clone the repository again?",
+      "title": "Le dépôt existe déjà",
+      "description": "Le dossier de destination existe déjà et n'est pas vide",
+      "warning": "Avertissement : Toutes les modifications locales non enregistrées dans ce dossier seront perdues. Voulez-vous supprimer le dossier existant et cloner le dépôt à nouveau ?",
       "buttons": {
-        "cancel": "Cancel",
-        "clone": "Clone"
+        "cancel": "Annuler",
+        "clone": "Cloner"
       }
     },
     "newRepositoryWizard": {
       "title": {
-        "new": "New Repository",
-        "edit": "Edit Repository"
+        "new": "Nouveau dépôt",
+        "edit": "Modifier le dépôt"
       },
       "description": {
-        "new": "Add a new repository to your collection in a few steps",
-        "edit": "Modify repository data"
+        "new": "Ajoutez un nouveau dépôt à votre collection en quelques étapes",
+        "edit": "Modifier les données du dépôt"
       },
       "steps": {
-        "connection": "Connection",
-        "details": "Details",
+        "connection": "Connexion",
+        "details": "Détails",
         "confirmation": "Confirmation"
       },
       "step1": {
         "connection": {
-          "label": "Select a connection",
-          "required": "(required)",
-          "description": "Choose the Git connection where the repository is located",
-          "placeholder": "Select a connection...",
-          "noConnections": "No connections available"
+          "label": "Sélectionner une connexion",
+          "required": "(requis)",
+          "description": "Choisissez la connexion Git où se trouve le dépôt",
+          "placeholder": "Sélectionner une connexion...",
+          "noConnections": "Aucune connexion disponible"
         },
         "repository": {
-          "label": "Select a repository",
-          "required": "(required)",
-          "description": "Choose the repository you want to add",
-          "placeholder": "Select a repository...",
-          "selectConnectionFirst": "First select a connection",
-          "loading": "Loading repositories...",
-          "searchPlaceholder": "Search repositories...",
-          "noResults": "No repositories found",
-          "noRepositories": "No repositories available"
+          "label": "Sélectionner un dépôt",
+          "required": "(requis)",
+          "description": "Choisissez le dépôt que vous souhaitez ajouter",
+          "placeholder": "Sélectionner un dépôt...",
+          "selectConnectionFirst": "Sélectionnez d'abord une connexion",
+          "loading": "Chargement des dépôts...",
+          "searchPlaceholder": "Rechercher des dépôts...",
+          "noResults": "Aucun dépôt trouvé",
+          "noRepositories": "Aucun dépôt disponible"
         }
       },
       "step2": {
         "name": {
-          "label": "Repository Name",
-          "required": "(required)",
-          "description": "Enter a descriptive name to identify this repository",
-          "placeholder": "E.g: My project"
+          "label": "Nom du dépôt",
+          "required": "(requis)",
+          "description": "Entrez un nom descriptif pour identifier ce dépôt",
+          "placeholder": "Ex: Mon projet"
         },
         "description": {
           "label": "Description",
-          "optional": "(optional)",
-          "description": "Add a description for this repository",
-          "placeholder": "Repository description..."
+          "optional": "(optionnel)",
+          "description": "Ajoutez une description pour ce dépôt",
+          "placeholder": "Description du dépôt..."
         }
       },
       "step3": {
         "title": {
-          "new": "Confirm repository data",
-          "edit": "Confirm repository changes"
+          "new": "Confirmer les données du dépôt",
+          "edit": "Confirmer les modifications du dépôt"
         },
         "description": {
-          "new": "Review the information before saving",
-          "edit": "Review changes before saving"
+          "new": "Vérifiez les informations avant d'enregistrer",
+          "edit": "Vérifiez les modifications avant d'enregistrer"
         },
         "fields": {
-          "connection": "Connection:",
-          "provider": "Provider:",
-          "url": "URL:",
-          "repository": "Repository:",
-          "name": "Name:",
-          "description": "Description:"
+          "connection": "Connexion :",
+          "provider": "Fournisseur :",
+          "url": "URL :",
+          "repository": "Dépôt :",
+          "name": "Nom :",
+          "description": "Description :"
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "previous": "Previous",
-        "next": "Next",
-        "save": "Save"
+        "cancel": "Annuler",
+        "previous": "Précédent",
+        "next": "Suivant",
+        "save": "Enregistrer"
       },
       "errors": {
-        "selectConnection": "Please select a connection",
-        "selectRepository": "Please select a repository",
-        "enterName": "Please enter a name for the repository",
-        "duplicateName": "A repository with that name already exists in this location",
-        "repositoryNotFound": "Repository not found",
-        "loadError": "Error loading repositories: {{message}}",
-        "saveError": "Error saving repository: {{message}}",
-        "saveChangesError": "Error saving changes. The repository was removed from view but may not have been saved to the file."
+        "selectConnection": "Veuillez sélectionner une connexion",
+        "selectRepository": "Veuillez sélectionner un dépôt",
+        "enterName": "Veuillez entrer un nom pour le dépôt",
+        "duplicateName": "Un dépôt avec ce nom existe déjà à cet emplacement",
+        "repositoryNotFound": "Dépôt introuvable",
+        "loadError": "Erreur lors du chargement des dépôts : {{message}}",
+        "saveError": "Erreur lors de l'enregistrement du dépôt : {{message}}",
+        "saveChangesError": "Erreur lors de l'enregistrement des modifications. Le dépôt a été retiré de la vue mais n'a peut-être pas été enregistré dans le fichier."
       }
     },
-    "preparing": "Preparing...",
+    "preparing": "Préparation...",
     "gitStatusPanel": {
       "unstagedChanges": {
-        "title": "Unstaged Changes",
-        "stageAll": "Stage All",
-        "noChanges": "No pending changes",
-        "allFilesSynced": "All files are synchronized",
-        "stageFile": "Stage file",
-        "stageFolder": "Stage folder"
+        "title": "Modifications non indexées",
+        "stageAll": "Tout indexer",
+        "noChanges": "Aucune modification en attente",
+        "allFilesSynced": "Tous les fichiers sont synchronisés",
+        "stageFile": "Indexer le fichier",
+        "stageFolder": "Indexer le dossier"
       },
       "stagedChanges": {
-        "title": "Staged Changes",
-        "unstageAll": "Unstage All",
-        "noChanges": "No staged changes",
-        "stageFilesToCommit": "Stage files to prepare your commit",
-        "unstageFile": "Unstage file",
-        "unstageFolder": "Unstage folder"
+        "title": "Modifications indexées",
+        "unstageAll": "Tout désindexer",
+        "noChanges": "Aucune modification indexée",
+        "stageFilesToCommit": "Indexez les fichiers pour préparer votre commit",
+        "unstageFile": "Désindexer le fichier",
+        "unstageFolder": "Désindexer le dossier"
       },
       "commitMessage": {
-        "title": "Commit Message",
-        "placeholder": "Enter commit message...",
-        "placeholderNoStaged": "Stage files to be able to commit",
+        "title": "Message de commit",
+        "placeholder": "Entrez le message de commit...",
+        "placeholderNoStaged": "Indexez les fichiers pour pouvoir committer",
         "button": {
-          "commit": "Commit",
-          "commitToBranch": "Commit to '{{branch}}'",
-          "commitPush": "Commit + Push",
-          "commitPushToBranch": "Commit + Push to '{{branch}}'",
-          "commitSync": "Commit + Sync",
-          "commitSyncToBranch": "Commit + Sync to '{{branch}}'",
-          "committing": "Committing",
-          "committingToBranch": "Committing to '{{branch}}'...",
-          "committingPushing": "Committing & Pushing",
-          "committingPushingToBranch": "Committing & Pushing to '{{branch}}'...",
-          "committingSyncing": "Committing & Syncing",
-          "committingSyncingToBranch": "Committing & Syncing to '{{branch}}'..."
+          "commit": "Valider",
+          "commitToBranch": "Valider vers '{{branch}}'",
+          "commitPush": "Valider + Envoyer",
+          "commitPushToBranch": "Valider + Envoyer vers '{{branch}}'",
+          "commitSync": "Valider + Synchroniser",
+          "commitSyncToBranch": "Valider + Synchroniser vers '{{branch}}'",
+          "committing": "Validation en cours",
+          "committingToBranch": "Validation vers '{{branch}}'...",
+          "committingPushing": "Validation et envoi",
+          "committingPushingToBranch": "Validation et envoi vers '{{branch}}'...",
+          "committingSyncing": "Validation et synchronisation",
+          "committingSyncingToBranch": "Validation et synchronisation vers '{{branch}}'..."
         },
         "errors": {
-          "pullFailedConflicts": "Commit completed successfully, but pull failed due to conflicts: {{message}}. Resolve conflicts manually.",
-          "pushFailedNeedPull": "Commit completed successfully, but push failed: {{message}}. You may need to pull first.",
-          "pushFailed": "Commit completed successfully, but push failed: {{message}}",
-          "additionalOperationFailed": "Commit completed successfully, but additional operation failed: {{message}}"
+          "pullFailedConflicts": "Commit réussi, mais la récupération a échoué en raison de conflits : {{message}}. Résolvez les conflits manuellement.",
+          "pushFailedNeedPull": "Commit réussi, mais l'envoi a échoué : {{message}}. Vous devrez peut-être récupérer d'abord.",
+          "pushFailed": "Commit réussi, mais l'envoi a échoué : {{message}}",
+          "additionalOperationFailed": "Commit réussi, mais l'opération supplémentaire a échoué : {{message}}"
         }
       }
     },
     "menuItems": {
-      "newBranch": "New Branch",
-      "newTag": "New Tag",
+      "newBranch": "Nouvelle branche",
+      "newTag": "Nouveau tag",
       "actions": "Actions"
     },
     "search": {
-      "placeholder": "Search commits (message, author, hash)...",
-      "clear": "Clear",
+      "placeholder": "Rechercher des commits (message, auteur, hash)...",
+      "clear": "Effacer",
       "commits": "commits"
     },
     "newBranchModal": {
-      "title": "New Branch",
-      "description": "Create a new branch from an existing branch",
+      "title": "Nouvelle branche",
+      "description": "Créer une nouvelle branche à partir d'une branche existante",
       "fields": {
         "branchName": {
-          "label": "New branch name",
-          "required": "(required)",
-          "hint": "The name must follow Git conventions (no spaces, use hyphens or underscores)",
-          "placeholder": "branch-name"
+          "label": "Nom de la nouvelle branche",
+          "required": "(requis)",
+          "hint": "Le nom doit respecter les conventions Git (pas d'espaces, utilisez des tirets ou des underscores)",
+          "placeholder": "nom-branche"
         },
         "createFrom": {
-          "label": "Create from",
-          "hint": "Select the branch from which the new branch will be created. The new branch will contain all commits from the selected branch.",
-          "placeholder": "Select a branch",
-          "current": "(current)",
-          "remotes": "Remotes",
-          "noBranches": "No branches available"
+          "label": "Créer à partir de",
+          "hint": "Sélectionnez la branche à partir de laquelle la nouvelle branche sera créée. La nouvelle branche contiendra tous les commits de la branche sélectionnée.",
+          "placeholder": "Sélectionner une branche",
+          "current": "(actuelle)",
+          "remotes": "Distantes",
+          "noBranches": "Aucune branche disponible"
         }
       },
       "info": {
-        "willCreateFrom": "The new branch {{branchName}} will be created from {{fromBranch}}",
-        "currentBranch": " (your current branch)"
+        "willCreateFrom": "La nouvelle branche {{branchName}} sera créée à partir de {{fromBranch}}",
+        "currentBranch": " (votre branche actuelle)"
       },
       "buttons": {
-        "cancel": "Cancel",
-        "create": "Create",
-        "creating": "Creating..."
+        "cancel": "Annuler",
+        "create": "Créer",
+        "creating": "Création..."
       },
       "errors": {
-        "createError": "Error creating branch"
+        "createError": "Erreur lors de la création de la branche"
       }
     },
     "newTagModal": {
-      "title": "New Tag",
-      "description": "Create a new tag on the selected commit",
+      "title": "Nouveau tag",
+      "description": "Créer un nouveau tag sur le commit sélectionné",
       "fields": {
         "tagName": {
-          "label": "Tag name",
-          "required": "(required)",
-          "hint": "Use semantic conventions like v1.0.0, v2.1.3, etc. Tags help mark important points in the project history.",
+          "label": "Nom du tag",
+          "required": "(requis)",
+          "hint": "Utilisez des conventions sémantiques comme v1.0.0, v2.1.3, etc. Les tags aident à marquer des points importants dans l'historique du projet.",
           "placeholder": "v1.0.0"
         },
         "message": {
           "label": "Message",
-          "optional": "(optional)",
-          "hint": "Provide a detailed description of the tag. This is useful for documenting releases, important changes, or project milestones.",
-          "placeholder": "Tag description..."
+          "optional": "(optionnel)",
+          "hint": "Fournissez une description détaillée du tag. C'est utile pour documenter les versions, les changements importants ou les jalons du projet.",
+          "placeholder": "Description du tag..."
         },
         "pushToRemotes": {
-          "label": "Push to all remotes",
-          "hint": "If enabled, the tag will be automatically sent to all configured remotes of the repository."
+          "label": "Envoyer à tous les dépôts distants",
+          "hint": "Si activé, le tag sera automatiquement envoyé à tous les dépôts distants configurés du dépôt."
         }
       },
       "info": {
-        "willCreateAt": "The tag {{tagName}} will be created at commit {{commitHash}}"
+        "willCreateAt": "Le tag {{tagName}} sera créé au commit {{commitHash}}"
       },
       "buttons": {
-        "cancel": "Cancel",
-        "create": "Create",
-        "creating": "Creating..."
+        "cancel": "Annuler",
+        "create": "Créer",
+        "creating": "Création..."
       },
       "success": {
-        "title": "Tag created successfully",
-        "description": "The tag \"{{tagName}}\" has been created",
-        "descriptionWithPush": "The tag \"{{tagName}}\" has been created and sent to all remotes"
+        "title": "Tag créé avec succès",
+        "description": "Le tag \"{{tagName}}\" a été créé",
+        "descriptionWithPush": "Le tag \"{{tagName}}\" a été créé et envoyé à tous les dépôts distants"
       },
       "errors": {
-        "createError": "Error creating tag",
-        "unknownError": "Unknown error"
+        "createError": "Erreur lors de la création du tag",
+        "unknownError": "Erreur inconnue"
       }
     },
     "stashModal": {
-      "title": "Create Stash",
-      "description": "Temporarily save your changes in Git stash",
+      "title": "Créer un stash",
+      "description": "Enregistrer temporairement vos modifications dans le stash Git",
       "fields": {
         "message": {
           "label": "Message",
-          "optional": "(optional)",
-          "hint": "Provide a descriptive message to identify this stash. If you don't specify a message, a default one will be used.",
-          "placeholder": "Stash message"
+          "optional": "(optionnel)",
+          "hint": "Fournissez un message descriptif pour identifier ce stash. Si vous ne spécifiez pas de message, un message par défaut sera utilisé.",
+          "placeholder": "Message du stash"
         },
         "includeUntracked": {
-          "label": "Include untracked files",
-          "hint": "Also saves new files that are not yet in the repository. Useful when you want to save changes in files that have not been added to the staging area."
+          "label": "Inclure les fichiers non suivis",
+          "hint": "Enregistre également les nouveaux fichiers qui ne sont pas encore dans le dépôt. Utile lorsque vous souhaitez enregistrer des modifications dans des fichiers qui n'ont pas été ajoutés à la zone de staging."
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "create": "Create",
-        "saving": "Saving..."
+        "cancel": "Annuler",
+        "create": "Créer",
+        "saving": "Enregistrement..."
       },
       "success": {
-        "title": "Stash completed",
-        "description": "Changes have been saved to stash",
-        "descriptionWithUntracked": "Changes and untracked files have been saved to stash"
+        "title": "Stash terminé",
+        "description": "Les modifications ont été enregistrées dans le stash",
+        "descriptionWithUntracked": "Les modifications et les fichiers non suivis ont été enregistrés dans le stash"
       },
       "errors": {
-        "title": "Error creating stash",
-        "description": "Could not complete the operation",
-        "unknownError": "An unexpected error occurred"
+        "title": "Erreur lors de la création du stash",
+        "description": "Impossible de terminer l'opération",
+        "unknownError": "Une erreur inattendue s'est produite"
       }
     },
     "stashListModal": {
       "title": "Stashes",
-      "description": "Select a stash to apply (pop) and restore your saved changes",
-      "loading": "Loading stashes...",
+      "description": "Sélectionnez un stash à appliquer (pop) et restaurez vos modifications enregistrées",
+      "loading": "Chargement des stashes...",
       "empty": {
-        "title": "No stashes available",
-        "description": "Stashes allow you to temporarily save changes without committing. Create one from the stash menu."
+        "title": "Aucun stash disponible",
+        "description": "Les stashes vous permettent d'enregistrer temporairement des modifications sans valider. Créez-en un depuis le menu stash."
       },
       "table": {
-        "reference": "Reference",
+        "reference": "Référence",
         "message": "Message",
         "date": "Date",
         "actions": "Actions"
       },
       "buttons": {
-        "close": "Close",
-        "clearAll": "Clear All",
-        "apply": "Apply",
-        "applying": "Applying...",
-        "deleteStash": "Delete stash"
+        "close": "Fermer",
+        "clearAll": "Tout effacer",
+        "apply": "Appliquer",
+        "applying": "Application...",
+        "deleteStash": "Supprimer le stash"
       },
       "deleteConfirm": {
-        "title": "Confirm Deletion",
-        "description": "Are you sure you want to delete this stash?",
-        "warning": "This action cannot be undone. The stash will be permanently deleted.",
-        "cancel": "Cancel",
-        "delete": "Delete",
-        "deleting": "Deleting..."
+        "title": "Confirmer la suppression",
+        "description": "Êtes-vous sûr de vouloir supprimer ce stash ?",
+        "warning": "Cette action ne peut pas être annulée. Le stash sera définitivement supprimé.",
+        "cancel": "Annuler",
+        "delete": "Supprimer",
+        "deleting": "Suppression..."
       },
       "clearAllConfirm": {
-        "title": "Confirm Clear All",
-        "description": "Are you sure you want to delete all stashes?",
-        "warning": "{{count}} {{stash}} will be deleted.",
+        "title": "Confirmer l'effacement de tout",
+        "description": "Êtes-vous sûr de vouloir supprimer tous les stashes ?",
+        "warning": "{{count}} {{stash}} sera supprimé.",
         "stash": "stash",
         "stashes": "stashes",
-        "permanentWarning": "This action cannot be undone. All stashes will be permanently deleted.",
-        "cancel": "Cancel",
-        "deleteAll": "Delete All",
-        "deleting": "Deleting..."
+        "permanentWarning": "Cette action ne peut pas être annulée. Tous les stashes seront définitivement supprimés.",
+        "cancel": "Annuler",
+        "deleteAll": "Tout supprimer",
+        "deleting": "Suppression..."
       },
       "toasts": {
         "selectStash": {
-          "title": "Select a stash",
-          "description": "Please select a stash to apply"
+          "title": "Sélectionner un stash",
+          "description": "Veuillez sélectionner un stash à appliquer"
         },
         "applied": {
-          "title": "Stash applied",
-          "description": "The stash has been applied and deleted successfully"
+          "title": "Stash appliqué",
+          "description": "Le stash a été appliqué et supprimé avec succès"
         },
         "applyError": {
-          "title": "Error applying stash",
-          "description": "Could not apply the stash",
-          "unknownError": "An unexpected error occurred"
+          "title": "Erreur lors de l'application du stash",
+          "description": "Impossible d'appliquer le stash",
+          "unknownError": "Une erreur inattendue s'est produite"
         },
         "deleted": {
-          "title": "Stash deleted",
-          "description": "The stash has been deleted successfully"
+          "title": "Stash supprimé",
+          "description": "Le stash a été supprimé avec succès"
         },
         "deleteError": {
-          "title": "Error deleting stash",
-          "description": "Could not delete the stash",
-          "unknownError": "An unexpected error occurred"
+          "title": "Erreur lors de la suppression du stash",
+          "description": "Impossible de supprimer le stash",
+          "unknownError": "Une erreur inattendue s'est produite"
         },
         "cleared": {
-          "title": "Stashes deleted",
-          "description": "All stashes have been deleted successfully"
+          "title": "Stashes supprimés",
+          "description": "Tous les stashes ont été supprimés avec succès"
         },
         "clearError": {
-          "title": "Error clearing stashes",
-          "description": "Could not delete the stashes",
-          "unknownError": "An unexpected error occurred"
+          "title": "Erreur lors de l'effacement des stashes",
+          "description": "Impossible de supprimer les stashes",
+          "unknownError": "Une erreur inattendue s'est produite"
         }
       }
     },
     "revertModal": {
-      "title": "Revert Commit",
-      "description": "Create a new commit that undoes the changes from this commit",
+      "title": "Annuler le commit",
+      "description": "Créer un nouveau commit qui annule les modifications de ce commit",
       "fields": {
-        "commitToRevert": "Commit to revert"
+        "commitToRevert": "Commit à annuler"
       },
-      "warning": "This will create a new commit that reverts the changes made in the selected commit. The original commit will remain in the history and will not be deleted.",
+      "warning": "Cela créera un nouveau commit qui annule les modifications apportées dans le commit sélectionné. Le commit original restera dans l'historique et ne sera pas supprimé.",
       "buttons": {
-        "cancel": "Cancel",
-        "revert": "Revert",
-        "reverting": "Reverting..."
+        "cancel": "Annuler",
+        "revert": "Annuler",
+        "reverting": "Annulation..."
       },
       "toasts": {
         "success": {
-          "title": "Revert completed",
-          "description": "The commit has been successfully reverted"
+          "title": "Annulation terminée",
+          "description": "Le commit a été annulé avec succès"
         },
         "error": {
-          "title": "Error reverting commit",
-          "description": "Could not complete the operation",
-          "unknownError": "An unexpected error occurred"
+          "title": "Erreur lors de l'annulation du commit",
+          "description": "Impossible de terminer l'opération",
+          "unknownError": "Une erreur inattendue s'est produite"
         }
       }
     },
     "cherryPickModal": {
       "title": "Cherry Pick",
-      "description": "Apply changes from an individual commit to the current branch",
+      "description": "Appliquer les modifications d'un commit individuel à la branche actuelle",
       "fields": {
-        "commitToApply": "Commit to apply",
+        "commitToApply": "Commit à appliquer",
         "commitChanges": {
-          "label": "Commit the changes",
-          "hint": "Automatically create a commit with the cherry-picked changes. If disabled, changes will remain in staging but no commit will be made, allowing you to review and modify them before committing."
+          "label": "Valider les modifications",
+          "hint": "Créer automatiquement un commit avec les modifications cherry-pickées. Si désactivé, les modifications resteront en staging mais aucun commit ne sera créé, vous permettant de les examiner et de les modifier avant de valider."
         },
         "appendOrigin": {
-          "label": "Append origin to commit message",
-          "hint": "Add a reference to the original commit at the end of the commit message (e.g., \"(cherry picked from commit abc1234)\"). This helps track where the changes came from in the git history. Only available when \"Commit the changes\" is enabled."
+          "label": "Ajouter l'origine au message de commit",
+          "hint": "Ajouter une référence au commit original à la fin du message de commit (par exemple, \"(cherry picked from commit abc1234)\"). Cela aide à suivre l'origine des modifications dans l'historique git. Disponible uniquement lorsque \"Valider les modifications\" est activé."
         }
       },
       "buttons": {
-        "cancel": "Cancel",
-        "apply": "Apply",
-        "applying": "Applying..."
+        "cancel": "Annuler",
+        "apply": "Appliquer",
+        "applying": "Application..."
       },
       "toasts": {
         "success": {
-          "title": "Cherry-pick completed",
-          "description": "The commit has been applied and committed successfully",
-          "descriptionNoCommit": "The commit has been applied (no commit)"
+          "title": "Cherry-pick terminé",
+          "description": "Le commit a été appliqué et validé avec succès",
+          "descriptionNoCommit": "Le commit a été appliqué (pas de commit)"
         },
         "conflicts": {
-          "title": "Cherry-pick with conflicts",
-          "description": "There are conflicts that need to be resolved. Use the notification bar to resolve or abort the operation."
+          "title": "Cherry-pick avec conflits",
+          "description": "Il y a des conflits qui doivent être résolus. Utilisez la barre de notification pour résoudre ou abandonner l'opération."
         },
         "error": {
-          "title": "Error performing cherry-pick",
-          "description": "Could not complete the operation",
-          "unknownError": "An unexpected error occurred"
+          "title": "Erreur lors de l'exécution du cherry-pick",
+          "description": "Impossible de terminer l'opération",
+          "unknownError": "Une erreur inattendue s'est produite"
         }
       }
     },
     "commitDetails": {
       "tabs": {
-        "detail": "Commit Detail",
-        "modified": "Modified Files",
-        "tree": "Commit Tree"
+        "detail": "Détail du commit",
+        "modified": "Fichiers modifiés",
+        "tree": "Arborescence du commit"
       },
       "detail": {
         "sections": {
           "description": "Description",
-          "author": "Author",
+          "author": "Auteur",
           "date": "Date",
-          "committer": "Committer",
-          "commitDate": "Commit Date",
-          "commitHash": "Commit Hash",
-          "parentCommit": "Parent Commit",
-          "parentCommits": "Parent Commits",
-          "statistics": "Statistics"
+          "committer": "Auteur de la validation",
+          "commitDate": "Date du commit",
+          "commitHash": "Hash du commit",
+          "parentCommit": "Commit parent",
+          "parentCommits": "Commits parents",
+          "statistics": "Statistiques"
         },
         "stats": {
-          "files": "Files",
+          "files": "Fichiers",
           "insertions": "Insertions",
-          "deletions": "Deletions"
+          "deletions": "Suppressions"
         },
         "copy": {
-          "copyHash": "Copy full hash",
-          "copyParentHash": "Copy parent hash"
+          "copyHash": "Copier le hash complet",
+          "copyParentHash": "Copier le hash parent"
         },
         "timeAgo": {
-          "years": "{{count}} year ago",
-          "yearsPlural": "{{count}} years ago",
-          "months": "{{count}} month ago",
-          "monthsPlural": "{{count}} months ago",
-          "weeks": "{{count}} week ago",
-          "weeksPlural": "{{count}} weeks ago",
-          "days": "{{count}} day ago",
-          "daysPlural": "{{count}} days ago",
-          "hours": "{{count}} hour ago",
-          "hoursPlural": "{{count}} hours ago",
-          "minutes": "{{count}} minute ago",
-          "minutesPlural": "{{count}} minutes ago",
-          "seconds": "A few seconds ago"
+          "years": "il y a {{count}} an",
+          "yearsPlural": "il y a {{count}} ans",
+          "months": "il y a {{count}} mois",
+          "monthsPlural": "il y a {{count}} mois",
+          "weeks": "il y a {{count}} semaine",
+          "weeksPlural": "il y a {{count}} semaines",
+          "days": "il y a {{count}} jour",
+          "daysPlural": "il y a {{count}} jours",
+          "hours": "il y a {{count}} heure",
+          "hoursPlural": "il y a {{count}} heures",
+          "minutes": "il y a {{count}} minute",
+          "minutesPlural": "il y a {{count}} minutes",
+          "seconds": "Il y a quelques secondes"
         }
       },
       "modified": {
-        "loading": "Loading...",
-        "detail": "Detail",
-        "selectFile": "Select a file to view changes"
+        "loading": "Chargement...",
+        "detail": "Détail",
+        "selectFile": "Sélectionnez un fichier pour voir les modifications"
       },
       "tree": {
-        "loading": "Loading tree...",
-        "noFiles": "No files",
-        "content": "Content",
-        "noFileSelected": "No file selected",
-        "selectFileMessage": "Click on a file in the tree to view its content",
+        "loading": "Chargement de l'arborescence...",
+        "noFiles": "Aucun fichier",
+        "content": "Contenu",
+        "noFileSelected": "Aucun fichier sélectionné",
+        "selectFileMessage": "Cliquez sur un fichier dans l'arborescence pour voir son contenu",
         "errors": {
-          "loadTree": "Error loading tree",
-          "loadFile": "Error loading file"
+          "loadTree": "Erreur lors du chargement de l'arborescence",
+          "loadFile": "Erreur lors du chargement du fichier"
         }
       }
     },
     "branchesDropdown": {
       "sections": {
-        "selectedCommit": "Selected Commit",
-        "local": "Local Branches",
-        "remote": "Remote Branches"
+        "selectedCommit": "Commit sélectionné",
+        "local": "Branches locales",
+        "remote": "Branches distantes"
       },
       "actions": {
         "checkoutHash": "Checkout Hash... {{hash}}",
-        "defaultBranch": "Branch"
+        "defaultBranch": "Branche"
       },
-      "empty": "No branches available",
+      "empty": "Aucune branche disponible",
       "toasts": {
         "checkoutSuccess": {
-          "title": "Checkout completed",
-          "description": "Switched to commit {{hash}}"
+          "title": "Checkout terminé",
+          "description": "Passage au commit {{hash}}"
         },
         "checkoutError": {
-          "title": "Checkout error",
-          "description": "An unexpected error occurred"
+          "title": "Erreur de checkout",
+          "description": "Une erreur inattendue s'est produite"
         },
         "resolveConflictError": {
-          "title": "Error resolving conflict",
-          "description": "An unexpected error occurred"
+          "title": "Erreur lors de la résolution du conflit",
+          "description": "Une erreur inattendue s'est produite"
         }
       },
-      "commitMessage": "Save files before switching to {{branch}}"
+      "commitMessage": "Enregistrez les fichiers avant de passer à {{branch}}"
     },
     "tooltips": {
-      "private": "Private",
-      "minimize": "Minimize",
-      "new": "New",
+      "private": "Privé",
+      "minimize": "Minimiser",
+      "new": "Nouveau",
       "stash": "Stash",
-      "moreStashOptions": "More stash options",
-      "refresh": "Refresh",
-      "close": "Close",
-      "middleClickToClose": "Middle click to close",
-      "uncommittedChanges": "uncommitted changes"
+      "moreStashOptions": "Plus d'options de stash",
+      "refresh": "Actualiser",
+      "close": "Fermer",
+      "middleClickToClose": "Clic du milieu pour fermer",
+      "uncommittedChanges": "modifications non validées"
     }
   }
 }
