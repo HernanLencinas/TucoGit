@@ -16,7 +16,7 @@ import i18n from '../i18n/config';
  * @returns {Object} returns.i18n - Instancia de i18n
  */
 export const useI18n = () => {
-  const { t, i18n: i18nInstance } = useTranslation();
+  const { t, i18n: i18nInstance } = useTranslation('translation');
   
   // Sincronizar el idioma actual con i18next cuando cambia
   useEffect(() => {

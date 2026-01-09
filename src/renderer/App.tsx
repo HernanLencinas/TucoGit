@@ -423,9 +423,6 @@ function App() {
     setMostrarModalClonarTodos(false);
     setForzarReclonado(false);
 
-    // Mostrar toast inicial
-    showToast(`Iniciando clonación de ${repositorios.length} ${repositorios.length === 1 ? 'repositorio' : 'repositorios'}...`, 'info');
-
     let exitosos = 0;
     let fallidos = 0;
     let omitidos = 0;
@@ -4518,11 +4515,11 @@ function App() {
               </Card>
 
               {/* Restablecer configuración */}
-              <Card className="border-2 border-destructive">
+              <Card className="border-2 border-red-600">
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-destructive/10">
-                      <Sliders className="h-5 w-5 text-destructive" />
+                    <div className="p-2 rounded-lg bg-red-600/10">
+                      <Sliders className="h-5 w-5 text-red-600" />
                     </div>
                     <div>
                       <CardTitle className="text-base">{t('settings.data.reset.title')}</CardTitle>
@@ -4533,8 +4530,8 @@ function App() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-destructive/5 border border-destructive/10">
-                    <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-red-600/5 border border-red-600/20">
+                    <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
                     <div className="flex-1">
                       <p className="text-sm font-medium text-foreground mb-1">{t('settings.data.reset.warning')}</p>
                       <p className="text-xs text-muted-foreground">

@@ -1211,7 +1211,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                         <div className="p-5">
                             {/* Mensaje del Commit y Hashes en 2 columnas */}
                             <div className="mb-5 pb-4">
-                                <div className="grid grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
                                     {/* Columna Izquierda: Descripción del Commit, Autor y Fecha */}
                                     <div className="space-y-4">
                                         <div className="pb-4 border-b border-slate-200 dark:border-slate-700">

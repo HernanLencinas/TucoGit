@@ -620,7 +620,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                     <div className="mb-3">
                         <textarea
                             className="w-full h-24 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md p-3 text-xs outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all resize-none text-slate-700 dark:text-slate-200 placeholder:text-slate-400 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-100 dark:disabled:bg-slate-800/50"
-                            placeholder={stagedFiles.length === 0 ? t('repositories.gitStatusPanel.commitMessage.placeholderNoStaged') : t('repositories.gitStatusPanel.commitMessage.placeholder')}
+                            placeholder={t('repositories.gitStatusPanel.commitMessage.placeholder')}
                             value={commitMessage}
                             onChange={(e) => setCommitMessage(e.target.value)}
                             maxLength={300}

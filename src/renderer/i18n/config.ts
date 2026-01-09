@@ -40,6 +40,8 @@ i18n
     resources,
     lng: 'es-AR', // Idioma por defecto
     fallbackLng: 'es-AR', // Idioma de respaldo
+    defaultNS: 'translation', // Namespace por defecto
+    ns: ['translation'], // Namespaces disponibles
     interpolation: {
       escapeValue: false, // React ya escapa los valores
     },
