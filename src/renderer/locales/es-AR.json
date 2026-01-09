@@ -120,6 +120,8 @@
         "description": "Selecciona el idioma que se mostrará en la interfaz de usuario",
         "english": "English (United States)",
         "spanish": "Español (Argentina)",
+        "german": "Deutsch",
+        "french": "Français",
         "selected": "Seleccionado",
         "changed": "Idioma cambiado a {{language}}",
         "error": "Error al guardar la configuración"

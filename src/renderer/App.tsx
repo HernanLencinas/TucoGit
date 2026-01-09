@@ -140,7 +140,7 @@ function App() {
   const [gitUserEmail, setGitUserEmail] = useState<string>("");
   const [commitButtonBehavior, setCommitButtonBehavior] = useState<"commit" | "commit-push" | "commit-sync">("commit");
   const [mostrarMenuCommitBehavior, setMostrarMenuCommitBehavior] = useState(false);
-  const [uiLanguage, setUiLanguage] = useState<"en" | "es-AR">("es-AR");
+  const [uiLanguage, setUiLanguage] = useState<"en" | "es-AR" | "de" | "fr">("es-AR");
   const [mostrarMenuIdioma, setMostrarMenuIdioma] = useState(false);
   const [mostrarModalRestablecerConfig, setMostrarModalRestablecerConfig] = useState(false);
   const [mostrarModalConfirmarReclon, setMostrarModalConfirmarReclon] = useState(false);
@@ -4164,10 +4164,10 @@ function App() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="font-semibold text-foreground truncate">
-                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : t('settings.general.uiLanguage.spanish')}
+                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : t('settings.general.uiLanguage.french')}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : t('settings.general.uiLanguage.spanish')}
+                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : t('settings.general.uiLanguage.french')}
                             </div>
                           </div>
                         </div>
@@ -4181,7 +4181,7 @@ function App() {
                           />
                           <div className="absolute z-20 w-full mt-2 rounded-lg border-2 bg-popover shadow-lg max-h-72 overflow-auto">
                             <div className="p-1">
-                              {(["en", "es-AR"] as const).map((idioma) => (
+                              {(["en", "es-AR", "de", "fr"] as const).map((idioma) => (
                                 <button
                                   key={idioma}
                                   onClick={async () => {
@@ -4198,7 +4198,7 @@ function App() {
                                   </div>
                                   <div className="flex-1 min-w-0">
                                     <div className="font-semibold">
-                                      {idioma === "en" ? t('settings.general.uiLanguage.english') : t('settings.general.uiLanguage.spanish')}
+                                      {idioma === "en" ? t('settings.general.uiLanguage.english') : idioma === "es-AR" ? t('settings.general.uiLanguage.spanish') : idioma === "de" ? t('settings.general.uiLanguage.german') : t('settings.general.uiLanguage.french')}
                                     </div>
                                     {uiLanguage === idioma && (
                                       <div className="text-xs text-primary mt-0.5 flex items-center gap-1">
