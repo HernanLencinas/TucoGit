@@ -1045,6 +1045,33 @@
           "loadFile": "Error loading file"
         }
       }
+    },
+    "branchesDropdown": {
+      "sections": {
+        "selectedCommit": "Selected Commit",
+        "local": "Local Branches",
+        "remote": "Remote Branches"
+      },
+      "actions": {
+        "checkoutHash": "Checkout Hash... {{hash}}",
+        "defaultBranch": "Branch"
+      },
+      "empty": "No branches available",
+      "toasts": {
+        "checkoutSuccess": {
+          "title": "Checkout completed",
+          "description": "Switched to commit {{hash}}"
+        },
+        "checkoutError": {
+          "title": "Checkout error",
+          "description": "An unexpected error occurred"
+        },
+        "resolveConflictError": {
+          "title": "Error resolving conflict",
+          "description": "An unexpected error occurred"
+        }
+      },
+      "commitMessage": "Save files before switching to {{branch}}"
     }
   }
 }

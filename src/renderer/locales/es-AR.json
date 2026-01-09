@@ -1045,6 +1045,33 @@
           "loadFile": "Error al cargar el archivo"
         }
       }
+    },
+    "branchesDropdown": {
+      "sections": {
+        "selectedCommit": "Commit seleccionado",
+        "local": "Branches Locales",
+        "remote": "Branches Remotos"
+      },
+      "actions": {
+        "checkoutHash": "Checkout Hash... {{hash}}",
+        "defaultBranch": "Branch"
+      },
+      "empty": "No hay branches disponibles",
+      "toasts": {
+        "checkoutSuccess": {
+          "title": "Checkout completado",
+          "description": "Cambiaste al commit {{hash}}"
+        },
+        "checkoutError": {
+          "title": "Error al hacer checkout",
+          "description": "Ocurrió un error inesperado"
+        },
+        "resolveConflictError": {
+          "title": "Error al resolver conflicto",
+          "description": "Ocurrió un error inesperado"
+        }
+      },
+      "commitMessage": "Guardar archivos antes de cambiar a {{branch}}"
     }
   }
 }

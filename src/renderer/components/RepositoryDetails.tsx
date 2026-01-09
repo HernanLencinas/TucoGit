@@ -984,7 +984,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             setShowCheckoutConflictModal(true);
                         } else {
                             toast({
-                                title: "Error al hacer checkout",
+                                title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
                                 description: errorMessage,
                                 variant: "destructive",
                             });
@@ -993,8 +993,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 } catch (err: any) {
                     // Error al hacer checkout
                     toast({
-                        title: "Error al hacer checkout",
-                        description: err?.message || "Ocurrió un error inesperado",
+                        title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
+                        description: err?.message || t('repositories.branchesDropdown.toasts.checkoutError.description'),
                         variant: "destructive",
                     });
                 }
@@ -1019,7 +1019,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         setShowCheckoutConflictModal(true);
                     } else {
                         toast({
-                            title: "Error al hacer checkout",
+                            title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
                             description: errorMessage,
                             variant: "destructive",
                         });
@@ -1028,8 +1028,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             } catch (err: any) {
                 // Error al hacer checkout
                 toast({
-                    title: "Error al hacer checkout",
-                    description: err?.message || "Ocurrió un error inesperado",
+                    title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
+                    description: err?.message || t('repositories.branchesDropdown.toasts.checkoutError.description'),
                     variant: "destructive",
                 });
             }
@@ -1048,7 +1048,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     await (window as any).electronAPI.gitStage?.(pendingCheckoutRepoPath, file);
                 }
                 // Hacer commit de los archivos
-                const commitMessage = `Guardar archivos antes de cambiar a ${pendingCheckoutBranch}`;
+                const commitMessage = t('repositories.branchesDropdown.commitMessage', { branch: pendingCheckoutBranch });
                 const commitResult = await (window as any).electronAPI.gitCommit?.(pendingCheckoutRepoPath, commitMessage);
                 if (!commitResult?.success) {
                     throw new Error(commitResult?.error || 'Error al hacer commit');
@@ -1098,8 +1098,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         } catch (err: any) {
             // Error al resolver conflicto
             toast({
-                title: "Error al resolver conflicto",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.branchesDropdown.toasts.resolveConflictError.title'),
+                description: err?.message || t('repositories.branchesDropdown.toasts.resolveConflictError.description'),
                 variant: "destructive",
             });
         } finally {
@@ -1293,7 +1293,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 >
                                     <GitBranch className="h-3.5 w-3.5" />
                                     <span className="max-w-[100px] truncate">
-                                        {branches.current || (branches.headHash ? branches.headHash.substring(0, 7) : 'Branch')}
+                                        {branches.current || (branches.headHash ? branches.headHash.substring(0, 7) : t('repositories.branchesDropdown.actions.defaultBranch'))}
                                     </span>
                                     <ChevronDown className="h-3 w-3" />
                                 </Button>
@@ -1302,7 +1302,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {/* Commit Seleccionado */}
                                     {selectedCommit && (
                                         <div className="p-2 border-b border-slate-200 dark:border-slate-700">
-                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">Commit seleccionado</div>
+                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.selectedCommit')}</div>
                                             <button
                                                 onClick={async () => {
                                                     const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
@@ -1312,11 +1312,6 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                             loadBranches();
                                                             loadCommits(true);
                                                             setBranchesOpen(false);
-                                                            toast({
-                                                                title: "Checkout completado",
-                                                                description: `Cambiaste al commit ${selectedCommit.hash.substring(0, 7)}`,
-                                                                variant: "success",
-                                                            });
                                                         } else {
                                                             const errorMessage = result?.error || '';
                                                             if (errorMessage.includes('untracked working tree files would be overwritten') ||
@@ -1329,7 +1324,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                                 setShowCheckoutConflictModal(true);
                                                             } else {
                                                                 toast({
-                                                                    title: "Error al hacer checkout",
+                                                                    title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
                                                                     description: errorMessage,
                                                                     variant: "destructive",
                                                                 });
@@ -1338,8 +1333,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                     } catch (err: any) {
                                                         // Error al hacer checkout
                                                         toast({
-                                                            title: "Error al hacer checkout",
-                                                            description: err?.message || "Ocurrió un error inesperado",
+                                                            title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
+                                                            description: err?.message || t('repositories.branchesDropdown.toasts.checkoutError.description'),
                                                             variant: "destructive",
                                                         });
                                                     }
@@ -1350,7 +1345,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                 )}
                                             >
                                                 <GitBranch className="h-3 w-3" />
-                                                <span className="truncate">Checkout Hash... {selectedCommit.hash.substring(0, 7)}</span>
+                                                <span className="truncate">{t('repositories.branchesDropdown.actions.checkoutHash', { hash: selectedCommit.hash.substring(0, 7) })}</span>
                                                 {branches.headHash === selectedCommit.hash && (
                                                     <span className="ml-auto text-[10px] text-cyan-600 dark:text-cyan-400">●</span>
                                                 )}
@@ -1360,7 +1355,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {/* Branches Locales */}
                                     {branches.local.length > 0 && (
                                         <div className="p-2">
-                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">Locales</div>
+                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.local')}</div>
                                             {branches.local.map((branch) => (
                                                 <button
                                                     key={branch}
@@ -1382,7 +1377,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {/* Branches Remotos */}
                                     {branches.remote.length > 0 && (
                                         <div className="p-2 border-t border-slate-200 dark:border-slate-700">
-                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">Remotos</div>
+                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.remote')}</div>
                                             {branches.remote.map((branch) => (
                                                 <button
                                                     key={branch}
@@ -1397,7 +1392,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     )}
                                     {branches.local.length === 0 && branches.remote.length === 0 && !selectedCommit && (
                                         <div className="p-4 text-center text-xs text-slate-500 dark:text-slate-400">
-                                            No hay branches disponibles
+                                            {t('repositories.branchesDropdown.empty')}
                                         </div>
                                     )}
                                 </div>
