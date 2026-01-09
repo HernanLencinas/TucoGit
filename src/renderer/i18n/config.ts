@@ -5,6 +5,7 @@ import esARTranslations from '../locales/es-AR.json';
 import deTranslations from '../locales/de.json';
 import frTranslations from '../locales/fr.json';
 import ptTranslations from '../locales/pt.json';
+import jaTranslations from '../locales/ja.json';
 
 // Recursos de traducción
 const resources = {
@@ -22,6 +23,9 @@ const resources = {
   },
   pt: {
     translation: ptTranslations,
+  },
+  ja: {
+    translation: jaTranslations,
   },
 };
 

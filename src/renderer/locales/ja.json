@@ -1,545 +1,545 @@
 {
   "common": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "close": "Close",
-    "confirm": "Confirm",
-    "search": "Search",
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "warning": "Warning",
-    "info": "Info",
-    "selected": "Selected",
-    "noAvailable": "Not available",
-    "loadingText": "Loading...",
-    "default": "Default",
-    "actions": "Actions",
-    "fullName": "Full Name",
-    "email": "Email",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる",
+    "confirm": "確認",
+    "search": "検索",
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "warning": "警告",
+    "info": "情報",
+    "selected": "選択済み",
+    "noAvailable": "利用不可",
+    "loadingText": "読み込み中...",
+    "default": "デフォルト",
+    "actions": "アクション",
+    "fullName": "フルネーム",
+    "email": "メール",
     "tabs": {
-      "home": "Home",
-      "repositories": "Repositories",
-      "connections": "Connections",
-      "settings": "Settings"
+      "home": "ホーム",
+      "repositories": "リポジトリ",
+      "connections": "接続",
+      "settings": "設定"
     },
     "theme": {
-      "switchToLight": "Switch to light mode",
-      "switchToDark": "Switch to dark mode"
+      "switchToLight": "ライトモードに切り替え",
+      "switchToDark": "ダークモードに切り替え"
     },
     "loadingScreen": {
       "messages": [
-        "Loading Tuco...",
-        "Preparing the environment...",
-        "Initializing repositories...",
-        "Configuring connections...",
-        "Loading configuration...",
-        "Getting everything ready for you...",
-        "Just a moment, almost there...",
-        "Organizing your repositories...",
-        "Loading data...",
-        "Preparing the interface...",
-        "Initializing components...",
-        "Almost done...",
-        "Configuring Git...",
-        "Loading preferences...",
-        "Preparing the experience...",
-        "Searching for lost commits...",
-        "Syncing with the Git universe...",
-        "Loading code magic...",
-        "Preparing your workspace...",
-        "Almost ready, don't go away...",
-        "Organizing the repo library...",
-        "Loading Git superpowers...",
-        "Setting the stage...",
-        "Final touches...",
-        "Loading the best experience...",
-        "Getting everything ready for you to shine...",
-        "Almost there, hang on a bit more...",
-        "Loading your next big idea...",
-        "Preparing the perfect environment...",
-        "Final magical touches...",
-        "Waking up the repositories...",
-        "Loading the power of Git...",
-        "Preparing your code arsenal...",
-        "Syncing with the stars...",
-        "Loading commit wisdom...",
-        "Preparing the epic journey...",
-        "Loading developer energy...",
-        "Organizing creative chaos...",
-        "Preparing the code revolution...",
-        "Loading infinite inspiration...",
-        "Tuning to Git frequency...",
-        "Preparing your moment of glory...",
-        "Loading the innovation engine...",
-        "Unlocking code superpowers...",
-        "Setting the stage for success...",
-        "Loading the secret formula...",
-        "Syncing neurons with Git...",
-        "Preparing the digital transformation...",
-        "Loading the perfect code elixir...",
-        "Activating ninja developer mode...",
-        "Preparing the Git time machine...",
-        "Loading the infinite library...",
-        "Tuning to the code matrix...",
-        "Preparing your ascent to the next level...",
-        "Loading the essence of development...",
-        "Waking up sleeping repositories..."
+        "Tucoを読み込み中...",
+        "環境を準備中...",
+        "リポジトリを初期化中...",
+        "接続を設定中...",
+        "設定を読み込み中...",
+        "すべての準備を整えています...",
+        "もう少しだけお待ちください...",
+        "リポジトリを整理中...",
+        "データを読み込み中...",
+        "インターフェースを準備中...",
+        "コンポーネントを初期化中...",
+        "ほぼ完了しました...",
+        "Gitを設定中...",
+        "設定を読み込み中...",
+        "体験を準備中...",
+        "失われたコミットを検索中...",
+        "Gitの世界と同期中...",
+        "コードの魔法を読み込み中...",
+        "ワークスペースを準備中...",
+        "ほぼ準備完了、そのままお待ちください...",
+        "リポジトリライブラリを整理中...",
+        "Gitの超能力を読み込み中...",
+        "ステージを設定中...",
+        "最終調整中...",
+        "最高の体験を読み込み中...",
+        "輝くための準備を整えています...",
+        "もう少しだけ、もう少し...",
+        "次の大きなアイデアを読み込み中...",
+        "完璧な環境を準備中...",
+        "最後の魔法の仕上げ中...",
+        "リポジトリを目覚めさせています...",
+        "Gitの力を読み込み中...",
+        "コードの武器庫を準備中...",
+        "星々と同期中...",
+        "コミットの知恵を読み込み中...",
+        "壮大な旅を準備中...",
+        "開発者のエネルギーを読み込み中...",
+        "創造的な混沌を整理中...",
+        "コード革命を準備中...",
+        "無限のインスピレーションを読み込み中...",
+        "Gitの周波数に調整中...",
+        "栄光の瞬間を準備中...",
+        "イノベーションエンジンを読み込み中...",
+        "コードの超能力を解除中...",
+        "成功のためのステージを設定中...",
+        "秘密の公式を読み込み中...",
+        "ニューロンをGitと同期中...",
+        "デジタル変革を準備中...",
+        "完璧なコードのエリクサーを読み込み中...",
+        "ニンジャ開発者モードを起動中...",
+        "Gitタイムマシンを準備中...",
+        "無限のライブラリを読み込み中...",
+        "コードマトリックスに調整中...",
+        "次のレベルへの上昇を準備中...",
+        "開発の本質を読み込み中...",
+        "眠っているリポジトリを目覚めさせています..."
       ]
     }
   },
   "settings": {
-    "title": "Settings",
+    "title": "設定",
     "tabs": {
-      "general": "General",
-      "data": "Data",
+      "general": "一般",
+      "data": "データ",
       "git": "Git",
-      "appearance": "Appearance",
-      "updates": "Updates",
-      "about": "About"
+      "appearance": "外観",
+      "updates": "更新",
+      "about": "について"
     },
     "general": {
-      "title": "General Settings",
-      "description": "Customize general application options",
+      "title": "一般設定",
+      "description": "アプリケーションの一般的なオプションをカスタマイズ",
       "preferredIDE": {
-        "title": "Preferred IDE Editor",
-        "description": "Select the editor that will be used to open repositories from cards",
-        "selected": "Selected",
-        "noEditorSelected": "No editor selected",
-        "selectEditor": "Select an IDE editor...",
-        "info": "Repositories will automatically open with {{ide}} when you click the open button.",
-        "noEditorsAvailable": "No editors available",
-        "installEditor": "Install an IDE editor to see it here",
-        "editorChanged": "IDE editor changed to {{ide}}",
-        "errorSaving": "Error saving configuration"
+        "title": "優先IDEエディタ",
+        "description": "カードからリポジトリを開くために使用されるエディタを選択",
+        "selected": "選択済み",
+        "noEditorSelected": "エディタが選択されていません",
+        "selectEditor": "IDEエディタを選択...",
+        "info": "開くボタンをクリックすると、リポジトリは自動的に{{ide}}で開かれます。",
+        "noEditorsAvailable": "利用可能なエディタがありません",
+        "installEditor": "IDEエディタをインストールすると、ここに表示されます",
+        "editorChanged": "IDEエディタを{{ide}}に変更しました",
+        "errorSaving": "設定の保存中にエラーが発生しました"
       },
       "uiLanguage": {
-        "title": "Interface Language",
-        "description": "Select the language that will be displayed in the user interface",
-        "english": "English (United States)",
-        "spanish": "Spanish (Argentina)",
-        "german": "German",
-        "french": "French",
-        "portuguese": "Portuguese",
-        "japanese": "Japanese",
-        "selected": "Selected",
-        "changed": "Language changed to {{language}}",
-        "error": "Error saving configuration"
+        "title": "インターフェース言語",
+        "description": "ユーザーインターフェースに表示される言語を選択してください",
+        "english": "英語（アメリカ合衆国）",
+        "spanish": "スペイン語（アルゼンチン）",
+        "german": "ドイツ語",
+        "french": "フランス語",
+        "portuguese": "ポルトガル語",
+        "japanese": "日本語",
+        "selected": "選択済み",
+        "changed": "言語を{{language}}に変更しました",
+        "error": "設定の保存中にエラーが発生しました"
       }
     },
     "data": {
-      "title": "Data Management",
-      "description": "Manage the location and backup of your configuration",
+      "title": "データ管理",
+      "description": "設定の場所とバックアップを管理",
       "configLocation": {
-        "title": "Configuration Location",
-        "description": "Select the folder where the configuration file will be saved",
-        "selectFolder": "Select Folder"
+        "title": "設定の場所",
+        "description": "設定ファイルが保存されるフォルダを選択",
+        "selectFolder": "フォルダを選択"
       },
       "fileInfo": {
-        "title": "File Information",
-        "description": "Details about the configuration file and last modification",
-        "configFile": "Configuration File",
-        "lastUpdate": "Last Update"
+        "title": "ファイル情報",
+        "description": "設定ファイルと最後の変更に関する詳細",
+        "configFile": "設定ファイル",
+        "lastUpdate": "最終更新"
       },
       "management": {
-        "title": "Configuration Management",
-        "description": "Import or export your configuration file to backup or restore your settings",
-        "import": "Import",
-        "export": "Export",
-        "exportSuccess": "Configuration exported successfully",
-        "exportError": "Error exporting: {{error}}",
-        "noConfigToExport": "No configuration to export",
-        "functionalityNotAvailable": "Functionality not available",
-        "importSuccess": "Configuration imported successfully. Reloading data...",
-        "dataReloaded": "Data reloaded successfully",
-        "importError": "Error importing: {{error}}",
-        "importNotAvailable": "Import functionality not available",
-        "invalidJson": "The selected file is not a valid JSON",
-        "importConfigError": "Error importing configuration: {{error}}"
+        "title": "設定管理",
+        "description": "設定ファイルをインポートまたはエクスポートして、設定をバックアップまたは復元",
+        "import": "インポート",
+        "export": "エクスポート",
+        "exportSuccess": "設定のエクスポートに成功しました",
+        "exportError": "エクスポートエラー: {{error}}",
+        "noConfigToExport": "エクスポートする設定がありません",
+        "functionalityNotAvailable": "機能が利用できません",
+        "importSuccess": "設定のインポートに成功しました。データを再読み込み中...",
+        "dataReloaded": "データの再読み込みに成功しました",
+        "importError": "インポートエラー: {{error}}",
+        "importNotAvailable": "インポート機能が利用できません",
+        "invalidJson": "選択したファイルは有効なJSONではありません",
+        "importConfigError": "設定のインポートエラー: {{error}}"
       },
       "reset": {
-        "title": "Reset Configuration",
-        "description": "Deletes all configuration and restores default values. This action cannot be undone.",
-        "warning": "Warning",
-        "warningMessage": "This action will delete all your configurations, connections and saved preferences.",
-        "restoreConfig": "Restore Configuration"
+        "title": "設定をリセット",
+        "description": "すべての設定を削除し、デフォルト値を復元します。この操作は元に戻せません。",
+        "warning": "警告",
+        "warningMessage": "この操作により、すべての設定、接続、保存された設定が削除されます。",
+        "restoreConfig": "設定を復元"
       }
     },
     "git": {
-      "title": "Git Configuration",
-      "description": "Configure your identity and security preferences for Git",
+      "title": "Git設定",
+      "description": "Gitのアイデンティティとセキュリティ設定を構成",
       "identities": {
-        "title": "Identities",
-        "description": "Manage multiple user identities to use in different repositories",
-        "newIdentity": "New Identity",
-        "noIdentities": "No identities configured",
-        "addIdentity": "Add an identity to get started"
+        "title": "アイデンティティ",
+        "description": "異なるリポジトリで使用する複数のユーザーアイデンティティを管理",
+        "newIdentity": "新しいアイデンティティ",
+        "noIdentities": "アイデンティティが設定されていません",
+        "addIdentity": "アイデンティティを追加して開始"
       },
       "commitBehavior": {
-        "title": "Commit Button Behavior",
-        "description": "Select what action the commit button will perform in the Git status panel",
-        "buttonAction": "Button action",
-        "commit": "Commit",
-        "commitPush": "Commit + Push",
-        "commitSync": "Commit + Sync",
-        "commitDescription": "Only commits files in stage. Does not sync with remote repository.",
-        "commitPushDescription": "Commits and then sends changes to remote repository. Does not download changes from remote.",
-        "commitSyncDescription": "Commits, downloads changes from remote (fetch + pull) and then sends local changes (push). Fully syncs with remote repository."
+        "title": "コミットボタンの動作",
+        "description": "Gitステータスパネルでコミットボタンが実行するアクションを選択",
+        "buttonAction": "ボタンのアクション",
+        "commit": "コミット",
+        "commitPush": "コミット + プッシュ",
+        "commitSync": "コミット + 同期",
+        "commitDescription": "ステージングされたファイルのみをコミットします。リモートリポジトリとは同期しません。",
+        "commitPushDescription": "コミットしてから、変更をリモートリポジトリに送信します。リモートからの変更はダウンロードしません。",
+        "commitSyncDescription": "コミットし、リモートから変更をダウンロード（fetch + pull）してから、ローカルの変更を送信（push）します。リモートリポジトリと完全に同期します。"
       },
       "security": {
-        "title": "Security and Network",
-        "description": "Connection settings and SSL certificate verification",
-        "sslVerify": "SSL Certificate Verification",
-        "activated": "ACTIVATED",
-        "deactivated": "DEACTIVATED",
-        "sslDescription": "Disable if you have problems with self-signed certificates or corporate proxies. Equivalent to http.sslVerify=false",
-        "sslWarning": "SSL verification is disabled. This may be a security risk.",
-        "sslActivated": "SSL verification activated",
-        "sslDeactivated": "SSL verification deactivated",
-        "sslError": "Error saving SSL configuration"
+        "title": "セキュリティとネットワーク",
+        "description": "接続設定とSSL証明書の検証",
+        "sslVerify": "SSL証明書の検証",
+        "activated": "有効",
+        "deactivated": "無効",
+        "sslDescription": "自己署名証明書や企業プロキシで問題がある場合は無効にしてください。http.sslVerify=falseと同等です",
+        "sslWarning": "SSL検証が無効になっています。これはセキュリティリスクになる可能性があります。",
+        "sslActivated": "SSL検証が有効になりました",
+        "sslDeactivated": "SSL検証が無効になりました",
+        "sslError": "SSL設定の保存中にエラーが発生しました"
       }
     },
     "appearance": {
-      "title": "Appearance",
-      "description": "Customize the theme and size of application components",
+      "title": "外観",
+      "description": "アプリケーションコンポーネントのテーマとサイズをカスタマイズ",
       "themes": {
-        "title": "Themes",
-        "description": "Select a theme style to customize the appearance",
-        "dark": "Dark",
-        "light": "Light"
+        "title": "テーマ",
+        "description": "外観をカスタマイズするテーマスタイルを選択",
+        "dark": "ダーク",
+        "light": "ライト"
       },
       "componentSize": {
-        "title": "Component Size",
-        "description": "Adjust the interface zoom to improve readability and comfort",
-        "zoomLevel": "Zoom Level",
-        "zoomDescription": "Affects the size of text, icons and spacing of all components",
-        "zoomInfo": "Zoom is applied immediately. Recommended: 100% for the best experience."
+        "title": "コンポーネントサイズ",
+        "description": "インターフェースのズームを調整して読みやすさと快適さを向上",
+        "zoomLevel": "ズームレベル",
+        "zoomDescription": "すべてのコンポーネントのテキスト、アイコン、間隔のサイズに影響します",
+        "zoomInfo": "ズームは即座に適用されます。推奨: 最高の体験のために100%。"
       }
     },
     "updates": {
-      "title": "Updates",
-      "description": "Information about the current version and last configuration modification",
+      "title": "更新",
+      "description": "現在のバージョンと最後の設定変更に関する情報",
       "currentVersion": {
-        "title": "Current Version",
-        "description": "Information about the installed application version",
-        "appVersion": "Application version",
-        "latestVersion": "You are using the latest available version"
+        "title": "現在のバージョン",
+        "description": "インストールされているアプリケーションのバージョン情報",
+        "appVersion": "アプリケーションバージョン",
+        "latestVersion": "最新の利用可能なバージョンを使用しています"
       },
       "lastUpdate": {
-        "title": "Last Update",
-        "description": "Date and time of the last configuration modification",
-        "configModified": "Configuration Modified",
-        "autoUpdateInfo": "This date is automatically updated when you modify any application configuration."
+        "title": "最終更新",
+        "description": "最後の設定変更の日時",
+        "configModified": "設定が変更されました",
+        "autoUpdateInfo": "アプリケーション設定を変更すると、この日付は自動的に更新されます。"
       },
       "systemInfo": {
-        "title": "System Information",
-        "description": "Versions of technologies used by the application",
-        "platform": "Platform",
+        "title": "システム情報",
+        "description": "アプリケーションで使用されているテクノロジーのバージョン",
+        "platform": "プラットフォーム",
         "electron": "Electron",
         "chrome": "Chrome"
       },
       "aboutUpdates": {
-        "title": "About Updates",
-        "description": "Application updates are managed automatically. When a new version is available, you will receive a notification."
+        "title": "更新について",
+        "description": "アプリケーションの更新は自動的に管理されます。新しいバージョンが利用可能になると、通知を受け取ります。"
       }
     },
     "about": {
-      "title": "About",
-      "appDescription": "Git client designed to simplify repository management and reduce the complexity of daily work, aligned with modern workflows and the most common version control operations.",
+      "title": "について",
+      "appDescription": "リポジトリ管理を簡素化し、日常業務の複雑さを軽減するように設計されたGitクライアント。最新のワークフローと最も一般的なバージョン管理操作に準拠しています。",
       "developer": {
-        "title": "Developer",
-        "description": "Contact information and developer profile",
-        "fullStack": "Full Stack Developer",
-        "bio": "Creator and maintainer of TucoGit. Passionate about creating tools that simplify developers' daily work."
+        "title": "開発者",
+        "description": "連絡先情報と開発者プロフィール",
+        "fullStack": "フルスタック開発者",
+        "bio": "TucoGitの作成者およびメンテナー。開発者の日常業務を簡素化するツールの作成に情熱を注いでいます。"
       },
       "support": {
-        "title": "Support and Community",
-        "description": "Report issues, share ideas and participate in the community",
-        "reportIssue": "Report an Issue",
-        "reportIssueDescription": "Open an issue on GitHub to report bugs or request features",
-        "discussions": "Discussions",
-        "discussionsDescription": "Participate in discussions, share ideas and get help from the community"
+        "title": "サポートとコミュニティ",
+        "description": "問題を報告し、アイデアを共有し、コミュニティに参加",
+        "reportIssue": "問題を報告",
+        "reportIssueDescription": "GitHubでissueを開いてバグを報告したり、機能をリクエストしたりします",
+        "discussions": "ディスカッション",
+        "discussionsDescription": "ディスカッションに参加し、アイデアを共有し、コミュニティからヘルプを得る"
       },
       "contact": {
-        "email": "Email",
+        "email": "メール",
         "github": "GitHub"
       },
       "footer": {
-        "madeWith": "Made with",
-        "openSource": "open source",
-        "openSourceBadge": "Open Source",
-        "beta": "Beta"
+        "madeWith": "作成",
+        "openSource": "オープンソース",
+        "openSourceBadge": "オープンソース",
+        "beta": "ベータ"
       }
     }
   },
   "home": {
-    "title": "Home",
+    "title": "ホーム",
     "welcome": {
-      "title": "Welcome to",
-      "subtitle": "Your Git control center",
-      "description": "Organize and manage all your Git repositories in one place. Connect your favorite services and keep your workflow efficient and organized.",
-      "connections": "Connections",
-      "repositories": "Repositories"
+      "title": "ようこそ",
+      "subtitle": "Gitコントロールセンター",
+      "description": "すべてのGitリポジトリを1つの場所で整理して管理。お気に入りのサービスを接続し、ワークフローを効率的かつ整理された状態に保ちます。",
+      "connections": "接続",
+      "repositories": "リポジトリ"
     },
     "quickNavigation": {
-      "title": "Quick Navigation",
+      "title": "クイックナビゲーション",
       "home": {
-        "title": "Home",
-        "description": "Overview and statistics"
+        "title": "ホーム",
+        "description": "概要と統計"
       },
       "repositories": {
-        "title": "Repositories",
-        "description": "Explore your local projects"
+        "title": "リポジトリ",
+        "description": "ローカルプロジェクトを探索"
       },
       "connections": {
-        "title": "Connections",
-        "description": "Manage your Git services"
+        "title": "接続",
+        "description": "Gitサービスを管理"
       },
       "settings": {
-        "title": "Settings",
-        "description": "Application preferences"
+        "title": "設定",
+        "description": "アプリケーション設定"
       },
       "configureConnection": {
-        "title": "Configure connection",
-        "description": "Link a new Git service account"
+        "title": "接続を設定",
+        "description": "新しいGitサービスアカウントをリンク"
       },
-      "configureGit": "Configure Git integration"
+      "configureGit": "Git統合を設定"
     },
     "favorites": {
-      "title": "Favorites",
-      "description": "Quick access to your repositories",
-      "noFavorites": "No favorites",
-      "noFavoritesDescription": "Repositories you mark as favorites will appear here",
-      "removeFromFavorites": "Remove from favorites",
-      "openIn": "Open in {{ide}}"
+      "title": "お気に入り",
+      "description": "リポジトリへのクイックアクセス",
+      "noFavorites": "お気に入りがありません",
+      "noFavoritesDescription": "お気に入りとしてマークしたリポジトリがここに表示されます",
+      "removeFromFavorites": "お気に入りから削除",
+      "openIn": "{{ide}}で開く"
     }
   },
   "wizard": {
     "welcome": {
-      "title": "Welcome to Tuco",
-      "description": "The complete solution for managing your Git repositories",
-      "mainTitle": "Manage all your Git projects in one place",
-      "mainDescription": "Tuco is a professional tool designed to simplify the management of your Git repositories. Connect multiple services, organize your projects and optimize your development workflow.",
+      "title": "Tucoへようこそ",
+      "description": "Gitリポジトリを管理するための完全なソリューション",
+      "mainTitle": "すべてのGitプロジェクトを1つの場所で管理",
+      "mainDescription": "Tucoは、Gitリポジトリの管理を簡素化するように設計されたプロフェッショナルツールです。複数のサービスを接続し、プロジェクトを整理し、開発ワークフローを最適化します。",
       "features": {
-        "versionControl": "Version Control",
-        "organization": "Organization",
-        "productivity": "Productivity"
+        "versionControl": "バージョン管理",
+        "organization": "整理",
+        "productivity": "生産性"
       }
     },
     "gitIdentity": {
-      "title": "Configure your Git identity",
-      "description": "Set your user information for commits",
-      "fullName": "Full name",
-      "fullNamePlaceholder": "E.g: John Doe",
-      "fullNameDescription": "This name will appear as author in all your Git commits",
-      "email": "Email",
-      "emailPlaceholder": "E.g: john.doe@example.com",
-      "emailDescription": "Use the same email associated with your GitHub, GitLab or other service accounts",
-      "emailRequired": "Email is required",
-      "emailInvalid": "Please enter a valid email address",
-      "info": "This information will be configured as your default Git identity and will be used to sign all your commits. You can modify it later in settings."
+      "title": "Gitアイデンティティを設定",
+      "description": "コミット用のユーザー情報を設定",
+      "fullName": "フルネーム",
+      "fullNamePlaceholder": "例: 山田太郎",
+      "fullNameDescription": "この名前は、すべてのGitコミットで作成者として表示されます",
+      "email": "メール",
+      "emailPlaceholder": "例: yamada@example.com",
+      "emailDescription": "GitHub、GitLab、またはその他のサービスアカウントに関連付けられている同じメールを使用してください",
+      "emailRequired": "メールは必須です",
+      "emailInvalid": "有効なメールアドレスを入力してください",
+      "info": "この情報はデフォルトのGitアイデンティティとして設定され、すべてのコミットに署名するために使用されます。後で設定で変更できます。"
     },
     "repositoryManagement": {
-      "title": "Repository management",
-      "description": "Organize and manage all your Git projects efficiently",
+      "title": "リポジトリ管理",
+      "description": "すべてのGitプロジェクトを効率的に整理して管理",
       "customCollections": {
-        "title": "Custom collections",
-        "description": "Group your repositories into themed collections to keep everything organized and easy to find"
+        "title": "カスタムコレクション",
+        "description": "リポジトリをテーマ別のコレクションにグループ化して、すべてを整理し、簡単に見つけられるようにします"
       },
       "directClone": {
-        "title": "Direct cloning",
-        "description": "Clone repositories from remote services directly from the interface, without needing to use the terminal"
+        "title": "直接クローン",
+        "description": "ターミナルを使用せずに、インターフェースから直接リモートサービスのリポジトリをクローン"
       },
       "realTimeStatus": {
-        "title": "Real-time status",
-        "description": "View the status of your repositories, branches, commits and pending changes instantly"
+        "title": "リアルタイムステータス",
+        "description": "リポジトリ、ブランチ、コミット、保留中の変更のステータスを即座に表示"
       },
-      "allInOne": "All in one place: Access all your Git projects from a unified and professional interface"
+      "allInOne": "すべてが1つの場所に: 統一されたプロフェッショナルなインターフェースからすべてのGitプロジェクトにアクセス"
     },
     "gitIntegration": {
-      "title": "Git service integration",
-      "description": "Connect your accounts and sync your repositories automatically",
+      "title": "Gitサービス統合",
+      "description": "アカウントを接続し、リポジトリを自動的に同期",
       "multipleProviders": {
-        "title": "Multiple providers",
-        "description": "Connect with GitHub, GitLab, Bitbucket, Gitea, Codeberg and other compatible Git services"
+        "title": "複数のプロバイダー",
+        "description": "GitHub、GitLab、Bitbucket、Gitea、Codeberg、その他の互換性のあるGitサービスに接続"
       },
       "autoSync": {
-        "title": "Automatic synchronization",
-        "description": "Keep your repositories updated automatically and access the latest information effortlessly"
+        "title": "自動同期",
+        "description": "リポジトリを自動的に更新し、最新の情報に簡単にアクセス"
       },
       "multipleAccounts": {
-        "title": "Multiple account management",
-        "description": "Manage multiple accounts and organizations from one place with complete security"
+        "title": "複数アカウント管理",
+        "description": "完全なセキュリティで1つの場所から複数のアカウントと組織を管理"
       },
-      "centralizedAccess": "Centralized access: All your remote repositories available without leaving the application"
+      "centralizedAccess": "一元化されたアクセス: アプリケーションを離れることなく、すべてのリモートリポジトリにアクセス可能"
     },
     "customization": {
-      "title": "Advanced customization",
-      "description": "Adapt the application to your work style and preferences",
+      "title": "高度なカスタマイズ",
+      "description": "アプリケーションをあなたの作業スタイルと好みに適応",
       "themes": {
-        "title": "Themes and appearance",
-        "description": "Choose from multiple themes and customize the application's appearance according to your visual preferences"
+        "title": "テーマと外観",
+        "description": "複数のテーマから選択し、視覚的な好みに応じてアプリケーションの外観をカスタマイズ"
       },
       "ideIntegration": {
-        "title": "IDE integration",
-        "description": "Configure your favorite code editor (VS Code, Cursor, IntelliJ, etc.) to open repositories directly"
+        "title": "IDE統合",
+        "description": "お気に入りのコードエディタ（VS Code、Cursor、IntelliJなど）を設定して、リポジトリを直接開く"
       },
-      "readyToStart": "Ready to start",
-      "readyDescription": "Configure the application according to your needs and start managing your repositories professionally"
+      "readyToStart": "開始する準備ができました",
+      "readyDescription": "ニーズに応じてアプリケーションを設定し、リポジトリをプロフェッショナルに管理し始めます"
     },
     "navigation": {
-      "previous": "Previous",
-      "next": "Next",
-      "start": "Start",
-      "step": "Step {{current}} of {{total}}"
+      "previous": "前へ",
+      "next": "次へ",
+      "start": "開始",
+      "step": "ステップ {{current}} / {{total}}"
     }
   },
   "connections": {
-    "title": "Connections",
+    "title": "接続",
     "search": {
-      "placeholder": "Search connections...",
-      "clear": "Clear",
-      "clearSearch": "Clear search",
-      "noResults": "No results found for \"{{query}}\""
+      "placeholder": "接続を検索...",
+      "clear": "クリア",
+      "clearSearch": "検索をクリア",
+      "noResults": "\"{{query}}\"の検索結果が見つかりませんでした"
     },
     "sort": {
-      "title": "Sort",
-      "ascending": "Ascending",
-      "descending": "Descending",
-      "none": "No sort"
+      "title": "並び替え",
+      "ascending": "昇順",
+      "descending": "降順",
+      "none": "並び替えなし"
     },
     "actions": {
-      "refresh": "Refresh",
-      "newConnection": "New Connection",
-      "edit": "Edit",
-      "delete": "Delete"
+      "refresh": "更新",
+      "newConnection": "新しい接続",
+      "edit": "編集",
+      "delete": "削除"
     },
     "empty": {
-      "title": "No connections defined",
-      "description": "To get started, press the 'New Connection' button to create your first connection with a Git provider."
+      "title": "接続が定義されていません",
+      "description": "開始するには、「新しい接続」ボタンを押して、Gitプロバイダーとの最初の接続を作成してください。"
     },
     "status": {
-      "checking": "Checking...",
-      "connected": "Connected",
-      "expired": "Token expired",
-      "disconnected": "Disconnected",
-      "noConnection": "No connection",
-      "expiredMessage": "Update the token to see information",
-      "disconnectedMessage": "Cannot connect to server",
-      "waiting": "Waiting for connection..."
+      "checking": "確認中...",
+      "connected": "接続済み",
+      "expired": "トークンの有効期限が切れています",
+      "disconnected": "切断されました",
+      "noConnection": "接続なし",
+      "expiredMessage": "情報を表示するにはトークンを更新してください",
+      "disconnectedMessage": "サーバーに接続できません",
+      "waiting": "接続を待機中..."
     },
     "stats": {
-      "remoteRepos": "Remote repositories",
-      "configuredLocally": "Configured locally",
-      "clonedLocally": "Cloned locally",
-      "organizations": "Organizations:",
-      "noOrganizations": "You don't belong to any organization"
+      "remoteRepos": "リモートリポジトリ",
+      "configuredLocally": "ローカルで設定済み",
+      "clonedLocally": "ローカルでクローン済み",
+      "organizations": "組織:",
+      "noOrganizations": "どの組織にも属していません"
     },
     "date": {
-      "notAvailable": "Date not available",
-      "justNow": "Created just now",
-      "minutesAgo": "Created {{count}} {{count, plural, one {minute} other {minutes}}} ago",
-      "hoursAgo": "Created {{count}} {{count, plural, one {hour} other {hours}}} ago",
-      "daysAgo": "Created {{count}} {{count, plural, one {day} other {days}}} ago",
-      "weeksAgo": "Created {{count}} {{count, plural, one {week} other {weeks}}} ago",
-      "monthsAgo": "Created {{count}} {{count, plural, one {month} other {months}}} ago",
-      "yearsAgo": "Created {{count}} {{count, plural, one {year} other {years}}} ago"
+      "notAvailable": "日付が利用できません",
+      "justNow": "今作成されました",
+      "minutesAgo": "{{count}}{{count, plural, one {分} other {分}}}前に作成されました",
+      "hoursAgo": "{{count}}{{count, plural, one {時間} other {時間}}}前に作成されました",
+      "daysAgo": "{{count}}{{count, plural, one {日} other {日}}}前に作成されました",
+      "weeksAgo": "{{count}}{{count, plural, one {週間} other {週間}}}前に作成されました",
+      "monthsAgo": "{{count}}{{count, plural, one {ヶ月} other {ヶ月}}}前に作成されました",
+      "yearsAgo": "{{count}}{{count, plural, one {年} other {年}}}前に作成されました"
     }
   },
   "connectionWizard": {
     "title": {
-      "new": "New Connection",
-      "edit": "Edit Connection"
+      "new": "新しい接続",
+      "edit": "接続を編集"
     },
     "description": {
-      "new": "Configure a new connection with your Git provider in a few steps",
-      "edit": "Modify your Git connection data"
+      "new": "いくつかのステップでGitプロバイダーとの新しい接続を設定",
+      "edit": "Git接続データを変更"
     },
     "steps": {
-      "provider": "Provider",
-      "authentication": "Authentication",
-      "confirmation": "Confirmation"
+      "provider": "プロバイダー",
+      "authentication": "認証",
+      "confirmation": "確認"
     },
     "step1": {
-      "title": "Git Provider",
+      "title": "Gitプロバイダー",
       "required": "*",
-      "description": "Select the Git provider you want to connect with",
+      "description": "接続するGitプロバイダーを選択",
       "providers": {
         "github": {
           "name": "GitHub",
-          "description": "The most popular for open source projects"
+          "description": "オープンソースプロジェクトで最も人気"
         },
         "gitlab": {
           "name": "GitLab",
-          "description": "Excellent for integrated CI/CD"
+          "description": "統合CI/CDに優れています"
         },
         "gitea": {
           "name": "Gitea",
-          "description": "Self-hosted Git platform"
+          "description": "セルフホスト型Gitプラットフォーム"
         },
         "codeberg": {
           "name": "Codeberg",
-          "description": "Free and open source alternative"
+          "description": "無料のオープンソース代替品"
         },
         "gogs": {
           "name": "Gogs",
-          "description": "Self-hosted Git platform"
+          "description": "セルフホスト型Gitプラットフォーム"
         }
       }
     },
     "step2": {
       "connectionName": {
-        "label": "Connection Name",
-        "required": "(required)",
-        "description": "Enter a descriptive name to identify this connection",
-        "placeholder": "E.g: My GitHub account"
+        "label": "接続名",
+        "required": "（必須）",
+        "description": "この接続を識別するための説明的な名前を入力",
+        "placeholder": "例: 私のGitHubアカウント"
       },
       "identity": {
-        "label": "Associated Identity",
-        "description": "Select the Git identity that will be used for this connection",
-        "select": "Select identity",
-        "default": "Default"
+        "label": "関連付けられたアイデンティティ",
+        "description": "この接続に使用されるGitアイデンティティを選択",
+        "select": "アイデンティティを選択",
+        "default": "デフォルト"
       },
       "token": {
-        "label": "Access Token",
-        "required": "(required)",
-        "description": "Personal access token",
-        "placeholder": "Enter your access token",
-        "validating": "Validating token and connecting to server...",
-        "valid": "Token valid. You can continue to the next step.",
-        "error": "Error validating token",
-        "errorServerUrl": "Please enter the server URL",
-        "errorValidation": "Error validating token",
-        "errorCannotValidate": "Error: Could not validate token",
-        "errorUnexpected": "Unexpected error validating token: {{message}}",
-        "errorInvalidOrInsufficient": "Invalid token or insufficient permissions"
+        "label": "アクセストークン",
+        "required": "（必須）",
+        "description": "個人アクセストークン",
+        "placeholder": "アクセストークンを入力",
+        "validating": "トークンを検証し、サーバーに接続中...",
+        "valid": "トークンが有効です。次のステップに進むことができます。",
+        "error": "トークンの検証エラー",
+        "errorServerUrl": "サーバーURLを入力してください",
+        "errorValidation": "トークンの検証エラー",
+        "errorCannotValidate": "エラー: トークンを検証できませんでした",
+        "errorUnexpected": "トークンの検証中に予期しないエラー: {{message}}",
+        "errorInvalidOrInsufficient": "無効なトークンまたは権限が不足しています"
       },
       "serverUrl": {
-        "label": "Server URL",
-        "optional": "(optional)",
-        "description": "Base URL of the Git server (only for custom servers)"
+        "label": "サーバーURL",
+        "optional": "（オプション）",
+        "description": "GitサーバーのベースURL（カスタムサーバーのみ）"
       }
     },
     "step3": {
-      "title": "Confirm your connection data",
-      "description": "Review the information before saving",
+      "title": "接続データを確認",
+      "description": "保存する前に情報を確認",
       "fields": {
-        "provider": "Provider:",
-        "name": "Name:",
+        "provider": "プロバイダー:",
+        "name": "名前:",
         "url": "URL:",
-        "authType": "Authentication Type:",
-        "token": "Token:",
-        "authTypeValue": "Token"
+        "authType": "認証タイプ:",
+        "token": "トークン:",
+        "authTypeValue": "トークン"
       }
     },
     "actions": {
-      "cancel": "Cancel",
-      "previous": "Previous",
-      "next": "Next",
-      "validating": "Validating...",
-      "save": "Save"
+      "cancel": "キャンセル",
+      "previous": "前へ",
+      "next": "次へ",
+      "validating": "検証中...",
+      "save": "保存"
     }
   },
   "repositories": {

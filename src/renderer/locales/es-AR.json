@@ -123,6 +123,7 @@
         "german": "Deutsch",
         "french": "Français",
         "portuguese": "Português",
+        "japanese": "日本語",
         "selected": "Seleccionado",
         "changed": "Idioma cambiado a {{language}}",
         "error": "Error al guardar la configuración"
