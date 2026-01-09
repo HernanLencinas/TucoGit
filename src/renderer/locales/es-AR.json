@@ -122,6 +122,7 @@
         "spanish": "Español (Argentina)",
         "german": "Deutsch",
         "french": "Français",
+        "portuguese": "Português",
         "selected": "Seleccionado",
         "changed": "Idioma cambiado a {{language}}",
         "error": "Error al guardar la configuración"

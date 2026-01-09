@@ -1,544 +1,544 @@
 {
   "common": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "close": "Close",
-    "confirm": "Confirm",
-    "search": "Search",
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "warning": "Warning",
-    "info": "Info",
-    "selected": "Selected",
-    "noAvailable": "Not available",
-    "loadingText": "Loading...",
-    "default": "Default",
-    "actions": "Actions",
-    "fullName": "Full Name",
-    "email": "Email",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "search": "Pesquisar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "warning": "Aviso",
+    "info": "Informação",
+    "selected": "Selecionado",
+    "noAvailable": "Não disponível",
+    "loadingText": "Carregando...",
+    "default": "Padrão",
+    "actions": "Ações",
+    "fullName": "Nome completo",
+    "email": "E-mail",
     "tabs": {
-      "home": "Home",
-      "repositories": "Repositories",
-      "connections": "Connections",
-      "settings": "Settings"
+      "home": "Início",
+      "repositories": "Repositórios",
+      "connections": "Conexões",
+      "settings": "Configurações"
     },
     "theme": {
-      "switchToLight": "Switch to light mode",
-      "switchToDark": "Switch to dark mode"
+      "switchToLight": "Alternar para modo claro",
+      "switchToDark": "Alternar para modo escuro"
     },
     "loadingScreen": {
       "messages": [
-        "Loading Tuco...",
-        "Preparing the environment...",
-        "Initializing repositories...",
-        "Configuring connections...",
-        "Loading configuration...",
-        "Getting everything ready for you...",
-        "Just a moment, almost there...",
-        "Organizing your repositories...",
-        "Loading data...",
-        "Preparing the interface...",
-        "Initializing components...",
-        "Almost done...",
-        "Configuring Git...",
-        "Loading preferences...",
-        "Preparing the experience...",
-        "Searching for lost commits...",
-        "Syncing with the Git universe...",
-        "Loading code magic...",
-        "Preparing your workspace...",
-        "Almost ready, don't go away...",
-        "Organizing the repo library...",
-        "Loading Git superpowers...",
-        "Setting the stage...",
-        "Final touches...",
-        "Loading the best experience...",
-        "Getting everything ready for you to shine...",
-        "Almost there, hang on a bit more...",
-        "Loading your next big idea...",
-        "Preparing the perfect environment...",
-        "Final magical touches...",
-        "Waking up the repositories...",
-        "Loading the power of Git...",
-        "Preparing your code arsenal...",
-        "Syncing with the stars...",
-        "Loading commit wisdom...",
-        "Preparing the epic journey...",
-        "Loading developer energy...",
-        "Organizing creative chaos...",
-        "Preparing the code revolution...",
-        "Loading infinite inspiration...",
-        "Tuning to Git frequency...",
-        "Preparing your moment of glory...",
-        "Loading the innovation engine...",
-        "Unlocking code superpowers...",
-        "Setting the stage for success...",
-        "Loading the secret formula...",
-        "Syncing neurons with Git...",
-        "Preparing the digital transformation...",
-        "Loading the perfect code elixir...",
-        "Activating ninja developer mode...",
-        "Preparing the Git time machine...",
-        "Loading the infinite library...",
-        "Tuning to the code matrix...",
-        "Preparing your ascent to the next level...",
-        "Loading the essence of development...",
-        "Waking up sleeping repositories..."
+        "Carregando Tuco...",
+        "Preparando o ambiente...",
+        "Inicializando repositórios...",
+        "Configurando conexões...",
+        "Carregando configuração...",
+        "Preparando tudo para você...",
+        "Só um momento, quase lá...",
+        "Organizando seus repositórios...",
+        "Carregando dados...",
+        "Preparando a interface...",
+        "Inicializando componentes...",
+        "Quase pronto...",
+        "Configurando Git...",
+        "Carregando preferências...",
+        "Preparando a experiência...",
+        "Procurando commits perdidos...",
+        "Sincronizando com o universo Git...",
+        "Carregando a mágica do código...",
+        "Preparando seu workspace...",
+        "Quase pronto, não vá embora...",
+        "Organizando a biblioteca de repositórios...",
+        "Carregando superpoderes Git...",
+        "Preparando o palco...",
+        "Toques finais...",
+        "Carregando a melhor experiência...",
+        "Preparando tudo para você brilhar...",
+        "Quase lá, aguarde um pouco mais...",
+        "Carregando sua próxima grande ideia...",
+        "Preparando o ambiente perfeito...",
+        "Toques mágicos finais...",
+        "Despertando os repositórios...",
+        "Carregando o poder do Git...",
+        "Preparando seu arsenal de código...",
+        "Sincronizando com as estrelas...",
+        "Carregando a sabedoria dos commits...",
+        "Preparando a jornada épica...",
+        "Carregando energia de desenvolvedor...",
+        "Organizando o caos criativo...",
+        "Preparando a revolução do código...",
+        "Carregando inspiração infinita...",
+        "Sintonizando na frequência Git...",
+        "Preparando seu momento de glória...",
+        "Carregando o motor de inovação...",
+        "Desbloqueando superpoderes do código...",
+        "Preparando o palco para o sucesso...",
+        "Carregando a fórmula secreta...",
+        "Sincronizando neurônios com Git...",
+        "Preparando a transformação digital...",
+        "Carregando o elixir perfeito do código...",
+        "Ativando modo desenvolvedor ninja...",
+        "Preparando a máquina do tempo Git...",
+        "Carregando a biblioteca infinita...",
+        "Sintonizando na matriz do código...",
+        "Preparando sua ascensão ao próximo nível...",
+        "Carregando a essência do desenvolvimento...",
+        "Despertando repositórios adormecidos..."
       ]
     }
   },
   "settings": {
-    "title": "Settings",
+    "title": "Configurações",
     "tabs": {
-      "general": "General",
-      "data": "Data",
+      "general": "Geral",
+      "data": "Dados",
       "git": "Git",
-      "appearance": "Appearance",
-      "updates": "Updates",
-      "about": "About"
+      "appearance": "Aparência",
+      "updates": "Atualizações",
+      "about": "Sobre"
     },
     "general": {
-      "title": "General Settings",
-      "description": "Customize general application options",
+      "title": "Configurações Gerais",
+      "description": "Personalize as opções gerais do aplicativo",
       "preferredIDE": {
-        "title": "Preferred IDE Editor",
-        "description": "Select the editor that will be used to open repositories from cards",
-        "selected": "Selected",
-        "noEditorSelected": "No editor selected",
-        "selectEditor": "Select an IDE editor...",
-        "info": "Repositories will automatically open with {{ide}} when you click the open button.",
-        "noEditorsAvailable": "No editors available",
-        "installEditor": "Install an IDE editor to see it here",
-        "editorChanged": "IDE editor changed to {{ide}}",
-        "errorSaving": "Error saving configuration"
+        "title": "Editor IDE Preferido",
+        "description": "Selecione o editor que será usado para abrir repositórios a partir dos cartões",
+        "selected": "Selecionado",
+        "noEditorSelected": "Nenhum editor selecionado",
+        "selectEditor": "Selecione um editor IDE...",
+        "info": "Os repositórios serão abertos automaticamente com {{ide}} quando você clicar no botão de abrir.",
+        "noEditorsAvailable": "Nenhum editor disponível",
+        "installEditor": "Instale um editor IDE para vê-lo aqui",
+        "editorChanged": "Editor IDE alterado para {{ide}}",
+        "errorSaving": "Erro ao salvar configuração"
       },
       "uiLanguage": {
-        "title": "Interface Language",
-        "description": "Select the language that will be displayed in the user interface",
-        "english": "English (United States)",
-        "spanish": "Spanish (Argentina)",
-        "german": "German",
-        "french": "French",
-        "portuguese": "Portuguese",
-        "selected": "Selected",
-        "changed": "Language changed to {{language}}",
-        "error": "Error saving configuration"
+        "title": "Idioma da Interface",
+        "description": "Selecione o idioma que será exibido na interface do usuário",
+        "english": "Inglês (Estados Unidos)",
+        "spanish": "Espanhol (Argentina)",
+        "german": "Alemão",
+        "french": "Francês",
+        "portuguese": "Português",
+        "selected": "Selecionado",
+        "changed": "Idioma alterado para {{language}}",
+        "error": "Erro ao salvar configuração"
       }
     },
     "data": {
-      "title": "Data Management",
-      "description": "Manage the location and backup of your configuration",
+      "title": "Gerenciamento de Dados",
+      "description": "Gerencie a localização e o backup da sua configuração",
       "configLocation": {
-        "title": "Configuration Location",
-        "description": "Select the folder where the configuration file will be saved",
-        "selectFolder": "Select Folder"
+        "title": "Localização da Configuração",
+        "description": "Selecione a pasta onde o arquivo de configuração será salvo",
+        "selectFolder": "Selecionar Pasta"
       },
       "fileInfo": {
-        "title": "File Information",
-        "description": "Details about the configuration file and last modification",
-        "configFile": "Configuration File",
-        "lastUpdate": "Last Update"
+        "title": "Informações do Arquivo",
+        "description": "Detalhes sobre o arquivo de configuração e última modificação",
+        "configFile": "Arquivo de Configuração",
+        "lastUpdate": "Última Atualização"
       },
       "management": {
-        "title": "Configuration Management",
-        "description": "Import or export your configuration file to backup or restore your settings",
-        "import": "Import",
-        "export": "Export",
-        "exportSuccess": "Configuration exported successfully",
-        "exportError": "Error exporting: {{error}}",
-        "noConfigToExport": "No configuration to export",
-        "functionalityNotAvailable": "Functionality not available",
-        "importSuccess": "Configuration imported successfully. Reloading data...",
-        "dataReloaded": "Data reloaded successfully",
-        "importError": "Error importing: {{error}}",
-        "importNotAvailable": "Import functionality not available",
-        "invalidJson": "The selected file is not a valid JSON",
-        "importConfigError": "Error importing configuration: {{error}}"
+        "title": "Gerenciamento de Configuração",
+        "description": "Importe ou exporte seu arquivo de configuração para fazer backup ou restaurar suas configurações",
+        "import": "Importar",
+        "export": "Exportar",
+        "exportSuccess": "Configuração exportada com sucesso",
+        "exportError": "Erro ao exportar: {{error}}",
+        "noConfigToExport": "Nenhuma configuração para exportar",
+        "functionalityNotAvailable": "Funcionalidade não disponível",
+        "importSuccess": "Configuração importada com sucesso. Recarregando dados...",
+        "dataReloaded": "Dados recarregados com sucesso",
+        "importError": "Erro ao importar: {{error}}",
+        "importNotAvailable": "Funcionalidade de importação não disponível",
+        "invalidJson": "O arquivo selecionado não é um JSON válido",
+        "importConfigError": "Erro ao importar configuração: {{error}}"
       },
       "reset": {
-        "title": "Reset Configuration",
-        "description": "Deletes all configuration and restores default values. This action cannot be undone.",
-        "warning": "Warning",
-        "warningMessage": "This action will delete all your configurations, connections and saved preferences.",
-        "restoreConfig": "Restore Configuration"
+        "title": "Redefinir Configuração",
+        "description": "Exclui toda a configuração e restaura os valores padrão. Esta ação não pode ser desfeita.",
+        "warning": "Aviso",
+        "warningMessage": "Esta ação excluirá todas as suas configurações, conexões e preferências salvas.",
+        "restoreConfig": "Restaurar Configuração"
       }
     },
     "git": {
-      "title": "Git Configuration",
-      "description": "Configure your identity and security preferences for Git",
+      "title": "Configuração Git",
+      "description": "Configure sua identidade e preferências de segurança para Git",
       "identities": {
-        "title": "Identities",
-        "description": "Manage multiple user identities to use in different repositories",
-        "newIdentity": "New Identity",
-        "noIdentities": "No identities configured",
-        "addIdentity": "Add an identity to get started"
+        "title": "Identidades",
+        "description": "Gerencie múltiplas identidades de usuário para usar em diferentes repositórios",
+        "newIdentity": "Nova Identidade",
+        "noIdentities": "Nenhuma identidade configurada",
+        "addIdentity": "Adicione uma identidade para começar"
       },
       "commitBehavior": {
-        "title": "Commit Button Behavior",
-        "description": "Select what action the commit button will perform in the Git status panel",
-        "buttonAction": "Button action",
+        "title": "Comportamento do Botão Commit",
+        "description": "Selecione qual ação o botão commit executará no painel de status Git",
+        "buttonAction": "Ação do botão",
         "commit": "Commit",
         "commitPush": "Commit + Push",
         "commitSync": "Commit + Sync",
-        "commitDescription": "Only commits files in stage. Does not sync with remote repository.",
-        "commitPushDescription": "Commits and then sends changes to remote repository. Does not download changes from remote.",
-        "commitSyncDescription": "Commits, downloads changes from remote (fetch + pull) and then sends local changes (push). Fully syncs with remote repository."
+        "commitDescription": "Apenas faz commit dos arquivos em stage. Não sincroniza com o repositório remoto.",
+        "commitPushDescription": "Faz commit e depois envia as alterações para o repositório remoto. Não baixa alterações do remoto.",
+        "commitSyncDescription": "Faz commit, baixa alterações do remoto (fetch + pull) e depois envia alterações locais (push). Sincroniza completamente com o repositório remoto."
       },
       "security": {
-        "title": "Security and Network",
-        "description": "Connection settings and SSL certificate verification",
-        "sslVerify": "SSL Certificate Verification",
-        "activated": "ACTIVATED",
-        "deactivated": "DEACTIVATED",
-        "sslDescription": "Disable if you have problems with self-signed certificates or corporate proxies. Equivalent to http.sslVerify=false",
-        "sslWarning": "SSL verification is disabled. This may be a security risk.",
-        "sslActivated": "SSL verification activated",
-        "sslDeactivated": "SSL verification deactivated",
-        "sslError": "Error saving SSL configuration"
+        "title": "Segurança e Rede",
+        "description": "Configurações de conexão e verificação de certificado SSL",
+        "sslVerify": "Verificação de Certificado SSL",
+        "activated": "ATIVADO",
+        "deactivated": "DESATIVADO",
+        "sslDescription": "Desative se tiver problemas com certificados autoassinados ou proxies corporativos. Equivalente a http.sslVerify=false",
+        "sslWarning": "A verificação SSL está desativada. Isso pode ser um risco de segurança.",
+        "sslActivated": "Verificação SSL ativada",
+        "sslDeactivated": "Verificação SSL desativada",
+        "sslError": "Erro ao salvar configuração SSL"
       }
     },
     "appearance": {
-      "title": "Appearance",
-      "description": "Customize the theme and size of application components",
+      "title": "Aparência",
+      "description": "Personalize o tema e o tamanho dos componentes do aplicativo",
       "themes": {
-        "title": "Themes",
-        "description": "Select a theme style to customize the appearance",
-        "dark": "Dark",
-        "light": "Light"
+        "title": "Temas",
+        "description": "Selecione um estilo de tema para personalizar a aparência",
+        "dark": "Escuro",
+        "light": "Claro"
       },
       "componentSize": {
-        "title": "Component Size",
-        "description": "Adjust the interface zoom to improve readability and comfort",
-        "zoomLevel": "Zoom Level",
-        "zoomDescription": "Affects the size of text, icons and spacing of all components",
-        "zoomInfo": "Zoom is applied immediately. Recommended: 100% for the best experience."
+        "title": "Tamanho dos Componentes",
+        "description": "Ajuste o zoom da interface para melhorar a legibilidade e o conforto",
+        "zoomLevel": "Nível de Zoom",
+        "zoomDescription": "Afeta o tamanho do texto, ícones e espaçamento de todos os componentes",
+        "zoomInfo": "O zoom é aplicado imediatamente. Recomendado: 100% para a melhor experiência."
       }
     },
     "updates": {
-      "title": "Updates",
-      "description": "Information about the current version and last configuration modification",
+      "title": "Atualizações",
+      "description": "Informações sobre a versão atual e última modificação de configuração",
       "currentVersion": {
-        "title": "Current Version",
-        "description": "Information about the installed application version",
-        "appVersion": "Application version",
-        "latestVersion": "You are using the latest available version"
+        "title": "Versão Atual",
+        "description": "Informações sobre a versão do aplicativo instalada",
+        "appVersion": "Versão do aplicativo",
+        "latestVersion": "Você está usando a versão mais recente disponível"
       },
       "lastUpdate": {
-        "title": "Last Update",
-        "description": "Date and time of the last configuration modification",
-        "configModified": "Configuration Modified",
-        "autoUpdateInfo": "This date is automatically updated when you modify any application configuration."
+        "title": "Última Atualização",
+        "description": "Data e hora da última modificação de configuração",
+        "configModified": "Configuração Modificada",
+        "autoUpdateInfo": "Esta data é atualizada automaticamente quando você modifica qualquer configuração do aplicativo."
       },
       "systemInfo": {
-        "title": "System Information",
-        "description": "Versions of technologies used by the application",
-        "platform": "Platform",
+        "title": "Informações do Sistema",
+        "description": "Versões das tecnologias usadas pelo aplicativo",
+        "platform": "Plataforma",
         "electron": "Electron",
         "chrome": "Chrome"
       },
       "aboutUpdates": {
-        "title": "About Updates",
-        "description": "Application updates are managed automatically. When a new version is available, you will receive a notification."
+        "title": "Sobre Atualizações",
+        "description": "As atualizações do aplicativo são gerenciadas automaticamente. Quando uma nova versão estiver disponível, você receberá uma notificação."
       }
     },
     "about": {
-      "title": "About",
-      "appDescription": "Git client designed to simplify repository management and reduce the complexity of daily work, aligned with modern workflows and the most common version control operations.",
+      "title": "Sobre",
+      "appDescription": "Cliente Git projetado para simplificar o gerenciamento de repositórios e reduzir a complexidade do trabalho diário, alinhado com fluxos de trabalho modernos e as operações de controle de versão mais comuns.",
       "developer": {
-        "title": "Developer",
-        "description": "Contact information and developer profile",
-        "fullStack": "Full Stack Developer",
-        "bio": "Creator and maintainer of TucoGit. Passionate about creating tools that simplify developers' daily work."
+        "title": "Desenvolvedor",
+        "description": "Informações de contato e perfil do desenvolvedor",
+        "fullStack": "Desenvolvedor Full Stack",
+        "bio": "Criador e mantenedor do TucoGit. Apaixonado por criar ferramentas que simplificam o trabalho diário dos desenvolvedores."
       },
       "support": {
-        "title": "Support and Community",
-        "description": "Report issues, share ideas and participate in the community",
-        "reportIssue": "Report an Issue",
-        "reportIssueDescription": "Open an issue on GitHub to report bugs or request features",
-        "discussions": "Discussions",
-        "discussionsDescription": "Participate in discussions, share ideas and get help from the community"
+        "title": "Suporte e Comunidade",
+        "description": "Reporte problemas, compartilhe ideias e participe da comunidade",
+        "reportIssue": "Reportar um Problema",
+        "reportIssueDescription": "Abra uma issue no GitHub para reportar bugs ou solicitar funcionalidades",
+        "discussions": "Discussões",
+        "discussionsDescription": "Participe de discussões, compartilhe ideias e obtenha ajuda da comunidade"
       },
       "contact": {
-        "email": "Email",
+        "email": "E-mail",
         "github": "GitHub"
       },
       "footer": {
-        "madeWith": "Made with",
-        "openSource": "open source",
-        "openSourceBadge": "Open Source",
+        "madeWith": "Feito com",
+        "openSource": "código aberto",
+        "openSourceBadge": "Código Aberto",
         "beta": "Beta"
       }
     }
   },
   "home": {
-    "title": "Home",
+    "title": "Início",
     "welcome": {
-      "title": "Welcome to",
-      "subtitle": "Your Git control center",
-      "description": "Organize and manage all your Git repositories in one place. Connect your favorite services and keep your workflow efficient and organized.",
-      "connections": "Connections",
-      "repositories": "Repositories"
+      "title": "Bem-vindo ao",
+      "subtitle": "Seu centro de controle Git",
+      "description": "Organize e gerencie todos os seus repositórios Git em um só lugar. Conecte seus serviços favoritos e mantenha seu fluxo de trabalho eficiente e organizado.",
+      "connections": "Conexões",
+      "repositories": "Repositórios"
     },
     "quickNavigation": {
-      "title": "Quick Navigation",
+      "title": "Navegação Rápida",
       "home": {
-        "title": "Home",
-        "description": "Overview and statistics"
+        "title": "Início",
+        "description": "Visão geral e estatísticas"
       },
       "repositories": {
-        "title": "Repositories",
-        "description": "Explore your local projects"
+        "title": "Repositórios",
+        "description": "Explore seus projetos locais"
       },
       "connections": {
-        "title": "Connections",
-        "description": "Manage your Git services"
+        "title": "Conexões",
+        "description": "Gerencie seus serviços Git"
       },
       "settings": {
-        "title": "Settings",
-        "description": "Application preferences"
+        "title": "Configurações",
+        "description": "Preferências do aplicativo"
       },
       "configureConnection": {
-        "title": "Configure connection",
-        "description": "Link a new Git service account"
+        "title": "Configurar conexão",
+        "description": "Vincular uma nova conta de serviço Git"
       },
-      "configureGit": "Configure Git integration"
+      "configureGit": "Configurar integração Git"
     },
     "favorites": {
-      "title": "Favorites",
-      "description": "Quick access to your repositories",
-      "noFavorites": "No favorites",
-      "noFavoritesDescription": "Repositories you mark as favorites will appear here",
-      "removeFromFavorites": "Remove from favorites",
-      "openIn": "Open in {{ide}}"
+      "title": "Favoritos",
+      "description": "Acesso rápido aos seus repositórios",
+      "noFavorites": "Nenhum favorito",
+      "noFavoritesDescription": "Os repositórios que você marcar como favoritos aparecerão aqui",
+      "removeFromFavorites": "Remover dos favoritos",
+      "openIn": "Abrir em {{ide}}"
     }
   },
   "wizard": {
     "welcome": {
-      "title": "Welcome to Tuco",
-      "description": "The complete solution for managing your Git repositories",
-      "mainTitle": "Manage all your Git projects in one place",
-      "mainDescription": "Tuco is a professional tool designed to simplify the management of your Git repositories. Connect multiple services, organize your projects and optimize your development workflow.",
+      "title": "Bem-vindo ao Tuco",
+      "description": "A solução completa para gerenciar seus repositórios Git",
+      "mainTitle": "Gerencie todos os seus projetos Git em um só lugar",
+      "mainDescription": "Tuco é uma ferramenta profissional projetada para simplificar o gerenciamento de seus repositórios Git. Conecte vários serviços, organize seus projetos e otimize seu fluxo de trabalho de desenvolvimento.",
       "features": {
-        "versionControl": "Version Control",
-        "organization": "Organization",
-        "productivity": "Productivity"
+        "versionControl": "Controle de Versão",
+        "organization": "Organização",
+        "productivity": "Produtividade"
       }
     },
     "gitIdentity": {
-      "title": "Configure your Git identity",
-      "description": "Set your user information for commits",
-      "fullName": "Full name",
-      "fullNamePlaceholder": "E.g: John Doe",
-      "fullNameDescription": "This name will appear as author in all your Git commits",
-      "email": "Email",
-      "emailPlaceholder": "E.g: john.doe@example.com",
-      "emailDescription": "Use the same email associated with your GitHub, GitLab or other service accounts",
-      "emailRequired": "Email is required",
-      "emailInvalid": "Please enter a valid email address",
-      "info": "This information will be configured as your default Git identity and will be used to sign all your commits. You can modify it later in settings."
+      "title": "Configure sua identidade Git",
+      "description": "Defina suas informações de usuário para commits",
+      "fullName": "Nome completo",
+      "fullNamePlaceholder": "Ex: João Silva",
+      "fullNameDescription": "Este nome aparecerá como autor em todos os seus commits Git",
+      "email": "E-mail",
+      "emailPlaceholder": "Ex: joao.silva@exemplo.com",
+      "emailDescription": "Use o mesmo e-mail associado às suas contas GitHub, GitLab ou outros serviços",
+      "emailRequired": "E-mail é obrigatório",
+      "emailInvalid": "Por favor, insira um endereço de e-mail válido",
+      "info": "Essas informações serão configuradas como sua identidade Git padrão e serão usadas para assinar todos os seus commits. Você pode modificá-las mais tarde nas configurações."
     },
     "repositoryManagement": {
-      "title": "Repository management",
-      "description": "Organize and manage all your Git projects efficiently",
+      "title": "Gerenciamento de repositórios",
+      "description": "Organize e gerencie todos os seus projetos Git com eficiência",
       "customCollections": {
-        "title": "Custom collections",
-        "description": "Group your repositories into themed collections to keep everything organized and easy to find"
+        "title": "Coleções personalizadas",
+        "description": "Agrupe seus repositórios em coleções temáticas para manter tudo organizado e fácil de encontrar"
       },
       "directClone": {
-        "title": "Direct cloning",
-        "description": "Clone repositories from remote services directly from the interface, without needing to use the terminal"
+        "title": "Clonagem direta",
+        "description": "Clone repositórios de serviços remotos diretamente da interface, sem precisar usar o terminal"
       },
       "realTimeStatus": {
-        "title": "Real-time status",
-        "description": "View the status of your repositories, branches, commits and pending changes instantly"
+        "title": "Status em tempo real",
+        "description": "Visualize o status de seus repositórios, branches, commits e alterações pendentes instantaneamente"
       },
-      "allInOne": "All in one place: Access all your Git projects from a unified and professional interface"
+      "allInOne": "Tudo em um só lugar: Acesse todos os seus projetos Git de uma interface unificada e profissional"
     },
     "gitIntegration": {
-      "title": "Git service integration",
-      "description": "Connect your accounts and sync your repositories automatically",
+      "title": "Integração de serviços Git",
+      "description": "Conecte suas contas e sincronize seus repositórios automaticamente",
       "multipleProviders": {
-        "title": "Multiple providers",
-        "description": "Connect with GitHub, GitLab, Bitbucket, Gitea, Codeberg and other compatible Git services"
+        "title": "Múltiplos provedores",
+        "description": "Conecte-se com GitHub, GitLab, Bitbucket, Gitea, Codeberg e outros serviços Git compatíveis"
       },
       "autoSync": {
-        "title": "Automatic synchronization",
-        "description": "Keep your repositories updated automatically and access the latest information effortlessly"
+        "title": "Sincronização automática",
+        "description": "Mantenha seus repositórios atualizados automaticamente e acesse as informações mais recentes sem esforço"
       },
       "multipleAccounts": {
-        "title": "Multiple account management",
-        "description": "Manage multiple accounts and organizations from one place with complete security"
+        "title": "Gerenciamento de múltiplas contas",
+        "description": "Gerencie múltiplas contas e organizações de um só lugar com segurança completa"
       },
-      "centralizedAccess": "Centralized access: All your remote repositories available without leaving the application"
+      "centralizedAccess": "Acesso centralizado: Todos os seus repositórios remotos disponíveis sem sair do aplicativo"
     },
     "customization": {
-      "title": "Advanced customization",
-      "description": "Adapt the application to your work style and preferences",
+      "title": "Personalização avançada",
+      "description": "Adapte o aplicativo ao seu estilo de trabalho e preferências",
       "themes": {
-        "title": "Themes and appearance",
-        "description": "Choose from multiple themes and customize the application's appearance according to your visual preferences"
+        "title": "Temas e aparência",
+        "description": "Escolha entre vários temas e personalize a aparência do aplicativo de acordo com suas preferências visuais"
       },
       "ideIntegration": {
-        "title": "IDE integration",
-        "description": "Configure your favorite code editor (VS Code, Cursor, IntelliJ, etc.) to open repositories directly"
+        "title": "Integração IDE",
+        "description": "Configure seu editor de código favorito (VS Code, Cursor, IntelliJ, etc.) para abrir repositórios diretamente"
       },
-      "readyToStart": "Ready to start",
-      "readyDescription": "Configure the application according to your needs and start managing your repositories professionally"
+      "readyToStart": "Pronto para começar",
+      "readyDescription": "Configure o aplicativo de acordo com suas necessidades e comece a gerenciar seus repositórios profissionalmente"
     },
     "navigation": {
-      "previous": "Previous",
-      "next": "Next",
-      "start": "Start",
-      "step": "Step {{current}} of {{total}}"
+      "previous": "Anterior",
+      "next": "Próximo",
+      "start": "Iniciar",
+      "step": "Etapa {{current}} de {{total}}"
     }
   },
   "connections": {
-    "title": "Connections",
+    "title": "Conexões",
     "search": {
-      "placeholder": "Search connections...",
-      "clear": "Clear",
-      "clearSearch": "Clear search",
-      "noResults": "No results found for \"{{query}}\""
+      "placeholder": "Pesquisar conexões...",
+      "clear": "Limpar",
+      "clearSearch": "Limpar pesquisa",
+      "noResults": "Nenhum resultado encontrado para \"{{query}}\""
     },
     "sort": {
-      "title": "Sort",
-      "ascending": "Ascending",
-      "descending": "Descending",
-      "none": "No sort"
+      "title": "Ordenar",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "none": "Sem ordenação"
     },
     "actions": {
-      "refresh": "Refresh",
-      "newConnection": "New Connection",
-      "edit": "Edit",
-      "delete": "Delete"
+      "refresh": "Atualizar",
+      "newConnection": "Nova Conexão",
+      "edit": "Editar",
+      "delete": "Excluir"
     },
     "empty": {
-      "title": "No connections defined",
-      "description": "To get started, press the 'New Connection' button to create your first connection with a Git provider."
+      "title": "Nenhuma conexão definida",
+      "description": "Para começar, pressione o botão 'Nova Conexão' para criar sua primeira conexão com um provedor Git."
     },
     "status": {
-      "checking": "Checking...",
-      "connected": "Connected",
-      "expired": "Token expired",
-      "disconnected": "Disconnected",
-      "noConnection": "No connection",
-      "expiredMessage": "Update the token to see information",
-      "disconnectedMessage": "Cannot connect to server",
-      "waiting": "Waiting for connection..."
+      "checking": "Verificando...",
+      "connected": "Conectado",
+      "expired": "Token expirado",
+      "disconnected": "Desconectado",
+      "noConnection": "Sem conexão",
+      "expiredMessage": "Atualize o token para ver informações",
+      "disconnectedMessage": "Não é possível conectar ao servidor",
+      "waiting": "Aguardando conexão..."
     },
     "stats": {
-      "remoteRepos": "Remote repositories",
-      "configuredLocally": "Configured locally",
-      "clonedLocally": "Cloned locally",
-      "organizations": "Organizations:",
-      "noOrganizations": "You don't belong to any organization"
+      "remoteRepos": "Repositórios remotos",
+      "configuredLocally": "Configurado localmente",
+      "clonedLocally": "Clonado localmente",
+      "organizations": "Organizações:",
+      "noOrganizations": "Você não pertence a nenhuma organização"
     },
     "date": {
-      "notAvailable": "Date not available",
-      "justNow": "Created just now",
-      "minutesAgo": "Created {{count}} {{count, plural, one {minute} other {minutes}}} ago",
-      "hoursAgo": "Created {{count}} {{count, plural, one {hour} other {hours}}} ago",
-      "daysAgo": "Created {{count}} {{count, plural, one {day} other {days}}} ago",
-      "weeksAgo": "Created {{count}} {{count, plural, one {week} other {weeks}}} ago",
-      "monthsAgo": "Created {{count}} {{count, plural, one {month} other {months}}} ago",
-      "yearsAgo": "Created {{count}} {{count, plural, one {year} other {years}}} ago"
+      "notAvailable": "Data não disponível",
+      "justNow": "Criado agora mesmo",
+      "minutesAgo": "Criado há {{count}} {{count, plural, one {minuto} other {minutos}}}",
+      "hoursAgo": "Criado há {{count}} {{count, plural, one {hora} other {horas}}}",
+      "daysAgo": "Criado há {{count}} {{count, plural, one {dia} other {dias}}}",
+      "weeksAgo": "Criado há {{count}} {{count, plural, one {semana} other {semanas}}}",
+      "monthsAgo": "Criado há {{count}} {{count, plural, one {mês} other {meses}}}",
+      "yearsAgo": "Criado há {{count}} {{count, plural, one {ano} other {anos}}}"
     }
   },
   "connectionWizard": {
     "title": {
-      "new": "New Connection",
-      "edit": "Edit Connection"
+      "new": "Nova Conexão",
+      "edit": "Editar Conexão"
     },
     "description": {
-      "new": "Configure a new connection with your Git provider in a few steps",
-      "edit": "Modify your Git connection data"
+      "new": "Configure uma nova conexão com seu provedor Git em algumas etapas",
+      "edit": "Modifique os dados da sua conexão Git"
     },
     "steps": {
-      "provider": "Provider",
-      "authentication": "Authentication",
-      "confirmation": "Confirmation"
+      "provider": "Provedor",
+      "authentication": "Autenticação",
+      "confirmation": "Confirmação"
     },
     "step1": {
-      "title": "Git Provider",
+      "title": "Provedor Git",
       "required": "*",
-      "description": "Select the Git provider you want to connect with",
+      "description": "Selecione o provedor Git com o qual deseja se conectar",
       "providers": {
         "github": {
           "name": "GitHub",
-          "description": "The most popular for open source projects"
+          "description": "O mais popular para projetos open source"
         },
         "gitlab": {
           "name": "GitLab",
-          "description": "Excellent for integrated CI/CD"
+          "description": "Excelente para CI/CD integrado"
         },
         "gitea": {
           "name": "Gitea",
-          "description": "Self-hosted Git platform"
+          "description": "Plataforma Git auto-hospedada"
         },
         "codeberg": {
           "name": "Codeberg",
-          "description": "Free and open source alternative"
+          "description": "Alternativa gratuita e open source"
         },
         "gogs": {
           "name": "Gogs",
-          "description": "Self-hosted Git platform"
+          "description": "Plataforma Git auto-hospedada"
         }
       }
     },
     "step2": {
       "connectionName": {
-        "label": "Connection Name",
-        "required": "(required)",
-        "description": "Enter a descriptive name to identify this connection",
-        "placeholder": "E.g: My GitHub account"
+        "label": "Nome da Conexão",
+        "required": "(obrigatório)",
+        "description": "Digite um nome descritivo para identificar esta conexão",
+        "placeholder": "Ex: Minha conta GitHub"
       },
       "identity": {
-        "label": "Associated Identity",
-        "description": "Select the Git identity that will be used for this connection",
-        "select": "Select identity",
-        "default": "Default"
+        "label": "Identidade Associada",
+        "description": "Selecione a identidade Git que será usada para esta conexão",
+        "select": "Selecionar identidade",
+        "default": "Padrão"
       },
       "token": {
-        "label": "Access Token",
-        "required": "(required)",
-        "description": "Personal access token",
-        "placeholder": "Enter your access token",
-        "validating": "Validating token and connecting to server...",
-        "valid": "Token valid. You can continue to the next step.",
-        "error": "Error validating token",
-        "errorServerUrl": "Please enter the server URL",
-        "errorValidation": "Error validating token",
-        "errorCannotValidate": "Error: Could not validate token",
-        "errorUnexpected": "Unexpected error validating token: {{message}}",
-        "errorInvalidOrInsufficient": "Invalid token or insufficient permissions"
+        "label": "Token de Acesso",
+        "required": "(obrigatório)",
+        "description": "Token de acesso pessoal",
+        "placeholder": "Digite seu token de acesso",
+        "validating": "Validando token e conectando ao servidor...",
+        "valid": "Token válido. Você pode continuar para a próxima etapa.",
+        "error": "Erro ao validar token",
+        "errorServerUrl": "Por favor, digite a URL do servidor",
+        "errorValidation": "Erro ao validar token",
+        "errorCannotValidate": "Erro: Não foi possível validar o token",
+        "errorUnexpected": "Erro inesperado ao validar token: {{message}}",
+        "errorInvalidOrInsufficient": "Token inválido ou permissões insuficientes"
       },
       "serverUrl": {
-        "label": "Server URL",
-        "optional": "(optional)",
-        "description": "Base URL of the Git server (only for custom servers)"
+        "label": "URL do Servidor",
+        "optional": "(opcional)",
+        "description": "URL base do servidor Git (apenas para servidores personalizados)"
       }
     },
     "step3": {
-      "title": "Confirm your connection data",
-      "description": "Review the information before saving",
+      "title": "Confirme os dados da sua conexão",
+      "description": "Revise as informações antes de salvar",
       "fields": {
-        "provider": "Provider:",
-        "name": "Name:",
+        "provider": "Provedor:",
+        "name": "Nome:",
         "url": "URL:",
-        "authType": "Authentication Type:",
+        "authType": "Tipo de Autenticação:",
         "token": "Token:",
         "authTypeValue": "Token"
       }
     },
     "actions": {
-      "cancel": "Cancel",
-      "previous": "Previous",
-      "next": "Next",
-      "validating": "Validating...",
-      "save": "Save"
+      "cancel": "Cancelar",
+      "previous": "Anterior",
+      "next": "Próximo",
+      "validating": "Validando...",
+      "save": "Salvar"
     }
   },
   "repositories": {
