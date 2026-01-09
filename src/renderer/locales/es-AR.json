@@ -435,7 +435,12 @@
         "placeholder": "Ingresa tu token de acceso",
         "validating": "Validando token y conectando con el servidor...",
         "valid": "Token válido. Puedes continuar al siguiente paso.",
-        "error": "Error al validar el token"
+        "error": "Error al validar el token",
+        "errorServerUrl": "Por favor, ingresa la URL del servidor",
+        "errorValidation": "Error al validar el token",
+        "errorCannotValidate": "Error: No se pudo validar el token",
+        "errorUnexpected": "Error inesperado al validar el token: {{message}}",
+        "errorInvalidOrInsufficient": "Token inválido o sin permisos suficientes"
       },
       "serverUrl": {
         "label": "URL del Servidor",

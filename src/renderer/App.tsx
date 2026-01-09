@@ -1124,7 +1124,7 @@ function App() {
       const urlServidorFinal = urlServidor || getUrlPorDefecto(proveedorSeleccionado);
 
       if (!urlServidorFinal) {
-        setErrorValidacionToken("Por favor, ingresa la URL del servidor");
+        setErrorValidacionToken(t('connectionWizard.step2.token.errorServerUrl'));
         setValidandoToken(false);
         return;
       }
@@ -1143,15 +1143,20 @@ function App() {
           // Avanzar al paso 3
           setPasoWizard(3);
         } else {
-          setErrorValidacionToken(resultado.error || "Error al validar el token");
+          // Traducir el mensaje de error si viene del backend
+          let errorMessage = resultado.error || t('connectionWizard.step2.token.errorValidation');
+          if (errorMessage === 'Token inválido o sin permisos suficientes') {
+            errorMessage = t('connectionWizard.step2.token.errorInvalidOrInsufficient');
+          }
+          setErrorValidacionToken(errorMessage);
           setTokenValidado(false);
         }
       } else {
-        setErrorValidacionToken("Error: No se pudo validar el token");
+        setErrorValidacionToken(t('connectionWizard.step2.token.errorCannotValidate'));
       }
     } catch (error) {
       // Error al validar token
-      setErrorValidacionToken("Error inesperado al validar el token: " + (error as Error).message);
+      setErrorValidacionToken(t('connectionWizard.step2.token.errorUnexpected', { message: (error as Error).message }));
       setTokenValidado(false);
     } finally {
       setValidandoToken(false);
