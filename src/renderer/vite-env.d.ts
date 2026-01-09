@@ -81,11 +81,6 @@ interface Window {
       editors?: string[];
       error?: string;
     }>;
-    saveConfigFile: (configData: any) => Promise<{
-      success: boolean;
-      filePath?: string;
-      error?: string;
-    }>;
     cloneRepository: (url: string, destPath: string, repoId: string, sslVerify?: boolean, token?: string) => Promise<{
       success: boolean;
       error?: string;
@@ -107,15 +102,6 @@ interface Window {
     getCommitFileContent: (repoPath: string, commitHash: string, filePath: string) => Promise<{ success: boolean; content?: string; error?: string }>;
     getCommitParents: (repoPath: string, commitHash: string) => Promise<{ success: boolean; parents?: string[]; error?: string }>;
     openInIDE: (path: string, ideName: string) => Promise<{
-      success: boolean;
-      error?: string;
-    }>;
-    getGitConfig: (key: string) => Promise<{
-      success: boolean;
-      value?: string;
-      error?: string;
-    }>;
-    setGitConfig: (key: string, value: string) => Promise<{
       success: boolean;
       error?: string;
     }>;

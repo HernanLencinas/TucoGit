@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react"
 import {
   Toast,
   ToastClose,
@@ -11,6 +12,65 @@ import { CheckCircle2, XCircle, Info, AlertTriangle } from "lucide-react"
 
 export function Toaster() {
   const { toasts } = useToast()
+  const lastPlayedToastId = useRef<string | null>(null)
+
+  const playNotificationSound = (variant?: string) => {
+    try {
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContext) return;
+
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (variant === 'destructive') {
+        // Error sound: low pitch, descending
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      } else if (variant === 'success') {
+        // Success sound: high pitch, ascending
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(500, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1000, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      } else {
+        // Default/Info sound: simple blip
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, ctx.currentTime);
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.15);
+      }
+    } catch (e) {
+      console.error("Audio playback failed", e);
+    }
+  };
+
+  useEffect(() => {
+    if (toasts.length > 0) {
+      const latestToast = toasts[0]; // toasts are usually [newest, ...rest] or handled by limit
+      // The use-toast reducer prepends new toasts: [action.toast, ...state.toasts]
+      // So index 0 is the newest.
+
+      if (latestToast.id !== lastPlayedToastId.current) {
+        // Only play if it's a new toast
+        playNotificationSound(latestToast.variant);
+        lastPlayedToastId.current = latestToast.id;
+      }
+    }
+  }, [toasts]);
 
   const getIcon = (variant?: string) => {
     switch (variant) {

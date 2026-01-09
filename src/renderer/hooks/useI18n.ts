@@ -1,6 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
-import i18n from '../i18n/config';
 
 /**
  * Hook personalizado para gestionar la internacionalización.
@@ -16,20 +14,7 @@ import i18n from '../i18n/config';
  * @returns {Object} returns.i18n - Instancia de i18n
  */
 export const useI18n = () => {
-  const { t, i18n: i18nInstance } = useTranslation();
-  
-  // Sincronizar el idioma actual con i18next cuando cambia
-  useEffect(() => {
-    const handleLanguageChanged = (lng: string) => {
-      // El idioma ya está actualizado en i18next
-    };
-    
-    i18nInstance.on('languageChanged', handleLanguageChanged);
-    
-    return () => {
-      i18nInstance.off('languageChanged', handleLanguageChanged);
-    };
-  }, [i18nInstance]);
+  const { t, i18n: i18nInstance } = useTranslation('translation');
 
   /**
    * Cambia el idioma de la aplicación y lo guarda en la configuración.

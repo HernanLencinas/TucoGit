@@ -813,7 +813,11 @@
     "search": {
       "placeholder": "Buscar commits (mensaje, autor, hash)...",
       "clear": "Limpiar",
-      "commits": "commits"
+      "commits": "commits",
+      "allCollections": "Todas las colecciones",
+      "placeholderCollections": "Buscar colecciones y repositorios...",
+      "clearSearch": "Limpiar búsqueda",
+      "noResults": "No se encontraron resultados para \"{{query}}\""
     },
     "newBranchModal": {
       "title": "Nuevo Branch",
