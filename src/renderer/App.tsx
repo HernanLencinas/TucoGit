@@ -33,7 +33,7 @@ function App() {
   const [selectedTheme, setSelectedTheme] = useState<{ name: string; mode: "light" | "dark" }>({ name: "default", mode: "dark" });
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const [tempZoomLevel, setTempZoomLevel] = useState<number>(100);
-  
+
   // Sincronizar tempZoomLevel cuando zoomLevel cambia externamente
   useEffect(() => {
     setTempZoomLevel(zoomLevel);
@@ -133,8 +133,8 @@ function App() {
   const [editoresInstalados, setEditoresInstalados] = useState<string[]>([]);
   const [editorIDECargado, setEditorIDECargado] = useState(false);
   const [gitSslVerify, setGitSslVerify] = useState<boolean>(true);
-  const [gitUserName, setGitUserName] = useState<string>("");
-  const [gitUserEmail, setGitUserEmail] = useState<string>("");
+  const [setGitUserName] = useState<string>("");
+  const [setGitUserEmail] = useState<string>("");
   const [commitButtonBehavior, setCommitButtonBehavior] = useState<"commit" | "commit-push" | "commit-sync">("commit");
   const [mostrarMenuCommitBehavior, setMostrarMenuCommitBehavior] = useState(false);
   const [uiLanguage, setUiLanguage] = useState<"en" | "es-AR" | "de" | "fr" | "pt" | "ja" | "zh-CN">("es-AR");
@@ -142,8 +142,8 @@ function App() {
   const [mostrarModalRestablecerConfig, setMostrarModalRestablecerConfig] = useState(false);
   const [mostrarModalConfirmarReclon, setMostrarModalConfirmarReclon] = useState(false);
   const [repoAClonar, setRepoAClonar] = useState<FolderItem | null>(null);
-  const [rutaDestinoAClonar, setRutaDestinoAClonar] = useState<string>("");
-  
+  const [setRutaDestinoAClonar] = useState<string>("");
+
   // Estado para identidades de Git
   const [gitIdentities, setGitIdentities] = useState<GitIdentity[]>([]);
   const [mostrarModalNuevaIdentidad, setMostrarModalNuevaIdentidad] = useState(false);
@@ -368,14 +368,14 @@ function App() {
             };
 
             const nuevaEstructura = actualizarEstructura(prevEstructura);
-            
+
             // Guardar configuración de forma asíncrona
             if (window.electronAPI?.writeConfig) {
               window.electronAPI.writeConfig({ repositorios: nuevaEstructura }).catch(() => {
                 // Error al guardar, pero continuamos
               });
             }
-            
+
             return nuevaEstructura;
           });
 
@@ -428,7 +428,7 @@ function App() {
     // Clonar cada repositorio secuencialmente
     for (let i = 0; i < repositorios.length; i++) {
       const repo = repositorios[i];
-      
+
       try {
         // Verificar si tiene URL de clonación
         if (!repo.urlClon) {
@@ -442,7 +442,7 @@ function App() {
           const orgPath = repo.organizacion ? `${repo.organizacion}/` : "";
           const repoName = repo.nombreGit || repo.nombre;
           const destPath = `${rutaConfiguracion}/repositories/${repo.idConexion || 'unknown'}/${orgPath}${repoName}`;
-          
+
           const existe = await window.electronAPI.checkPathExists(destPath);
           if (existe) {
             omitidos++;
@@ -472,10 +472,10 @@ function App() {
         // Clonar el repositorio (si forzarReclonado es true, saltará la confirmación y eliminará la carpeta)
         // Esperar a que la clonación termine completamente
         await clonarRepositorio(repo, forzarReclonado);
-        
+
         // Esperar un momento adicional para asegurar que el estado se haya actualizado
         await new Promise(resolve => setTimeout(resolve, 200));
-        
+
         exitosos++;
       } catch (error) {
         fallidos++;
@@ -546,7 +546,7 @@ function App() {
     const inicializarConfiguracion = async () => {
       // Mantener el loading activo mientras se inicializa
       setIsLoading(true);
-      
+
       // Esperar un poco para asegurar que Electron esté listo
       await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -652,7 +652,7 @@ function App() {
                 // Asegurar que la identidad por defecto existe y esté primero
                 const identidades = [...resultado.gitIdentities];
                 const defaultIndex = identidades.findIndex(id => id.id === IDENTIDAD_DEFAULT_ID);
-                
+
                 if (defaultIndex === -1) {
                   // Si no existe, agregarla al inicio
                   identidades.unshift(IDENTIDAD_DEFAULT);
@@ -662,7 +662,7 @@ function App() {
                   identidades.splice(defaultIndex, 1);
                   identidades.unshift(defaultIdentity);
                 }
-                
+
                 setGitIdentities(identidades);
               } else {
                 // Si no hay identidades guardadas, crear solo la por defecto
@@ -969,12 +969,12 @@ function App() {
   // Función para completar el wizard de bienvenida
   const completarWizardBienvenida = async (nombre?: string, email?: string) => {
     setMostrarWizardBienvenida(false);
-    
+
     try {
       // Crear el archivo de configuración con los datos del wizard
       if (window.electronAPI?.getDocumentsPath && window.electronAPI?.writeConfig) {
         const documentsPath = await window.electronAPI.getDocumentsPath();
-        
+
         if (nombre && email) {
           // Crear identidad predeterminada con los datos del wizard
           const identidadActualizada = {
@@ -985,7 +985,7 @@ function App() {
 
           // Guardar configuración inicial con los datos del wizard
           // writeConfig ahora crea el archivo si no existe
-          await window.electronAPI.writeConfig({ 
+          await window.electronAPI.writeConfig({
             wizardCompleted: true,
             gitUserName: nombre,
             gitUserEmail: email,
@@ -1004,7 +1004,7 @@ function App() {
           setGitIdentities([identidadActualizada]);
         } else {
           // Si no se proporcionaron valores, crear archivo con valores por defecto
-          await window.electronAPI.writeConfig({ 
+          await window.electronAPI.writeConfig({
             wizardCompleted: true,
             gitIdentities: [IDENTIDAD_DEFAULT]
           });
@@ -1016,14 +1016,14 @@ function App() {
           const configRecargada = await window.electronAPI.initializeConfig(documentsPath);
           if (configRecargada.success) {
             setRutaConfiguracion(configRecargada.ruta || `${documentsPath}/Tuco`);
-            
+
             // Aplicar tema y otros valores por defecto
             const temaMode = configRecargada.tema === 'dark' ? 'dark' : 'light';
             const temaNombre = configRecargada.temaNombre || 'default';
             setIsDark(temaMode === 'dark');
             setSelectedTheme({ name: temaNombre, mode: temaMode });
             applyTheme(temaNombre as ThemeName, temaMode);
-            
+
             if (configRecargada.zoomLevel) {
               setZoomLevel(configRecargada.zoomLevel);
               setTempZoomLevel(configRecargada.zoomLevel);
@@ -2870,7 +2870,7 @@ function App() {
               {rutaCompleta.map((item, index) => {
                 const esUltimo = index === rutaCompleta.length - 1;
                 const cantidadRepos = esUltimo ? itemsActuales.filter(item => item.tipo === "archivo").length : 0;
-                
+
                 return (
                   <div key={item.id} className="flex items-center gap-1">
                     {index > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
@@ -4090,9 +4090,8 @@ function App() {
                                         }
                                       }
                                     }}
-                                    className={`w-full px-4 py-3 text-sm text-left rounded-md hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ${
-                                      editorIDESeleccionado === ide ? 'bg-primary/10 border border-primary/20' : ''
-                                    }`}
+                                    className={`w-full px-4 py-3 text-sm text-left rounded-md hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ${editorIDESeleccionado === ide ? 'bg-primary/10 border border-primary/20' : ''
+                                      }`}
                                   >
                                     <div className="flex-shrink-0 p-1.5 rounded-md bg-background">
                                       {getIconoIDE(ide)}
@@ -4117,7 +4116,7 @@ function App() {
                         </>
                       )}
                     </div>
-                    
+
                     {editorIDESeleccionado && (
                       <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
                         <Info className="h-4 w-4 text-primary flex-shrink-0" />
@@ -4179,9 +4178,8 @@ function App() {
                                     setMostrarMenuIdioma(false);
                                     await changeLanguage(idioma);
                                   }}
-                                  className={`w-full px-4 py-3 text-sm text-left rounded-md hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ${
-                                    uiLanguage === idioma ? 'bg-primary/10 border border-primary/20' : ''
-                                  }`}
+                                  className={`w-full px-4 py-3 text-sm text-left rounded-md hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ${uiLanguage === idioma ? 'bg-primary/10 border border-primary/20' : ''
+                                    }`}
                                 >
                                   <div className="flex-shrink-0 p-1.5 rounded-md bg-background">
                                     <Globe className="h-4 w-4 text-muted-foreground" />
@@ -4271,25 +4269,25 @@ function App() {
               if (window.electronAPI?.getDocumentsPath && window.electronAPI?.initializeConfig) {
                 const documentsPath = await window.electronAPI.getDocumentsPath();
                 const resultado = await window.electronAPI.initializeConfig(documentsPath);
-                
+
                 if (resultado.success) {
                   // Actualizar ruta de configuración
                   setRutaConfiguracion(resultado.ruta || `${documentsPath}/Tuco`);
-                  
+
                   // Aplicar tema
                   const temaMode = resultado.tema === 'dark' ? 'dark' : 'light';
                   const temaNombre = resultado.temaNombre || 'default';
                   setIsDark(temaMode === 'dark');
                   setSelectedTheme({ name: temaNombre, mode: temaMode });
                   applyTheme(temaNombre as ThemeName, temaMode);
-                  
+
                   // Aplicar zoom
                   if (resultado.zoomLevel) {
                     setZoomLevel(resultado.zoomLevel);
                     setTempZoomLevel(resultado.zoomLevel);
                     document.documentElement.style.setProperty('--zoom-level', `${resultado.zoomLevel}%`);
                   }
-                  
+
                   // Recargar repositorios
                   if (resultado.repositorios && resultado.repositorios.length > 0) {
                     const reposConEstado = await Promise.all(resultado.repositorios.map(async (item: FolderItem) => {
@@ -4319,7 +4317,7 @@ function App() {
                       hijos: []
                     }]);
                   }
-                  
+
                   // Recargar conexiones
                   if (window.electronAPI?.readConfig) {
                     const configResult = await window.electronAPI.readConfig();
@@ -4329,7 +4327,7 @@ function App() {
                       setConexionesGuardadas([]);
                     }
                   }
-                  
+
                   // Actualizar fecha de última actualización
                   if (resultado.ultimaActualizacion) {
                     const fecha = new Date(resultado.ultimaActualizacion);
@@ -4343,12 +4341,12 @@ function App() {
                       hour12: true
                     }));
                   }
-                  
+
                   // Actualizar editor IDE
                   if (resultado.editorIDE) {
                     setEditorIDESeleccionado(resultado.editorIDE);
                   }
-                  
+
                   // Actualizar configuración de Git
                   if (resultado.gitSslVerify !== undefined) {
                     setGitSslVerify(resultado.gitSslVerify);
@@ -4489,15 +4487,15 @@ function App() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex gap-2">
-                    <Button 
-                      onClick={importarConfiguracion} 
+                    <Button
+                      onClick={importarConfiguracion}
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       {t('settings.data.management.import')}
                     </Button>
-                    <Button 
-                      onClick={exportarConfiguracion} 
+                    <Button
+                      onClick={exportarConfiguracion}
                       className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                     >
                       <Upload className="h-4 w-4 mr-2" />
@@ -4702,9 +4700,8 @@ function App() {
                                     }
                                   }
                                 }}
-                                className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${
-                                  commitButtonBehavior === "commit" ? "bg-accent text-accent-foreground" : ""
-                                }`}
+                                className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${commitButtonBehavior === "commit" ? "bg-accent text-accent-foreground" : ""
+                                  }`}
                               >
                                 <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit" ? "opacity-100" : "opacity-0"}`} />
                                 <span>{t('settings.git.commitBehavior.commit')}</span>
@@ -4722,9 +4719,8 @@ function App() {
                                     }
                                   }
                                 }}
-                                className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${
-                                  commitButtonBehavior === "commit-push" ? "bg-accent text-accent-foreground" : ""
-                                }`}
+                                className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${commitButtonBehavior === "commit-push" ? "bg-accent text-accent-foreground" : ""
+                                  }`}
                               >
                                 <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit-push" ? "opacity-100" : "opacity-0"}`} />
                                 <span>{t('settings.git.commitBehavior.commitPush')}</span>
@@ -4742,9 +4738,8 @@ function App() {
                                     }
                                   }
                                 }}
-                                className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${
-                                  commitButtonBehavior === "commit-sync" ? "bg-accent text-accent-foreground" : ""
-                                }`}
+                                className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${commitButtonBehavior === "commit-sync" ? "bg-accent text-accent-foreground" : ""
+                                  }`}
                               >
                                 <Check className={`h-4 w-4 flex-shrink-0 ${commitButtonBehavior === "commit-sync" ? "opacity-100" : "opacity-0"}`} />
                                 <span>{t('settings.git.commitBehavior.commitSync')}</span>
@@ -4803,11 +4798,10 @@ function App() {
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center gap-2">
                           <label className="text-sm font-semibold">{t('settings.git.security.sslVerify')}</label>
-                          <div className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                            gitSslVerify 
-                              ? 'bg-green-500/10 text-green-600 dark:text-green-400' 
-                              : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
-                          }`}>
+                          <div className={`px-2 py-0.5 rounded-full text-xs font-semibold ${gitSslVerify
+                            ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+                            : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                            }`}>
                             {gitSslVerify ? t('settings.git.security.activated') : t('settings.git.security.deactivated')}
                           </div>
                         </div>
@@ -4841,14 +4835,12 @@ function App() {
                             }
                           }
                         }}
-                        className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex-shrink-0 ${
-                          gitSslVerify ? 'bg-primary' : 'bg-muted'
-                        }`}
+                        className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex-shrink-0 ${gitSslVerify ? 'bg-primary' : 'bg-muted'
+                          }`}
                       >
                         <span
-                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${
-                            gitSslVerify ? 'translate-x-6' : 'translate-x-1'
-                          }`}
+                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform ${gitSslVerify ? 'translate-x-6' : 'translate-x-1'
+                            }`}
                         />
                       </button>
                     </div>
@@ -4911,11 +4903,10 @@ function App() {
                       return (
                         <Card
                           key={theme.name}
-                          className={`p-3 cursor-pointer hover:border-primary/50 transition-all border-2 ${
-                            selectedTheme.name === theme.name 
-                              ? 'border-primary bg-primary/5 shadow-md' 
-                              : 'border-border'
-                          }`}
+                          className={`p-3 cursor-pointer hover:border-primary/50 transition-all border-2 ${selectedTheme.name === theme.name
+                            ? 'border-primary bg-primary/5 shadow-md'
+                            : 'border-border'
+                            }`}
                           onClick={() => handleThemeSelect(theme.name)}
                         >
                           <div className="space-y-2">
@@ -5443,7 +5434,7 @@ function App() {
                 const esActivo = activeRepository?.id === repo.id;
                 const gitInfo = gitInfoRepositorios[repo.id];
                 const tieneCambios = gitInfo?.uncommitted && gitInfo.uncommitted > 0;
-                
+
                 return (
                   <div
                     key={repo.id}
@@ -5490,7 +5481,7 @@ function App() {
                         {repo.nombre}
                       </span>
                     </button>
-                    
+
                     {/* Botón cerrar - solo visible en hover o si está activo */}
                     <button
                       onClick={(e) => {
@@ -5858,8 +5849,8 @@ function App() {
                         />
                         <span className={cn(
                           "absolute top-2.5 right-3 text-xs font-medium transition-colors pointer-events-none",
-                          nombreConexion.length > 28 
-                            ? "text-amber-600 dark:text-amber-500" 
+                          nombreConexion.length > 28
+                            ? "text-amber-600 dark:text-amber-500"
                             : "text-slate-500 dark:text-slate-400"
                         )}>
                           {nombreConexion.length}/32
@@ -5908,9 +5899,8 @@ function App() {
                                     setIdentidadSeleccionada(identidad.id);
                                     setMostrarMenuIdentidad(false);
                                   }}
-                                  className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${
-                                    identidadSeleccionada === identidad.id ? "bg-accent text-accent-foreground" : ""
-                                  }`}
+                                  className={`w-full px-3 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-2 ${identidadSeleccionada === identidad.id ? "bg-accent text-accent-foreground" : ""
+                                    }`}
                                 >
                                   <Check className={`h-4 w-4 flex-shrink-0 ${identidadSeleccionada === identidad.id ? "opacity-100" : "opacity-0"}`} />
                                   <div className="flex-1 min-w-0">
@@ -6182,18 +6172,18 @@ function App() {
               }}
             >
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                  <div className="mb-6">
-                    <div className="flex-1">
-                      <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                        {editandoRepositorio ? t('repositories.newRepositoryWizard.title.edit') : t('repositories.newRepositoryWizard.title.new')}
-                      </CardTitle>
-                      <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                        {editandoRepositorio
-                          ? t('repositories.newRepositoryWizard.description.edit')
-                          : t('repositories.newRepositoryWizard.description.new')}
-                      </CardDescription>
-                    </div>
+                <div className="mb-6">
+                  <div className="flex-1">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                      {editandoRepositorio ? t('repositories.newRepositoryWizard.title.edit') : t('repositories.newRepositoryWizard.title.new')}
+                    </CardTitle>
+                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                      {editandoRepositorio
+                        ? t('repositories.newRepositoryWizard.description.edit')
+                        : t('repositories.newRepositoryWizard.description.new')}
+                    </CardDescription>
                   </div>
+                </div>
 
                 {/* Barra de progreso */}
                 <div className="flex items-center justify-between">
@@ -6507,8 +6497,8 @@ function App() {
                         />
                         <span className={cn(
                           "absolute top-2.5 right-3 text-xs font-medium transition-colors pointer-events-none",
-                          nombreRepositorio.length > 28 
-                            ? "text-amber-600 dark:text-amber-500" 
+                          nombreRepositorio.length > 28
+                            ? "text-amber-600 dark:text-amber-500"
                             : "text-slate-500 dark:text-slate-400"
                         )}>
                           {nombreRepositorio.length}/32
@@ -6544,8 +6534,8 @@ function App() {
                         />
                         <span className={cn(
                           "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
-                          descripcionRepositorio.length > 85 
-                            ? "text-amber-600 dark:text-amber-500" 
+                          descripcionRepositorio.length > 85
+                            ? "text-amber-600 dark:text-amber-500"
                             : "text-slate-500 dark:text-slate-400"
                         )}>
                           {descripcionRepositorio.length}/100
@@ -6699,7 +6689,7 @@ function App() {
             }}
             tabIndex={-1}
           >
-            <Card 
+            <Card
               className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
@@ -6855,8 +6845,8 @@ function App() {
                   />
                   <span className={cn(
                     "absolute top-2.5 right-3 text-xs font-medium transition-colors pointer-events-none",
-                    nombreNuevaCarpeta.length > 28 
-                      ? "text-amber-600 dark:text-amber-500" 
+                    nombreNuevaCarpeta.length > 28
+                      ? "text-amber-600 dark:text-amber-500"
                       : "text-slate-500 dark:text-slate-400"
                   )}>
                     {nombreNuevaCarpeta.length}/32
@@ -6910,8 +6900,8 @@ function App() {
                   />
                   <span className={cn(
                     "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
-                    descripcionNuevaCarpeta.length > 85 
-                      ? "text-amber-600 dark:text-amber-500" 
+                    descripcionNuevaCarpeta.length > 85
+                      ? "text-amber-600 dark:text-amber-500"
                       : "text-slate-500 dark:text-slate-400"
                   )}>
                     {descripcionNuevaCarpeta.length}/100
@@ -6926,14 +6916,14 @@ function App() {
               </div>
 
               <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="default"
                   className="min-w-[100px]"
-                  onClick={() => { 
+                  onClick={() => {
                     if (!creandoColeccion) {
-                      setMostrarModalNuevaCarpeta(false); 
-                      setNombreNuevaCarpeta(""); 
+                      setMostrarModalNuevaCarpeta(false);
+                      setNombreNuevaCarpeta("");
                       setDescripcionNuevaCarpeta("");
                       setErrorNombre(null);
                       setErrorDescripcion(null);
@@ -6943,7 +6933,7 @@ function App() {
                 >
                   {t('repositories.newCollectionModal.buttons.cancel')}
                 </Button>
-                <Button 
+                <Button
                   size="default"
                   className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={crearNuevaCarpeta}
@@ -7083,8 +7073,8 @@ function App() {
                   />
                   <span className={cn(
                     "absolute top-2.5 right-3 text-xs font-medium transition-colors pointer-events-none",
-                    nombreEditarColeccion.length > 28 
-                      ? "text-amber-600 dark:text-amber-500" 
+                    nombreEditarColeccion.length > 28
+                      ? "text-amber-600 dark:text-amber-500"
                       : "text-slate-500 dark:text-slate-400"
                   )}>
                     {nombreEditarColeccion.length}/32
@@ -7138,8 +7128,8 @@ function App() {
                   />
                   <span className={cn(
                     "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
-                    descripcionEditarColeccion.length > 85 
-                      ? "text-amber-600 dark:text-amber-500" 
+                    descripcionEditarColeccion.length > 85
+                      ? "text-amber-600 dark:text-amber-500"
                       : "text-slate-500 dark:text-slate-400"
                   )}>
                     {descripcionEditarColeccion.length}/100
@@ -7154,15 +7144,15 @@ function App() {
               </div>
 
               <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="default"
                   className="min-w-[100px]"
-                  onClick={() => { 
+                  onClick={() => {
                     if (!editandoColeccion) {
-                      setMostrarModalEditarColeccion(false); 
-                      setColeccionAEditar(null); 
-                      setNombreEditarColeccion(""); 
+                      setMostrarModalEditarColeccion(false);
+                      setColeccionAEditar(null);
+                      setNombreEditarColeccion("");
                       setDescripcionEditarColeccion("");
                       setErrorNombreEditar(null);
                       setErrorDescripcionEditar(null);
@@ -7172,7 +7162,7 @@ function App() {
                 >
                   {t('repositories.editCollectionModal.buttons.cancel')}
                 </Button>
-                <Button 
+                <Button
                   size="default"
                   className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={guardarEdicionColeccion}
@@ -7212,7 +7202,7 @@ function App() {
             }}
             tabIndex={-1}
           >
-            <Card 
+            <Card
               className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
@@ -7304,8 +7294,8 @@ function App() {
               }}
               tabIndex={-1}
             >
-              <Card 
-                className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+              <Card
+                className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => {
                   if (e.key === 'Escape') {
@@ -7399,7 +7389,7 @@ function App() {
             }}
             tabIndex={-1}
           >
-            <Card 
+            <Card
               className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
@@ -7502,7 +7492,7 @@ function App() {
               }}
               tabIndex={-1}
             >
-              <Card 
+              <Card
                 className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => {
@@ -7607,7 +7597,7 @@ function App() {
             }}
             tabIndex={-1}
           >
-            <Card 
+            <Card
               className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
@@ -7959,7 +7949,7 @@ function App() {
                         ? { ...identidad, nombre: nombreNuevaIdentidad.trim(), email: emailNuevaIdentidad.trim() }
                         : identidad
                     );
-                    
+
                     // Asegurar que la identidad por defecto siempre esté primero
                     const identidadDefault = identidadesActualizadas.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
                     const otrasIdentidades = identidadesActualizadas.filter(id => id.id !== IDENTIDAD_DEFAULT_ID);
@@ -8035,7 +8025,7 @@ function App() {
                     const identidadesActualizadas = gitIdentities.filter(
                       identidad => identidad.id !== identidadAEliminar.id && identidad.id !== IDENTIDAD_DEFAULT_ID
                     );
-                    
+
                     // Asegurar que la identidad por defecto siempre esté primero
                     const identidadDefault = gitIdentities.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
                     const identidadesOrdenadas = [identidadDefault, ...identidadesActualizadas];
