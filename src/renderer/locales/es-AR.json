@@ -696,6 +696,49 @@
         "saveChangesError": "Error al guardar los cambios. El repositorio se eliminó de la vista pero puede no haberse guardado en el archivo."
       }
     },
-    "preparing": "Preparando..."
+    "preparing": "Preparando...",
+    "gitStatusPanel": {
+      "unstagedChanges": {
+        "title": "Cambios sin Stage",
+        "stageAll": "Stagear Todo",
+        "noChanges": "No hay cambios pendientes",
+        "allFilesSynced": "Todos los archivos están sincronizados",
+        "stageFile": "Stagear archivo",
+        "stageFolder": "Stagear carpeta"
+      },
+      "stagedChanges": {
+        "title": "Cambios en Stage",
+        "unstageAll": "Quitar Todo del Stage",
+        "noChanges": "No hay cambios en stage",
+        "stageFilesToCommit": "Stagea archivos para preparar tu commit",
+        "unstageFile": "Quitar archivo del stage",
+        "unstageFolder": "Quitar carpeta del stage"
+      },
+      "commitMessage": {
+        "title": "Mensaje de Commit",
+        "placeholder": "Ingresa el mensaje de commit...",
+        "placeholderNoStaged": "Stagea archivos para poder hacer commit",
+        "button": {
+          "commit": "Commit",
+          "commitToBranch": "Commit a '{{branch}}'",
+          "commitPush": "Commit + Push",
+          "commitPushToBranch": "Commit + Push a '{{branch}}'",
+          "commitSync": "Commit + Sync",
+          "commitSyncToBranch": "Commit + Sync a '{{branch}}'",
+          "committing": "Haciendo commit",
+          "committingToBranch": "Haciendo commit a '{{branch}}'...",
+          "committingPushing": "Haciendo commit y push",
+          "committingPushingToBranch": "Haciendo commit y push a '{{branch}}'...",
+          "committingSyncing": "Haciendo commit y sync",
+          "committingSyncingToBranch": "Haciendo commit y sync a '{{branch}}'..."
+        },
+        "errors": {
+          "pullFailedConflicts": "Commit realizado exitosamente, pero el pull falló por conflictos: {{message}}. Resuelve los conflictos manualmente.",
+          "pushFailedNeedPull": "Commit realizado exitosamente, pero el push falló: {{message}}. Puede que necesites hacer pull primero.",
+          "pushFailed": "Commit realizado exitosamente, pero el push falló: {{message}}",
+          "additionalOperationFailed": "Commit realizado exitosamente, pero la operación adicional falló: {{message}}"
+        }
+      }
+    }
   }
 }

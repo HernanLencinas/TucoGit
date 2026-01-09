@@ -4094,7 +4094,6 @@ function App() {
                                       if (window.electronAPI?.writeConfig) {
                                         try {
                                           await window.electronAPI.writeConfig({ editorIDE: ide });
-                                          showToast(t('settings.general.preferredIDE.editorChanged', { ide }), 'success');
                                         } catch (error) {
                                           // Error al guardar editor IDE
                                           showToast(t('settings.general.preferredIDE.errorSaving'), 'error');

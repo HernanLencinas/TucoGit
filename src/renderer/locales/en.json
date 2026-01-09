@@ -696,6 +696,49 @@
         "saveChangesError": "Error saving changes. The repository was removed from view but may not have been saved to the file."
       }
     },
-    "preparing": "Preparing..."
+    "preparing": "Preparing...",
+    "gitStatusPanel": {
+      "unstagedChanges": {
+        "title": "Unstaged Changes",
+        "stageAll": "Stage All",
+        "noChanges": "No pending changes",
+        "allFilesSynced": "All files are synchronized",
+        "stageFile": "Stage file",
+        "stageFolder": "Stage folder"
+      },
+      "stagedChanges": {
+        "title": "Staged Changes",
+        "unstageAll": "Unstage All",
+        "noChanges": "No staged changes",
+        "stageFilesToCommit": "Stage files to prepare your commit",
+        "unstageFile": "Unstage file",
+        "unstageFolder": "Unstage folder"
+      },
+      "commitMessage": {
+        "title": "Commit Message",
+        "placeholder": "Enter commit message...",
+        "placeholderNoStaged": "Stage files to be able to commit",
+        "button": {
+          "commit": "Commit",
+          "commitToBranch": "Commit to '{{branch}}'",
+          "commitPush": "Commit + Push",
+          "commitPushToBranch": "Commit + Push to '{{branch}}'",
+          "commitSync": "Commit + Sync",
+          "commitSyncToBranch": "Commit + Sync to '{{branch}}'",
+          "committing": "Committing",
+          "committingToBranch": "Committing to '{{branch}}'...",
+          "committingPushing": "Committing & Pushing",
+          "committingPushingToBranch": "Committing & Pushing to '{{branch}}'...",
+          "committingSyncing": "Committing & Syncing",
+          "committingSyncingToBranch": "Committing & Syncing to '{{branch}}'..."
+        },
+        "errors": {
+          "pullFailedConflicts": "Commit completed successfully, but pull failed due to conflicts: {{message}}. Resolve conflicts manually.",
+          "pushFailedNeedPull": "Commit completed successfully, but push failed: {{message}}. You may need to pull first.",
+          "pushFailed": "Commit completed successfully, but push failed: {{message}}",
+          "additionalOperationFailed": "Commit completed successfully, but additional operation failed: {{message}}"
+        }
+      }
+    }
   }
 }

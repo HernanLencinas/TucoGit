@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/renderer/hooks/useI18n";
 
 /**
  * Interfaz que representa un archivo en el estado de Git.
@@ -78,6 +79,7 @@ interface GitStatusPanelProps {
  * ```
  */
 export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefreshGraph, connectionId }) => {
+    const { t } = useI18n();
     const [stagedFiles, setStagedFiles] = useState<GitFile[]>([]);
     const [unstagedFiles, setUnstagedFiles] = useState<GitFile[]>([]);
     const [commitMessage, setCommitMessage] = useState("");
@@ -283,7 +285,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                             if (!pullResult?.success) {
                                 const errorMessage = pullResult?.error || "";
                                 if (errorMessage.includes("conflict") || errorMessage.includes("CONFLICT")) {
-                                    setError(`Commit realizado exitosamente, pero el pull falló por conflictos: ${errorMessage}. Resuelve los conflictos manualmente.`);
+                                    setError(t('repositories.gitStatusPanel.commitMessage.errors.pullFailedConflicts', { message: errorMessage }));
                                     loadStatus();
                                     onRefreshGraph();
                                     return;
@@ -303,13 +305,13 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                             // Si el push falla, mostrar el error pero el commit ya se hizo
                             const errorMessage = pushResult?.error || "";
                             if (errorMessage.includes("non-fast-forward") || errorMessage.includes("behind") || errorMessage.includes("Updates were rejected")) {
-                                setError(`Commit realizado exitosamente, pero el push falló: ${errorMessage}. Puede que necesites hacer pull primero.`);
+                                setError(t('repositories.gitStatusPanel.commitMessage.errors.pushFailedNeedPull', { message: errorMessage }));
                             } else {
-                                setError(`Commit realizado exitosamente, pero el push falló: ${errorMessage}`);
+                                setError(t('repositories.gitStatusPanel.commitMessage.errors.pushFailed', { message: errorMessage }));
                             }
                         }
                     } catch (pushErr: any) {
-                        setError(`Commit realizado exitosamente, pero la operación adicional falló: ${pushErr.message}`);
+                        setError(t('repositories.gitStatusPanel.commitMessage.errors.additionalOperationFailed', { message: pushErr.message }));
                     }
                 }
             } else {
@@ -507,7 +509,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                             size="icon"
                             className="h-6 w-6 text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/20"
                             onClick={() => handleStage(file.path)}
-                            title={isFolder ? "Stage folder" : "Stage file"}
+                            title={isFolder ? t('repositories.gitStatusPanel.unstagedChanges.stageFolder') : t('repositories.gitStatusPanel.unstagedChanges.stageFile')}
                         >
                             <Plus className="h-3.5 w-3.5" />
                         </Button>
@@ -520,7 +522,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                             size="icon"
                             className="h-6 w-6 text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/20"
                             onClick={() => handleUnstage(file.path)}
-                            title={isFolder ? "Unstage folder" : "Unstage file"}
+                            title={isFolder ? t('repositories.gitStatusPanel.stagedChanges.unstageFolder') : t('repositories.gitStatusPanel.stagedChanges.unstageFile')}
                         >
                             <Minus className="h-3.5 w-3.5" />
                         </Button>
@@ -536,7 +538,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
             <div className="flex flex-col flex-1 min-h-0 border-b border-slate-200 dark:border-slate-700/50">
                 <div className="h-9 px-4 flex items-center justify-between bg-slate-50/80 dark:bg-[#0b253a]/30 border-b border-slate-200 dark:border-slate-700/50 sticky top-0 z-10">
                     <div className="flex items-center gap-2">
-                        <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Unstaged Changes</h3>
+                        <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('repositories.gitStatusPanel.unstagedChanges.title')}</h3>
                         <span className="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded-sm font-mono">
                             {unstagedFiles.length}
                         </span>
@@ -558,7 +560,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                             onClick={() => handleStage('*')}
                             disabled={unstagedFiles.length === 0 || loading}
                         >
-                            Stage All
+                            {t('repositories.gitStatusPanel.unstagedChanges.stageAll')}
                         </Button>
                     </div>
                 </div>
@@ -566,8 +568,8 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                     {unstagedFiles.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center p-6 text-center">
                             <CheckCircle2 className="h-8 w-8 text-slate-300 dark:text-slate-600 mb-2" />
-                            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">No hay cambios pendientes</span>
-                            <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Todos los archivos están sincronizados</span>
+                            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{t('repositories.gitStatusPanel.unstagedChanges.noChanges')}</span>
+                            <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">{t('repositories.gitStatusPanel.unstagedChanges.allFilesSynced')}</span>
                         </div>
                     ) : (
                         unstagedFiles.map(file => renderFileRow(file, 'unstaged'))
@@ -579,7 +581,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
             <div className="flex flex-col flex-1 min-h-0">
                 <div className="h-9 px-4 flex items-center justify-between bg-slate-50/80 dark:bg-[#0b253a]/30 border-b border-slate-200 dark:border-slate-700/50 sticky top-0 z-10">
                     <div className="flex items-center gap-2">
-                        <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Staged Changes</h3>
+                        <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('repositories.gitStatusPanel.stagedChanges.title')}</h3>
                         <span className="text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded-sm font-mono">
                             {stagedFiles.length}
                         </span>
@@ -591,15 +593,15 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                         onClick={() => handleUnstage('*')}
                         disabled={stagedFiles.length === 0 || loading}
                     >
-                        Unstage All
+                        {t('repositories.gitStatusPanel.stagedChanges.unstageAll')}
                     </Button>
                 </div>
                 <div className="flex-1 overflow-auto">
                     {stagedFiles.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center p-6 text-center">
                             <CheckCircle2 className="h-8 w-8 text-slate-300 dark:text-slate-600 mb-2" />
-                            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">No hay cambios en stage</span>
-                            <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Stagea archivos para preparar tu commit</span>
+                            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{t('repositories.gitStatusPanel.stagedChanges.noChanges')}</span>
+                            <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">{t('repositories.gitStatusPanel.stagedChanges.stageFilesToCommit')}</span>
                         </div>
                     ) : (
                         stagedFiles.map(file => renderFileRow(file, 'staged'))
@@ -611,14 +613,14 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
             <div className="flex flex-col border-t border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-[#0b253a]/20">
                 <div className="h-9 px-4 flex items-center bg-slate-50/80 dark:bg-[#0b253a]/30 border-b border-slate-200 dark:border-slate-700/50">
                     <div className="flex items-center gap-2">
-                        <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Commit Message</h3>
+                        <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('repositories.gitStatusPanel.commitMessage.title')}</h3>
                     </div>
                 </div>
                 <div className="p-4">
                     <div className="mb-3">
                         <textarea
                             className="w-full h-24 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md p-3 text-xs outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all resize-none text-slate-700 dark:text-slate-200 placeholder:text-slate-400 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-100 dark:disabled:bg-slate-800/50"
-                            placeholder={stagedFiles.length === 0 ? "Stagea archivos para poder hacer commit" : "Enter commit message..."}
+                            placeholder={stagedFiles.length === 0 ? t('repositories.gitStatusPanel.commitMessage.placeholderNoStaged') : t('repositories.gitStatusPanel.commitMessage.placeholder')}
                             value={commitMessage}
                             onChange={(e) => setCommitMessage(e.target.value)}
                             maxLength={300}
@@ -634,15 +636,15 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                         {loading ? (
                             <>
                                 <RefreshCw className="h-3.5 w-3.5 animate-spin mr-2" />
-                                {commitButtonBehavior === "commit" && <>Committing{currentBranch ? ` to '${currentBranch}'` : ''}...</>}
-                                {commitButtonBehavior === "commit-push" && <>Committing & Pushing{currentBranch ? ` to '${currentBranch}'` : ''}...</>}
-                                {commitButtonBehavior === "commit-sync" && <>Committing & Syncing{currentBranch ? ` to '${currentBranch}'` : ''}...</>}
+                                {commitButtonBehavior === "commit" && <>{currentBranch ? t('repositories.gitStatusPanel.commitMessage.button.committingToBranch', { branch: currentBranch }) : t('repositories.gitStatusPanel.commitMessage.button.committing')}</>}
+                                {commitButtonBehavior === "commit-push" && <>{currentBranch ? t('repositories.gitStatusPanel.commitMessage.button.committingPushingToBranch', { branch: currentBranch }) : t('repositories.gitStatusPanel.commitMessage.button.committingPushing')}</>}
+                                {commitButtonBehavior === "commit-sync" && <>{currentBranch ? t('repositories.gitStatusPanel.commitMessage.button.committingSyncingToBranch', { branch: currentBranch }) : t('repositories.gitStatusPanel.commitMessage.button.committingSyncing')}</>}
                             </>
                         ) : (
                             <>
-                                {commitButtonBehavior === "commit" && <>Commit{currentBranch ? ` to '${currentBranch}'` : ''}</>}
-                                {commitButtonBehavior === "commit-push" && <>Commit + Push{currentBranch ? ` to '${currentBranch}'` : ''}</>}
-                                {commitButtonBehavior === "commit-sync" && <>Commit + Sync{currentBranch ? ` to '${currentBranch}'` : ''}</>}
+                                {commitButtonBehavior === "commit" && <>{currentBranch ? t('repositories.gitStatusPanel.commitMessage.button.commitToBranch', { branch: currentBranch }) : t('repositories.gitStatusPanel.commitMessage.button.commit')}</>}
+                                {commitButtonBehavior === "commit-push" && <>{currentBranch ? t('repositories.gitStatusPanel.commitMessage.button.commitPushToBranch', { branch: currentBranch }) : t('repositories.gitStatusPanel.commitMessage.button.commitPush')}</>}
+                                {commitButtonBehavior === "commit-sync" && <>{currentBranch ? t('repositories.gitStatusPanel.commitMessage.button.commitSyncToBranch', { branch: currentBranch }) : t('repositories.gitStatusPanel.commitMessage.button.commitSync')}</>}
                             </>
                         )}
                     </Button>
