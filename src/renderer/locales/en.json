@@ -518,6 +518,34 @@
       "pendingPush": "Pending upload (Push)",
       "pendingPull": "Pending download (Pull)"
     },
+    "newCollectionModal": {
+      "title": "New Collection",
+      "description": "Organize your repositories in a new custom collection",
+      "name": {
+        "label": "Collection name",
+        "required": "(required)",
+        "placeholder": "E.g: Frontend Projects, Backend APIs, etc.",
+        "errors": {
+          "required": "Name is required",
+          "maxLength": "Name cannot exceed 32 characters",
+          "duplicate": "A collection with that name already exists",
+          "createError": "Error creating collection. Please try again."
+        }
+      },
+      "descriptionField": {
+        "label": "Description",
+        "optional": "(optional)",
+        "placeholder": "Add a description to easily identify this collection...",
+        "errors": {
+          "maxLength": "Description cannot exceed 100 characters"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "creating": "Creating...",
+        "create": "Create"
+      }
+    },
     "preparing": "Preparing..."
   }
 }

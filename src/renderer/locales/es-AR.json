@@ -518,6 +518,34 @@
       "pendingPush": "Pendientes de subida (Push)",
       "pendingPull": "Pendientes de bajada (Pull)"
     },
+    "newCollectionModal": {
+      "title": "Nueva Colección",
+      "description": "Organiza tus repositorios en una nueva colección personalizada",
+      "name": {
+        "label": "Nombre de la colección",
+        "required": "(requerido)",
+        "placeholder": "Ej: Proyectos Frontend, Backend APIs, etc.",
+        "errors": {
+          "required": "El nombre es requerido",
+          "maxLength": "El nombre no puede exceder 32 caracteres",
+          "duplicate": "Ya existe una colección con ese nombre",
+          "createError": "Error al crear la colección. Por favor, intenta nuevamente."
+        }
+      },
+      "descriptionField": {
+        "label": "Descripción",
+        "optional": "(opcional)",
+        "placeholder": "Agrega una descripción para identificar fácilmente esta colección...",
+        "errors": {
+          "maxLength": "La descripción no puede exceder 100 caracteres"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "creating": "Creando...",
+        "create": "Crear"
+      }
+    },
     "preparing": "Preparando..."
   }
 }

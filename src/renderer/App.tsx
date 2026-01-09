@@ -1767,7 +1767,7 @@ function App() {
       setErrorNombre(null);
       setErrorDescripcion(null);
     } catch (error) {
-      setErrorNombre("Error al crear la colección. Por favor, intenta nuevamente.");
+      setErrorNombre(t('repositories.newCollectionModal.name.errors.createError'));
     } finally {
       setCreandoColeccion(false);
     }
@@ -6805,19 +6805,19 @@ function App() {
             <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
               <div className="flex-1">
                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                  Nueva Colección
+                  {t('repositories.newCollectionModal.title')}
                 </CardTitle>
                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                  Organiza tus repositorios en una nueva colección personalizada
+                  {t('repositories.newCollectionModal.description')}
                 </CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Nombre de la colección</span>
+                  <span>{t('repositories.newCollectionModal.name.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
+                    {t('repositories.newCollectionModal.name.required')}
                   </span>
                 </label>
                 <div className="relative">
@@ -6834,15 +6834,15 @@ function App() {
                     onBlur={() => {
                       const nombreTrimmed = nombreNuevaCarpeta.trim();
                       if (!nombreTrimmed) {
-                        setErrorNombre("El nombre es requerido");
+                        setErrorNombre(t('repositories.newCollectionModal.name.errors.required'));
                       } else if (nombreTrimmed.length > 32) {
-                        setErrorNombre("El nombre no puede exceder 32 caracteres");
+                        setErrorNombre(t('repositories.newCollectionModal.name.errors.maxLength'));
                       } else {
                         const carpetaActual = obtenerCarpetaActual();
                         if (carpetaActual) {
                           const nombresExistentes = carpetaActual.hijos?.map((h) => h.nombre.toLowerCase()) || [];
                           if (nombresExistentes.includes(nombreTrimmed.toLowerCase())) {
-                            setErrorNombre("Ya existe una colección con ese nombre");
+                            setErrorNombre(t('repositories.newCollectionModal.name.errors.duplicate'));
                           } else {
                             setErrorNombre(null);
                           }
@@ -6858,7 +6858,7 @@ function App() {
                         : "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
                       creandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
-                    placeholder="Ej: Proyectos Frontend, Backend APIs, etc."
+                    placeholder={t('repositories.newCollectionModal.name.placeholder')}
                     autoFocus
                     maxLength={32}
                     disabled={creandoColeccion}
@@ -6882,9 +6882,9 @@ function App() {
 
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Descripción</span>
+                  <span>{t('repositories.newCollectionModal.descriptionField.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (opcional)
+                    {t('repositories.newCollectionModal.descriptionField.optional')}
                   </span>
                 </label>
                 <div className="relative">
@@ -6899,7 +6899,7 @@ function App() {
                     }}
                     onBlur={() => {
                       if (descripcionNuevaCarpeta.trim().length > 100) {
-                        setErrorDescripcion("La descripción no puede exceder 100 caracteres");
+                        setErrorDescripcion(t('repositories.newCollectionModal.descriptionField.errors.maxLength'));
                       } else {
                         setErrorDescripcion(null);
                       }
@@ -6914,7 +6914,7 @@ function App() {
                       "min-h-[110px] resize-none",
                       creandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
-                    placeholder="Agrega una descripción para identificar fácilmente esta colección..."
+                    placeholder={t('repositories.newCollectionModal.descriptionField.placeholder')}
                     maxLength={100}
                     disabled={creandoColeccion}
                   />
@@ -6951,7 +6951,7 @@ function App() {
                   }}
                   disabled={creandoColeccion}
                 >
-                  Cancelar
+                  {t('repositories.newCollectionModal.buttons.cancel')}
                 </Button>
                 <Button 
                   size="default"
@@ -6962,10 +6962,10 @@ function App() {
                   {creandoColeccion ? (
                     <span className="flex items-center gap-2">
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      Creando...
+                      {t('repositories.newCollectionModal.buttons.creating')}
                     </span>
                   ) : (
-                    "Crear"
+                    t('repositories.newCollectionModal.buttons.create')
                   )}
                 </Button>
               </div>
