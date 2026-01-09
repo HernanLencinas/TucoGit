@@ -546,6 +546,89 @@
         "create": "Crear"
       }
     },
+    "newRepositoryWizard": {
+      "title": {
+        "new": "Nuevo Repositorio",
+        "edit": "Editar Repositorio"
+      },
+      "description": {
+        "new": "Agrega un nuevo repositorio a tu colección en pocos pasos",
+        "edit": "Modifica los datos del repositorio"
+      },
+      "steps": {
+        "connection": "Conexión",
+        "details": "Detalles",
+        "confirmation": "Confirmación"
+      },
+      "step1": {
+        "connection": {
+          "label": "Selecciona una conexión",
+          "required": "(requerido)",
+          "description": "Elige la conexión Git donde se encuentra el repositorio",
+          "placeholder": "Selecciona una conexión...",
+          "noConnections": "No hay conexiones disponibles"
+        },
+        "repository": {
+          "label": "Selecciona un repositorio",
+          "required": "(requerido)",
+          "description": "Elige el repositorio que deseas agregar",
+          "placeholder": "Selecciona un repositorio...",
+          "selectConnectionFirst": "Primero selecciona una conexión",
+          "loading": "Cargando repositorios...",
+          "searchPlaceholder": "Buscar repositorios...",
+          "noResults": "No se encontraron repositorios",
+          "noRepositories": "No hay repositorios disponibles"
+        }
+      },
+      "step2": {
+        "name": {
+          "label": "Nombre del Repositorio",
+          "required": "(requerido)",
+          "description": "Ingresa un nombre descriptivo para identificar este repositorio",
+          "placeholder": "Ej: Mi proyecto"
+        },
+        "description": {
+          "label": "Descripción",
+          "optional": "(opcional)",
+          "description": "Agrega una descripción para este repositorio",
+          "placeholder": "Descripción del repositorio..."
+        }
+      },
+      "step3": {
+        "title": {
+          "new": "Confirma los datos del repositorio",
+          "edit": "Confirma los cambios del repositorio"
+        },
+        "description": {
+          "new": "Revisa la información antes de guardar",
+          "edit": "Revisa los cambios antes de guardar"
+        },
+        "fields": {
+          "connection": "Conexión:",
+          "provider": "Proveedor:",
+          "url": "URL:",
+          "repository": "Repositorio:",
+          "name": "Nombre:",
+          "description": "Descripción:"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "save": "Guardar"
+      },
+      "errors": {
+        "selectConnection": "Por favor selecciona una conexión",
+        "selectRepository": "Por favor selecciona un repositorio",
+        "enterName": "Por favor ingresa un nombre para el repositorio",
+        "duplicateName": "Ya existe un repositorio con ese nombre en esta ubicación",
+        "repositoryNotFound": "Repositorio no encontrado",
+        "loadError": "Error al cargar repositorios: {{message}}",
+        "saveError": "Error al guardar el repositorio: {{message}}",
+        "saveChangesError": "Error al guardar los cambios. El repositorio se eliminó de la vista pero puede no haberse guardado en el archivo."
+      }
+    },
     "preparing": "Preparando..."
   }
 }

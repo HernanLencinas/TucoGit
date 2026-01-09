@@ -1842,7 +1842,7 @@ function App() {
       setRepositoriosDisponibles([]);
       // Solo mostrar alert si se solicita explícitamente (cuando se está creando un nuevo repositorio)
       if (mostrarError) {
-        alert("Error al cargar repositorios: " + (error as Error).message);
+        alert(t('repositories.newRepositoryWizard.errors.loadError', { message: (error as Error).message }));
       }
       // Re-lanzar el error para que pueda ser manejado por el llamador si es necesario
       throw error;
@@ -2051,7 +2051,7 @@ function App() {
       // Si estamos editando, validar solo nombre
       if (editandoRepositorio && repositorioAEditar) {
         if (!nombreRepositorio.trim()) {
-          alert("Por favor ingresa un nombre para el repositorio");
+          alert(t('repositories.newRepositoryWizard.errors.enterName'));
           return;
         }
 
@@ -2077,7 +2077,7 @@ function App() {
             ?.filter((h) => h.id !== repositorioAEditar.id)
             .map((h) => h.nombre.toLowerCase()) || [];
           if (nombresExistentes.includes(nombreRepositorio.trim().toLowerCase())) {
-            alert("Ya existe un repositorio con ese nombre en esta ubicación");
+            alert(t('repositories.newRepositoryWizard.errors.duplicateName'));
             return;
           }
         }
@@ -2125,7 +2125,7 @@ function App() {
             setBusquedaRepositorio("");
           } else {
             // Error al guardar repositorio
-            alert("Error al guardar el repositorio: " + resultado.error);
+            alert(t('repositories.newRepositoryWizard.errors.saveError', { message: resultado.error }));
           }
         }
         return;
@@ -2139,7 +2139,7 @@ function App() {
 
       const repoSeleccionado = repositoriosDisponibles.find(r => r.id === repositorioSeleccionado);
       if (!repoSeleccionado) {
-        alert("Repositorio no encontrado");
+        alert(t('repositories.newRepositoryWizard.errors.repositoryNotFound'));
         return;
       }
 
@@ -2232,12 +2232,12 @@ function App() {
           setBusquedaRepositorio("");
         } else {
           // Error al guardar repositorio
-          alert("Error al guardar el repositorio: " + resultado.error);
+          alert(t('repositories.newRepositoryWizard.errors.saveError', { message: resultado.error }));
         }
       }
     } catch (error) {
       // Error al guardar repositorio
-      alert("Error al guardar el repositorio: " + (error as Error).message);
+      alert(t('repositories.newRepositoryWizard.errors.saveError', { message: (error as Error).message }));
     }
   };
 
@@ -2456,12 +2456,12 @@ function App() {
         const resultado = await window.electronAPI.writeConfig({ repositorios: nuevaEstructura });
         if (!resultado.success) {
           // Error al guardar después de eliminar
-          alert('Error al guardar los cambios. El repositorio se eliminó de la vista pero puede no haberse guardado en el archivo.');
+          alert(t('repositories.newRepositoryWizard.errors.saveChangesError'));
         }
       }
     } catch (error) {
       // Error al guardar estructura después de eliminar
-      alert('Error al guardar los cambios. El repositorio se eliminó de la vista pero puede no haberse guardado en el archivo.');
+      alert(t('repositories.newRepositoryWizard.errors.saveChangesError'));
     }
 
     // Cerrar modal y limpiar estado
@@ -6192,18 +6192,18 @@ function App() {
               }}
             >
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-                <div className="mb-6">
-                  <div className="flex-1">
-                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                      {editandoRepositorio ? "Editar Repositorio" : "Nuevo Repositorio"}
-                    </CardTitle>
-                    <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                      {editandoRepositorio
-                        ? "Modifica los datos del repositorio"
-                        : "Agrega un nuevo repositorio a tu colección en pocos pasos"}
-                    </CardDescription>
+                  <div className="mb-6">
+                    <div className="flex-1">
+                      <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                        {editandoRepositorio ? t('repositories.newRepositoryWizard.title.edit') : t('repositories.newRepositoryWizard.title.new')}
+                      </CardTitle>
+                      <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                        {editandoRepositorio
+                          ? t('repositories.newRepositoryWizard.description.edit')
+                          : t('repositories.newRepositoryWizard.description.new')}
+                      </CardDescription>
+                    </div>
                   </div>
-                </div>
 
                 {/* Barra de progreso */}
                 <div className="flex items-center justify-between">
@@ -6213,7 +6213,7 @@ function App() {
                       {pasoWizardRepositorio > 1 ? <Check className="w-4 h-4" /> : "1"}
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizardRepositorio >= 1 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Conexión
+                      {t('repositories.newRepositoryWizard.steps.connection')}
                     </span>
                   </div>
                   <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizardRepositorio >= 2 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
@@ -6223,7 +6223,7 @@ function App() {
                       {pasoWizardRepositorio > 2 ? <Check className="w-4 h-4" /> : "2"}
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizardRepositorio >= 2 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Detalles
+                      {t('repositories.newRepositoryWizard.steps.details')}
                     </span>
                   </div>
                   <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizardRepositorio >= 3 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
@@ -6233,7 +6233,7 @@ function App() {
                       3
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizardRepositorio >= 3 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Confirmación
+                      {t('repositories.newRepositoryWizard.steps.confirmation')}
                     </span>
                   </div>
                 </div>
@@ -6246,13 +6246,13 @@ function App() {
                     {/* Seleccionar Conexión */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Selecciona una conexión</span>
+                        <span>{t('repositories.newRepositoryWizard.step1.connection.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (requerido)
+                          {t('repositories.newRepositoryWizard.step1.connection.required')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Elige la conexión Git donde se encuentra el repositorio
+                        {t('repositories.newRepositoryWizard.step1.connection.description')}
                       </p>
                       <div className="relative">
                         <button
@@ -6273,7 +6273,7 @@ function App() {
                               </div>
                             )}
                             <span className={conexionSeleccionada ? "text-foreground truncate" : "text-muted-foreground"}>
-                              {conexionSeleccionada ? conexionSeleccionada.nombre : "Selecciona una conexión..."}
+                              {conexionSeleccionada ? conexionSeleccionada.nombre : t('repositories.newRepositoryWizard.step1.connection.placeholder')}
                             </span>
                           </div>
                           <ChevronRight className={`h-4 w-4 transition-transform flex-shrink-0 ${mostrarMenuConexion ? "rotate-90" : ""}`} />
@@ -6287,7 +6287,7 @@ function App() {
                             <div className="absolute z-20 w-full mt-1 rounded-md border bg-popover shadow-md max-h-60 overflow-auto">
                               {conexionesGuardadas.length === 0 ? (
                                 <div className="p-3 text-sm text-muted-foreground text-center">
-                                  No hay conexiones disponibles
+                                  {t('repositories.newRepositoryWizard.step1.connection.noConnections')}
                                 </div>
                               ) : (
                                 [...conexionesGuardadas]
@@ -6321,13 +6321,13 @@ function App() {
                     {/* Seleccionar Repositorio */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Selecciona un repositorio</span>
+                        <span>{t('repositories.newRepositoryWizard.step1.repository.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (requerido)
+                          {t('repositories.newRepositoryWizard.step1.repository.required')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Elige el repositorio que deseas agregar
+                        {t('repositories.newRepositoryWizard.step1.repository.description')}
                       </p>
                       <div className="relative">
                         <button
@@ -6360,13 +6360,13 @@ function App() {
                             {cargandoRepositorios ? (
                               <>
                                 <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                                <span>Cargando repositorios...</span>
+                                <span>{t('repositories.newRepositoryWizard.step1.repository.loading')}</span>
                               </>
                             ) : !conexionSeleccionada
-                              ? "Primero selecciona una conexión"
+                              ? t('repositories.newRepositoryWizard.step1.repository.selectConnectionFirst')
                               : repositorioSeleccionado
                                 ? repositoriosDisponibles.find(r => r.id === repositorioSeleccionado)?.full_name || repositorioSeleccionado
-                                : "Selecciona un repositorio..."}
+                                : t('repositories.newRepositoryWizard.step1.repository.placeholder')}
                           </span>
                           <ChevronRight className={`h-4 w-4 transition-transform ${mostrarMenuRepositorio ? "rotate-90" : ""}`} />
                         </button>
@@ -6396,7 +6396,7 @@ function App() {
                                     type="text"
                                     value={busquedaRepositorio}
                                     onChange={(e) => setBusquedaRepositorio(e.target.value)}
-                                    placeholder="Buscar repositorios..."
+                                    placeholder={t('repositories.newRepositoryWizard.step1.repository.searchPlaceholder')}
                                     className="w-full pl-7 pr-2 py-1.5 text-xs rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
                                     onClick={(e) => e.stopPropagation()}
                                     onKeyDown={(e) => {
@@ -6425,7 +6425,7 @@ function App() {
                                 {cargandoRepositorios ? (
                                   <div className="p-6 flex flex-col items-center justify-center gap-2">
                                     <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                                    <p className="text-xs text-muted-foreground">Cargando repositorios...</p>
+                                    <p className="text-xs text-muted-foreground">{t('repositories.newRepositoryWizard.step1.repository.loading')}</p>
                                   </div>
                                 ) : (() => {
                                   // Filtrar repositorios basado en la búsqueda
@@ -6441,7 +6441,7 @@ function App() {
                                   if (repositoriosFiltrados.length === 0) {
                                     return (
                                       <div className="p-3 text-sm text-muted-foreground text-center">
-                                        {busquedaRepositorio ? "No se encontraron repositorios" : "No hay repositorios disponibles"}
+                                        {busquedaRepositorio ? t('repositories.newRepositoryWizard.step1.repository.noResults') : t('repositories.newRepositoryWizard.step1.repository.noRepositories')}
                                       </div>
                                     );
                                   }
@@ -6493,20 +6493,20 @@ function App() {
                     {/* Nombre del Repositorio */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Nombre del Repositorio</span>
+                        <span>{t('repositories.newRepositoryWizard.step2.name.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (requerido)
+                          {t('repositories.newRepositoryWizard.step2.name.required')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Ingresa un nombre descriptivo para identificar este repositorio
+                        {t('repositories.newRepositoryWizard.step2.name.description')}
                       </p>
                       <div className="relative">
                         <input
                           type="text"
                           value={nombreRepositorio}
                           onChange={(e) => setNombreRepositorio(e.target.value)}
-                          placeholder="Ej: Mi proyecto"
+                          placeholder={t('repositories.newRepositoryWizard.step2.name.placeholder')}
                           maxLength={32}
                           className={cn(
                             "w-full px-4 py-3 pr-16 text-sm rounded-xl border transition-all duration-200",
@@ -6529,19 +6529,19 @@ function App() {
                     {/* Descripción */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Descripción</span>
+                        <span>{t('repositories.newRepositoryWizard.step2.description.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (opcional)
+                          {t('repositories.newRepositoryWizard.step2.description.optional')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Agrega una descripción para este repositorio
+                        {t('repositories.newRepositoryWizard.step2.description.description')}
                       </p>
                       <div className="relative">
                         <textarea
                           value={descripcionRepositorio}
                           onChange={(e) => setDescripcionRepositorio(e.target.value)}
-                          placeholder="Descripción del repositorio..."
+                          placeholder={t('repositories.newRepositoryWizard.step2.description.placeholder')}
                           rows={4}
                           maxLength={100}
                           className={cn(
@@ -6570,42 +6570,42 @@ function App() {
                   <div className="space-y-6 min-h-[300px]">
                     <div>
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
-                        {editandoRepositorio ? "Confirma los cambios del repositorio" : "Confirma los datos del repositorio"}
+                        {editandoRepositorio ? t('repositories.newRepositoryWizard.step3.title.edit') : t('repositories.newRepositoryWizard.step3.title.new')}
                       </label>
                       <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                        {editandoRepositorio ? "Revisa los cambios antes de guardar" : "Revisa la información antes de guardar"}
+                        {editandoRepositorio ? t('repositories.newRepositoryWizard.step3.description.edit') : t('repositories.newRepositoryWizard.step3.description.new')}
                       </p>
                       <Card className="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
                         <CardContent className="p-4 space-y-2">
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Conexión:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.connection')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{conexionSeleccionada?.nombre || "-"}</span>
                           </div>
                           {conexionSeleccionada && (
                             <>
                               <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Proveedor:</span>
+                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.provider')}</span>
                                 <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{conexionSeleccionada.tipo || "-"}</span>
                               </div>
                               <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">URL:</span>
+                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.url')}</span>
                                 <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 break-all text-right max-w-[60%]">{conexionSeleccionada.host || "-"}</span>
                               </div>
                             </>
                           )}
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Repositorio:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.repository')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 break-all text-right max-w-[60%]">
                               {repositoriosDisponibles.find(r => r.id === repositorioSeleccionado)?.full_name || repositorioAEditar?.nombre || "-"}
                             </span>
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Nombre:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.name')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{nombreRepositorio || "-"}</span>
                           </div>
                           {descripcionRepositorio && (
                             <div className="flex items-start justify-between py-2">
-                              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Descripción:</span>
+                              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('repositories.newRepositoryWizard.step3.fields.description')}</span>
                               <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 text-right max-w-[60%] break-words">
                                 {descripcionRepositorio}
                               </span>
@@ -6640,7 +6640,7 @@ function App() {
                       }
                     }}
                   >
-                    {(pasoWizardRepositorio === 1 || (pasoWizardRepositorio === 2 && editandoRepositorio)) ? "Cancelar" : "Anterior"}
+                    {(pasoWizardRepositorio === 1 || (pasoWizardRepositorio === 2 && editandoRepositorio)) ? t('repositories.newRepositoryWizard.buttons.cancel') : t('repositories.newRepositoryWizard.buttons.previous')}
                   </Button>
                   {pasoWizardRepositorio === 3 ? (
                     <Button
@@ -6650,7 +6650,7 @@ function App() {
                       disabled={!nombreRepositorio.trim()}
                     >
                       <Check className="w-4 h-4" />
-                      Guardar
+                      {t('repositories.newRepositoryWizard.buttons.save')}
                     </Button>
                   ) : (
                     <Button
@@ -6659,16 +6659,16 @@ function App() {
                       onClick={() => {
                         if (pasoWizardRepositorio === 1) {
                           if (!conexionSeleccionada) {
-                            alert("Por favor selecciona una conexión");
+                            alert(t('repositories.newRepositoryWizard.errors.selectConnection'));
                             return;
                           }
                           if (!repositorioSeleccionado) {
-                            alert("Por favor selecciona un repositorio");
+                            alert(t('repositories.newRepositoryWizard.errors.selectRepository'));
                             return;
                           }
                         } else if (pasoWizardRepositorio === 2) {
                           if (!nombreRepositorio.trim()) {
-                            alert("Por favor ingresa un nombre para el repositorio");
+                            alert(t('repositories.newRepositoryWizard.errors.enterName'));
                             return;
                           }
                           // Si estamos editando, ir al paso 3 (Confirmación)
@@ -6683,7 +6683,7 @@ function App() {
                         (pasoWizardRepositorio === 2 && !nombreRepositorio.trim())
                       }
                     >
-                      Siguiente
+                      {t('repositories.newRepositoryWizard.buttons.next')}
                       <ChevronRight className="w-4 h-4" />
                     </Button>
                   )}

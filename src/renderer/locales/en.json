@@ -546,6 +546,89 @@
         "create": "Create"
       }
     },
+    "newRepositoryWizard": {
+      "title": {
+        "new": "New Repository",
+        "edit": "Edit Repository"
+      },
+      "description": {
+        "new": "Add a new repository to your collection in a few steps",
+        "edit": "Modify repository data"
+      },
+      "steps": {
+        "connection": "Connection",
+        "details": "Details",
+        "confirmation": "Confirmation"
+      },
+      "step1": {
+        "connection": {
+          "label": "Select a connection",
+          "required": "(required)",
+          "description": "Choose the Git connection where the repository is located",
+          "placeholder": "Select a connection...",
+          "noConnections": "No connections available"
+        },
+        "repository": {
+          "label": "Select a repository",
+          "required": "(required)",
+          "description": "Choose the repository you want to add",
+          "placeholder": "Select a repository...",
+          "selectConnectionFirst": "First select a connection",
+          "loading": "Loading repositories...",
+          "searchPlaceholder": "Search repositories...",
+          "noResults": "No repositories found",
+          "noRepositories": "No repositories available"
+        }
+      },
+      "step2": {
+        "name": {
+          "label": "Repository Name",
+          "required": "(required)",
+          "description": "Enter a descriptive name to identify this repository",
+          "placeholder": "E.g: My project"
+        },
+        "description": {
+          "label": "Description",
+          "optional": "(optional)",
+          "description": "Add a description for this repository",
+          "placeholder": "Repository description..."
+        }
+      },
+      "step3": {
+        "title": {
+          "new": "Confirm repository data",
+          "edit": "Confirm repository changes"
+        },
+        "description": {
+          "new": "Review the information before saving",
+          "edit": "Review changes before saving"
+        },
+        "fields": {
+          "connection": "Connection:",
+          "provider": "Provider:",
+          "url": "URL:",
+          "repository": "Repository:",
+          "name": "Name:",
+          "description": "Description:"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "previous": "Previous",
+        "next": "Next",
+        "save": "Save"
+      },
+      "errors": {
+        "selectConnection": "Please select a connection",
+        "selectRepository": "Please select a repository",
+        "enterName": "Please enter a name for the repository",
+        "duplicateName": "A repository with that name already exists in this location",
+        "repositoryNotFound": "Repository not found",
+        "loadError": "Error loading repositories: {{message}}",
+        "saveError": "Error saving repository: {{message}}",
+        "saveChangesError": "Error saving changes. The repository was removed from view but may not have been saved to the file."
+      }
+    },
     "preparing": "Preparing..."
   }
 }
