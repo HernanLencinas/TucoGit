@@ -5641,12 +5641,12 @@ function App() {
                 <div className="mb-6">
                   <div className="flex-1">
                     <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                      {editandoConexion ? "Editar Conexión" : "Nueva Conexión"}
+                      {editandoConexion ? t('connectionWizard.title.edit') : t('connectionWizard.title.new')}
                     </CardTitle>
                     <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
                       {editandoConexion
-                        ? "Modifica los datos de tu conexión Git"
-                        : "Configura una nueva conexión con tu proveedor de Git en pocos pasos"}
+                        ? t('connectionWizard.description.edit')
+                        : t('connectionWizard.description.new')}
                     </CardDescription>
                   </div>
                 </div>
@@ -5659,7 +5659,7 @@ function App() {
                       {pasoWizard > 1 ? <Check className="w-4 h-4" /> : "1"}
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizard >= 1 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Proveedor
+                      {t('connectionWizard.steps.provider')}
                     </span>
                   </div>
                   <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizard >= 2 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
@@ -5669,7 +5669,7 @@ function App() {
                       {pasoWizard > 2 ? <Check className="w-4 h-4" /> : "2"}
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizard >= 2 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Autenticación
+                      {t('connectionWizard.steps.authentication')}
                     </span>
                   </div>
                   <div className={`flex-1 h-1 mx-3 rounded-full transition-all duration-300 ${pasoWizard >= 3 ? "bg-primary" : "bg-slate-200 dark:bg-slate-700"}`} />
@@ -5679,7 +5679,7 @@ function App() {
                       3
                     </div>
                     <span className={`text-sm font-medium transition-colors ${pasoWizard >= 3 ? "text-foreground" : "text-muted-foreground"}`}>
-                      Confirmación
+                      {t('connectionWizard.steps.confirmation')}
                     </span>
                   </div>
                 </div>
@@ -5692,10 +5692,10 @@ function App() {
                   <div className="space-y-6 min-h-[300px]">
                     <div>
                       <label className="text-sm font-semibold mb-2 block">
-                        Proveedor de Git <span className="text-destructive">*</span>
+                        {t('connectionWizard.step1.title')} <span className="text-destructive">{t('connectionWizard.step1.required')}</span>
                       </label>
                       <p className="text-sm text-muted-foreground mb-4">
-                        Selecciona el proveedor de Git con el que deseas conectar
+                        {t('connectionWizard.step1.description')}
                       </p>
                       <div className="grid grid-cols-3 gap-3 auto-rows-fr">
                         {/* GitHub */}
@@ -5715,9 +5715,9 @@ function App() {
                               </svg>
                             </div>
                             <div className="text-center">
-                              <div className="font-semibold text-sm">GitHub</div>
+                              <div className="font-semibold text-sm">{t('connectionWizard.step1.providers.github.name')}</div>
                               <div className="text-xs text-muted-foreground mt-0.5">
-                                El más popular para proyectos open source
+                                {t('connectionWizard.step1.providers.github.description')}
                               </div>
                             </div>
                           </div>
@@ -5738,9 +5738,9 @@ function App() {
                               </svg>
                             </div>
                             <div className="text-center">
-                              <div className="font-semibold text-sm">GitLab</div>
+                              <div className="font-semibold text-sm">{t('connectionWizard.step1.providers.gitlab.name')}</div>
                               <div className="text-xs text-muted-foreground mt-0.5">
-                                Excelente para CI/CD integrado
+                                {t('connectionWizard.step1.providers.gitlab.description')}
                               </div>
                             </div>
                           </div>
@@ -5761,9 +5761,9 @@ function App() {
                               </svg>
                             </div>
                             <div className="text-center">
-                              <div className="font-semibold text-sm">Gitea</div>
+                              <div className="font-semibold text-sm">{t('connectionWizard.step1.providers.gitea.name')}</div>
                               <div className="text-xs text-muted-foreground mt-0.5">
-                                Plataforma Git auto-hospedada
+                                {t('connectionWizard.step1.providers.gitea.description')}
                               </div>
                             </div>
                           </div>
@@ -5792,9 +5792,9 @@ function App() {
                               </svg>
                             </div>
                             <div className="text-center">
-                              <div className="font-semibold text-sm">Codeberg</div>
+                              <div className="font-semibold text-sm">{t('connectionWizard.step1.providers.codeberg.name')}</div>
                               <div className="text-xs text-muted-foreground mt-0.5">
-                                Alternativa libre y open source
+                                {t('connectionWizard.step1.providers.codeberg.description')}
                               </div>
                             </div>
                           </div>
@@ -5815,9 +5815,9 @@ function App() {
                               </svg>
                             </div>
                             <div className="text-center">
-                              <div className="font-semibold text-sm">Gogs</div>
+                              <div className="font-semibold text-sm">{t('connectionWizard.step1.providers.gogs.name')}</div>
                               <div className="text-xs text-muted-foreground mt-0.5">
-                                Plataforma Git auto-hospedada
+                                {t('connectionWizard.step1.providers.gogs.description')}
                               </div>
                             </div>
                           </div>
@@ -5833,20 +5833,20 @@ function App() {
                     {/* Nombre de la Conexión */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Nombre de la Conexión</span>
+                        <span>{t('connectionWizard.step2.connectionName.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (requerido)
+                          {t('connectionWizard.step2.connectionName.required')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Ingresa un nombre descriptivo para identificar esta conexión
+                        {t('connectionWizard.step2.connectionName.description')}
                       </p>
                       <div className="relative">
                         <input
                           type="text"
                           value={nombreConexion}
                           onChange={(e) => setNombreConexion(e.target.value)}
-                          placeholder="Ej: Mi cuenta de GitHub"
+                          placeholder={t('connectionWizard.step2.connectionName.placeholder')}
                           maxLength={32}
                           className={cn(
                             "w-full px-4 py-3 pr-16 text-sm rounded-xl border transition-all duration-200",
@@ -5869,10 +5869,10 @@ function App() {
                     {/* Identidad Asociada */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                        Identidad Asociada
+                        {t('connectionWizard.step2.identity.label')}
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Selecciona la identidad de Git que se usará para esta conexión
+                        {t('connectionWizard.step2.identity.description')}
                       </p>
                       <div className="relative">
                         <button
@@ -5888,8 +5888,8 @@ function App() {
                         >
                           <span className={identidadSeleccionada ? "text-foreground" : "text-muted-foreground"}>
                             {identidadSeleccionada
-                              ? gitIdentities.find(id => id.id === identidadSeleccionada)?.nombre || "Seleccionar identidad"
-                              : "Seleccionar identidad"}
+                              ? gitIdentities.find(id => id.id === identidadSeleccionada)?.nombre || t('connectionWizard.step2.identity.select')
+                              : t('connectionWizard.step2.identity.select')}
                           </span>
                           <ChevronRight className={`h-4 w-4 transition-transform flex-shrink-0 ${mostrarMenuIdentidad ? "rotate-90" : ""}`} />
                         </button>
@@ -5917,7 +5917,7 @@ function App() {
                                       {identidad.nombre}
                                       {identidad.id === IDENTIDAD_DEFAULT_ID && (
                                         <span className="px-0.5 py-0 text-[6px] font-semibold leading-none rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                                          Default
+                                          {t('connectionWizard.step2.identity.default')}
                                         </span>
                                       )}
                                     </div>
@@ -5934,20 +5934,20 @@ function App() {
                     {/* Token de Acceso */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>Token de Acceso</span>
+                        <span>{t('connectionWizard.step2.token.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (requerido)
+                          {t('connectionWizard.step2.token.required')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Token personal de acceso
+                        {t('connectionWizard.step2.token.description')}
                       </p>
                       <div className="relative">
                         <input
                           type={mostrarToken ? "text" : "password"}
                           value={tokenAcceso}
                           onChange={(e) => setTokenAcceso(e.target.value)}
-                          placeholder="Ingresa tu token de acceso"
+                          placeholder={t('connectionWizard.step2.token.placeholder')}
                           className={cn(
                             "w-full px-4 py-3 pr-10 text-sm rounded-xl border transition-all duration-200",
                             "bg-slate-50 dark:bg-slate-800/50",
@@ -5979,7 +5979,7 @@ function App() {
                         <div className="flex items-center gap-2 p-3 rounded-md bg-blue-500/10 border border-blue-500/20 mt-2">
                           <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                           <p className="text-xs text-blue-600 dark:text-blue-400">
-                            Validando token y conectando con el servidor...
+                            {t('connectionWizard.step2.token.validating')}
                           </p>
                         </div>
                       )}
@@ -5995,7 +5995,7 @@ function App() {
                         <div className="flex items-center gap-2 p-3 rounded-md bg-green-500/10 border border-green-500/20 mt-2">
                           <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
                           <p className="text-xs text-green-600 dark:text-green-400">
-                            Token válido. Puedes continuar al siguiente paso.
+                            {t('connectionWizard.step2.token.valid')}
                           </p>
                         </div>
                       )}
@@ -6004,13 +6004,13 @@ function App() {
                     {/* URL del Servidor */}
                     <div className="space-y-3">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>URL del Servidor</span>
+                        <span>{t('connectionWizard.step2.serverUrl.label')}</span>
                         <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          (opcional)
+                          {t('connectionWizard.step2.serverUrl.optional')}
                         </span>
                       </label>
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        URL base del servidor Git (solo para servidores personalizados)
+                        {t('connectionWizard.step2.serverUrl.description')}
                       </p>
                       <input
                         type="text"
@@ -6033,31 +6033,31 @@ function App() {
                   <div className="space-y-6 min-h-[300px]">
                     <div>
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
-                        Confirma los datos de tu conexión
+                        {t('connectionWizard.step3.title')}
                       </label>
                       <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                        Revisa la información antes de guardar
+                        {t('connectionWizard.step3.description')}
                       </p>
                       <Card className="bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/60 dark:border-slate-700/60 shadow-sm">
                         <CardContent className="p-4 space-y-2">
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Proveedor:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('connectionWizard.step3.fields.provider')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{getNombreProveedor(proveedorSeleccionado)}</span>
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Nombre:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('connectionWizard.step3.fields.name')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{nombreConexion || "-"}</span>
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">URL:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('connectionWizard.step3.fields.url')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 break-all text-right max-w-[60%]">{urlServidor || "-"}</span>
                           </div>
                           <div className="flex items-center justify-between py-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Tipo de Autenticación:</span>
-                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">Token</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('connectionWizard.step3.fields.authType')}</span>
+                            <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">{t('connectionWizard.step3.fields.authTypeValue')}</span>
                           </div>
                           <div className="flex items-center justify-between py-2">
-                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Token:</span>
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{t('connectionWizard.step3.fields.token')}</span>
                             <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 font-mono">
                               {ocultarToken(tokenAcceso)}
                             </span>
@@ -6078,7 +6078,7 @@ function App() {
                       limpiarWizardConexion();
                     }}
                   >
-                    Cancelar
+                    {t('connectionWizard.actions.cancel')}
                   </Button>
                   <div className="flex gap-2">
                     {pasoWizard > 1 && (
@@ -6090,7 +6090,7 @@ function App() {
                           setPasoWizard((prev) => (prev - 1) as 1 | 2 | 3);
                         }}
                       >
-                        Anterior
+                        {t('connectionWizard.actions.previous')}
                       </Button>
                     )}
                     {pasoWizard === 3 ? (
@@ -6100,7 +6100,7 @@ function App() {
                         onClick={guardarConexion}
                       >
                         <Check className="w-4 h-4" />
-                        Guardar
+                        {t('connectionWizard.actions.save')}
                       </Button>
                     ) : (
                       <Button
@@ -6122,11 +6122,11 @@ function App() {
                         {validandoToken ? (
                           <>
                             <RefreshCw className="w-4 h-4 animate-spin" />
-                            Validando...
+                            {t('connectionWizard.actions.validating')}
                           </>
                         ) : (
                           <>
-                            Siguiente
+                            {t('connectionWizard.actions.next')}
                             <ChevronRight className="w-4 h-4" />
                           </>
                         )}

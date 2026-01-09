@@ -373,5 +373,94 @@
       "monthsAgo": "Creado hace {{count}} {{count, plural, one {mes} other {meses}}}",
       "yearsAgo": "Creado hace {{count}} {{count, plural, one {año} other {años}}}"
     }
+  },
+  "connectionWizard": {
+    "title": {
+      "new": "Nueva Conexión",
+      "edit": "Editar Conexión"
+    },
+    "description": {
+      "new": "Configura una nueva conexión con tu proveedor de Git en pocos pasos",
+      "edit": "Modifica los datos de tu conexión Git"
+    },
+    "steps": {
+      "provider": "Proveedor",
+      "authentication": "Autenticación",
+      "confirmation": "Confirmación"
+    },
+    "step1": {
+      "title": "Proveedor de Git",
+      "required": "*",
+      "description": "Selecciona el proveedor de Git con el que deseas conectar",
+      "providers": {
+        "github": {
+          "name": "GitHub",
+          "description": "El más popular para proyectos open source"
+        },
+        "gitlab": {
+          "name": "GitLab",
+          "description": "Excelente para CI/CD integrado"
+        },
+        "gitea": {
+          "name": "Gitea",
+          "description": "Plataforma Git auto-hospedada"
+        },
+        "codeberg": {
+          "name": "Codeberg",
+          "description": "Alternativa libre y open source"
+        },
+        "gogs": {
+          "name": "Gogs",
+          "description": "Plataforma Git auto-hospedada"
+        }
+      }
+    },
+    "step2": {
+      "connectionName": {
+        "label": "Nombre de la Conexión",
+        "required": "(requerido)",
+        "description": "Ingresa un nombre descriptivo para identificar esta conexión",
+        "placeholder": "Ej: Mi cuenta de GitHub"
+      },
+      "identity": {
+        "label": "Identidad Asociada",
+        "description": "Selecciona la identidad de Git que se usará para esta conexión",
+        "select": "Seleccionar identidad",
+        "default": "Default"
+      },
+      "token": {
+        "label": "Token de Acceso",
+        "required": "(requerido)",
+        "description": "Token personal de acceso",
+        "placeholder": "Ingresa tu token de acceso",
+        "validating": "Validando token y conectando con el servidor...",
+        "valid": "Token válido. Puedes continuar al siguiente paso.",
+        "error": "Error al validar el token"
+      },
+      "serverUrl": {
+        "label": "URL del Servidor",
+        "optional": "(opcional)",
+        "description": "URL base del servidor Git (solo para servidores personalizados)"
+      }
+    },
+    "step3": {
+      "title": "Confirma los datos de tu conexión",
+      "description": "Revisa la información antes de guardar",
+      "fields": {
+        "provider": "Proveedor:",
+        "name": "Nombre:",
+        "url": "URL:",
+        "authType": "Tipo de Autenticación:",
+        "token": "Token:",
+        "authTypeValue": "Token"
+      }
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "validating": "Validando...",
+      "save": "Guardar"
+    }
   }
 }

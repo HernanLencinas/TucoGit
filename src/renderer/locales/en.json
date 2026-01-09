@@ -373,5 +373,94 @@
       "monthsAgo": "Created {{count}} {{count, plural, one {month} other {months}}} ago",
       "yearsAgo": "Created {{count}} {{count, plural, one {year} other {years}}} ago"
     }
+  },
+  "connectionWizard": {
+    "title": {
+      "new": "New Connection",
+      "edit": "Edit Connection"
+    },
+    "description": {
+      "new": "Configure a new connection with your Git provider in a few steps",
+      "edit": "Modify your Git connection data"
+    },
+    "steps": {
+      "provider": "Provider",
+      "authentication": "Authentication",
+      "confirmation": "Confirmation"
+    },
+    "step1": {
+      "title": "Git Provider",
+      "required": "*",
+      "description": "Select the Git provider you want to connect with",
+      "providers": {
+        "github": {
+          "name": "GitHub",
+          "description": "The most popular for open source projects"
+        },
+        "gitlab": {
+          "name": "GitLab",
+          "description": "Excellent for integrated CI/CD"
+        },
+        "gitea": {
+          "name": "Gitea",
+          "description": "Self-hosted Git platform"
+        },
+        "codeberg": {
+          "name": "Codeberg",
+          "description": "Free and open source alternative"
+        },
+        "gogs": {
+          "name": "Gogs",
+          "description": "Self-hosted Git platform"
+        }
+      }
+    },
+    "step2": {
+      "connectionName": {
+        "label": "Connection Name",
+        "required": "(required)",
+        "description": "Enter a descriptive name to identify this connection",
+        "placeholder": "E.g: My GitHub account"
+      },
+      "identity": {
+        "label": "Associated Identity",
+        "description": "Select the Git identity that will be used for this connection",
+        "select": "Select identity",
+        "default": "Default"
+      },
+      "token": {
+        "label": "Access Token",
+        "required": "(required)",
+        "description": "Personal access token",
+        "placeholder": "Enter your access token",
+        "validating": "Validating token and connecting to server...",
+        "valid": "Token valid. You can continue to the next step.",
+        "error": "Error validating token"
+      },
+      "serverUrl": {
+        "label": "Server URL",
+        "optional": "(optional)",
+        "description": "Base URL of the Git server (only for custom servers)"
+      }
+    },
+    "step3": {
+      "title": "Confirm your connection data",
+      "description": "Review the information before saving",
+      "fields": {
+        "provider": "Provider:",
+        "name": "Name:",
+        "url": "URL:",
+        "authType": "Authentication Type:",
+        "token": "Token:",
+        "authTypeValue": "Token"
+      }
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "previous": "Previous",
+      "next": "Next",
+      "validating": "Validating...",
+      "save": "Save"
+    }
   }
 }
