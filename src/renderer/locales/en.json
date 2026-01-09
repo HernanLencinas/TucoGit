@@ -814,6 +814,111 @@
         "createError": "Error creating tag",
         "unknownError": "Unknown error"
       }
+    },
+    "stashModal": {
+      "title": "Create Stash",
+      "description": "Temporarily save your changes in Git stash",
+      "fields": {
+        "message": {
+          "label": "Message",
+          "optional": "(optional)",
+          "hint": "Provide a descriptive message to identify this stash. If you don't specify a message, a default one will be used.",
+          "placeholder": "Stash message"
+        },
+        "includeUntracked": {
+          "label": "Include untracked files",
+          "hint": "Also saves new files that are not yet in the repository. Useful when you want to save changes in files that have not been added to the staging area."
+        }
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "create": "Create",
+        "saving": "Saving..."
+      },
+      "success": {
+        "title": "Stash completed",
+        "description": "Changes have been saved to stash",
+        "descriptionWithUntracked": "Changes and untracked files have been saved to stash"
+      },
+      "errors": {
+        "title": "Error creating stash",
+        "description": "Could not complete the operation",
+        "unknownError": "An unexpected error occurred"
+      }
+    },
+    "stashListModal": {
+      "title": "Stashes",
+      "description": "Select a stash to apply (pop) and restore your saved changes",
+      "loading": "Loading stashes...",
+      "empty": {
+        "title": "No stashes available",
+        "description": "Stashes allow you to temporarily save changes without committing. Create one from the stash menu."
+      },
+      "table": {
+        "reference": "Reference",
+        "message": "Message",
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "buttons": {
+        "close": "Close",
+        "clearAll": "Clear All",
+        "apply": "Apply",
+        "applying": "Applying...",
+        "deleteStash": "Delete stash"
+      },
+      "deleteConfirm": {
+        "title": "Confirm Deletion",
+        "description": "Are you sure you want to delete this stash?",
+        "warning": "This action cannot be undone. The stash will be permanently deleted.",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "deleting": "Deleting..."
+      },
+      "clearAllConfirm": {
+        "title": "Confirm Clear All",
+        "description": "Are you sure you want to delete all stashes?",
+        "warning": "{{count}} {{stash}} will be deleted.",
+        "stash": "stash",
+        "stashes": "stashes",
+        "permanentWarning": "This action cannot be undone. All stashes will be permanently deleted.",
+        "cancel": "Cancel",
+        "deleteAll": "Delete All",
+        "deleting": "Deleting..."
+      },
+      "toasts": {
+        "selectStash": {
+          "title": "Select a stash",
+          "description": "Please select a stash to apply"
+        },
+        "applied": {
+          "title": "Stash applied",
+          "description": "The stash has been applied and deleted successfully"
+        },
+        "applyError": {
+          "title": "Error applying stash",
+          "description": "Could not apply the stash",
+          "unknownError": "An unexpected error occurred"
+        },
+        "deleted": {
+          "title": "Stash deleted",
+          "description": "The stash has been deleted successfully"
+        },
+        "deleteError": {
+          "title": "Error deleting stash",
+          "description": "Could not delete the stash",
+          "unknownError": "An unexpected error occurred"
+        },
+        "cleared": {
+          "title": "Stashes deleted",
+          "description": "All stashes have been deleted successfully"
+        },
+        "clearError": {
+          "title": "Error clearing stashes",
+          "description": "Could not delete the stashes",
+          "unknownError": "An unexpected error occurred"
+        }
+      }
     }
   }
 }

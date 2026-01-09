@@ -585,8 +585,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const handleStashPop = async () => {
         if (!selectedStash) {
             toast({
-                title: "Selecciona un stash",
-                description: "Por favor selecciona un stash para aplicar",
+                title: t('repositories.stashListModal.toasts.selectStash.title'),
+                description: t('repositories.stashListModal.toasts.selectStash.description'),
                 variant: "destructive",
             });
             return;
@@ -598,8 +598,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitStashPop?.(repoPath, selectedStash);
             if (result?.success) {
                 toast({
-                    title: "Stash aplicado",
-                    description: "El stash ha sido aplicado y eliminado exitosamente",
+                    title: t('repositories.stashListModal.toasts.applied.title'),
+                    description: t('repositories.stashListModal.toasts.applied.description'),
                     variant: "success",
                 });
                 // Recargar la lista de stashes
@@ -611,16 +611,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadCommits(true);
             } else {
                 toast({
-                    title: "Error al aplicar stash",
-                    description: result?.error || "No se pudo aplicar el stash",
+                    title: t('repositories.stashListModal.toasts.applyError.title'),
+                    description: result?.error || t('repositories.stashListModal.toasts.applyError.description'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al aplicar stash
             toast({
-                title: "Error al aplicar stash",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.stashListModal.toasts.applyError.title'),
+                description: err?.message || t('repositories.stashListModal.toasts.applyError.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -638,8 +638,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitStashDrop?.(repoPath, stashToDelete.ref);
             if (result?.success) {
                 toast({
-                    title: "Stash eliminado",
-                    description: "El stash ha sido eliminado exitosamente",
+                    title: t('repositories.stashListModal.toasts.deleted.title'),
+                    description: t('repositories.stashListModal.toasts.deleted.description'),
                     variant: "success",
                 });
                 // Recargar la lista de stashes
@@ -653,16 +653,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setStashToDelete(null);
             } else {
                 toast({
-                    title: "Error al eliminar stash",
-                    description: result?.error || "No se pudo eliminar el stash",
+                    title: t('repositories.stashListModal.toasts.deleteError.title'),
+                    description: result?.error || t('repositories.stashListModal.toasts.deleteError.description'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al eliminar stash
             toast({
-                title: "Error al eliminar stash",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.stashListModal.toasts.deleteError.title'),
+                description: err?.message || t('repositories.stashListModal.toasts.deleteError.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -678,8 +678,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitStashClear?.(repoPath);
             if (result?.success) {
                 toast({
-                    title: "Stashes eliminados",
-                    description: "Todos los stashes han sido eliminados exitosamente",
+                    title: t('repositories.stashListModal.toasts.cleared.title'),
+                    description: t('repositories.stashListModal.toasts.cleared.description'),
                     variant: "success",
                 });
                 // Recargar la lista de stashes (debería estar vacía)
@@ -691,16 +691,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setShowClearAllConfirm(false);
             } else {
                 toast({
-                    title: "Error al limpiar stashes",
-                    description: result?.error || "No se pudieron eliminar los stashes",
+                    title: t('repositories.stashListModal.toasts.clearError.title'),
+                    description: result?.error || t('repositories.stashListModal.toasts.clearError.description'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al limpiar stashes
             toast({
-                title: "Error al limpiar stashes",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.stashListModal.toasts.clearError.title'),
+                description: err?.message || t('repositories.stashListModal.toasts.clearError.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -717,10 +717,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             const result = await (window as any).electronAPI.gitStash?.(repoPath, stashIncludeUntracked, stashMessage || '');
             if (result?.success) {
                 toast({
-                    title: "Stash completado",
+                    title: t('repositories.stashModal.success.title'),
                     description: stashIncludeUntracked 
-                        ? "Los cambios y archivos sin trackear han sido guardados en el stash"
-                        : "Los cambios han sido guardados en el stash",
+                        ? t('repositories.stashModal.success.descriptionWithUntracked')
+                        : t('repositories.stashModal.success.description'),
                     variant: "success",
                 });
                 setShowStashModal(false);
@@ -728,16 +728,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadCommits(true);
             } else {
                 toast({
-                    title: "Error al hacer stash",
-                    description: result?.error || "No se pudo completar la operación",
+                    title: t('repositories.stashModal.errors.title'),
+                    description: result?.error || t('repositories.stashModal.errors.description'),
                     variant: "destructive",
                 });
             }
         } catch (err: any) {
             // Error al hacer stash
             toast({
-                title: "Error al hacer stash",
-                description: err?.message || "Ocurrió un error inesperado",
+                title: t('repositories.stashModal.errors.title'),
+                description: err?.message || t('repositories.stashModal.errors.unknownError'),
                 variant: "destructive",
             });
         } finally {
@@ -2690,23 +2690,23 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Crear Stash
+                                    {t('repositories.stashModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Guarda temporalmente tus cambios en el stash de Git
+                                    {t('repositories.stashModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
                         <CardContent className="p-6 space-y-6">
                             <div className="space-y-3">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                    Mensaje
+                                    {t('repositories.stashModal.fields.message.label')}
                                     <span className="text-xs font-normal text-slate-500 dark:text-slate-400 ml-2">
-                                        (opcional)
+                                        {t('repositories.stashModal.fields.message.optional')}
                                     </span>
                                 </label>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    Proporciona un mensaje descriptivo para identificar este stash. Si no especificas un mensaje, se usará uno por defecto.
+                                    {t('repositories.stashModal.fields.message.hint')}
                                 </p>
                                 <input
                                     type="text"
@@ -2719,7 +2719,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary",
                                         stashing && "opacity-60 cursor-not-allowed"
                                     )}
-                                    placeholder="Mensaje para el stash"
+                                    placeholder={t('repositories.stashModal.fields.message.placeholder')}
                                     autoFocus
                                     disabled={stashing}
                                     onKeyDown={(e) => {
@@ -2733,7 +2733,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             <div className="space-y-3 py-2">
                                 <div className="flex items-center justify-between">
                                     <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 cursor-pointer" htmlFor="stash-untracked">
-                                        Incluir archivos sin trackear
+                                        {t('repositories.stashModal.fields.includeUntracked.label')}
                                     </label>
                                     <Switch
                                         id="stash-untracked"
@@ -2743,7 +2743,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     />
                                 </div>
                                 <p className="text-xs text-slate-600 dark:text-slate-400">
-                                    También guarda archivos nuevos que aún no están en el repositorio. Útil cuando quieres guardar cambios en archivos que no han sido agregados al staging area.
+                                    {t('repositories.stashModal.fields.includeUntracked.hint')}
                                 </p>
                             </div>
 
@@ -2759,7 +2759,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={stashing}
                                 >
-                                    Cancelar
+                                    {t('repositories.stashModal.buttons.cancel')}
                                 </Button>
                                 <Button
                                     size="default"
@@ -2770,10 +2770,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {stashing ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Guardando...
+                                            {t('repositories.stashModal.buttons.saving')}
                                         </span>
                                     ) : (
-                                        "Crear"
+                                        t('repositories.stashModal.buttons.create')
                                     )}
                                 </Button>
                             </div>
@@ -2809,10 +2809,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                             <div className="flex-1">
                                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                                    Stashes
+                                    {t('repositories.stashListModal.title')}
                                 </CardTitle>
                                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                                    Selecciona un stash para aplicarlo (pop) y restaurar tus cambios guardados
+                                    {t('repositories.stashListModal.description')}
                                 </CardDescription>
                             </div>
                         </CardHeader>
@@ -2820,7 +2820,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             {loadingStashList ? (
                                 <div className="flex items-center justify-center py-12">
                                     <RefreshCw className="h-6 w-6 animate-spin text-primary" />
-                                    <span className="ml-3 text-sm text-slate-600 dark:text-slate-400 font-medium">Cargando stashes...</span>
+                                    <span className="ml-3 text-sm text-slate-600 dark:text-slate-400 font-medium">{t('repositories.stashListModal.loading')}</span>
                                 </div>
                             ) : stashList.length === 0 ? (
                                 <div className="flex flex-col items-center justify-center py-16 px-4">
@@ -2828,10 +2828,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         <Archive className="h-10 w-10 text-primary" />
                                     </div>
                                     <p className="text-base font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                                        No hay stashes disponibles
+                                        {t('repositories.stashListModal.empty.title')}
                                     </p>
                                     <p className="text-sm text-slate-600 dark:text-slate-400 text-center max-w-sm">
-                                        Los stashes te permiten guardar temporalmente cambios sin hacer commit. Crea uno desde el menú de stashes.
+                                        {t('repositories.stashListModal.empty.description')}
                                     </p>
                                 </div>
                             ) : (
@@ -2841,10 +2841,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             <thead>
                                                 <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
                                                     <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider w-12"></th>
-                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Referencia</th>
-                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Mensaje</th>
-                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Fecha</th>
-                                                    <th className="text-center p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider w-20">Acciones</th>
+                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">{t('repositories.stashListModal.table.reference')}</th>
+                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">{t('repositories.stashListModal.table.message')}</th>
+                                                    <th className="text-left p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">{t('repositories.stashListModal.table.date')}</th>
+                                                    <th className="text-center p-4 text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider w-20">{t('repositories.stashListModal.table.actions')}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -2896,7 +2896,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                                                     setStashToDelete({ ref: stash.ref, message: stash.message });
                                                                 }}
                                                                 disabled={applyingStash !== null || deletingStash || clearingAllStashes}
-                                                                title="Eliminar stash"
+                                                                title={t('repositories.stashListModal.buttons.deleteStash')}
                                                             >
                                                                 <Trash2 className="h-4 w-4" />
                                                             </Button>
@@ -2921,7 +2921,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     }}
                                     disabled={applyingStash !== null || deletingStash || clearingAllStashes}
                                 >
-                                    Cerrar
+                                    {t('repositories.stashListModal.buttons.close')}
                                 </Button>
                                 {stashList.length > 0 && (
                                     <Button
@@ -2932,7 +2932,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         disabled={applyingStash !== null || deletingStash || clearingAllStashes}
                                     >
                                         <Trash2 className="h-4 w-4 mr-2" />
-                                        Limpiar Todos
+                                        {t('repositories.stashListModal.buttons.clearAll')}
                                     </Button>
                                 )}
                                 <Button
@@ -2944,10 +2944,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {applyingStash ? (
                                         <span className="flex items-center gap-2">
                                             <RefreshCw className="w-4 h-4 animate-spin" />
-                                            Aplicando...
+                                            {t('repositories.stashListModal.buttons.applying')}
                                         </span>
                                     ) : (
-                                        "Aplicar"
+                                        t('repositories.stashListModal.buttons.apply')
                                     )}
                                 </Button>
                             </div>
@@ -2968,9 +2968,9 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 >
                     <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
                         <CardHeader className="p-4">
-                            <CardTitle className="text-lg">Confirmar Eliminación</CardTitle>
+                            <CardTitle className="text-lg">{t('repositories.stashListModal.deleteConfirm.title')}</CardTitle>
                             <CardDescription className="text-sm">
-                                ¿Estás seguro de que deseas eliminar este stash?
+                                {t('repositories.stashListModal.deleteConfirm.description')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="p-4 pt-0 space-y-4">
@@ -2983,7 +2983,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </p>
                             </div>
                             <p className="text-xs text-slate-500 dark:text-slate-400">
-                                Esta acción no se puede deshacer. El stash será eliminado permanentemente.
+                                {t('repositories.stashListModal.deleteConfirm.warning')}
                             </p>
                             <div className="flex gap-2 pt-2">
                                 <Button
@@ -2993,7 +2993,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     onClick={() => setStashToDelete(null)}
                                     disabled={deletingStash}
                                 >
-                                    Cancelar
+                                    {t('repositories.stashListModal.deleteConfirm.cancel')}
                                 </Button>
                                 <Button
                                     size="sm"
@@ -3004,10 +3004,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {deletingStash ? (
                                         <>
                                             <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                                            Eliminando...
+                                            {t('repositories.stashListModal.deleteConfirm.deleting')}
                                         </>
                                     ) : (
-                                        'Eliminar'
+                                        t('repositories.stashListModal.deleteConfirm.delete')
                                     )}
                                 </Button>
                             </div>
@@ -3028,19 +3028,35 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 >
                     <Card className="w-full max-w-md mx-4 bg-background border-2" onClick={(e) => e.stopPropagation()}>
                         <CardHeader className="p-4">
-                            <CardTitle className="text-lg">Confirmar Limpieza</CardTitle>
+                            <CardTitle className="text-lg">{t('repositories.stashListModal.clearAllConfirm.title')}</CardTitle>
                             <CardDescription className="text-sm">
-                                ¿Estás seguro de que deseas eliminar todos los stashes?
+                                {t('repositories.stashListModal.clearAllConfirm.description')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="p-4 pt-0 space-y-4">
                             <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
                                 <p className="text-sm text-slate-700 dark:text-slate-300 mb-1">
-                                    Se eliminarán <span className="font-semibold">{stashList.length}</span> {stashList.length === 1 ? 'stash' : 'stashes'}.
+                                    {(() => {
+                                        const template = t('repositories.stashListModal.clearAllConfirm.warning', {
+                                            count: stashList.length,
+                                            stash: stashList.length === 1 
+                                                ? t('repositories.stashListModal.clearAllConfirm.stash')
+                                                : t('repositories.stashListModal.clearAllConfirm.stashes')
+                                        });
+                                        // Reemplazar el número con una versión en negrita
+                                        const parts = template.split(String(stashList.length));
+                                        return (
+                                            <>
+                                                {parts[0]}
+                                                <span className="font-semibold">{stashList.length}</span>
+                                                {parts[1]}
+                                            </>
+                                        );
+                                    })()}
                                 </p>
                             </div>
                             <p className="text-xs text-slate-500 dark:text-slate-400">
-                                Esta acción no se puede deshacer. Todos los stashes serán eliminados permanentemente.
+                                {t('repositories.stashListModal.clearAllConfirm.permanentWarning')}
                             </p>
                             <div className="flex gap-2 pt-2">
                                 <Button
@@ -3050,7 +3066,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     onClick={() => setShowClearAllConfirm(false)}
                                     disabled={clearingAllStashes}
                                 >
-                                    Cancelar
+                                    {t('repositories.stashListModal.clearAllConfirm.cancel')}
                                 </Button>
                                 <Button
                                     size="sm"
@@ -3061,10 +3077,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {clearingAllStashes ? (
                                         <>
                                             <RotateCw className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                                            Eliminando...
+                                            {t('repositories.stashListModal.clearAllConfirm.deleting')}
                                         </>
                                     ) : (
-                                        'Eliminar Todos'
+                                        t('repositories.stashListModal.clearAllConfirm.deleteAll')
                                     )}
                                 </Button>
                             </div>

@@ -814,6 +814,111 @@
         "createError": "Error al crear tag",
         "unknownError": "Error desconocido"
       }
+    },
+    "stashModal": {
+      "title": "Crear Stash",
+      "description": "Guarda temporalmente tus cambios en el stash de Git",
+      "fields": {
+        "message": {
+          "label": "Mensaje",
+          "optional": "(opcional)",
+          "hint": "Proporciona un mensaje descriptivo para identificar este stash. Si no especificas un mensaje, se usará uno por defecto.",
+          "placeholder": "Mensaje para el stash"
+        },
+        "includeUntracked": {
+          "label": "Incluir archivos sin trackear",
+          "hint": "También guarda archivos nuevos que aún no están en el repositorio. Útil cuando quieres guardar cambios en archivos que no han sido agregados al staging area."
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "create": "Crear",
+        "saving": "Guardando..."
+      },
+      "success": {
+        "title": "Stash completado",
+        "description": "Los cambios han sido guardados en el stash",
+        "descriptionWithUntracked": "Los cambios y archivos sin trackear han sido guardados en el stash"
+      },
+      "errors": {
+        "title": "Error al hacer stash",
+        "description": "No se pudo completar la operación",
+        "unknownError": "Ocurrió un error inesperado"
+      }
+    },
+    "stashListModal": {
+      "title": "Stashes",
+      "description": "Selecciona un stash para aplicarlo (pop) y restaurar tus cambios guardados",
+      "loading": "Cargando stashes...",
+      "empty": {
+        "title": "No hay stashes disponibles",
+        "description": "Los stashes te permiten guardar temporalmente cambios sin hacer commit. Crea uno desde el menú de stashes."
+      },
+      "table": {
+        "reference": "Referencia",
+        "message": "Mensaje",
+        "date": "Fecha",
+        "actions": "Acciones"
+      },
+      "buttons": {
+        "close": "Cerrar",
+        "clearAll": "Limpiar Todos",
+        "apply": "Aplicar",
+        "applying": "Aplicando...",
+        "deleteStash": "Eliminar stash"
+      },
+      "deleteConfirm": {
+        "title": "Confirmar Eliminación",
+        "description": "¿Estás seguro de que deseas eliminar este stash?",
+        "warning": "Esta acción no se puede deshacer. El stash será eliminado permanentemente.",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "deleting": "Eliminando..."
+      },
+      "clearAllConfirm": {
+        "title": "Confirmar Limpieza",
+        "description": "¿Estás seguro de que deseas eliminar todos los stashes?",
+        "warning": "Se eliminarán {{count}} {{stash}}.",
+        "stash": "stash",
+        "stashes": "stashes",
+        "permanentWarning": "Esta acción no se puede deshacer. Todos los stashes serán eliminados permanentemente.",
+        "cancel": "Cancelar",
+        "deleteAll": "Eliminar Todos",
+        "deleting": "Eliminando..."
+      },
+      "toasts": {
+        "selectStash": {
+          "title": "Selecciona un stash",
+          "description": "Por favor selecciona un stash para aplicar"
+        },
+        "applied": {
+          "title": "Stash aplicado",
+          "description": "El stash ha sido aplicado y eliminado exitosamente"
+        },
+        "applyError": {
+          "title": "Error al aplicar stash",
+          "description": "No se pudo aplicar el stash",
+          "unknownError": "Ocurrió un error inesperado"
+        },
+        "deleted": {
+          "title": "Stash eliminado",
+          "description": "El stash ha sido eliminado exitosamente"
+        },
+        "deleteError": {
+          "title": "Error al eliminar stash",
+          "description": "No se pudo eliminar el stash",
+          "unknownError": "Ocurrió un error inesperado"
+        },
+        "cleared": {
+          "title": "Stashes eliminados",
+          "description": "Todos los stashes han sido eliminados exitosamente"
+        },
+        "clearError": {
+          "title": "Error al limpiar stashes",
+          "description": "No se pudieron eliminar los stashes",
+          "unknownError": "Ocurrió un error inesperado"
+        }
+      }
     }
   }
 }
