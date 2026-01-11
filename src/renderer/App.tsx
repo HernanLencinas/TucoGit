@@ -12,6 +12,7 @@ import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
 import { WelcomeWizard } from "@/renderer/components/WelcomeWizard";
 import { LoadingScreen } from "@/renderer/components/LoadingScreen";
 import { useI18n } from "@/renderer/hooks/useI18n";
+import tucoLogo from "@/renderer/assets/logo-tuco.png";
 
 // Constantes para identidades de Git
 type GitIdentity = {
@@ -5185,8 +5186,8 @@ function App() {
                       <div className="flex justify-center">
                         <div className="relative group">
                           <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                          <div className="relative w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 flex items-center justify-center shadow-2xl shadow-purple-500/40 transform group-hover:scale-105 transition-transform">
-                            <div className="text-4xl font-bold text-white drop-shadow-lg">T</div>
+                          <div className="relative w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 flex items-center justify-center shadow-2xl shadow-purple-500/40 transform group-hover:scale-105 transition-transform overflow-hidden">
+                            <img src={tucoLogo} alt="TucoGit Logo" className="w-full h-full object-cover" />
                           </div>
                           <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-green-500 border-4 border-background flex items-center justify-center shadow-lg">
                             <Check className="h-4 w-4 text-white" />
