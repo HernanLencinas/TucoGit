@@ -12,7 +12,7 @@ import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
 import { WelcomeWizard } from "@/renderer/components/WelcomeWizard";
 import { LoadingScreen } from "@/renderer/components/LoadingScreen";
 import { useI18n } from "@/renderer/hooks/useI18n";
-import tucoLogo from "@/renderer/assets/logo-tuco.png";
+import tucoLogo from "@/renderer/assets/logo-tuco.jpg";
 
 // Constantes para identidades de Git
 type GitIdentity = {
@@ -2570,48 +2570,8 @@ function App() {
 
                 <div className="relative flex flex-col md:flex-row items-center gap-8">
                   {/* Logo de bowl de ramen con sombra suave */}
-                  <div className="flex-shrink-0 w-24 h-24 rounded-2xl bg-background shadow-xl border border-border/50 flex items-center justify-center group/logo transition-transform duration-500 hover:scale-105">
-                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm">
-                      {/* Bowl con gradiente azul-púrpura */}
-                      <defs>
-                        <linearGradient id="bowlGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#60A5FA" />
-                          <stop offset="100%" stopColor="#7C3AED" />
-                        </linearGradient>
-                        <linearGradient id="noodleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="#FCD34D" />
-                          <stop offset="100%" stopColor="#F59E0B" />
-                        </linearGradient>
-                      </defs>
-
-                      {/* Bowl exterior */}
-                      <ellipse cx="40" cy="65" rx="32" ry="8" fill="url(#bowlGradient)" opacity="0.9" />
-                      <path d="M12 45 Q12 35 20 30 Q28 25 40 25 Q52 25 60 30 Q68 35 68 45 L68 60 Q68 65 60 68 Q52 71 40 71 Q28 71 20 68 Q12 65 12 60 Z" fill="url(#bowlGradient)" />
-
-                      {/* Highlight en el bowl */}
-                      <ellipse cx="35" cy="40" rx="18" ry="20" fill="white" opacity="0.2" />
-
-                      {/* Noodles dorados */}
-                      <g stroke="url(#noodleGradient)" strokeWidth="1.5" fill="none" strokeLinecap="round">
-                        <path d="M18 45 Q22 35 28 30 Q34 25 40 25 Q46 25 52 30 Q58 35 62 45" opacity="0.8" />
-                        <path d="M20 48 Q24 38 30 33 Q36 28 40 28 Q44 28 50 33 Q56 38 60 48" opacity="0.8" />
-                        <path d="M22 51 Q26 41 32 36 Q38 31 40 31 Q42 31 48 36 Q54 41 58 51" opacity="0.8" />
-                        <path d="M16 42 Q20 32 26 27 Q32 22 40 22 Q48 22 54 27 Q60 32 64 42" opacity="0.8" />
-                        <path d="M24 54 Q28 44 34 39 Q40 34 40 34 Q40 34 46 39 Q52 44 56 54" opacity="0.8" />
-                      </g>
-
-                      {/* Chiles rojos */}
-                      <path d="M30 35 Q32 30 35 32 Q38 34 36 38 Q34 42 30 40 Q26 38 28 35 Z" fill="#EF4444" opacity="0.9" />
-                      <path d="M50 38 Q52 33 55 35 Q58 37 56 41 Q54 45 50 43 Q46 41 48 38 Z" fill="#EF4444" opacity="0.9" />
-                      <path d="M35 42 Q37 37 40 39 Q43 41 41 45 Q39 49 35 47 Q31 45 33 42 Z" fill="#EF4444" opacity="0.85" />
-
-                      {/* Hojas verdes */}
-                      <ellipse cx="28" cy="40" rx="3" ry="5" fill="#22C55E" opacity="0.9" transform="rotate(-20 28 40)" />
-                      <ellipse cx="52" cy="43" rx="3" ry="5" fill="#22C55E" opacity="0.9" transform="rotate(25 52 43)" />
-                      <ellipse cx="38" cy="36" rx="2.5" ry="4" fill="#22C55E" opacity="0.9" transform="rotate(-15 38 36)" />
-                      <ellipse cx="45" cy="45" rx="2.5" ry="4" fill="#22C55E" opacity="0.9" transform="rotate(30 45 45)" />
-                      <ellipse cx="32" cy="48" rx="2" ry="3.5" fill="#22C55E" opacity="0.85" transform="rotate(-10 32 48)" />
-                    </svg>
+                  <div className="flex-shrink-0 w-24 h-24 rounded-2xl bg-background shadow-xl border border-border/50 flex items-center justify-center group/logo transition-transform duration-500 hover:scale-105 overflow-hidden">
+                    <img src={tucoLogo} alt="TucoGit Logo" className="w-full h-full object-cover rounded-2xl" />
                   </div>
 
                   <div className="flex-1 text-center md:text-left">
