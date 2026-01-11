@@ -2568,9 +2568,9 @@ function App() {
                 <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
                 <div className="absolute bottom-0 left-0 -mb-4 -ml-4 w-24 h-24 bg-secondary/10 rounded-full blur-2xl pointer-events-none" />
 
-                <div className="relative flex flex-col md:flex-row items-center gap-8">
+                <div className="relative flex flex-col md:flex-row items-start gap-8">
                   {/* Logo de bowl de ramen con sombra suave */}
-                  <div className="flex-shrink-0 w-24 h-24 rounded-2xl bg-background shadow-xl border border-border/50 flex items-center justify-center group/logo transition-transform duration-500 hover:scale-105 overflow-hidden">
+                  <div className="flex-shrink-0 w-24 h-24 mt-10 rounded-2xl bg-background shadow-xl border border-border/50 flex items-center justify-center group/logo transition-transform duration-500 hover:scale-105 overflow-hidden">
                     <img src={tucoLogo} alt="TucoGit Logo" className="w-full h-full object-cover rounded-2xl" />
                   </div>
 
