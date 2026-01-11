@@ -56,7 +56,7 @@ Aplicación de escritorio multiplataforma para gestionar y organizar tus reposit
 ## Instalación
 
 ```bash
-npm install
+npm install--save-dev
 ```
 
 ## Desarrollo

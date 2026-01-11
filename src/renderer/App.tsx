@@ -3144,8 +3144,8 @@ function App() {
                   <Card
                     key={item.id}
                     className={`relative ${item.tipo === "coleccion"
-                        ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20"
-                        : "bg-secondary/40 hover:bg-secondary/60 border-border/80"
+                      ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20"
+                      : "bg-secondary/40 hover:bg-secondary/60 border-border/80"
                       } hover:shadow-lg transition-all duration-300 hover:border-primary/50 group backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px] w-full`}
                   >
                     <div
@@ -5079,7 +5079,7 @@ function App() {
                         </div>
                       </div>
                       <div className="px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                        <span className="text-sm font-bold text-primary">v1.0.0</span>
+                        <span className="text-sm font-bold text-primary">v0.1.100</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
@@ -5202,7 +5202,7 @@ function App() {
                           </h2>
                           <div className="flex items-center justify-center gap-2 mt-2">
                             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-                              <span className="text-xs font-semibold text-primary">v1.0.0</span>
+                              <span className="text-xs font-semibold text-primary">v0.1.100</span>
                             </div>
                             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
                               <span className="text-xs font-medium text-blue-600 dark:text-blue-400">{t('settings.about.footer.beta')}</span>

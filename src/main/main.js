@@ -426,7 +426,7 @@ ipcMain.handle('write-config', async (event, updates) => {
       const keyHex = randomKey.toString('hex');
 
       configData = {
-        version: "1.0.0",
+        version: "0.1.100",
         encryptionKey: keyHex,
         repositorios: [
           {
@@ -665,7 +665,7 @@ function getEncryptionKey() {
       }
 
       const configBase = {
-        version: "1.0.0",
+        version: "0.1.100",
         encryptionKey: keyHex, // Guardar la clave en el archivo
         repositorios: [
           {
