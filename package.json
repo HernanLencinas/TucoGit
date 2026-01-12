@@ -84,14 +84,16 @@
       ],
       "category": "Utility",
       "maintainer": "lencinas.hernan@gmail.com",
-      "icon": "icons/icon.png"
+      "icon": "icons/icon.png",
+      "artifactName": "${name}-${version}-linux-${arch}.${ext}"
     },
     "win": {
       "target": [
         "nsis",
         "portable"
       ],
-      "icon": "icons/icon.ico"
+      "icon": "icons/icon.ico",
+      "artifactName": "${productName}-${version}-windows-${arch}.${ext}"
     },
     "mac": {
       "target": [
@@ -100,7 +102,8 @@
       ],
       "category": "public.app-category.utilities",
       "icon": "icons/icon.icns",
-      "identity": null
+      "identity": null,
+      "artifactName": "${productName}-${version}-mac-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
