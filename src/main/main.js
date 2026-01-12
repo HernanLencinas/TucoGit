@@ -181,7 +181,8 @@ function createWindow() {
       contextIsolation: true,
       sandbox: false // Desactivar sandbox para permitir m?dulos de Node.js en preload
     },
-    icon: path.join(__dirname, '../../icons/icon.png')
+    icon: path.join(__dirname, '../../icons/icon.png'),
+    autoHideMenuBar: true // Ocultar la barra de menú en Windows (se puede mostrar con Alt)
   };
 
   // Personalización para macOS
