@@ -41,7 +41,7 @@ run_step "Descargar Deps" \
 
 # -------- Builds --------
 run_step "Build macOS (arm64 + x64)" \
-  npm run build:mac -- zip --arm64 --x64
+  npm run build:mac -- dmg --arm64 --x64
 
 run_step "Build Windows (arm64 + x64)" \
   npm run build:windows -- zip --arm64 --x64
@@ -49,14 +49,19 @@ run_step "Build Windows (arm64 + x64)" \
 run_step "Build Linux (arm64 + x64)" \
   npm run build:linux -- deb --x64
 
-# -------- Validar artefactos --------
 [ -d "$DIST_DIR" ] || error "No existe el directorio dist luego del build"
 
+DMG_COUNT=$(ls dist/*.dmg 2>/dev/null | wc -l || true)
 ZIP_COUNT=$(ls dist/*.zip 2>/dev/null | wc -l || true)
 DEB_COUNT=$(ls dist/*.deb 2>/dev/null | wc -l || true)
 
-[ "$ZIP_COUNT" -gt 0 ] || error "No se generaron archivos .zip"
-log "ZIPs generados: $ZIP_COUNT"
+if [ "$DMG_COUNT" -gt 0 ]; then
+  log "DMGs generados: $DMG_COUNT"
+elif [ "$ZIP_COUNT" -gt 0 ]; then
+  log "ZIPs generados: $ZIP_COUNT"
+else
+  error "No se generaron archivos .dmg o .zip"
+fi
 
 if [ "$DEB_COUNT" -gt 0 ]; then
   log "DEBs generados: $DEB_COUNT"
@@ -69,6 +74,7 @@ log "Creando directorio build/"
 mkdir -p "$BUILD_DIR"
 
 log "Moviendo artefactos a build/"
+mv dist/*.dmg "$BUILD_DIR/" 2>/dev/null || true
 mv dist/*.zip "$BUILD_DIR/" 2>/dev/null || true
 mv dist/*.deb "$BUILD_DIR/" 2>/dev/null || true
 
