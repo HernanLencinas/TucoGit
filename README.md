@@ -2,6 +2,10 @@
 
 Aplicación de escritorio multiplataforma para gestionar y organizar tus repositorios Git. Construida con Electron, React, Vite y shadcn/ui.
 
+<img width="1714" height="1130" alt="tuco_home" src="https://github.com/user-attachments/assets/21caeed6-12f3-43e5-b001-fdb190ee89fa" />
+
+<img width="1715" height="1131" alt="tuco_git" src="https://github.com/user-attachments/assets/fb914b2d-33dd-4f22-b4dd-4c82b9fd9e81" />
+
 ## Características Principales
 
 ### Gestión de Repositorios
