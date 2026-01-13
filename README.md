@@ -262,5 +262,3 @@ En la página de releases encontrarás instaladores y builds para:
 - **Linux**
 
 Cada release incluye notas de versión con las novedades, mejoras y correcciones incorporadas.
-
-> Recomendación: descarga siempre la versión más reciente para obtener las últimas mejoras de estabilidad y seguridad.
