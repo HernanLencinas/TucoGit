@@ -320,7 +320,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
             setSelectedTreeFile(null); // Reset tree file selection
             setFileContent(null); // Reset file content
             setActiveTab('detail'); // Reset to detail tab
-            
+
             // Establecer parents del commit si están disponibles
             if (commit.parents && commit.parents.length > 0) {
                 setCommitParents(commit.parents);
@@ -337,7 +337,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                     setCommitParents([]);
                 }
             }
-            
+
             try {
                 if (!window.electronAPI?.getCommitDetails) {
                     throw new Error("API not available");
@@ -430,7 +430,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
     const getFileIcon = (filePath: string) => {
         const isFolder = filePath.endsWith('/');
         if (isFolder) return Folder;
-        
+
         const extension = filePath.split('.').pop()?.toLowerCase() || '';
         const fileName = filePath.split('/').pop()?.toLowerCase() || '';
 
@@ -439,7 +439,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         if (['yml', 'yaml'].includes(extension)) return FileCode;
         if (['toml', 'ini', 'conf', 'config'].includes(extension)) return FileCode;
         if (fileName === 'package.json' || fileName === 'package-lock.json' || fileName === 'yarn.lock') return FileCode;
-        
+
         // Code files
         if (['js', 'jsx', 'ts', 'tsx', 'mjs', 'cjs'].includes(extension)) return FileCode;
         if (['py', 'pyw', 'pyi'].includes(extension)) return FileCode;
@@ -451,11 +451,11 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         if (['html', 'htm', 'xml', 'svg'].includes(extension)) return FileCode;
         if (['css', 'scss', 'sass', 'less', 'styl'].includes(extension)) return FileCode;
         if (['vue', 'svelte'].includes(extension)) return FileCode;
-        
+
         // Text files
         if (['md', 'markdown', 'txt', 'readme'].includes(extension) || fileName === 'readme' || fileName === 'license') return FileCode;
         if (['log', 'out', 'err'].includes(extension)) return FileCode;
-        
+
         // Default
         return File;
     };
@@ -583,7 +583,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         if (!filePath) return 'text';
         const fileName = filePath.toLowerCase();
         const ext = fileName.split('.').pop() || '';
-        
+
         const languageMap: { [key: string]: string } = {
             'js': 'javascript', 'jsx': 'javascript', 'mjs': 'javascript', 'cjs': 'javascript',
             'ts': 'typescript', 'tsx': 'typescript',
@@ -622,11 +622,11 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
             'vim': 'vim',
             'diff': 'diff', 'patch': 'diff',
         };
-        
+
         if (fileName === 'dockerfile' || fileName === 'makefile') {
             return fileName;
         }
-        
+
         return languageMap[ext] || 'text';
     };
 
@@ -714,11 +714,11 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                     // Procesar el texto antes del string (keywords, números, funciones, etc.)
                     processCodeTokens(textBefore, language, lastIndex, tokens);
                 }
-                tokens.push({ 
-                    text: strMatch.text, 
-                    type: 'string', 
-                    start: lastIndex + strMatch.start, 
-                    end: lastIndex + strMatch.end 
+                tokens.push({
+                    text: strMatch.text,
+                    type: 'string',
+                    start: lastIndex + strMatch.start,
+                    end: lastIndex + strMatch.end
                 });
                 lastIndex = strMatch.end;
             });
@@ -838,7 +838,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         let match;
         while ((match = numberPattern.exec(text)) !== null) {
             // Verificar que no está dentro de una keyword
-            const isInsideKeyword = allMatches.some(k => 
+            const isInsideKeyword = allMatches.some(k =>
                 match.index >= k.start && match.index < k.end
             );
             if (!isInsideKeyword) {
@@ -855,7 +855,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
 
         while ((match = functionPattern.exec(text)) !== null) {
             // Verificar que no es una keyword
-            const isKeyword = allMatches.some(k => 
+            const isKeyword = allMatches.some(k =>
                 match.index >= k.start && match.index < k.end
             );
             if (!isKeyword) {
@@ -872,7 +872,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
 
         while ((match = operatorPattern.exec(text)) !== null) {
             // Verificar que no está dentro de otro token
-            const isInsideOther = allMatches.some(k => 
+            const isInsideOther = allMatches.some(k =>
                 match.index >= k.start && match.index < k.end
             );
             if (!isInsideOther) {
@@ -894,11 +894,11 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
             if (m.start > lastIndex) {
                 const normalText = text.substring(lastIndex, m.start);
                 if (normalText) {
-                    tokens.push({ 
-                        text: normalText, 
-                        type: 'normal', 
-                        start: offset + lastIndex, 
-                        end: offset + m.start 
+                    tokens.push({
+                        text: normalText,
+                        type: 'normal',
+                        start: offset + lastIndex,
+                        end: offset + m.start
                     });
                 }
             }
@@ -914,11 +914,11 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
         if (lastIndex < text.length) {
             const normalText = text.substring(lastIndex);
             if (normalText) {
-                tokens.push({ 
-                    text: normalText, 
-                    type: 'normal', 
-                    start: offset + lastIndex, 
-                    end: offset + text.length 
+                tokens.push({
+                    text: normalText,
+                    type: 'normal',
+                    start: offset + lastIndex,
+                    end: offset + text.length
                 });
             }
         }
@@ -950,7 +950,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
 
         const language = detectLanguage(selectedTreeFile || '');
         const lines = content.split('\n');
-        
+
         return (
             <div>
                 {lines.map((line, idx) => (
@@ -1028,8 +1028,8 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                     onClick={() => loadFileContent(node.path)}
                     className={cn(
                         "flex items-center gap-1 px-3 py-1 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors text-[11px] cursor-pointer",
-                        isSelected 
-                            ? "bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white" 
+                        isSelected
+                            ? "bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white"
                             : "text-slate-500 dark:text-slate-400"
                     )}
                     style={{ paddingLeft: `${12 + indent}px` }}
@@ -1207,7 +1207,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                 {/* Contenido según la tab activa */}
                 {activeTab === 'detail' ? (
                     /* Tab Detalle: Solo el panel con el detalle del commit */
-                    <div className="flex-1 overflow-auto bg-slate-50 dark:bg-[#0b253a]/30 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+                    <div className="flex-1 overflow-auto bg-slate-50 dark:bg-[#0b253a]/30 hide-scrollbar">
                         <div className="p-5">
                             {/* Mensaje del Commit y Hashes en 2 columnas */}
                             <div className="mb-5 pb-4">
@@ -1222,7 +1222,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                                                 {commit.message}
                                             </div>
                                         </div>
-                                        
+
                                         <div>
                                             <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
                                                 {t('repositories.commitDetails.detail.sections.author')}
@@ -1274,66 +1274,66 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                                             </div>
                                         </div>
 
-                                        {details.committer && 
-                                         (details.committer.name !== commit.author.name || 
-                                          details.committer.email !== commit.author.email) && (
-                                            <>
-                                                <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-                                                    <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
-                                                        {t('repositories.commitDetails.detail.sections.committer')}
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <div className="text-xs font-medium text-slate-700 dark:text-slate-300">
-                                                            {details.committer.name}
-                                                        </div>
-                                                        <div className="text-[10px] text-slate-500 dark:text-slate-400">
-                                                            {details.committer.email}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {details.committer.date && (
-                                                    <div>
+                                        {details.committer &&
+                                            (details.committer.name !== commit.author.name ||
+                                                details.committer.email !== commit.author.email) && (
+                                                <>
+                                                    <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
                                                         <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
-                                                            {t('repositories.commitDetails.detail.sections.commitDate')}
+                                                            {t('repositories.commitDetails.detail.sections.committer')}
                                                         </div>
-                                                        <div className="text-xs text-slate-700 dark:text-slate-300">
-                                                            {new Date(details.committer.date).toLocaleString(currentLanguage === 'en' ? 'en-US' : 'es-ES', {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                                hour: '2-digit',
-                                                                minute: '2-digit'
-                                                            })}
-                                                        </div>
-                                                        <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
-                                                            {(() => {
-                                                                const now = new Date();
-                                                                const commitDate = new Date(details.committer.date);
-                                                                const diffMs = now.getTime() - commitDate.getTime();
-                                                                const diffSecs = Math.floor(diffMs / 1000);
-                                                                const diffMins = Math.floor(diffSecs / 60);
-                                                                const diffHours = Math.floor(diffMins / 60);
-                                                                const diffDays = Math.floor(diffHours / 24);
-                                                                const diffWeeks = Math.floor(diffDays / 7);
-                                                                const diffMonths = Math.floor(diffDays / 30);
-                                                                const diffYears = Math.floor(diffDays / 365);
-
-                                                                if (diffYears > 0) return t(diffYears === 1 ? 'repositories.commitDetails.detail.timeAgo.years' : 'repositories.commitDetails.detail.timeAgo.yearsPlural', { count: diffYears });
-                                                                if (diffMonths > 0) return t(diffMonths === 1 ? 'repositories.commitDetails.detail.timeAgo.months' : 'repositories.commitDetails.detail.timeAgo.monthsPlural', { count: diffMonths });
-                                                                if (diffWeeks > 0) return t(diffWeeks === 1 ? 'repositories.commitDetails.detail.timeAgo.weeks' : 'repositories.commitDetails.detail.timeAgo.weeksPlural', { count: diffWeeks });
-                                                                if (diffDays > 0) return t(diffDays === 1 ? 'repositories.commitDetails.detail.timeAgo.days' : 'repositories.commitDetails.detail.timeAgo.daysPlural', { count: diffDays });
-                                                                if (diffHours > 0) return t(diffHours === 1 ? 'repositories.commitDetails.detail.timeAgo.hours' : 'repositories.commitDetails.detail.timeAgo.hoursPlural', { count: diffHours });
-                                                                if (diffMins > 0) return t(diffMins === 1 ? 'repositories.commitDetails.detail.timeAgo.minutes' : 'repositories.commitDetails.detail.timeAgo.minutesPlural', { count: diffMins });
-                                                                return t('repositories.commitDetails.detail.timeAgo.seconds');
-                                                            })()}
+                                                        <div className="space-y-1">
+                                                            <div className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                                                                {details.committer.name}
+                                                            </div>
+                                                            <div className="text-[10px] text-slate-500 dark:text-slate-400">
+                                                                {details.committer.email}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                )}
-                                            </>
-                                        )}
+
+                                                    {details.committer.date && (
+                                                        <div>
+                                                            <div className="text-[10px] font-semibold uppercase text-slate-500 dark:text-slate-400 mb-2 tracking-wider">
+                                                                {t('repositories.commitDetails.detail.sections.commitDate')}
+                                                            </div>
+                                                            <div className="text-xs text-slate-700 dark:text-slate-300">
+                                                                {new Date(details.committer.date).toLocaleString(currentLanguage === 'en' ? 'en-US' : 'es-ES', {
+                                                                    year: 'numeric',
+                                                                    month: 'long',
+                                                                    day: 'numeric',
+                                                                    hour: '2-digit',
+                                                                    minute: '2-digit'
+                                                                })}
+                                                            </div>
+                                                            <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                                                                {(() => {
+                                                                    const now = new Date();
+                                                                    const commitDate = new Date(details.committer.date);
+                                                                    const diffMs = now.getTime() - commitDate.getTime();
+                                                                    const diffSecs = Math.floor(diffMs / 1000);
+                                                                    const diffMins = Math.floor(diffSecs / 60);
+                                                                    const diffHours = Math.floor(diffMins / 60);
+                                                                    const diffDays = Math.floor(diffHours / 24);
+                                                                    const diffWeeks = Math.floor(diffDays / 7);
+                                                                    const diffMonths = Math.floor(diffDays / 30);
+                                                                    const diffYears = Math.floor(diffDays / 365);
+
+                                                                    if (diffYears > 0) return t(diffYears === 1 ? 'repositories.commitDetails.detail.timeAgo.years' : 'repositories.commitDetails.detail.timeAgo.yearsPlural', { count: diffYears });
+                                                                    if (diffMonths > 0) return t(diffMonths === 1 ? 'repositories.commitDetails.detail.timeAgo.months' : 'repositories.commitDetails.detail.timeAgo.monthsPlural', { count: diffMonths });
+                                                                    if (diffWeeks > 0) return t(diffWeeks === 1 ? 'repositories.commitDetails.detail.timeAgo.weeks' : 'repositories.commitDetails.detail.timeAgo.weeksPlural', { count: diffWeeks });
+                                                                    if (diffDays > 0) return t(diffDays === 1 ? 'repositories.commitDetails.detail.timeAgo.days' : 'repositories.commitDetails.detail.timeAgo.daysPlural', { count: diffDays });
+                                                                    if (diffHours > 0) return t(diffHours === 1 ? 'repositories.commitDetails.detail.timeAgo.hours' : 'repositories.commitDetails.detail.timeAgo.hoursPlural', { count: diffHours });
+                                                                    if (diffMins > 0) return t(diffMins === 1 ? 'repositories.commitDetails.detail.timeAgo.minutes' : 'repositories.commitDetails.detail.timeAgo.minutesPlural', { count: diffMins });
+                                                                    return t('repositories.commitDetails.detail.timeAgo.seconds');
+                                                                })()}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
                                     </div>
-                                    
+
                                     {/* Columna Derecha: Hashes y Estadísticas */}
                                     <div className="space-y-4">
                                         <div>
@@ -1446,58 +1446,58 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                     /* Tab Archivos Modificados: Lista de archivos + Panel de diff */
                     <>
                         <div className="w-1/3 border-r border-slate-200 dark:border-slate-700 flex flex-col bg-slate-50 dark:bg-[#0b253a]/30">
-                    <div className="flex-1 overflow-auto p-0 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
-                        {details.loading ? (
-                            <div className="text-center p-4 text-slate-500 text-[10px]">{t('repositories.commitDetails.modified.loading')}</div>
-                        ) : details.error ? (
-                            <div className="text-center p-4 text-red-400 text-[10px]">{details.error}</div>
-                        ) : (
-                            details.files.map((file, i) => (
-                                <div
-                                    key={i}
-                                    onClick={() => setSelectedFile(file.path)}
+                            <div className="flex-1 overflow-auto p-0 hide-scrollbar">
+                                {details.loading ? (
+                                    <div className="text-center p-4 text-slate-500 text-[10px]">{t('repositories.commitDetails.modified.loading')}</div>
+                                ) : details.error ? (
+                                    <div className="text-center p-4 text-red-400 text-[10px]">{details.error}</div>
+                                ) : (
+                                    details.files.map((file, i) => (
+                                        <div
+                                            key={i}
+                                            onClick={() => setSelectedFile(file.path)}
                                             className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-[11px] transition-colors
                                         ${selectedFile === file.path
                                                     ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white'
                                                     : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
-                                        }`}
-                                >
-                                    {getStatusIcon(file.status)}
-                                    <span className="truncate flex-1">{file.path}</span>
-                                    <span className="text-[9px] font-mono opacity-50">{file.status}</span>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                </div>
-                {/* Diff View */}
-                <div className="flex-1 flex flex-col bg-white dark:bg-[#011627] min-w-0">
+                                                }`}
+                                        >
+                                            {getStatusIcon(file.status)}
+                                            <span className="truncate flex-1">{file.path}</span>
+                                            <span className="text-[9px] font-mono opacity-50">{file.status}</span>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                        {/* Diff View */}
+                        <div className="flex-1 flex flex-col bg-white dark:bg-[#011627] min-w-0">
                             <div className="px-4 py-1 text-xs text-slate-500 border-b border-slate-200 dark:border-slate-700 flex-shrink-0 bg-white dark:bg-[#011627]">
                                 {selectedFile || t('repositories.commitDetails.modified.detail')}
-                    </div>
-                    <div className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
-                        {details.loading ? (
-                            <div className="flex items-center justify-center h-full">
-                                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-500"></div>
                             </div>
-                        ) : activeDiff ? (
-                            <div className="pb-4">
-                                {renderDiffContent(activeDiff)}
+                            <div className="flex-1 overflow-auto hide-scrollbar">
+                                {details.loading ? (
+                                    <div className="flex items-center justify-center h-full">
+                                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-500"></div>
+                                    </div>
+                                ) : activeDiff ? (
+                                    <div className="pb-4">
+                                        {renderDiffContent(activeDiff)}
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-2">
+                                        <FileCode className="h-8 w-8 opacity-20" />
+                                        <span className="text-xs">{t('repositories.commitDetails.modified.selectFile')}</span>
+                                    </div>
+                                )}
                             </div>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-2">
-                                <FileCode className="h-8 w-8 opacity-20" />
-                                <span className="text-xs">{t('repositories.commitDetails.modified.selectFile')}</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
+                        </div>
                     </>
                 ) : (
                     /* Tab Árbol: Árbol de archivos + Panel de contenido */
                     <>
                         <div className="w-1/3 border-r border-slate-200 dark:border-slate-700 flex flex-col bg-slate-50 dark:bg-[#0b253a]/30">
-                            <div className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+                            <div className="flex-1 overflow-auto hide-scrollbar">
                                 {loadingTree ? (
                                     <div className="flex flex-col items-center justify-center p-4 text-slate-500 text-[10px]">
                                         <RefreshCw className="h-4 w-4 animate-spin mb-2" />
@@ -1519,7 +1519,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
                             <div className="px-4 py-1 text-xs text-slate-500 border-b border-slate-200 dark:border-slate-700 flex-shrink-0 bg-white dark:bg-[#011627]">
                                 {selectedTreeFile || t('repositories.commitDetails.tree.content')}
                             </div>
-                            <div className="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+                            <div className="flex-1 overflow-auto hide-scrollbar">
                                 {loadingFileContent ? (
                                     <div className="flex items-center justify-center h-full">
                                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-500"></div>
