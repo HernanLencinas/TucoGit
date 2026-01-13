@@ -5397,7 +5397,7 @@ function App() {
       )}
       {/* Contenido Principal */}
       <div className={`flex-1 min-h-0 overflow-hidden ${activeTab === 'repositorios' && viewMode === 'details' ? 'p-0' : 'p-6'}`}>
-        <div className={`h-full w-full ${activeTab === 'repositorios' && viewMode === 'details' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+        <div className={`h-full w-full ${activeTab === 'repositorios' && viewMode === 'details' ? 'overflow-hidden' : 'overflow-y-auto'} ${activeTab === 'inicio' ? 'hide-scrollbar' : ''}`}>
           {renderContent()}
         </div>
       </div>
