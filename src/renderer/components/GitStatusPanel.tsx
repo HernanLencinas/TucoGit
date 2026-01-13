@@ -147,9 +147,9 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         const handleFocus = () => {
             loadCommitBehavior();
         };
-        
+
         window.addEventListener('focus', handleFocus);
-        
+
         return () => {
             window.removeEventListener('focus', handleFocus);
         };
@@ -239,18 +239,18 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
             // Obtener la identidad asociada a la conexión si existe
             let authorName: string | undefined;
             let authorEmail: string | undefined;
-            
+
             if (connectionId && (window as any).electronAPI?.readConfig) {
                 try {
                     const configResult = await (window as any).electronAPI.readConfig();
                     if (configResult.success && configResult.config) {
                         const conexiones = configResult.config.conexiones || [];
                         const conexion = conexiones.find((c: any) => c.id === connectionId);
-                        
+
                         if (conexion?.identidadId) {
                             const gitIdentities = configResult.config.configuracion?.gitIdentities || [];
                             const identidad = gitIdentities.find((id: any) => id.id === conexion.identidadId);
-                            
+
                             if (identidad) {
                                 authorName = identidad.nombre;
                                 authorEmail = identidad.email;
@@ -261,14 +261,14 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                     // Error al obtener identidad, continuar sin autor personalizado
                 }
             }
-            
+
             // Realizar commit
             const commitResult = await (window as any).electronAPI.gitCommit(repoPath, commitMessage, authorName, authorEmail);
             if (commitResult.success) {
                 setCommitMessage("");
                 loadStatus();
                 onRefreshGraph();
-                
+
                 // Ejecutar acción adicional según la configuración
                 if (commitButtonBehavior === "commit-push" || commitButtonBehavior === "commit-sync") {
                     try {
@@ -279,7 +279,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                             if (!fetchResult?.success) {
                                 // Fetch falló
                             }
-                            
+
                             // Pull
                             const pullResult = await (window as any).electronAPI.gitPull?.(repoPath);
                             if (!pullResult?.success) {
@@ -294,7 +294,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                                 }
                             }
                         }
-                        
+
                         // Push (para ambos commit-push y commit-sync)
                         const pushResult = await (window as any).electronAPI.gitPush?.(repoPath);
                         if (pushResult?.success) {
@@ -372,9 +372,9 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
     const getFileIcon = (filePath: string) => {
         // Check if it's a folder (path ends with / or has no extension and no filename)
         const isFolder = filePath.endsWith('/') || (!filePath.includes('.') && !filePath.split('/').pop());
-        
+
         if (isFolder) return Folder;
-        
+
         const extension = filePath.split('.').pop()?.toLowerCase() || '';
         const fileName = filePath.split('/').pop()?.toLowerCase() || '';
 
@@ -383,7 +383,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         if (['yml', 'yaml'].includes(extension)) return Settings;
         if (['toml', 'ini', 'conf', 'config'].includes(extension)) return Settings;
         if (fileName === 'package.json' || fileName === 'package-lock.json' || fileName === 'yarn.lock' || fileName === 'pnpm-lock.yaml') return Package;
-        
+
         // Code files
         if (['js', 'jsx', 'ts', 'tsx', 'mjs', 'cjs'].includes(extension)) return FileCode;
         if (['py', 'pyw', 'pyi'].includes(extension)) return FileCode;
@@ -395,21 +395,21 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
         if (['html', 'htm', 'xml', 'svg'].includes(extension)) return FileCode;
         if (['css', 'scss', 'sass', 'less', 'styl'].includes(extension)) return FileCode;
         if (['vue', 'svelte', 'jsx', 'tsx'].includes(extension)) return FileCode;
-        
+
         // Data files
         if (['sql', 'db', 'sqlite', 'sqlite3'].includes(extension)) return Database;
         if (['csv', 'tsv'].includes(extension)) return Database;
-        
+
         // Text files
         if (['md', 'markdown', 'txt', 'readme'].includes(extension) || fileName === 'readme' || fileName === 'license') return FileText;
         if (['log', 'out', 'err'].includes(extension)) return FileText;
-        
+
         // Image files
         if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp', 'tiff'].includes(extension)) return Image;
-        
+
         // Font files
         if (['ttf', 'otf', 'woff', 'woff2', 'eot'].includes(extension)) return FileType;
-        
+
         // Default
         return File;
     };
@@ -425,24 +425,24 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
     const renderFileRow = (file: GitFile, type: 'staged' | 'unstaged') => {
         const isFolder = file.path.endsWith('/') || (!file.path.includes('.') && !file.path.split('/').pop());
         const pathParts = file.path.split('/').filter(Boolean);
-        
+
         // For folders, get the folder name
         // For files, show full path if it's inside a folder, otherwise just the filename
         const hasDirectory = pathParts.length > 1;
-        const displayName = isFolder 
+        const displayName = isFolder
             ? (pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2] || 'folder')
-            : hasDirectory 
+            : hasDirectory
                 ? file.path  // Show full path for files in folders
                 : (pathParts[pathParts.length - 1] || file.path);
-        
-        const directory = isFolder 
+
+        const directory = isFolder
             ? pathParts.slice(0, -1).join('/')
-            : hasDirectory 
+            : hasDirectory
                 ? undefined  // Don't show directory separately when showing full path
                 : pathParts.slice(0, -1).join('/');
-        
+
         const FileIcon = getFileIcon(file.path);
-        
+
         // Get status display text
         const getStatusText = (status: string) => {
             switch (status.toUpperCase()) {
@@ -453,7 +453,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                 default: return status;
             }
         };
-        
+
         const isTextStatus = ['?', 'A', 'M', 'D'].includes(file.status.toUpperCase());
 
         return (
@@ -465,8 +465,8 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                 <div className="mr-3 flex-shrink-0">
                     <FileIcon className={cn(
                         "h-4 w-4",
-                        isFolder 
-                            ? "text-blue-500 dark:text-blue-400" 
+                        isFolder
+                            ? "text-blue-500 dark:text-blue-400"
                             : "text-slate-400 dark:text-slate-500"
                     )} />
                 </div>
@@ -564,7 +564,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                         </Button>
                     </div>
                 </div>
-                <div className="flex-1 overflow-auto">
+                <div className="flex-1 overflow-auto hide-scrollbar">
                     {unstagedFiles.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center p-6 text-center">
                             <CheckCircle2 className="h-8 w-8 text-slate-300 dark:text-slate-600 mb-2" />
@@ -596,7 +596,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
                         {t('repositories.gitStatusPanel.stagedChanges.unstageAll')}
                     </Button>
                 </div>
-                <div className="flex-1 overflow-auto">
+                <div className="flex-1 overflow-auto hide-scrollbar">
                     {stagedFiles.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center p-6 text-center">
                             <CheckCircle2 className="h-8 w-8 text-slate-300 dark:text-slate-600 mb-2" />
