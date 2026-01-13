@@ -438,12 +438,18 @@
     "date": {
       "notAvailable": "Date non disponible",
       "justNow": "Créé à l'instant",
-      "minutesAgo": "Créé il y a {{count}} {{count, plural, one {minute} other {minutes}}}",
-      "hoursAgo": "Créé il y a {{count}} {{count, plural, one {heure} other {heures}}}",
-      "daysAgo": "Créé il y a {{count}} {{count, plural, one {jour} other {jours}}}",
-      "weeksAgo": "Créé il y a {{count}} {{count, plural, one {semaine} other {semaines}}}",
-      "monthsAgo": "Créé il y a {{count}} {{count, plural, one {mois} other {mois}}}",
-      "yearsAgo": "Créé il y a {{count}} {{count, plural, one {année} other {années}}}"
+      "minutesAgo_one": "Créé il y a {{count}} minute",
+      "minutesAgo_other": "Créé il y a {{count}} minutes",
+      "hoursAgo_one": "Créé il y a {{count}} heure",
+      "hoursAgo_other": "Créé il y a {{count}} heures",
+      "daysAgo_one": "Créé il y a {{count}} jour",
+      "daysAgo_other": "Créé il y a {{count}} jours",
+      "weeksAgo_one": "Créé il y a {{count}} semaine",
+      "weeksAgo_other": "Créé il y a {{count}} semaines",
+      "monthsAgo_one": "Créé il y a {{count}} mois",
+      "monthsAgo_other": "Créé il y a {{count}} mois",
+      "yearsAgo_one": "Créé il y a {{count}} année",
+      "yearsAgo_other": "Créé il y a {{count}} années"
     }
   },
   "connectionWizard": {

@@ -439,12 +439,18 @@
     "date": {
       "notAvailable": "Data não disponível",
       "justNow": "Criado agora mesmo",
-      "minutesAgo": "Criado há {{count}} {{count, plural, one {minuto} other {minutos}}}",
-      "hoursAgo": "Criado há {{count}} {{count, plural, one {hora} other {horas}}}",
-      "daysAgo": "Criado há {{count}} {{count, plural, one {dia} other {dias}}}",
-      "weeksAgo": "Criado há {{count}} {{count, plural, one {semana} other {semanas}}}",
-      "monthsAgo": "Criado há {{count}} {{count, plural, one {mês} other {meses}}}",
-      "yearsAgo": "Criado há {{count}} {{count, plural, one {ano} other {anos}}}"
+      "minutesAgo_one": "Criado há {{count}} minuto",
+      "minutesAgo_other": "Criado há {{count}} minutos",
+      "hoursAgo_one": "Criado há {{count}} hora",
+      "hoursAgo_other": "Criado há {{count}} horas",
+      "daysAgo_one": "Criado há {{count}} dia",
+      "daysAgo_other": "Criado há {{count}} dias",
+      "weeksAgo_one": "Criado há {{count}} semana",
+      "weeksAgo_other": "Criado há {{count}} semanas",
+      "monthsAgo_one": "Criado há {{count}} mês",
+      "monthsAgo_other": "Criado há {{count}} meses",
+      "yearsAgo_one": "Criado há {{count}} ano",
+      "yearsAgo_other": "Criado há {{count}} anos"
     }
   },
   "connectionWizard": {

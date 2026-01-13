@@ -440,12 +440,12 @@
     "date": {
       "notAvailable": "日付が利用できません",
       "justNow": "今作成されました",
-      "minutesAgo": "{{count}}{{count, plural, one {分} other {分}}}前に作成されました",
-      "hoursAgo": "{{count}}{{count, plural, one {時間} other {時間}}}前に作成されました",
-      "daysAgo": "{{count}}{{count, plural, one {日} other {日}}}前に作成されました",
-      "weeksAgo": "{{count}}{{count, plural, one {週間} other {週間}}}前に作成されました",
-      "monthsAgo": "{{count}}{{count, plural, one {ヶ月} other {ヶ月}}}前に作成されました",
-      "yearsAgo": "{{count}}{{count, plural, one {年} other {年}}}前に作成されました"
+      "minutesAgo_other": "{{count}}分前に作成されました",
+      "hoursAgo_other": "{{count}}時間前に作成されました",
+      "daysAgo_other": "{{count}}日前に作成されました",
+      "weeksAgo_other": "{{count}}週間前に作成されました",
+      "monthsAgo_other": "{{count}}ヶ月前に作成されました",
+      "yearsAgo_other": "{{count}}年前に作成されました"
     }
   },
   "connectionWizard": {

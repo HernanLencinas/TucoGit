@@ -441,12 +441,12 @@
     "date": {
       "notAvailable": "日期不可用",
       "justNow": "刚刚创建",
-      "minutesAgo": "{{count}}{{count, plural, one {分钟} other {分钟}}}前创建",
-      "hoursAgo": "{{count}}{{count, plural, one {小时} other {小时}}}前创建",
-      "daysAgo": "{{count}}{{count, plural, one {天} other {天}}}前创建",
-      "weeksAgo": "{{count}}{{count, plural, one {周} other {周}}}前创建",
-      "monthsAgo": "{{count}}{{count, plural, one {个月} other {个月}}}前创建",
-      "yearsAgo": "{{count}}{{count, plural, one {年} other {年}}}前创建"
+      "minutesAgo_other": "{{count}}分钟前创建",
+      "hoursAgo_other": "{{count}}小时前创建",
+      "daysAgo_other": "{{count}}天前创建",
+      "weeksAgo_other": "{{count}}周前创建",
+      "monthsAgo_other": "{{count}}个月前创建",
+      "yearsAgo_other": "{{count}}年前创建"
     }
   },
   "connectionWizard": {

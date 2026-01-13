@@ -441,12 +441,18 @@
     "date": {
       "notAvailable": "Fecha no disponible",
       "justNow": "Creado hace un momento",
-      "minutesAgo": "Creado hace {{count}} {{count, plural, one {minuto} other {minutos}}}",
-      "hoursAgo": "Creado hace {{count}} {{count, plural, one {hora} other {horas}}}",
-      "daysAgo": "Creado hace {{count}} {{count, plural, one {día} other {días}}}",
-      "weeksAgo": "Creado hace {{count}} {{count, plural, one {semana} other {semanas}}}",
-      "monthsAgo": "Creado hace {{count}} {{count, plural, one {mes} other {meses}}}",
-      "yearsAgo": "Creado hace {{count}} {{count, plural, one {año} other {años}}}"
+      "minutesAgo_one": "Creado hace {{count}} minuto",
+      "minutesAgo_other": "Creado hace {{count}} minutos",
+      "hoursAgo_one": "Creado hace {{count}} hora",
+      "hoursAgo_other": "Creado hace {{count}} horas",
+      "daysAgo_one": "Creado hace {{count}} día",
+      "daysAgo_other": "Creado hace {{count}} días",
+      "weeksAgo_one": "Creado hace {{count}} semana",
+      "weeksAgo_other": "Creado hace {{count}} semanas",
+      "monthsAgo_one": "Creado hace {{count}} mes",
+      "monthsAgo_other": "Creado hace {{count}} meses",
+      "yearsAgo_one": "Creado hace {{count}} año",
+      "yearsAgo_other": "Creado hace {{count}} años"
     }
   },
   "connectionWizard": {

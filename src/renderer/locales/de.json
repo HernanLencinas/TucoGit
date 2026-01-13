@@ -437,12 +437,18 @@
     "date": {
       "notAvailable": "Datum nicht verfügbar",
       "justNow": "Gerade erstellt",
-      "minutesAgo": "Vor {{count}} {{count, plural, one {Minute} other {Minuten}}} erstellt",
-      "hoursAgo": "Vor {{count}} {{count, plural, one {Stunde} other {Stunden}}} erstellt",
-      "daysAgo": "Vor {{count}} {{count, plural, one {Tag} other {Tagen}}} erstellt",
-      "weeksAgo": "Vor {{count}} {{count, plural, one {Woche} other {Wochen}}} erstellt",
-      "monthsAgo": "Vor {{count}} {{count, plural, one {Monat} other {Monaten}}} erstellt",
-      "yearsAgo": "Vor {{count}} {{count, plural, one {Jahr} other {Jahren}}} erstellt"
+      "minutesAgo_one": "Vor {{count}} Minute erstellt",
+      "minutesAgo_other": "Vor {{count}} Minuten erstellt",
+      "hoursAgo_one": "Vor {{count}} Stunde erstellt",
+      "hoursAgo_other": "Vor {{count}} Stunden erstellt",
+      "daysAgo_one": "Vor {{count}} Tag erstellt",
+      "daysAgo_other": "Vor {{count}} Tagen erstellt",
+      "weeksAgo_one": "Vor {{count}} Woche erstellt",
+      "weeksAgo_other": "Vor {{count}} Wochen erstellt",
+      "monthsAgo_one": "Vor {{count}} Monat erstellt",
+      "monthsAgo_other": "Vor {{count}} Monaten erstellt",
+      "yearsAgo_one": "Vor {{count}} Jahr erstellt",
+      "yearsAgo_other": "Vor {{count}} Jahren erstellt"
     }
   },
   "connectionWizard": {

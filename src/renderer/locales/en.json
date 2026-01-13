@@ -441,12 +441,18 @@
     "date": {
       "notAvailable": "Date not available",
       "justNow": "Created just now",
-      "minutesAgo": "Created {{count}} {{count, plural, one {minute} other {minutes}}} ago",
-      "hoursAgo": "Created {{count}} {{count, plural, one {hour} other {hours}}} ago",
-      "daysAgo": "Created {{count}} {{count, plural, one {day} other {days}}} ago",
-      "weeksAgo": "Created {{count}} {{count, plural, one {week} other {weeks}}} ago",
-      "monthsAgo": "Created {{count}} {{count, plural, one {month} other {months}}} ago",
-      "yearsAgo": "Created {{count}} {{count, plural, one {year} other {years}}} ago"
+      "minutesAgo_one": "Created {{count}} minute ago",
+      "minutesAgo_other": "Created {{count}} minutes ago",
+      "hoursAgo_one": "Created {{count}} hour ago",
+      "hoursAgo_other": "Created {{count}} hours ago",
+      "daysAgo_one": "Created {{count}} day ago",
+      "daysAgo_other": "Created {{count}} days ago",
+      "weeksAgo_one": "Created {{count}} week ago",
+      "weeksAgo_other": "Created {{count}} weeks ago",
+      "monthsAgo_one": "Created {{count}} month ago",
+      "monthsAgo_other": "Created {{count}} months ago",
+      "yearsAgo_one": "Created {{count}} year ago",
+      "yearsAgo_other": "Created {{count}} years ago"
     }
   },
   "connectionWizard": {
