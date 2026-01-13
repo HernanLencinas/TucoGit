@@ -1,9 +1,10 @@
-# TucoGit
-
-Aplicación de escritorio multiplataforma para gestionar y organizar tus repositorios Git. Construida con Electron, React, Vite y shadcn/ui.
-
+<img width="1500" height="330" alt="fondo_tuco" src="https://github.com/user-attachments/assets/40999ea9-ce14-45b8-b038-fb929988e676" />
+<br><br>
+Aplicación de escritorio multiplataforma diseñada para centralizar, gestionar y organizar tus repositorios Git de forma simple y eficiente.
+Desarrollada con Electron, React y Vite, ofrece una experiencia moderna, rápida y fluida, con una interfaz cuidada construida sobre shadcn/ui. Ideal para desarrolladores que buscan tener visibilidad y control de sus proyectos Git desde un único lugar, sin fricciones y con foco en la productividad.
+<br><br>
 <img width="1703" height="1129" alt="tuco_home" src="https://github.com/user-attachments/assets/0e77b97b-a4e1-4f02-9e0c-2a873f02acce" />
-
+<br><br>
 <img width="1709" height="1126" alt="tuco_git" src="https://github.com/user-attachments/assets/103002c8-9e2b-4b22-9c39-7837ac5ea1a6" />
 
 ## Características Principales
