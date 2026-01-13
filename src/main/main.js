@@ -1093,7 +1093,91 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
         };
       }
 
-      // Para GitHub y GitLab, usar la lógica original (ellos manejan paginación diferente)
+      // Para GitHub, necesitamos manejar paginación también
+      if (proveedor.toLowerCase() === 'github') {
+        let allRepos = [];
+        let page = 1;
+        const limit = 100;
+        let hasMore = true;
+        const maxPages = 100; // Límite de seguridad
+
+        // Configurar URL base con affiliation que incluya organizaciones
+        // affiliation: owner, collaborator, organization_member (default por defecto, pero lo hacemos explícito para mayor claridad)
+        const affiliationParam = 'affiliation=owner,collaborator,organization_member';
+
+        // Base para GitHub Enterprise o GitHub.com
+        let urlBaseRepos;
+        if (apiUrl.includes('?')) {
+          urlBaseRepos = apiUrl.split('?')[0];
+        } else {
+          urlBaseRepos = apiUrl;
+        }
+
+        // Si ya tenía query params, asegurarnos de limpiar y construir correctamente
+        // La lógica anterior construía la URL completa en el switch, aquí la reconstruiremos para paginación
+
+        while (hasMore && page <= maxPages) {
+          const paginatedUrl = `${urlBaseRepos}?per_page=${limit}&page=${page}&sort=updated&${affiliationParam}`;
+
+          const response = await makeRequest(paginatedUrl, {
+            method: 'GET',
+            headers: headers,
+            sslVerify: sslVerify
+          });
+
+          if (response.statusCode >= 200 && response.statusCode < 300) {
+            let reposData;
+            try {
+              reposData = JSON.parse(response.data);
+            } catch (e) {
+              return { success: false, error: 'Error al parsear respuesta del servidor GitHub' };
+            }
+
+            if (!Array.isArray(reposData)) {
+              // Si no es un array, algo está mal o es una respuesta inesperada
+              hasMore = false;
+              break;
+            }
+
+            const pageRepos = reposData.map((repo) => ({
+              id: repo.id.toString(),
+              name: repo.name,
+              full_name: repo.full_name,
+              description: repo.description || undefined,
+              private: repo.private,
+              clone_url: repo.clone_url
+            }));
+
+            allRepos = allRepos.concat(pageRepos);
+
+            // Verificar si hay más páginas
+            const linkHeader = response.headers['link'] || response.headers['Link'];
+            if (linkHeader && (linkHeader.includes('rel="next"') || linkHeader.includes('rel=next'))) {
+              hasMore = true;
+              page++;
+            } else if (reposData.length === limit) {
+              // Fallback: si recibimos el límite completo y no hay header (raro en GitHub v3), asumimos que podría haber más
+              hasMore = true;
+              page++;
+            } else {
+              hasMore = false;
+            }
+          } else if (response.statusCode === 401 || response.statusCode === 403) {
+            return { success: false, error: 'Token inválido o sin permisos suficientes para GitHub' };
+          } else {
+            const errorMsg = response.data ? response.data.substring(0, 200) : 'Sin detalles';
+            return { success: false, error: `Error de GitHub: ${response.statusCode} - ${errorMsg}` };
+          }
+        }
+
+        return {
+          success: true,
+          repositories: allRepos
+        };
+      }
+
+      // Para GitLab (manejamos paginación básica o simple request como estaba, pero idealmente debería paginarse también)
+      // Por ahora mantenemos la lógica existente para GitLab pero separada del bloque GitHub
       const response = await makeRequest(apiUrl, {
         method: 'GET',
         headers: headers,
@@ -1108,18 +1192,9 @@ ipcMain.handle('get-git-repositories', async (event, { proveedor, token, urlServ
           return { success: false, error: 'Error al parsear respuesta del servidor' };
         }
 
-        // Normalizar los datos según el proveedor
+        // Normalizar los datos según el proveedor (solo queda GitLab aquí)
         let repos = [];
-        if (proveedor.toLowerCase() === 'github') {
-          repos = reposData.map((repo) => ({
-            id: repo.id.toString(),
-            name: repo.name,
-            full_name: repo.full_name,
-            description: repo.description || undefined,
-            private: repo.private,
-            clone_url: repo.clone_url
-          }));
-        } else if (proveedor.toLowerCase() === 'gitlab') {
+        if (proveedor.toLowerCase() === 'gitlab') {
           repos = reposData.map((repo) => ({
             id: repo.id.toString(),
             name: repo.name,
@@ -1689,7 +1764,7 @@ ipcMain.handle('open-in-ide', async (event, { path: repoPath, ideName }) => {
               '/Applications/Antigravity.app/Contents/Resources/app/bin/antigravity',
               '/Applications/Google Antigravity.app/Contents/Resources/app/bin/antigravity'
             ];
-            
+
             // Buscar el binario disponible
             let antigravityBin = null;
             for (const binPath of antigravityPaths) {
@@ -1698,7 +1773,7 @@ ipcMain.handle('open-in-ide', async (event, { path: repoPath, ideName }) => {
                 break;
               }
             }
-            
+
             if (antigravityBin) {
               // Usar el binario directamente con el flag -n para abrir en nueva ventana
               command = `"${antigravityBin}" -n "${repoPath}"`;
@@ -1778,12 +1853,12 @@ ipcMain.handle('clone-repository', async (event, { url, destPath, repoId, sslVer
 
       // Argumentos para clonar incluyendo todos los branches remotos explicitly
       const args = ['clone', '--progress', '--no-single-branch'];
-      
+
       // Configurar SSL verification explícitamente
       // Usar el valor de sslVerify si está definido, de lo contrario usar true por defecto
       const sslVerifyValue = sslVerify !== undefined ? sslVerify : true;
       args.push('-c', `http.sslVerify=${sslVerifyValue}`);
-      
+
       args.push(cloneUrl, '.');
 
 
@@ -2031,14 +2106,14 @@ ipcMain.handle('git-commit', async (event, { repoPath, message, authorName, auth
   try {
     const escapedMessage = message.replace(/"/g, '\\"');
     let commitCommand = `git commit -m "${escapedMessage}"`;
-    
+
     // Si se proporciona nombre y email del autor, usar --author
     if (authorName && authorEmail) {
       const escapedName = authorName.replace(/"/g, '\\"');
       const escapedEmail = authorEmail.replace(/"/g, '\\"');
       commitCommand += ` --author="${escapedName} <${escapedEmail}>"`;
     }
-    
+
     await execPromise(commitCommand, { cwd: repoPath });
     return { success: true };
   } catch (error) {
@@ -2118,7 +2193,7 @@ ipcMain.handle('get-git-branches', async (event, repoPath) => {
     try {
       const { stdout: currentBranch } = await execPromise('git branch --show-current', { cwd: repoPath });
       current = currentBranch.trim();
-      
+
       // Si no hay branch actual (detached HEAD), obtener el hash del HEAD
       if (!current || current === '') {
         try {
@@ -2155,10 +2230,10 @@ ipcMain.handle('git-create-branch', async (event, { repoPath, branchName, fromBr
     }
 
     // Crear el branch desde el branch especificado
-    const command = fromBranch 
+    const command = fromBranch
       ? `git checkout -b "${branchName.trim()}" "${fromBranch}"`
       : `git checkout -b "${branchName.trim()}"`;
-    
+
     await execPromise(command, { cwd: repoPath });
     return { success: true };
   } catch (error) {
@@ -2208,7 +2283,7 @@ ipcMain.handle('can-cherry-pick-commit', async (event, { repoPath, commitHash })
     try {
       const { stdout: branchOutput } = await execPromise('git branch --show-current', { cwd: repoPath });
       currentBranch = branchOutput.trim();
-      
+
       const { stdout: headOutput } = await execPromise('git rev-parse HEAD', { cwd: repoPath });
       headHash = headOutput.trim();
     } catch (e) {
@@ -2284,29 +2359,29 @@ ipcMain.handle('git-cherry-pick', async (event, { repoPath, commitHash, commitCh
 
     // Construir el comando de cherry-pick
     let command = 'git cherry-pick';
-    
+
     // Si no se debe hacer commit automático, usar --no-commit
     if (!commitChanges) {
       command += ' --no-commit';
     }
-    
+
     command += ` ${commitHash}`;
-    
+
     await execPromise(command, { cwd: repoPath });
-    
+
     // Si se debe agregar el origen al mensaje del commit y se hizo commit
     if (appendOrigin && commitChanges) {
       try {
         // Obtener el hash corto del commit original
         const { stdout: originalHash } = await execPromise(`git rev-parse --short ${commitHash}`, { cwd: repoPath });
         const shortHash = originalHash.trim();
-        
+
         // Obtener el mensaje del commit actual (el que se acaba de crear)
         const { stdout: currentMessage } = await execPromise('git log -1 --format=%B HEAD', { cwd: repoPath });
-        
+
         // Modificar el mensaje del commit para agregar la referencia
         const newMessage = `${currentMessage.trim()}\n\n(cherry picked from commit ${shortHash})`;
-        
+
         // Usar git commit --amend para modificar el mensaje
         const escapedMessage = newMessage.replace(/"/g, '\\"');
         await execPromise(`git commit --amend -m "${escapedMessage}"`, { cwd: repoPath });
@@ -2314,7 +2389,7 @@ ipcMain.handle('git-cherry-pick', async (event, { repoPath, commitHash, commitCh
         // Si falla al modificar el mensaje, no es crítico, el cherry-pick ya se hizo
       }
     }
-    
+
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
@@ -2340,11 +2415,11 @@ ipcMain.handle('get-pending-operation', async (event, repoPath) => {
     const cherryPickHead = path.join(gitDir, 'CHERRY_PICK_HEAD');
     if (fs.existsSync(cherryPickHead)) {
       const commitHash = fs.readFileSync(cherryPickHead, 'utf-8').trim();
-      return { 
-        success: true, 
-        hasPendingOperation: true, 
-        operation: 'cherry-pick', 
-        commitHash: commitHash.substring(0, 7) 
+      return {
+        success: true,
+        hasPendingOperation: true,
+        operation: 'cherry-pick',
+        commitHash: commitHash.substring(0, 7)
       };
     }
 
@@ -2352,11 +2427,11 @@ ipcMain.handle('get-pending-operation', async (event, repoPath) => {
     const mergeHead = path.join(gitDir, 'MERGE_HEAD');
     if (fs.existsSync(mergeHead)) {
       const commitHash = fs.readFileSync(mergeHead, 'utf-8').trim();
-      return { 
-        success: true, 
-        hasPendingOperation: true, 
-        operation: 'merge', 
-        commitHash: commitHash.substring(0, 7) 
+      return {
+        success: true,
+        hasPendingOperation: true,
+        operation: 'merge',
+        commitHash: commitHash.substring(0, 7)
       };
     }
 
@@ -2364,10 +2439,10 @@ ipcMain.handle('get-pending-operation', async (event, repoPath) => {
     const rebaseApplyDir = path.join(gitDir, 'rebase-apply');
     const rebaseMergeDir = path.join(gitDir, 'rebase-merge');
     if (fs.existsSync(rebaseApplyDir) || fs.existsSync(rebaseMergeDir)) {
-      return { 
-        success: true, 
-        hasPendingOperation: true, 
-        operation: 'rebase' 
+      return {
+        success: true,
+        hasPendingOperation: true,
+        operation: 'rebase'
       };
     }
 
@@ -2449,12 +2524,12 @@ ipcMain.handle('git-create-tag', async (event, { repoPath, tagName, message, com
     if (message && message.trim()) {
       // Tag anotado con mensaje
       const escapedMessage = message.replace(/"/g, '\\"');
-      tagCommand = commitHash 
+      tagCommand = commitHash
         ? `git tag -a "${tagName.trim()}" -m "${escapedMessage}" ${commitHash}`
         : `git tag -a "${tagName.trim()}" -m "${escapedMessage}"`;
     } else {
       // Tag ligero
-      tagCommand = commitHash 
+      tagCommand = commitHash
         ? `git tag "${tagName.trim()}" ${commitHash}`
         : `git tag "${tagName.trim()}"`;
     }
@@ -2501,18 +2576,18 @@ ipcMain.handle('git-stash', async (event, { repoPath, includeUntracked = false, 
     // Normalizar el mensaje: si es undefined, null o string vacío después de trim, usar el por defecto
     const normalizedMessage = (message && typeof message === 'string') ? message.trim() : '';
     const userMessage = normalizedMessage || 'Stash automático antes de cambiar de rama';
-    
+
     // Agregar solo el prefijo "WIP: " al mensaje (Git ya agrega "On <branch>:" automáticamente)
     const stashMessage = `WIP: ${userMessage}`;
-    
+
     // Escapar comillas dobles y caracteres especiales en el mensaje para evitar problemas con el shell
     // Usar comillas simples para evitar problemas con caracteres especiales
     const escapedMessage = stashMessage.replace(/'/g, "'\\''");
-    
-    const command = includeUntracked 
+
+    const command = includeUntracked
       ? `git stash push --include-untracked -m '${escapedMessage}'`
       : `git stash push -m '${escapedMessage}'`;
-    
+
     await execPromise(command, { cwd: repoPath });
     return { success: true };
   } catch (error) {
@@ -2534,7 +2609,7 @@ ipcMain.handle('get-git-stash-list', async (event, repoPath) => {
     // Obtener la lista de stashes
     // Usar --format para obtener información estructurada
     const { stdout } = await execPromise('git stash list --format="%gd|%gs|%ci"', { cwd: repoPath });
-    
+
     const stashes = [];
     if (stdout.trim()) {
       const lines = stdout.trim().split('\n');
@@ -2545,7 +2620,7 @@ ipcMain.handle('get-git-stash-list', async (event, repoPath) => {
           const ref = parts[0].trim();
           const message = parts.slice(1, -1).join('|').trim(); // El mensaje puede contener |
           const date = parts[parts.length - 1].trim();
-          
+
           stashes.push({
             index: index,
             ref: ref, // stash@{0}, stash@{1}, etc.
@@ -2636,7 +2711,7 @@ ipcMain.handle('git-clean', async (event, { repoPath, force = false }) => {
 
     // -f: force, -d: incluye directorios
     const command = force ? 'git clean -fd' : 'git clean -fd';
-    
+
     await execPromise(command, { cwd: repoPath });
     return { success: true };
   } catch (error) {
