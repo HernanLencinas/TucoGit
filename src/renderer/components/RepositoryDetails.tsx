@@ -234,18 +234,18 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
 
             // Configurar la estrategia localmente para este repositorio
             const configResult = await (window as any).electronAPI.setGitConfigLocal?.(pendingPullRepoPath, configKey, configValue);
-            
+
             if (configResult?.success) {
                 // Reintentar el pull
                 const pullResult = await (window as any).electronAPI.gitPull?.(pendingPullRepoPath);
                 if (pullResult?.success) {
                     loadCommits(true);
                     loadBranches();
-                    await (window as any).electronAPI.gitFetch?.(pendingPullRepoPath).catch(() => {});
+                    await (window as any).electronAPI.gitFetch?.(pendingPullRepoPath).catch(() => { });
                     setTimeout(() => {
                         loadSyncInfo();
                     }, 500);
-                    
+
                     // Si se abrió desde push, reintentar el push después del pull
                     if (shouldPushAfter) {
                         setPushing(true);
@@ -254,7 +254,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                             if (pushResult?.success) {
                                 loadCommits(true);
                                 loadBranches();
-                                await (window as any).electronAPI.gitFetch?.(pendingPullRepoPath).catch(() => {});
+                                await (window as any).electronAPI.gitFetch?.(pendingPullRepoPath).catch(() => { });
                                 setTimeout(() => {
                                     loadSyncInfo();
                                 }, 500);
@@ -463,7 +463,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         const orgPath = repository.organizacion ? `${repository.organizacion}/` : "";
         const repoName = repository.nombreGit || repository.nombre;
         const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${orgPath}${repoName}`;
-        
+
         const checkPendingOperation = async () => {
             try {
                 const result = await (window as any).electronAPI.getPendingOperation?.(repoPath);
@@ -480,7 +480,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 setPendingOperation(null);
             }
         };
-        
+
         checkPendingOperation();
         const interval = setInterval(checkPendingOperation, 2000);
         return () => clearInterval(interval);
@@ -713,7 +713,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             if (result?.success) {
                 toast({
                     title: t('repositories.stashModal.success.title'),
-                    description: stashIncludeUntracked 
+                    description: stashIncludeUntracked
                         ? t('repositories.stashModal.success.descriptionWithUntracked')
                         : t('repositories.stashModal.success.description'),
                     variant: "success",
@@ -742,10 +742,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
 
     const handleCreateBranch = async () => {
         if (!newBranchName.trim()) return;
-        
+
         setCreatingBranch(true);
         const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
-        
+
         try {
             const result = await (window as any).electronAPI.gitCreateBranch?.(repoPath, newBranchName.trim(), newBranchFrom);
             if (result?.success) {
@@ -769,10 +769,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
 
     const handleRevert = async () => {
         if (!selectedCommit?.hash) return;
-        
+
         setReverting(true);
         const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
-        
+
         try {
             const result = await (window as any).electronAPI.gitRevert?.(repoPath, selectedCommit.hash);
             if (result?.success) {
@@ -805,16 +805,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
 
     const handleCherryPick = async () => {
         if (!selectedCommit?.hash) return;
-        
+
         setCherryPicking(true);
         const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
-        
+
         try {
             const result = await (window as any).electronAPI.gitCherryPick?.(repoPath, selectedCommit.hash, cherryPickCommitChanges, cherryPickAppendOrigin);
             if (result?.success) {
                 toast({
                     title: t('repositories.cherryPickModal.toasts.success.title'),
-                    description: cherryPickCommitChanges 
+                    description: cherryPickCommitChanges
                         ? t('repositories.cherryPickModal.toasts.success.description')
                         : t('repositories.cherryPickModal.toasts.success.descriptionNoCommit'),
                     variant: "success",
@@ -881,10 +881,10 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
 
     const handleCreateTag = async () => {
         if (!tagName.trim() || !selectedCommit) return;
-        
+
         setCreatingTag(true);
         const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
-        
+
         try {
             const result = await (window as any).electronAPI.gitCreateTag?.(repoPath, tagName.trim(), tagMessage.trim(), selectedCommit.hash, pushToAllRemotes);
             if (result?.success) {
@@ -895,7 +895,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                 loadCommits(true);
                 toast({
                     title: t('repositories.newTagModal.success.title'),
-                    description: pushToAllRemotes 
+                    description: pushToAllRemotes
                         ? t('repositories.newTagModal.success.descriptionWithPush', { tagName: tagName.trim() })
                         : t('repositories.newTagModal.success.description', { tagName: tagName.trim() }),
                 });
@@ -925,34 +925,34 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         const lines = errorMessage.split('\n');
         const files: string[] = [];
         let foundHeader = false;
-        
+
         for (const line of lines) {
-            if (line.includes('untracked working tree files would be overwritten') || 
+            if (line.includes('untracked working tree files would be overwritten') ||
                 line.includes('Your local changes to the following files would be overwritten')) {
                 foundHeader = true;
                 continue;
             }
-            if (foundHeader && line.trim() && 
-                !line.includes('Please move or remove') && 
+            if (foundHeader && line.trim() &&
+                !line.includes('Please move or remove') &&
                 !line.includes('Please commit your changes') &&
                 !line.includes('stash them before') &&
                 !line.includes('Aborting')) {
                 files.push(line.trim());
             }
         }
-        
+
         return files;
     };
 
     const handleBranchSelect = async (branch: string, isRemote: boolean = false) => {
         const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
-        
+
         if (isRemote) {
             // Si es remoto, verificar si tiene un branch local correspondiente
             // Remover el prefijo "origin/" o similar para obtener el nombre del branch
             const branchName = branch.replace(/^[^/]+\//, '');
             const hasLocalBranch = branches.local.includes(branchName);
-            
+
             if (!hasLocalBranch) {
                 // No tiene branch local, abrir modal para crearlo
                 setIsCreatingFromRemote(true);
@@ -1138,15 +1138,15 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     // Handlers para redimensionar el panel de detalles del commit
     const handleResizeMove = React.useCallback((e: MouseEvent) => {
         if (!isResizingRef.current) return;
-        
+
         const container = scrollContainerRef.current?.parentElement;
         if (!container) return;
-        
+
         const containerHeight = container.clientHeight;
         const deltaY = resizeStartY.current - e.clientY; // Negativo cuando arrastras hacia arriba
         const deltaPercent = (deltaY / containerHeight) * 100;
         const newHeight = Math.max(20, Math.min(80, resizeStartHeight.current + deltaPercent));
-        
+
         setCommitPanelHeight(newHeight);
     }, []);
 
@@ -1179,12 +1179,12 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         <div className="h-full flex flex-col bg-white dark:bg-[#011627] text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
             {/* Barra de título personalizada con nombre del repositorio (solo macOS) */}
             {window.electronAPI?.platform === 'darwin' && (
-                <div 
+                <div
                     className="fixed top-0 left-0 right-0 h-[48px] bg-slate-700 dark:bg-slate-800 z-50 flex items-center justify-between pl-[70px] pr-4"
                     style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
                 >
                     {/* Nombre del repositorio dentro del área roja */}
-                    <div 
+                    <div
                         className="flex items-center gap-2 min-w-0 pointer-events-none pl-4 pt-2"
                         style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
                     >
@@ -1201,7 +1201,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
 
                     {/* Botón de minimizar dentro del área roja */}
                     {onMinimize && (
-                        <div 
+                        <div
                             className="flex items-center gap-2 pointer-events-auto pt-2"
                             style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
                         >
@@ -1292,105 +1292,105 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     </span>
                                     <ChevronDown className="h-3 w-3" />
                                 </Button>
-                            {branchesOpen && (
-                                <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50 max-h-96 overflow-auto">
-                                    {/* Commit Seleccionado */}
-                                    {selectedCommit && (
-                                        <div className="p-2 border-b border-slate-200 dark:border-slate-700">
-                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.selectedCommit')}</div>
-                                            <button
-                                                onClick={async () => {
-                                                    const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
-                                                    try {
-                                                        const result = await (window as any).electronAPI.gitCheckout?.(repoPath, selectedCommit.hash);
-                                                        if (result?.success) {
-                                                            loadBranches();
-                                                            loadCommits(true);
-                                                            setBranchesOpen(false);
-                                                        } else {
-                                                            const errorMessage = result?.error || '';
-                                                            if (errorMessage.includes('untracked working tree files would be overwritten') ||
-                                                                errorMessage.includes('Your local changes to the following files would be overwritten')) {
-                                                                const files = extractConflictFiles(errorMessage);
-                                                                setConflictFiles(files);
-                                                                setPendingCheckoutBranch(selectedCommit.hash);
-                                                                setPendingCheckoutRepoPath(repoPath);
-                                                                setIsUntrackedConflict(errorMessage.includes('untracked working tree files'));
-                                                                setShowCheckoutConflictModal(true);
-                                                            } else {
-                                                                toast({
-                                                                    title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
-                                                                    description: errorMessage,
-                                                                    variant: "destructive",
-                                                                });
-                                                            }
-                                                        }
-                                                    } catch (err: any) {
-                                                        // Error al hacer checkout
-                                                        toast({
-                                                            title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
-                                                            description: err?.message || t('repositories.branchesDropdown.toasts.checkoutError.description'),
-                                                            variant: "destructive",
-                                                        });
-                                                    }
-                                                }}
-                                                className={cn(
-                                                    "w-full text-left px-3 py-1.5 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2",
-                                                    branches.headHash === selectedCommit.hash && "bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 font-medium"
-                                                )}
-                                            >
-                                                <GitBranch className="h-3 w-3" />
-                                                <span className="truncate">{t('repositories.branchesDropdown.actions.checkoutHash', { hash: selectedCommit.hash.substring(0, 7) })}</span>
-                                                {branches.headHash === selectedCommit.hash && (
-                                                    <span className="ml-auto text-[10px] text-cyan-600 dark:text-cyan-400">●</span>
-                                                )}
-                                            </button>
-                                        </div>
-                                    )}
-                                    {/* Branches Locales */}
-                                    {branches.local.length > 0 && (
-                                        <div className="p-2">
-                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.local')}</div>
-                                            {branches.local.map((branch) => (
+                                {branchesOpen && (
+                                    <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50 max-h-96 overflow-auto">
+                                        {/* Commit Seleccionado */}
+                                        {selectedCommit && (
+                                            <div className="p-2 border-b border-slate-200 dark:border-slate-700">
+                                                <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.selectedCommit')}</div>
                                                 <button
-                                                    key={branch}
-                                                    onClick={() => handleBranchSelect(branch, false)}
+                                                    onClick={async () => {
+                                                        const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+                                                        try {
+                                                            const result = await (window as any).electronAPI.gitCheckout?.(repoPath, selectedCommit.hash);
+                                                            if (result?.success) {
+                                                                loadBranches();
+                                                                loadCommits(true);
+                                                                setBranchesOpen(false);
+                                                            } else {
+                                                                const errorMessage = result?.error || '';
+                                                                if (errorMessage.includes('untracked working tree files would be overwritten') ||
+                                                                    errorMessage.includes('Your local changes to the following files would be overwritten')) {
+                                                                    const files = extractConflictFiles(errorMessage);
+                                                                    setConflictFiles(files);
+                                                                    setPendingCheckoutBranch(selectedCommit.hash);
+                                                                    setPendingCheckoutRepoPath(repoPath);
+                                                                    setIsUntrackedConflict(errorMessage.includes('untracked working tree files'));
+                                                                    setShowCheckoutConflictModal(true);
+                                                                } else {
+                                                                    toast({
+                                                                        title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
+                                                                        description: errorMessage,
+                                                                        variant: "destructive",
+                                                                    });
+                                                                }
+                                                            }
+                                                        } catch (err: any) {
+                                                            // Error al hacer checkout
+                                                            toast({
+                                                                title: t('repositories.branchesDropdown.toasts.checkoutError.title'),
+                                                                description: err?.message || t('repositories.branchesDropdown.toasts.checkoutError.description'),
+                                                                variant: "destructive",
+                                                            });
+                                                        }
+                                                    }}
                                                     className={cn(
                                                         "w-full text-left px-3 py-1.5 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2",
-                                                        branch === branches.current && "bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 font-medium"
+                                                        branches.headHash === selectedCommit.hash && "bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 font-medium"
                                                     )}
                                                 >
                                                     <GitBranch className="h-3 w-3" />
-                                                    <span className="truncate">{branch}</span>
-                                                    {branch === branches.current && (
+                                                    <span className="truncate">{t('repositories.branchesDropdown.actions.checkoutHash', { hash: selectedCommit.hash.substring(0, 7) })}</span>
+                                                    {branches.headHash === selectedCommit.hash && (
                                                         <span className="ml-auto text-[10px] text-cyan-600 dark:text-cyan-400">●</span>
                                                     )}
                                                 </button>
-                                            ))}
-                                        </div>
-                                    )}
-                                    {/* Branches Remotos */}
-                                    {branches.remote.length > 0 && (
-                                        <div className="p-2 border-t border-slate-200 dark:border-slate-700">
-                                            <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.remote')}</div>
-                                            {branches.remote.map((branch) => (
-                                                <button
-                                                    key={branch}
-                                                    onClick={() => handleBranchSelect(branch, true)}
-                                                    className="w-full text-left px-3 py-1.5 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-600 dark:text-slate-400"
-                                                >
-                                                    <GitBranch className="h-3 w-3" />
-                                                    <span className="truncate">{branch}</span>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
-                                    {branches.local.length === 0 && branches.remote.length === 0 && !selectedCommit && (
-                                        <div className="p-4 text-center text-xs text-slate-500 dark:text-slate-400">
-                                            {t('repositories.branchesDropdown.empty')}
-                                        </div>
-                                    )}
-                                </div>
+                                            </div>
+                                        )}
+                                        {/* Branches Locales */}
+                                        {branches.local.length > 0 && (
+                                            <div className="p-2">
+                                                <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.local')}</div>
+                                                {branches.local.map((branch) => (
+                                                    <button
+                                                        key={branch}
+                                                        onClick={() => handleBranchSelect(branch, false)}
+                                                        className={cn(
+                                                            "w-full text-left px-3 py-1.5 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2",
+                                                            branch === branches.current && "bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 font-medium"
+                                                        )}
+                                                    >
+                                                        <GitBranch className="h-3 w-3" />
+                                                        <span className="truncate">{branch}</span>
+                                                        {branch === branches.current && (
+                                                            <span className="ml-auto text-[10px] text-cyan-600 dark:text-cyan-400">●</span>
+                                                        )}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {/* Branches Remotos */}
+                                        {branches.remote.length > 0 && (
+                                            <div className="p-2 border-t border-slate-200 dark:border-slate-700">
+                                                <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase px-2 py-1">{t('repositories.branchesDropdown.sections.remote')}</div>
+                                                {branches.remote.map((branch) => (
+                                                    <button
+                                                        key={branch}
+                                                        onClick={() => handleBranchSelect(branch, true)}
+                                                        className="w-full text-left px-3 py-1.5 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-600 dark:text-slate-400"
+                                                    >
+                                                        <GitBranch className="h-3 w-3" />
+                                                        <span className="truncate">{branch}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {branches.local.length === 0 && branches.remote.length === 0 && !selectedCommit && (
+                                            <div className="p-4 text-center text-xs text-slate-500 dark:text-slate-400">
+                                                {t('repositories.branchesDropdown.empty')}
+                                            </div>
+                                        )}
+                                    </div>
                                 )}
                             </div>
                             {/* Botón de acciones con menú desplegable */}
@@ -1406,172 +1406,187 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 >
                                     <Plus className="h-4 w-4" />
                                 </Button>
-                            {newBranchMenuOpen && (
-                                <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
-                                    <button
-                                        onClick={() => {
-                                            setNewBranchMenuOpen(false);
-                                            setIsCreatingFromRemote(false);
-                                            setShowNewBranchModal(true);
-                                        }}
-                                        className="w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-600 dark:text-slate-400"
-                                    >
-                                        <GitBranch className="h-3.5 w-3.5" />
-                                        <span>{t('repositories.menuItems.newBranch')}</span>
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setNewBranchMenuOpen(false);
-                                            setShowNewTagModal(true);
-                                        }}
-                                        disabled={!selectedCommit}
-                                        className={cn(
-                                            "w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2",
-                                            selectedCommit 
-                                                ? "text-slate-600 dark:text-slate-400" 
-                                                : "text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50"
-                                        )}
-                                    >
-                                        <Tag className="h-3.5 w-3.5" />
-                                        <span>{t('repositories.menuItems.newTag')}</span>
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                                {newBranchMenuOpen && (
+                                    <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
+                                        <button
+                                            onClick={() => {
+                                                setNewBranchMenuOpen(false);
+                                                setIsCreatingFromRemote(false);
+                                                setShowNewBranchModal(true);
+                                            }}
+                                            className="w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-600 dark:text-slate-400"
+                                        >
+                                            <GitBranch className="h-3.5 w-3.5" />
+                                            <span>{t('repositories.menuItems.newBranch')}</span>
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                setNewBranchMenuOpen(false);
+                                                setShowNewTagModal(true);
+                                            }}
+                                            disabled={!selectedCommit}
+                                            className={cn(
+                                                "w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2",
+                                                selectedCommit
+                                                    ? "text-slate-600 dark:text-slate-400"
+                                                    : "text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50"
+                                            )}
+                                        >
+                                            <Tag className="h-3.5 w-3.5" />
+                                            <span>{t('repositories.menuItems.newTag')}</span>
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         {/* Separador */}
                         <div className="h-6 w-px bg-slate-300 dark:bg-slate-600 flex-shrink-0"></div>
                         {/* Grupo 2: Fetch, Pull, Push */}
                         <div className="flex items-center gap-2 flex-shrink-0">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={async () => {
-                                const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
-                                setFetching(true);
-                                try {
-                                    const result = await (window as any).electronAPI.gitFetch?.(repoPath);
-                                    if (result?.success) {
-                                        loadCommits(true);
-                                        loadBranches();
-                                        loadSyncInfo();
-                                    } else {
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={async () => {
+                                    const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+                                    setFetching(true);
+                                    try {
+                                        const result = await (window as any).electronAPI.gitFetch?.(repoPath);
+                                        if (result?.success) {
+                                            loadCommits(true);
+                                            loadBranches();
+                                            loadSyncInfo();
+                                        } else {
+                                            toast({
+                                                title: "Error al hacer fetch",
+                                                description: result?.error || "No se pudo completar la operación",
+                                                variant: "destructive",
+                                            });
+                                        }
+                                    } catch (err: any) {
+                                        // Error al hacer fetch
                                         toast({
                                             title: "Error al hacer fetch",
-                                            description: result?.error || "No se pudo completar la operación",
+                                            description: err?.message || "Ocurrió un error inesperado",
                                             variant: "destructive",
                                         });
+                                    } finally {
+                                        setFetching(false);
                                     }
-                                } catch (err: any) {
-                                    // Error al hacer fetch
-                                    toast({
-                                        title: "Error al hacer fetch",
-                                        description: err?.message || "Ocurrió un error inesperado",
-                                        variant: "destructive",
-                                    });
-                                } finally {
-                                    setFetching(false);
-                                }
-                            }}
-                            disabled={fetching}
-                            className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            <svg 
-                                className={cn("h-3.5 w-3.5 transition-all", fetching && "animate-bounce")} 
-                                viewBox="0 0 24 24" 
-                                fill="currentColor"
+                                }}
+                                disabled={fetching}
+                                className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <path d="m18.707 12.707-1.414-1.414L13 15.586V6h-2v9.586l-4.293-4.293-1.414 1.414L12 19.414z"/>
-                            </svg>
-                            <span>{fetching ? 'Fetching...' : 'Fetch'}</span>
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={async () => {
-                                const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
-                                setPulling(true);
-                                try {
-                                    const result = await (window as any).electronAPI.gitPull?.(repoPath);
-                                    if (result?.success) {
-                                        loadCommits(true);
-                                        loadBranches();
-                                        // Hacer fetch y luego actualizar syncInfo con un pequeño delay
-                                        await (window as any).electronAPI.gitFetch?.(repoPath).catch(() => {});
-                                        setTimeout(() => {
-                                            loadSyncInfo();
-                                        }, 500);
-                                    } else {
-                                        // Verificar si es el error de branches divergentes
-                                        const errorMessage = result?.error || "";
+                                <svg
+                                    className={cn("h-3.5 w-3.5 transition-all", fetching && "animate-bounce")}
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path d="m18.707 12.707-1.414-1.414L13 15.586V6h-2v9.586l-4.293-4.293-1.414 1.414L12 19.414z" />
+                                </svg>
+                                <span>{fetching ? 'Fetching...' : 'Fetch'}</span>
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={async () => {
+                                    const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+                                    setPulling(true);
+                                    try {
+                                        const result = await (window as any).electronAPI.gitPull?.(repoPath);
+                                        if (result?.success) {
+                                            loadCommits(true);
+                                            loadBranches();
+                                            // Hacer fetch y luego actualizar syncInfo con un pequeño delay
+                                            await (window as any).electronAPI.gitFetch?.(repoPath).catch(() => { });
+                                            setTimeout(() => {
+                                                loadSyncInfo();
+                                            }, 500);
+                                        } else {
+                                            // Verificar si es el error de branches divergentes
+                                            const errorMessage = result?.error || "";
+                                            if (errorMessage.includes("divergent branches") || errorMessage.includes("Need to specify how to reconcile")) {
+                                                setPendingPullRepoPath(repoPath);
+                                                setShowPullStrategyModal(true);
+                                            } else {
+                                                toast({
+                                                    title: "Error al hacer pull",
+                                                    description: errorMessage || "No se pudo completar la operación",
+                                                    variant: "destructive",
+                                                });
+                                            }
+                                        }
+                                    } catch (err: any) {
+                                        // Error al hacer pull
+                                        const errorMessage = err?.message || "";
                                         if (errorMessage.includes("divergent branches") || errorMessage.includes("Need to specify how to reconcile")) {
                                             setPendingPullRepoPath(repoPath);
                                             setShowPullStrategyModal(true);
                                         } else {
                                             toast({
                                                 title: "Error al hacer pull",
-                                                description: errorMessage || "No se pudo completar la operación",
+                                                description: errorMessage || "Ocurrió un error inesperado",
                                                 variant: "destructive",
                                             });
                                         }
+                                    } finally {
+                                        setPulling(false);
                                     }
-                                } catch (err: any) {
-                                    // Error al hacer pull
-                                    const errorMessage = err?.message || "";
-                                    if (errorMessage.includes("divergent branches") || errorMessage.includes("Need to specify how to reconcile")) {
-                                        setPendingPullRepoPath(repoPath);
-                                        setShowPullStrategyModal(true);
-                                    } else {
-                                        toast({
-                                            title: "Error al hacer pull",
-                                            description: errorMessage || "Ocurrió un error inesperado",
-                                            variant: "destructive",
-                                        });
-                                    }
-                                } finally {
-                                    setPulling(false);
-                                }
-                            }}
-                            disabled={pulling}
-                            className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {pulling ? (
-                                <svg 
-                                    className={cn("h-3.5 w-3.5 transition-all animate-bounce")} 
-                                    viewBox="0 0 24 24" 
-                                    fill="currentColor"
-                                >
-                                    <path d="m18.707 12.707-1.414-1.414L13 15.586V6h-2v9.586l-4.293-4.293-1.414 1.414L12 19.414z"/>
-                                </svg>
-                            ) : (
-                                <Download className="h-3.5 w-3.5" />
-                            )}
-                            <span>{pulling ? 'Pulling...' : 'Pull'}</span>
-                            {syncInfo.behind > 0 && !pulling && (
-                                <span className="h-4 px-1.5 rounded-sm bg-transparent border border-purple-500 dark:border-purple-400 text-purple-600 dark:text-purple-400 text-[8px] font-bold flex items-center justify-center">
-                                    {syncInfo.behind > 9 ? '9+' : syncInfo.behind}
-                                </span>
-                            )}
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={async () => {
-                                const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
-                                setPushing(true);
-                                try {
-                                    const result = await (window as any).electronAPI.gitPush?.(repoPath);
-                                    if (result?.success) {
-                                        loadCommits(true);
-                                        loadBranches();
-                                        // Hacer fetch y luego actualizar syncInfo con un pequeño delay
-                                        await (window as any).electronAPI.gitFetch?.(repoPath).catch(() => {});
-                                        setTimeout(() => {
-                                            loadSyncInfo();
-                                        }, 500);
-                                    } else {
-                                        // Verificar si es el error de non-fast-forward o behind
-                                        const errorMessage = result?.error || "";
+                                }}
+                                disabled={pulling}
+                                className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {pulling ? (
+                                    <svg
+                                        className={cn("h-3.5 w-3.5 transition-all animate-bounce")}
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                    >
+                                        <path d="m18.707 12.707-1.414-1.414L13 15.586V6h-2v9.586l-4.293-4.293-1.414 1.414L12 19.414z" />
+                                    </svg>
+                                ) : (
+                                    <Download className="h-3.5 w-3.5" />
+                                )}
+                                <span>{pulling ? 'Pulling...' : 'Pull'}</span>
+                                {syncInfo.behind > 0 && !pulling && (
+                                    <span className="h-4 px-1.5 rounded-sm bg-transparent border border-purple-500 dark:border-purple-400 text-purple-600 dark:text-purple-400 text-[8px] font-bold flex items-center justify-center">
+                                        {syncInfo.behind > 9 ? '9+' : syncInfo.behind}
+                                    </span>
+                                )}
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={async () => {
+                                    const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+                                    setPushing(true);
+                                    try {
+                                        const result = await (window as any).electronAPI.gitPush?.(repoPath);
+                                        if (result?.success) {
+                                            loadCommits(true);
+                                            loadBranches();
+                                            // Hacer fetch y luego actualizar syncInfo con un pequeño delay
+                                            await (window as any).electronAPI.gitFetch?.(repoPath).catch(() => { });
+                                            setTimeout(() => {
+                                                loadSyncInfo();
+                                            }, 500);
+                                        } else {
+                                            // Verificar si es el error de non-fast-forward o behind
+                                            const errorMessage = result?.error || "";
+                                            if (errorMessage.includes("non-fast-forward") || errorMessage.includes("behind") || errorMessage.includes("Updates were rejected")) {
+                                                setPendingPullRepoPath(repoPath);
+                                                setPendingPushAfterPull(true);
+                                                setShowPullStrategyModal(true);
+                                            } else {
+                                                toast({
+                                                    title: "Error al hacer push",
+                                                    description: errorMessage || "No se pudo completar la operación",
+                                                    variant: "destructive",
+                                                });
+                                            }
+                                        }
+                                    } catch (err: any) {
+                                        // Error al hacer push
+                                        const errorMessage = err?.message || "";
                                         if (errorMessage.includes("non-fast-forward") || errorMessage.includes("behind") || errorMessage.includes("Updates were rejected")) {
                                             setPendingPullRepoPath(repoPath);
                                             setPendingPushAfterPull(true);
@@ -1579,284 +1594,269 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         } else {
                                             toast({
                                                 title: "Error al hacer push",
-                                                description: errorMessage || "No se pudo completar la operación",
+                                                description: errorMessage || "Ocurrió un error inesperado",
                                                 variant: "destructive",
                                             });
                                         }
+                                    } finally {
+                                        setPushing(false);
                                     }
-                                } catch (err: any) {
-                                    // Error al hacer push
-                                    const errorMessage = err?.message || "";
-                                    if (errorMessage.includes("non-fast-forward") || errorMessage.includes("behind") || errorMessage.includes("Updates were rejected")) {
-                                        setPendingPullRepoPath(repoPath);
-                                        setPendingPushAfterPull(true);
-                                        setShowPullStrategyModal(true);
-                                    } else {
-                                        toast({
-                                            title: "Error al hacer push",
-                                            description: errorMessage || "Ocurrió un error inesperado",
-                                            variant: "destructive",
-                                        });
-                                    }
-                                } finally {
-                                    setPushing(false);
-                                }
-                            }}
-                            disabled={pushing}
-                            className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {pushing ? (
-                                <svg 
-                                    className={cn("h-3.5 w-3.5 transition-all animate-bounce")} 
-                                    viewBox="0 0 24 24" 
-                                    fill="currentColor"
-                                >
-                                    <path d="m5.293 11.293 1.414 1.414L11 6.414V18h2V6.414l4.293 4.293 1.414-1.414L12 4.586z"/>
-                                </svg>
-                            ) : (
-                                <Upload className="h-3.5 w-3.5" />
-                            )}
-                            <span>{pushing ? 'Pushing...' : 'Push'}</span>
-                            {syncInfo.ahead > 0 && !pushing && (
-                                <span className="h-4 px-1.5 rounded-sm bg-transparent border border-green-500 dark:border-green-400 text-green-600 dark:text-green-400 text-[8px] font-bold flex items-center justify-center">
-                                    {syncInfo.ahead > 9 ? '9+' : syncInfo.ahead}
-                                </span>
-                            )}
-                        </Button>
+                                }}
+                                disabled={pushing}
+                                className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {pushing ? (
+                                    <svg
+                                        className={cn("h-3.5 w-3.5 transition-all animate-bounce")}
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                    >
+                                        <path d="m5.293 11.293 1.414 1.414L11 6.414V18h2V6.414l4.293 4.293 1.414-1.414L12 4.586z" />
+                                    </svg>
+                                ) : (
+                                    <Upload className="h-3.5 w-3.5" />
+                                )}
+                                <span>{pushing ? 'Pushing...' : 'Push'}</span>
+                                {syncInfo.ahead > 0 && !pushing && (
+                                    <span className="h-4 px-1.5 rounded-sm bg-transparent border border-green-500 dark:border-green-400 text-green-600 dark:text-green-400 text-[8px] font-bold flex items-center justify-center">
+                                        {syncInfo.ahead > 9 ? '9+' : syncInfo.ahead}
+                                    </span>
+                                )}
+                            </Button>
                         </div>
                         {/* Separador */}
                         <div className="h-6 w-px bg-slate-300 dark:bg-slate-600 flex-shrink-0"></div>
                         {/* Grupo 3: Stash y Acciones */}
                         <div className="flex items-center gap-2 flex-shrink-0">
-                        {/* Botón de Stash dividido: acción principal + menú desplegable */}
-                        <div className="relative flex items-center flex-shrink-0" ref={stashMenuRef}>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                    setStashMessage('');
-                                    setStashIncludeUntracked(true);
-                                    setShowStashModal(true);
-                                }}
-                                className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm rounded-r-none"
-                                title={t('repositories.tooltips.stash')}
-                            >
-                                <svg
-                                    className="h-3.5 w-3.5"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
+                            {/* Botón de Stash dividido: acción principal + menú desplegable */}
+                            <div className="relative flex items-center flex-shrink-0" ref={stashMenuRef}>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setStashMessage('');
+                                        setStashIncludeUntracked(true);
+                                        setShowStashModal(true);
+                                    }}
+                                    className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm rounded-r-none"
+                                    title={t('repositories.tooltips.stash')}
                                 >
-                                    <path
-                                        fillRule="evenodd"
-                                        clipRule="evenodd"
-                                        d="M3.95526 2.25C3.97013 2.25001 3.98505 2.25001 4.00001 2.25001L20.0448 2.25C20.4776 2.24995 20.8744 2.24991 21.1972 2.29331C21.5527 2.3411 21.9284 2.45355 22.2374 2.76257C22.5465 3.07159 22.6589 3.44732 22.7067 3.8028C22.7501 4.12561 22.7501 4.52245 22.75 4.95526V5.04475C22.7501 5.47757 22.7501 5.8744 22.7067 6.19721C22.6589 6.55269 22.5465 6.92842 22.2374 7.23744C21.9437 7.53121 21.5896 7.64733 21.25 7.69914V13.0564C21.25 14.8942 21.25 16.3498 21.0969 17.489C20.9392 18.6615 20.6071 19.6104 19.8588 20.3588C19.1104 21.1071 18.1615 21.4392 16.989 21.5969C15.8498 21.75 14.3942 21.75 12.5564 21.75H11.4436C9.60583 21.75 8.1502 21.75 7.01098 21.5969C5.83856 21.4392 4.88961 21.1071 4.14125 20.3588C3.39289 19.6104 3.06077 18.6615 2.90314 17.489C2.74998 16.3498 2.74999 14.8942 2.75001 13.0564L2.75001 7.69914C2.41038 7.64733 2.05634 7.53121 1.76257 7.23744C1.45355 6.92842 1.3411 6.55269 1.29331 6.19721C1.24991 5.8744 1.24995 5.47757 1.25 5.04476C1.25001 5.02988 1.25001 5.01496 1.25001 5.00001C1.25001 4.98505 1.25001 4.97013 1.25 4.95526C1.24995 4.52244 1.24991 4.12561 1.29331 3.8028C1.3411 3.44732 1.45355 3.07159 1.76257 2.76257C2.07159 2.45355 2.44732 2.3411 2.8028 2.29331C3.12561 2.24991 3.52244 2.24995 3.95526 2.25ZM4.25001 7.75001V13C4.25001 14.9068 4.2516 16.2615 4.38977 17.2892C4.52503 18.2952 4.7787 18.8749 5.20191 19.2981C5.62512 19.7213 6.20477 19.975 7.21086 20.1102C8.23852 20.2484 9.59319 20.25 11.5 20.25H12.5C14.4068 20.25 15.7615 20.2484 16.7892 20.1102C17.7952 19.975 18.3749 19.7213 18.7981 19.2981C19.2213 18.8749 19.475 18.2952 19.6102 17.2892C19.7484 16.2615 19.75 14.9068 19.75 13V7.75001H4.25001ZM2.82324 3.82324L2.82568 3.82187C2.82761 3.82086 2.83093 3.81924 2.83597 3.81717C2.85775 3.80821 2.90611 3.79291 3.00267 3.77993C3.21339 3.7516 3.5074 3.75001 4.00001 3.75001H20C20.4926 3.75001 20.7866 3.7516 20.9973 3.77993C21.0939 3.79291 21.1423 3.80821 21.164 3.81717C21.1691 3.81924 21.1724 3.82086 21.1743 3.82187L21.1768 3.82323L21.1781 3.82568C21.1792 3.82761 21.1808 3.83093 21.1828 3.83597C21.1918 3.85775 21.2071 3.90611 21.2201 4.00267C21.2484 4.21339 21.25 4.5074 21.25 5.00001C21.25 5.49261 21.2484 5.78662 21.2201 5.99734C21.2071 6.0939 21.1918 6.14226 21.1828 6.16404C21.1808 6.16909 21.1792 6.1724 21.1781 6.17434L21.1768 6.17678L21.1743 6.17815C21.1724 6.17916 21.1691 6.18077 21.164 6.18285C21.1423 6.19181 21.0939 6.2071 20.9973 6.22008C20.7866 6.24841 20.4926 6.25001 20 6.25001H4.00001C3.5074 6.25001 3.21339 6.24841 3.00267 6.22008C2.90611 6.2071 2.85775 6.19181 2.83597 6.18285C2.83093 6.18077 2.82761 6.17916 2.82568 6.17815L2.82324 6.17677L2.82187 6.17434C2.82086 6.1724 2.81924 6.16909 2.81717 6.16404C2.80821 6.14226 2.79291 6.0939 2.77993 5.99734C2.7516 5.78662 2.75001 5.49261 2.75001 5.00001C2.75001 4.5074 2.7516 4.21339 2.77993 4.00267C2.79291 3.90611 2.80821 3.85775 2.81717 3.83597C2.81924 3.83093 2.82086 3.82761 2.82187 3.82568L2.82324 3.82324ZM2.82324 6.17677C2.82284 6.17636 2.82297 6.17644 2.82324 6.17677V6.17677ZM10.4782 9.75001H13.5218C13.736 9.74999 13.9329 9.74998 14.0982 9.76126C14.2759 9.77338 14.4712 9.80099 14.6697 9.88322C15.0985 10.0608 15.4392 10.4015 15.6168 10.8303C15.699 11.0288 15.7266 11.2242 15.7388 11.4018C15.75 11.5671 15.75 11.764 15.75 11.9782V12.0218C15.75 12.236 15.75 12.4329 15.7388 12.5982C15.7266 12.7759 15.699 12.9712 15.6168 13.1697C15.4392 13.5985 15.0985 13.9392 14.6697 14.1168C14.4712 14.199 14.2759 14.2266 14.0982 14.2388C13.9329 14.25 13.736 14.25 13.5218 14.25H10.4782C10.264 14.25 10.0671 14.25 9.9018 14.2388C9.72416 14.2266 9.52881 14.199 9.33031 14.1168C8.90151 13.9392 8.56083 13.5985 8.38322 13.1697C8.30099 12.9712 8.27338 12.7759 8.26126 12.5982C8.24998 12.4329 8.24999 12.236 8.25001 12.0218V11.9782C8.24999 11.764 8.24998 11.5671 8.26126 11.4018C8.27338 11.2242 8.30099 11.0288 8.38322 10.8303C8.56083 10.4015 8.90151 10.0608 9.33031 9.88322C9.52881 9.80099 9.72416 9.77338 9.9018 9.76126C10.0671 9.74998 10.264 9.74999 10.4782 9.75001ZM9.90131 11.2703C9.84248 11.2956 9.79559 11.3425 9.77031 11.4013C9.76844 11.4087 9.76234 11.4371 9.75778 11.5039C9.75041 11.6119 9.75001 11.7568 9.75001 12C9.75001 12.2432 9.75041 12.3881 9.75778 12.4961C9.76234 12.5629 9.76844 12.5913 9.77031 12.5987C9.79559 12.6575 9.84248 12.7044 9.90131 12.7297C9.90867 12.7316 9.93707 12.7377 10.0039 12.7422C10.1119 12.7496 10.2568 12.75 10.5 12.75H13.5C13.7432 12.75 13.8881 12.7496 13.9961 12.7422C14.0629 12.7377 14.0913 12.7316 14.0987 12.7297C14.1575 12.7044 14.2044 12.6575 14.2297 12.5987C14.2316 12.5913 14.2377 12.5629 14.2422 12.4961C14.2496 12.3881 14.25 12.2432 14.25 12C14.25 11.7568 14.2496 11.6119 14.2422 11.5039C14.2377 11.4371 14.2316 11.4087 14.2297 11.4013C14.2044 11.3425 14.1575 11.2956 14.0987 11.2703C14.0913 11.2684 14.0629 11.2623 13.9961 11.2578C13.8881 11.2504 13.7432 11.25 13.5 11.25H10.5C10.2568 11.25 10.1119 11.2504 10.0039 11.2578C9.93707 11.2623 9.90866 11.2684 9.90131 11.2703Z"
-                                        fill="currentColor"
-                                    />
-                                </svg>
-                                <span>Stash</span>
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setStashMenuOpen(!stashMenuOpen);
-                                }}
-                                className="h-7 w-6 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm rounded-l-none border-l-0"
-                                title={t('repositories.tooltips.moreStashOptions')}
-                            >
-                                <ChevronDown className="h-3 w-3" />
-                            </Button>
-                            {stashMenuOpen && (
-                                <div className="absolute top-full right-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
-                                    <button
-                                        onClick={async () => {
-                                            setStashMenuOpen(false);
-                                            const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
-                                            setLoadingStashList(true);
-                                            setShowStashListModal(true);
-                                            try {
-                                                const result = await (window as any).electronAPI.getGitStashList?.(repoPath);
-                                                if (result?.success) {
-                                                    setStashList(result.stashes || []);
-                                                } else {
+                                    <svg
+                                        className="h-3.5 w-3.5"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            clipRule="evenodd"
+                                            d="M3.95526 2.25C3.97013 2.25001 3.98505 2.25001 4.00001 2.25001L20.0448 2.25C20.4776 2.24995 20.8744 2.24991 21.1972 2.29331C21.5527 2.3411 21.9284 2.45355 22.2374 2.76257C22.5465 3.07159 22.6589 3.44732 22.7067 3.8028C22.7501 4.12561 22.7501 4.52245 22.75 4.95526V5.04475C22.7501 5.47757 22.7501 5.8744 22.7067 6.19721C22.6589 6.55269 22.5465 6.92842 22.2374 7.23744C21.9437 7.53121 21.5896 7.64733 21.25 7.69914V13.0564C21.25 14.8942 21.25 16.3498 21.0969 17.489C20.9392 18.6615 20.6071 19.6104 19.8588 20.3588C19.1104 21.1071 18.1615 21.4392 16.989 21.5969C15.8498 21.75 14.3942 21.75 12.5564 21.75H11.4436C9.60583 21.75 8.1502 21.75 7.01098 21.5969C5.83856 21.4392 4.88961 21.1071 4.14125 20.3588C3.39289 19.6104 3.06077 18.6615 2.90314 17.489C2.74998 16.3498 2.74999 14.8942 2.75001 13.0564L2.75001 7.69914C2.41038 7.64733 2.05634 7.53121 1.76257 7.23744C1.45355 6.92842 1.3411 6.55269 1.29331 6.19721C1.24991 5.8744 1.24995 5.47757 1.25 5.04476C1.25001 5.02988 1.25001 5.01496 1.25001 5.00001C1.25001 4.98505 1.25001 4.97013 1.25 4.95526C1.24995 4.52244 1.24991 4.12561 1.29331 3.8028C1.3411 3.44732 1.45355 3.07159 1.76257 2.76257C2.07159 2.45355 2.44732 2.3411 2.8028 2.29331C3.12561 2.24991 3.52244 2.24995 3.95526 2.25ZM4.25001 7.75001V13C4.25001 14.9068 4.2516 16.2615 4.38977 17.2892C4.52503 18.2952 4.7787 18.8749 5.20191 19.2981C5.62512 19.7213 6.20477 19.975 7.21086 20.1102C8.23852 20.2484 9.59319 20.25 11.5 20.25H12.5C14.4068 20.25 15.7615 20.2484 16.7892 20.1102C17.7952 19.975 18.3749 19.7213 18.7981 19.2981C19.2213 18.8749 19.475 18.2952 19.6102 17.2892C19.7484 16.2615 19.75 14.9068 19.75 13V7.75001H4.25001ZM2.82324 3.82324L2.82568 3.82187C2.82761 3.82086 2.83093 3.81924 2.83597 3.81717C2.85775 3.80821 2.90611 3.79291 3.00267 3.77993C3.21339 3.7516 3.5074 3.75001 4.00001 3.75001H20C20.4926 3.75001 20.7866 3.7516 20.9973 3.77993C21.0939 3.79291 21.1423 3.80821 21.164 3.81717C21.1691 3.81924 21.1724 3.82086 21.1743 3.82187L21.1768 3.82323L21.1781 3.82568C21.1792 3.82761 21.1808 3.83093 21.1828 3.83597C21.1918 3.85775 21.2071 3.90611 21.2201 4.00267C21.2484 4.21339 21.25 4.5074 21.25 5.00001C21.25 5.49261 21.2484 5.78662 21.2201 5.99734C21.2071 6.0939 21.1918 6.14226 21.1828 6.16404C21.1808 6.16909 21.1792 6.1724 21.1781 6.17434L21.1768 6.17678L21.1743 6.17815C21.1724 6.17916 21.1691 6.18077 21.164 6.18285C21.1423 6.19181 21.0939 6.2071 20.9973 6.22008C20.7866 6.24841 20.4926 6.25001 20 6.25001H4.00001C3.5074 6.25001 3.21339 6.24841 3.00267 6.22008C2.90611 6.2071 2.85775 6.19181 2.83597 6.18285C2.83093 6.18077 2.82761 6.17916 2.82568 6.17815L2.82324 6.17677L2.82187 6.17434C2.82086 6.1724 2.81924 6.16909 2.81717 6.16404C2.80821 6.14226 2.79291 6.0939 2.77993 5.99734C2.7516 5.78662 2.75001 5.49261 2.75001 5.00001C2.75001 4.5074 2.7516 4.21339 2.77993 4.00267C2.79291 3.90611 2.80821 3.85775 2.81717 3.83597C2.81924 3.83093 2.82086 3.82761 2.82187 3.82568L2.82324 3.82324ZM2.82324 6.17677C2.82284 6.17636 2.82297 6.17644 2.82324 6.17677V6.17677ZM10.4782 9.75001H13.5218C13.736 9.74999 13.9329 9.74998 14.0982 9.76126C14.2759 9.77338 14.4712 9.80099 14.6697 9.88322C15.0985 10.0608 15.4392 10.4015 15.6168 10.8303C15.699 11.0288 15.7266 11.2242 15.7388 11.4018C15.75 11.5671 15.75 11.764 15.75 11.9782V12.0218C15.75 12.236 15.75 12.4329 15.7388 12.5982C15.7266 12.7759 15.699 12.9712 15.6168 13.1697C15.4392 13.5985 15.0985 13.9392 14.6697 14.1168C14.4712 14.199 14.2759 14.2266 14.0982 14.2388C13.9329 14.25 13.736 14.25 13.5218 14.25H10.4782C10.264 14.25 10.0671 14.25 9.9018 14.2388C9.72416 14.2266 9.52881 14.199 9.33031 14.1168C8.90151 13.9392 8.56083 13.5985 8.38322 13.1697C8.30099 12.9712 8.27338 12.7759 8.26126 12.5982C8.24998 12.4329 8.24999 12.236 8.25001 12.0218V11.9782C8.24999 11.764 8.24998 11.5671 8.26126 11.4018C8.27338 11.2242 8.30099 11.0288 8.38322 10.8303C8.56083 10.4015 8.90151 10.0608 9.33031 9.88322C9.52881 9.80099 9.72416 9.77338 9.9018 9.76126C10.0671 9.74998 10.264 9.74999 10.4782 9.75001ZM9.90131 11.2703C9.84248 11.2956 9.79559 11.3425 9.77031 11.4013C9.76844 11.4087 9.76234 11.4371 9.75778 11.5039C9.75041 11.6119 9.75001 11.7568 9.75001 12C9.75001 12.2432 9.75041 12.3881 9.75778 12.4961C9.76234 12.5629 9.76844 12.5913 9.77031 12.5987C9.79559 12.6575 9.84248 12.7044 9.90131 12.7297C9.90867 12.7316 9.93707 12.7377 10.0039 12.7422C10.1119 12.7496 10.2568 12.75 10.5 12.75H13.5C13.7432 12.75 13.8881 12.7496 13.9961 12.7422C14.0629 12.7377 14.0913 12.7316 14.0987 12.7297C14.1575 12.7044 14.2044 12.6575 14.2297 12.5987C14.2316 12.5913 14.2377 12.5629 14.2422 12.4961C14.2496 12.3881 14.25 12.2432 14.25 12C14.25 11.7568 14.2496 11.6119 14.2422 11.5039C14.2377 11.4371 14.2316 11.4087 14.2297 11.4013C14.2044 11.3425 14.1575 11.2956 14.0987 11.2703C14.0913 11.2684 14.0629 11.2623 13.9961 11.2578C13.8881 11.2504 13.7432 11.25 13.5 11.25H10.5C10.2568 11.25 10.1119 11.2504 10.0039 11.2578C9.93707 11.2623 9.90866 11.2684 9.90131 11.2703Z"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                    <span>Stash</span>
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setStashMenuOpen(!stashMenuOpen);
+                                    }}
+                                    className="h-7 w-6 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm rounded-l-none border-l-0"
+                                    title={t('repositories.tooltips.moreStashOptions')}
+                                >
+                                    <ChevronDown className="h-3 w-3" />
+                                </Button>
+                                {stashMenuOpen && (
+                                    <div className="absolute top-full right-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
+                                        <button
+                                            onClick={async () => {
+                                                setStashMenuOpen(false);
+                                                const repoPath = `${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`;
+                                                setLoadingStashList(true);
+                                                setShowStashListModal(true);
+                                                try {
+                                                    const result = await (window as any).electronAPI.getGitStashList?.(repoPath);
+                                                    if (result?.success) {
+                                                        setStashList(result.stashes || []);
+                                                    } else {
+                                                        toast({
+                                                            title: "Error al obtener stashes",
+                                                            description: result?.error || "No se pudo obtener la lista de stashes",
+                                                            variant: "destructive",
+                                                        });
+                                                        setShowStashListModal(false);
+                                                    }
+                                                } catch (err: any) {
+                                                    // Error al obtener stashes
                                                     toast({
                                                         title: "Error al obtener stashes",
-                                                        description: result?.error || "No se pudo obtener la lista de stashes",
+                                                        description: err?.message || "Ocurrió un error inesperado",
                                                         variant: "destructive",
                                                     });
                                                     setShowStashListModal(false);
+                                                } finally {
+                                                    setLoadingStashList(false);
                                                 }
-                                            } catch (err: any) {
-                                                // Error al obtener stashes
-                                                toast({
-                                                    title: "Error al obtener stashes",
-                                                    description: err?.message || "Ocurrió un error inesperado",
-                                                    variant: "destructive",
-                                                });
-                                                setShowStashListModal(false);
-                                            } finally {
-                                                setLoadingStashList(false);
-                                            }
-                                        }}
-                                        className="w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-600 dark:text-slate-400"
-                                    >
-                                        <svg
-                                            className="h-3.5 w-3.5"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
+                                            }}
+                                            className="w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-600 dark:text-slate-400"
                                         >
-                                            <path
-                                                d="M4 6h16M4 12h16M4 18h16"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                            />
-                                        </svg>
-                                        <span>Stash List</span>
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                        {/* Botón de Acciones con menú desplegable */}
-                        <div className="relative flex-shrink-0" ref={cherryPickMenuRef}>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                    setCherryPickMenuOpen(!cherryPickMenuOpen);
-                                }}
-                                className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm flex items-center gap-1.5"
-                                title={t('repositories.menuItems.actions')}
-                            >
-                                <svg 
-                                    className="h-3.5 w-3.5" 
-                                    viewBox="0 -0.5 25 25" 
-                                    fill="none" 
-                                    xmlns="http://www.w3.org/2000/svg"
+                                            <svg
+                                                className="h-3.5 w-3.5"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M4 6h16M4 12h16M4 18h16"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                />
+                                            </svg>
+                                            <span>Stash List</span>
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                            {/* Botón de Acciones con menú desplegable */}
+                            <div className="relative flex-shrink-0" ref={cherryPickMenuRef}>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setCherryPickMenuOpen(!cherryPickMenuOpen);
+                                    }}
+                                    className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm flex items-center gap-1.5"
+                                    title={t('repositories.menuItems.actions')}
                                 >
-                                    <path 
-                                        fillRule="evenodd" 
-                                        clipRule="evenodd" 
-                                        d="M10.759 5L7.5 11.222H10.759L8.315 19L18.5 11.222H14.019L16.463 5H10.759Z" 
-                                        stroke="currentColor" 
-                                        strokeWidth="1.5" 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                                <span>{t('repositories.menuItems.actions')}</span>
-                            </Button>
-                            {cherryPickMenuOpen && (
-                                <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
-                                    <button
-                                        onClick={() => {
-                                            setCherryPickMenuOpen(false);
-                                            if (selectedCommit) {
-                                                setShowRevertModal(true);
-                                            }
-                                        }}
-                                        disabled={!selectedCommit}
-                                        className={cn(
-                                            "w-full text-left px-3 py-2 text-xs rounded-sm flex items-center gap-2",
-                                            selectedCommit
-                                                ? "hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400"
-                                                : "text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50"
-                                        )}
+                                    <svg
+                                        className="h-3.5 w-3.5"
+                                        viewBox="0 -0.5 25 25"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <Undo2 className="h-3.5 w-3.5" />
-                                        <span>Revert commit</span>
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setCherryPickMenuOpen(false);
-                                            if (canCherryPick && selectedCommit) {
-                                                setShowCherryPickModal(true);
-                                            }
-                                        }}
-                                        disabled={!canCherryPick}
-                                        className={cn(
-                                            "w-full text-left px-3 py-2 text-xs rounded-sm flex items-center gap-2",
-                                            canCherryPick
-                                                ? "hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400"
-                                                : "text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50"
-                                        )}
-                                    >
-                                        <GitBranch className="h-3.5 w-3.5" />
-                                        <span>Cherry-pick</span>
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                                        <path
+                                            fillRule="evenodd"
+                                            clipRule="evenodd"
+                                            d="M10.759 5L7.5 11.222H10.759L8.315 19L18.5 11.222H14.019L16.463 5H10.759Z"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    <span>{t('repositories.menuItems.actions')}</span>
+                                </Button>
+                                {cherryPickMenuOpen && (
+                                    <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
+                                        <button
+                                            onClick={() => {
+                                                setCherryPickMenuOpen(false);
+                                                if (selectedCommit) {
+                                                    setShowRevertModal(true);
+                                                }
+                                            }}
+                                            disabled={!selectedCommit}
+                                            className={cn(
+                                                "w-full text-left px-3 py-2 text-xs rounded-sm flex items-center gap-2",
+                                                selectedCommit
+                                                    ? "hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400"
+                                                    : "text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50"
+                                            )}
+                                        >
+                                            <Undo2 className="h-3.5 w-3.5" />
+                                            <span>Revert commit</span>
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                setCherryPickMenuOpen(false);
+                                                if (canCherryPick && selectedCommit) {
+                                                    setShowCherryPickModal(true);
+                                                }
+                                            }}
+                                            disabled={!canCherryPick}
+                                            className={cn(
+                                                "w-full text-left px-3 py-2 text-xs rounded-sm flex items-center gap-2",
+                                                canCherryPick
+                                                    ? "hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400"
+                                                    : "text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50"
+                                            )}
+                                        >
+                                            <GitBranch className="h-3.5 w-3.5" />
+                                            <span>Cherry-pick</span>
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         {/* Grupo 4: Refresh y Búsqueda */}
                         <div className="flex items-center gap-2 flex-1 min-w-[200px]">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => loadCommits(true)}
-                            className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
-                            disabled={loading}
-                            title={t('repositories.tooltips.refresh')}
-                        >
-                            <RotateCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-                        </Button>
-                        <div 
-                            className={cn(
-                                "relative group transition-all duration-200 ease-in-out",
-                                (isSearchExpanded || searchTerm) ? "flex-1 min-w-[200px] max-w-md" : "w-auto"
-                            )}
-                            onMouseEnter={() => setIsSearchExpanded(true)}
-                            onMouseLeave={() => {
-                                if (!searchTerm) {
-                                    setIsSearchExpanded(false);
-                                }
-                            }}
-                        >
-                            {(isSearchExpanded || searchTerm) ? (
-                                <>
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-cyan-500 transition-colors z-10" />
-                                    <input
-                                        type="text"
-                                        placeholder={t('repositories.search.placeholder')}
-                                        className={cn(
-                                            "w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md py-1.5 pl-9 text-xs outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all shadow-sm",
-                                            searchTerm ? "pr-28" : "pr-24"
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => loadCommits(true)}
+                                className="h-7 w-7 p-0 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                                disabled={loading}
+                                title={t('repositories.tooltips.refresh')}
+                            >
+                                <RotateCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                            </Button>
+                            <div
+                                className={cn(
+                                    "relative group transition-all duration-200 ease-in-out",
+                                    (isSearchExpanded || searchTerm) ? "flex-1 min-w-[200px] max-w-md" : "w-auto"
+                                )}
+                                onMouseEnter={() => setIsSearchExpanded(true)}
+                                onMouseLeave={() => {
+                                    if (!searchTerm) {
+                                        setIsSearchExpanded(false);
+                                    }
+                                }}
+                            >
+                                {(isSearchExpanded || searchTerm) ? (
+                                    <>
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-cyan-500 transition-colors z-10" />
+                                        <input
+                                            type="text"
+                                            placeholder={t('repositories.search.placeholder')}
+                                            className={cn(
+                                                "w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md py-1.5 pl-9 text-xs outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all shadow-sm",
+                                                searchTerm ? "pr-28" : "pr-24"
+                                            )}
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            onFocus={() => setIsSearchExpanded(true)}
+                                        />
+                                        {searchTerm && (
+                                            <button
+                                                onClick={() => setSearchTerm("")}
+                                                className="absolute right-20 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 transition-colors z-10"
+                                            >
+                                                {t('repositories.search.clear')}
+                                            </button>
                                         )}
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        onFocus={() => setIsSearchExpanded(true)}
-                                    />
-                                    {searchTerm && (
-                                        <button
-                                            onClick={() => setSearchTerm("")}
-                                            className="absolute right-20 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 transition-colors z-10"
-                                        >
-                                            {t('repositories.search.clear')}
-                                        </button>
-                                    )}
-                                    <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
+                                        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
+                                            <div className="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
+                                            <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">
+                                                {commits.length} {t('repositories.search.commits')}
+                                            </span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div
+                                        className="flex items-center gap-2 px-2 py-1.5 cursor-pointer bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-sm"
+                                        onClick={() => setIsSearchExpanded(true)}
+                                    >
+                                        <Search className="h-4 w-4 text-slate-400" />
                                         <div className="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
                                         <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">
                                             {commits.length} {t('repositories.search.commits')}
                                         </span>
                                     </div>
-                                </>
-                            ) : (
-                                <div 
-                                    className="flex items-center gap-2 px-2 py-1.5 cursor-pointer bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-sm" 
-                                    onClick={() => setIsSearchExpanded(true)}
-                                >
-                                    <Search className="h-4 w-4 text-slate-400" />
-                                    <div className="h-3 w-px bg-slate-300 dark:bg-slate-600"></div>
-                                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">
-                                        {commits.length} {t('repositories.search.commits')}
-                                    </span>
-                                </div>
-                            )}
-                        </div>
+                                )}
+                            </div>
                         </div>
                     </div>
 
@@ -1916,7 +1916,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     )}
 
                     <div
-                        className="flex-1 overflow-auto bg-white dark:bg-[#011627] relative"
+                        className="flex-1 overflow-auto bg-white dark:bg-[#011627] relative hide-scrollbar"
                         ref={scrollContainerRef}
                         onScroll={handleScroll}
                     >
@@ -1972,16 +1972,15 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
 
                     {/* Details Panel */}
                     {selectedCommit && (
-                        <div 
+                        <div
                             className="flex-shrink-0 border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.3)] z-20 flex flex-col"
                             style={{ height: `${commitPanelHeight}%` }}
                         >
                             {/* Resize Handle */}
                             <div
                                 onMouseDown={handleResizeStart}
-                                className={`h-0.5 cursor-ns-resize hover:h-1 transition-all bg-slate-200 dark:bg-slate-700 hover:bg-cyan-500 dark:hover:bg-cyan-500 flex items-center justify-center group ${
-                                    isResizing ? 'bg-cyan-500 dark:bg-cyan-500' : ''
-                                }`}
+                                className={`h-0.5 cursor-ns-resize hover:h-1 transition-all bg-slate-200 dark:bg-slate-700 hover:bg-cyan-500 dark:hover:bg-cyan-500 flex items-center justify-center group ${isResizing ? 'bg-cyan-500 dark:bg-cyan-500' : ''
+                                    }`}
                                 style={{ userSelect: 'none' }}
                             >
                                 <div className="w-12 h-px bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-400 dark:group-hover:bg-cyan-400 rounded-full"></div>
@@ -2020,8 +2019,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     }}
                     tabIndex={-1}
                 >
-                    <Card 
-                        className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                    <Card
+                        className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
                         onClick={(e) => e.stopPropagation()}
                         onKeyDown={(e) => {
                             if (e.key === 'Escape' && !creatingBranch) {
@@ -2097,7 +2096,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         disabled={creatingBranch}
                                     >
                                         <span className="block truncate">
-                                            {newBranchFrom 
+                                            {newBranchFrom
                                                 ? `${newBranchFrom}${newBranchFrom === branches.current ? ` ${t('repositories.newBranchModal.fields.createFrom.current')}` : ''}`
                                                 : t('repositories.newBranchModal.fields.createFrom.placeholder')}
                                         </span>
@@ -2176,7 +2175,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                             <Info className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
                                             <span>
                                                 {(() => {
-                                                    const template = t('repositories.newBranchModal.info.willCreateFrom', { 
+                                                    const template = t('repositories.newBranchModal.info.willCreateFrom', {
                                                         branchName: '{{branchName}}',
                                                         fromBranch: '{{fromBranch}}'
                                                     });
@@ -2255,8 +2254,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     }}
                     tabIndex={-1}
                 >
-                    <Card 
-                        className="w-full max-w-md mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                    <Card
+                        className="w-full max-w-md mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
@@ -2419,7 +2418,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 {pendingPushAfterPull ? "Push Rechazado - Ramas Divergentes" : "Ramas Divergentes Detectadas"}
                             </CardTitle>
                             <CardDescription className="text-sm">
-                                {pendingPushAfterPull 
+                                {pendingPushAfterPull
                                     ? "Tu rama local está detrás de la remota. Necesitas hacer pull primero para integrar los cambios remotos antes de poder hacer push. Elige una estrategia:"
                                     : "Git necesita saber cómo reconciliar las ramas divergentes. Elige una estrategia:"
                                 }
@@ -2503,12 +2502,12 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     variant="outline"
                                     size="sm"
                                     className="flex-1"
-                    onClick={() => {
-                        setShowPullStrategyModal(false);
-                        setPendingPullRepoPath(null);
-                        setSelectedPullStrategy('merge');
-                        setPendingPushAfterPull(false);
-                    }}
+                                    onClick={() => {
+                                        setShowPullStrategyModal(false);
+                                        setPendingPullRepoPath(null);
+                                        setSelectedPullStrategy('merge');
+                                        setPendingPushAfterPull(false);
+                                    }}
                                 >
                                     Cancelar
                                 </Button>
@@ -2545,7 +2544,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         <CardHeader className="p-4">
                             <CardTitle className="text-lg">Cambios detectados</CardTitle>
                             <CardDescription className="text-sm">
-                                {isUntrackedConflict 
+                                {isUntrackedConflict
                                     ? `Hay archivos sin trackear que serían sobrescritos al cambiar a la rama '${pendingCheckoutBranch}'. Elige cómo resolver este conflicto:`
                                     : `Hay cambios locales que serían sobrescritos al cambiar a la rama '${pendingCheckoutBranch}'. Elige cómo resolver este conflicto:`}
                             </CardDescription>
@@ -2673,8 +2672,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     }}
                     tabIndex={-1}
                 >
-                    <Card 
-                        className="w-full max-w-md mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                    <Card
+                        className="w-full max-w-md mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
@@ -2792,8 +2791,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     }}
                     tabIndex={-1}
                 >
-                    <Card 
-                        className="w-full max-w-3xl mx-4 bg-background border-2 shadow-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                    <Card
+                        className="w-full max-w-3xl mx-4 bg-background border-2 shadow-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
@@ -3029,7 +3028,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     {(() => {
                                         const template = t('repositories.stashListModal.clearAllConfirm.warning', {
                                             count: stashList.length,
-                                            stash: stashList.length === 1 
+                                            stash: stashList.length === 1
                                                 ? t('repositories.stashListModal.clearAllConfirm.stash')
                                                 : t('repositories.stashListModal.clearAllConfirm.stashes')
                                         });
@@ -3095,8 +3094,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     }}
                     tabIndex={-1}
                 >
-                    <Card 
-                        className="w-full max-w-lg mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                    <Card
+                        className="w-full max-w-lg mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
@@ -3124,7 +3123,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="p-4 rounded-xl border border-amber-200/60 dark:border-amber-800/40 bg-amber-50/50 dark:bg-amber-900/20">
                                 <div className="flex items-start gap-3">
                                     <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
@@ -3187,8 +3186,8 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     }}
                     tabIndex={-1}
                 >
-                    <Card 
-                        className="w-full max-w-lg mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300" 
+                    <Card
+                        className="w-full max-w-lg mx-4 bg-background border-2 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
@@ -3216,7 +3215,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="space-y-4">
                                 <div className="p-4 rounded-xl border border-slate-200/60 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-800/30">
                                     <div className="flex items-start justify-between gap-4">
@@ -3238,7 +3237,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div className={cn(
                                     "p-4 rounded-xl border transition-all",
                                     cherryPickCommitChanges
@@ -3249,16 +3248,16 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                         <div className="flex-1 space-y-2">
                                             <label htmlFor="cherry-pick-append" className={cn(
                                                 "text-sm font-semibold block",
-                                                cherryPickCommitChanges 
-                                                    ? "text-slate-700 dark:text-slate-300 cursor-pointer" 
+                                                cherryPickCommitChanges
+                                                    ? "text-slate-700 dark:text-slate-300 cursor-pointer"
                                                     : "text-slate-500 dark:text-slate-500 cursor-not-allowed"
                                             )}>
                                                 {t('repositories.cherryPickModal.fields.appendOrigin.label')}
                                             </label>
                                             <p className={cn(
                                                 "text-xs leading-relaxed",
-                                                cherryPickCommitChanges 
-                                                    ? "text-slate-600 dark:text-slate-400" 
+                                                cherryPickCommitChanges
+                                                    ? "text-slate-600 dark:text-slate-400"
                                                     : "text-slate-400 dark:text-slate-600"
                                             )}>
                                                 {t('repositories.cherryPickModal.fields.appendOrigin.hint')}

@@ -75,3 +75,13 @@
   }
 }
 
+/* Ocultar barras de desplazamiento en la pestaña de inicio */
+.hide-scrollbar {
+  /* Para Chrome, Safari y Opera */
+  scrollbar-width: none; /* Para Firefox */
+  -ms-overflow-style: none; /* Para Internet Explorer y Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Para Chrome, Safari y Opera */
+}

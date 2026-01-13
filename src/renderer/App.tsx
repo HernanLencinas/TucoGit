@@ -3059,7 +3059,7 @@ function App() {
           </div>
 
           {/* Contenido scrolleable */}
-          <div className="flex-1 overflow-y-auto pr-2">
+          <div className="flex-1 overflow-y-auto pr-2 hide-scrollbar">
             {itemsFiltrados.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center p-8">
                 {terminoBusquedaDebounced.trim() === "" ? (
@@ -3643,7 +3643,7 @@ function App() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto pr-2">
+        <div className="flex-1 overflow-y-auto pr-2 hide-scrollbar">
           {conexionesFiltradas.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center p-8">
               {terminoBusquedaConexionesDebounced.trim() === "" ? (
@@ -5353,7 +5353,7 @@ function App() {
         </div>
 
         {/* Contenido scrolleable */}
-        <div className="flex-1 overflow-y-auto py-4">
+        <div className="flex-1 overflow-y-auto py-4 hide-scrollbar">
           {renderConfigContent()}
         </div>
       </div>
@@ -5397,7 +5397,7 @@ function App() {
       )}
       {/* Contenido Principal */}
       <div className={`flex-1 min-h-0 overflow-hidden ${activeTab === 'repositorios' && viewMode === 'details' ? 'p-0' : 'p-6'}`}>
-        <div className={`h-full w-full ${activeTab === 'repositorios' && viewMode === 'details' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+        <div className={`h-full w-full ${activeTab === 'repositorios' && viewMode === 'details' ? 'overflow-hidden' : 'overflow-y-auto'} ${activeTab === 'inicio' || activeTab === 'configuracion' ? 'hide-scrollbar' : ''}`}>
           {renderContent()}
         </div>
       </div>
