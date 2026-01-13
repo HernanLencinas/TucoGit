@@ -3059,7 +3059,7 @@ function App() {
           </div>
 
           {/* Contenido scrolleable */}
-          <div className="flex-1 overflow-y-auto pr-2">
+          <div className="flex-1 overflow-y-auto pr-2 hide-scrollbar">
             {itemsFiltrados.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center p-8">
                 {terminoBusquedaDebounced.trim() === "" ? (
@@ -3643,7 +3643,7 @@ function App() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto pr-2">
+        <div className="flex-1 overflow-y-auto pr-2 hide-scrollbar">
           {conexionesFiltradas.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center p-8">
               {terminoBusquedaConexionesDebounced.trim() === "" ? (
