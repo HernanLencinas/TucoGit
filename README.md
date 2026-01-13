@@ -247,3 +247,20 @@ Este archivo contiene:
 - Los tokens de acceso se almacenan encriptados en el archivo de configuración
 - Cada instalación genera una clave de encriptación única
 - Los tokens nunca se transmiten fuera de la aplicación
+
+## Descarga
+
+Puedes descargar la última versión estable de **TucoGit** desde la sección de *Releases* del repositorio oficial en GitHub.
+
+👉 **Descargar TucoGit**  
+https://github.com/HernanLencinas/TucoGit/releases
+
+En la página de releases encontrarás instaladores y builds para:
+
+- **macOS** (Intel y Apple Silicon)
+- **Windows**
+- **Linux**
+
+Cada release incluye notas de versión con las novedades, mejoras y correcciones incorporadas.
+
+> Recomendación: descarga siempre la versión más reciente para obtener las últimas mejoras de estabilidad y seguridad.
