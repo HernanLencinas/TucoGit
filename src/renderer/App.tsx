@@ -144,6 +144,9 @@ function App() {
   const [mostrarModalConfirmarReclon, setMostrarModalConfirmarReclon] = useState(false);
   const [repoAClonar, setRepoAClonar] = useState<FolderItem | null>(null);
   const [rutaDestinoAClonar, setRutaDestinoAClonar] = useState<string>("");
+  const [mostrarModalPurgarTodo, setMostrarModalPurgarTodo] = useState(false);
+  const [mostrarModalPurgarRepo, setMostrarModalPurgarRepo] = useState(false);
+  const [repoAPurgar, setRepoAPurgar] = useState<FolderItem | null>(null);
 
   // Estado para identidades de Git
   const [gitIdentities, setGitIdentities] = useState<GitIdentity[]>([]);
@@ -556,6 +559,131 @@ function App() {
     return favoritos;
   };
 
+  // Helper para obtener todos los repositorios clonados
+  const obtenerRepositoriosClonados = (items: FolderItem[]): FolderItem[] => {
+    let clonados: FolderItem[] = [];
+    items.forEach((item) => {
+      if (item.tipo === 'archivo' && item.clonado) {
+        clonados.push(item);
+      }
+      if (item.hijos && item.hijos.length > 0) {
+        clonados = [...clonados, ...obtenerRepositoriosClonados(item.hijos)];
+      }
+    });
+    return clonados;
+  };
+
+  const purgarRepositorio = (item: FolderItem) => {
+    setRepoAPurgar(item);
+    setMostrarModalPurgarRepo(true);
+  };
+
+  const ejecutarPurgarRepositorio = async () => {
+    const item = repoAPurgar;
+    if (!item || !item.clonado) return;
+
+    setMostrarModalPurgarRepo(false);
+
+    // reset repoAPurgar after animation delay or immediately? 
+    // Usually wait for modal close, but here let's keep it simple.
+    // We'll setRepoAPurgar(null) in the modal close handler usually.
+
+    const orgPath = item.organizacion ? `${item.organizacion}/` : "";
+    const repoName = item.nombreGit || item.nombre;
+    const repoPath = `${rutaConfiguracion}/repositories/${item.idConexion || 'unknown'}/${orgPath}${repoName}`;
+
+    try {
+      if (window.electronAPI?.deletePath) {
+        const resultado = await window.electronAPI.deletePath(repoPath);
+        if (resultado.success) {
+          showToast(`Repositorio ${item.nombre} purgado exitosamente`, 'success');
+
+          // Actualizar estado
+          setEstructuraCarpetas(prev => {
+            const actualizar = (items: FolderItem[]): FolderItem[] => {
+              return items.map(i => {
+                if (i.id === item.id) {
+                  return { ...i, clonado: false };
+                }
+                if (i.hijos) {
+                  return { ...i, hijos: actualizar(i.hijos) };
+                }
+                return i;
+              });
+            };
+            const nueva = actualizar(prev);
+            // Guardar config
+            if (window.electronAPI?.writeConfig) {
+              window.electronAPI.writeConfig({ repositorios: nueva });
+            }
+            return nueva;
+          });
+        } else {
+          showToast(`Error al purgar ${item.nombre}: ${resultado.error}`, 'error');
+        }
+      }
+    } catch (error) {
+      showToast(`Error al purgar repositorio: ${(error as Error).message}`, 'error');
+    }
+  };
+
+  const purgarTodoCache = () => {
+    setMostrarModalPurgarTodo(true);
+  };
+
+  const ejecutarPurgarTodoCache = async () => {
+    setMostrarModalPurgarTodo(false);
+
+    const reposClonados = obtenerRepositoriosClonados(estructuraCarpetas);
+    let exitosos = 0;
+    let fallidos = 0;
+
+    for (const repo of reposClonados) {
+      const orgPath = repo.organizacion ? `${repo.organizacion}/` : "";
+      const repoName = repo.nombreGit || repo.nombre;
+      const repoPath = `${rutaConfiguracion}/repositories/${repo.idConexion || 'unknown'}/${orgPath}${repoName}`;
+
+      try {
+        if (window.electronAPI?.deletePath) {
+          const resultado = await window.electronAPI.deletePath(repoPath);
+          if (resultado.success) {
+            exitosos++;
+          } else {
+            fallidos++;
+          }
+        }
+      } catch (e) {
+        fallidos++;
+      }
+    }
+
+    // Actualizar estado masivamente
+    setEstructuraCarpetas(prev => {
+      const actualizar = (items: FolderItem[]): FolderItem[] => {
+        return items.map(i => {
+          if (i.tipo === 'archivo' && i.clonado) {
+            return { ...i, clonado: false };
+          }
+          if (i.hijos) {
+            return { ...i, hijos: actualizar(i.hijos) };
+          }
+          return i;
+        });
+      };
+      const nueva = actualizar(prev);
+      if (window.electronAPI?.writeConfig) {
+        window.electronAPI.writeConfig({ repositorios: nueva });
+      }
+      return nueva;
+    });
+
+    if (fallidos === 0) {
+      showToast(`Se purgaron ${exitosos} repositorios exitosamente`, 'success');
+    } else {
+      showToast(`Purgado completado. Exitosos: ${exitosos}, Fallidos: ${fallidos}`, 'warning');
+    }
+  };
+
   // Obtener ruta por defecto de documentos e inicializar configuración
   useEffect(() => {
     const inicializarConfiguracion = async () => {
@@ -794,6 +922,15 @@ function App() {
           setRutaDestinoAClonar("");
           return;
         }
+        if (mostrarModalPurgarTodo) {
+          setMostrarModalPurgarTodo(false);
+          return;
+        }
+        if (mostrarModalPurgarRepo) {
+          setMostrarModalPurgarRepo(false);
+          setRepoAPurgar(null);
+          return;
+        }
 
         // Si estamos en un input, no cerramos otros modales para evitar cierres accidentales
         if (esInput) return;
@@ -867,7 +1004,8 @@ function App() {
     mostrarModalConfirmarReclon,
     mostrarMenuNuevaCarpeta, mostrarMenuNuevaConexion, mostrarMenuOrdenar,
     mostrarMenuOrdenarRepos, mostrarMenuConexion, mostrarMenuIdentidad, mostrarMenuAccionesRepos,
-    mostrarModalClonarTodos, mostrarModalNuevaIdentidad, mostrarModalEditarIdentidad, mostrarModalEliminarIdentidad
+    mostrarModalClonarTodos, mostrarModalNuevaIdentidad, mostrarModalEditarIdentidad, mostrarModalEliminarIdentidad,
+    mostrarModalPurgarTodo, mostrarModalPurgarRepo
   ]);
 
   useEffect(() => {
@@ -4483,6 +4621,69 @@ function App() {
                 </CardContent>
               </Card>
 
+              {/* Purgar Cache */}
+              <Card className="border-2 border-orange-600/50">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-orange-600/10">
+                      <Trash2 className="h-5 w-5 text-orange-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base">{t('settings.data.purgeCache.title')}</CardTitle>
+                      <CardDescription className="text-xs mt-1">
+                        {t('settings.data.purgeCache.description')}
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="border rounded-md">
+                      <div className="bg-muted/50 px-3 py-2 text-xs font-semibold border-b">
+                        {t('settings.data.purgeCache.clonedRepos')} ({obtenerRepositoriosClonados(estructuraCarpetas).length})
+                      </div>
+                      <div className="max-h-48 overflow-y-auto p-2 space-y-1 scrollbar-hide">
+                        {obtenerRepositoriosClonados(estructuraCarpetas).length === 0 ? (
+                          <div className="text-center py-4 text-xs text-muted-foreground">
+                            No hay repositorios en cache
+                          </div>
+                        ) : (
+                          obtenerRepositoriosClonados(estructuraCarpetas).map(repo => (
+                            <div key={repo.id} className="flex items-center justify-between p-2 hover:bg-muted/50 rounded-md text-sm">
+                              <div className="flex items-center gap-2 overflow-hidden">
+                                <FolderGit2 className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                                <span className="truncate">{repo.nombre}</span>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/30"
+                                onClick={() => purgarRepositorio(repo)}
+                                title={t('settings.data.purgeCache.delete')}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={purgarTodoCache}
+                        disabled={obtenerRepositoriosClonados(estructuraCarpetas).length === 0}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {t('settings.data.purgeCache.purgeAll')}
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Restablecer configuración */}
               <Card className="border-2 border-red-600">
                 <CardHeader className="pb-3">
@@ -4508,14 +4709,15 @@ function App() {
                       </p>
                     </div>
                   </div>
-                  <Button
-                    variant="destructive"
-                    onClick={() => setMostrarModalRestablecerConfig(true)}
-                    className="w-full mt-4"
-                  >
-                    <Sliders className="h-4 w-4 mr-2" />
-                    {t('settings.data.reset.restoreConfig')}
-                  </Button>
+                  <div className="flex justify-end mt-4">
+                    <Button
+                      variant="destructive"
+                      onClick={() => setMostrarModalRestablecerConfig(true)}
+                    >
+                      <Sliders className="h-4 w-4 mr-2" />
+                      {t('settings.data.reset.restoreConfig')}
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -7348,6 +7550,142 @@ function App() {
             </div>
           ) : null;
         })()
+      }
+
+      {/* Modal para purgar todo el cache */}
+      {
+        mostrarModalPurgarTodo && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+            onClick={() => setMostrarModalPurgarTodo(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') setMostrarModalPurgarTodo(false);
+            }}
+            tabIndex={-1}
+          >
+            <Card
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarModalPurgarTodo(false);
+                }
+              }}
+            >
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    {t('settings.data.purgeCache.purgeAll')}
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    {t('settings.data.purgeCache.description')}
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 space-y-6">
+                <div className="bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 rounded-xl p-4">
+                  <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
+                    <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                    <span>{t('settings.data.purgeCache.purgeAllConfirm')}</span>
+                  </p>
+                </div>
+                <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
+                  <Button
+                    variant="outline"
+                    size="default"
+                    className="min-w-[100px]"
+                    onClick={() => setMostrarModalPurgarTodo(false)}
+                  >
+                    {t('common.cancel')}
+                  </Button>
+                  <Button
+                    size="default"
+                    variant="destructive"
+                    className="min-w-[120px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/25"
+                    onClick={ejecutarPurgarTodoCache}
+                  >
+                    {t('settings.data.purgeCache.purgeAll')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )
+      }
+
+      {/* Modal para purgar repositorio individual */}
+      {
+        mostrarModalPurgarRepo && repoAPurgar && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+            onClick={() => {
+              setMostrarModalPurgarRepo(false);
+              setRepoAPurgar(null);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setMostrarModalPurgarRepo(false);
+                setRepoAPurgar(null);
+              }
+            }}
+            tabIndex={-1}
+          >
+            <Card
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarModalPurgarRepo(false);
+                  setRepoAPurgar(null);
+                }
+              }}
+            >
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    {t('settings.data.purgeCache.purgeRepoConfirmTitle')}
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    {t('settings.data.purgeCache.title')}
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 space-y-6">
+                <div className="bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 rounded-xl p-4">
+                  <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
+                    <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                    <span>
+                      {t('settings.data.purgeCache.purgeRepoConfirmMessage', { name: repoAPurgar.nombre })}
+                    </span>
+                  </p>
+                </div>
+                <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
+                  <Button
+                    variant="outline"
+                    size="default"
+                    className="min-w-[100px]"
+                    onClick={() => {
+                      setMostrarModalPurgarRepo(false);
+                      setRepoAPurgar(null);
+                    }}
+                  >
+                    {t('common.cancel')}
+                  </Button>
+                  <Button
+                    size="default"
+                    variant="destructive"
+                    className="min-w-[120px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/25"
+                    onClick={ejecutarPurgarRepositorio}
+                  >
+                    {t('settings.data.purgeCache.delete')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )
       }
 
       {/* Modal para confirmar eliminación de colección */}

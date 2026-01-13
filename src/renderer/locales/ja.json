@@ -165,6 +165,16 @@
         "warning": "警告",
         "warningMessage": "この操作により、すべての設定、接続、保存された設定が削除されます。",
         "restoreConfig": "設定を復元"
+      },
+      "purgeCache": {
+        "title": "リポジトリキャッシュをパージ",
+        "description": "ローカルにクローンされたリポジトリを削除して空き容量を増やします。リモートリポジトリには影響しません。",
+        "purgeAll": "すべてのキャッシュをパージ",
+        "purgeAllConfirm": "本当にすべてのクローンされたリポジトリを削除しますか？この操作は元に戻せません。",
+        "purgeRepoConfirmTitle": "リポジトリをパージ",
+        "purgeRepoConfirmMessage": "本当にリポジトリ「{{name}}」をパージしますか？これによりローカルコピーは削除されますが、リモートリポジトリには影響しません。",
+        "clonedRepos": "クローンされたリポジトリ",
+        "delete": "パージ"
       }
     },
     "git": {

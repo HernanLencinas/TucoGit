@@ -163,6 +163,16 @@
         "warning": "Avertissement",
         "warningMessage": "Cette action supprimera toutes vos configurations, connexions et préférences enregistrées.",
         "restoreConfig": "Restaurer la configuration"
+      },
+      "purgeCache": {
+        "title": "Purger le cache du dépôt",
+        "description": "Supprimez les dépôts clonés localement pour libérer de l'espace. N'affecte pas les dépôts distants.",
+        "purgeAll": "Purger tout le cache",
+        "purgeAllConfirm": "Êtes-vous sûr de vouloir supprimer TOUS les dépôts clonés ? Cette action ne peut pas être annulée.",
+        "purgeRepoConfirmTitle": "Purger le dépôt",
+        "purgeRepoConfirmMessage": "Êtes-vous sûr de vouloir purger le dépôt \"{{name}}\" ? Cela supprimera la copie locale mais n'affectera pas le dépôt distant.",
+        "clonedRepos": "Dépôts clonés",
+        "delete": "Purger"
       }
     },
     "git": {

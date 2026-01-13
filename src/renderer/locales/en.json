@@ -166,6 +166,16 @@
         "warning": "Warning",
         "warningMessage": "This action will delete all your configurations, connections and saved preferences.",
         "restoreConfig": "Restore Configuration"
+      },
+      "purgeCache": {
+        "title": "Purge Repository Cache",
+        "description": "Delete locally cloned repositories to free up space. Does not affect remote repositories.",
+        "purgeAll": "Purge All Cache",
+        "purgeAllConfirm": "Are you sure you want to delete ALL cloned repositories? This action cannot be undone.",
+        "purgeRepoConfirmTitle": "Purge repository",
+        "purgeRepoConfirmMessage": "Are you sure you want to purge the repository \"{{name}}\"? This will delete the local copy but won't affect the remote repository.",
+        "clonedRepos": "Cloned Repositories",
+        "delete": "Purge"
       }
     },
     "git": {
