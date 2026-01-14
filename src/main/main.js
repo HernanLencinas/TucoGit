@@ -7,6 +7,7 @@ const http = require('http');
 const chokidar = require('chokidar');
 
 let mainWindow;
+let isQuitting = false;
 const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
 
 // Almacenar watchers activos por repositorio
@@ -86,6 +87,7 @@ function stopRepositoryWatcher(repoPath) {
 
 // Limpiar todos los watchers cuando la app se cierra
 app.on('before-quit', () => {
+  isQuitting = true;
   activeWatchers.forEach((watcher, repoPath) => {
     watcher.close();
   });
@@ -244,7 +246,17 @@ function createWindow() {
   mainWindow.on('resize', debounceSaveBounds);
   mainWindow.on('move', debounceSaveBounds);
 
-  // Guardar al cerrar la ventana
+  // Interceptar el cierre en macOS para ocultar la ventana
+  mainWindow.on('close', (event) => {
+    if (process.platform === 'darwin' && !isQuitting) {
+      event.preventDefault();
+      saveWindowBounds();
+      mainWindow.hide();
+    }
+    // En otras plataformas, permitir que se cierre (se disparará 'closed')
+  });
+
+  // Guardar al cerrar la ventana (esto sucede cuando realmente se destruye)
   mainWindow.on('closed', () => {
     saveWindowBounds();
     mainWindow = null;
@@ -257,6 +269,8 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
+    } else if (mainWindow) {
+      mainWindow.show();
     }
   });
 });
