@@ -10,14 +10,17 @@ import { CommitGraph } from "./CommitGraph";
 import { CommitDetails } from "./CommitDetails";
 import { GitStatusPanel } from "./GitStatusPanel";
 import { useI18n } from "@/renderer/hooks/useI18n";
+import { getIconoIDE } from '@/renderer/utils/ideUtils';
 
 interface RepositoryDetailsProps {
     repository: FolderItem;
     configPath: string;
     onMinimize?: () => void;
+    onOpenInIDE?: (repository: FolderItem) => void;
+    preferredIDE?: string;
 }
 
-export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository, configPath, onMinimize }) => {
+export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository, configPath, onMinimize, onOpenInIDE, preferredIDE }) => {
     const { t } = useI18n();
     const { toast } = useToast();
     const [commits, setCommits] = useState<any[]>([]);
@@ -1720,6 +1723,25 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     </div>
                                 )}
                             </div>
+                            {/* Open in IDE Button */}
+                            {onOpenInIDE && preferredIDE && (
+                                <div className="relative group/tooltip flex-shrink-0">
+                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] font-medium text-white bg-slate-900 dark:bg-slate-100 dark:text-slate-900 rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg z-20">
+                                        {t('home.favorites.openIn', { ide: preferredIDE })}
+                                        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-900 dark:border-t-slate-100" />
+                                    </div>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => onOpenInIDE(repository)}
+                                        className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm active:scale-[0.98] transition-all"
+                                    >
+                                        <div className="flex-shrink-0 scale-90">
+                                            {getIconoIDE(preferredIDE)}
+                                        </div>
+                                    </Button>
+                                </div>
+                            )}
                             {/* Botón de Acciones con menú desplegable */}
                             <div className="relative flex-shrink-0" ref={cherryPickMenuRef}>
                                 <Button
