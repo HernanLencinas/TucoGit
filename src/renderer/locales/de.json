@@ -162,6 +162,16 @@
         "warning": "Warnung",
         "warningMessage": "Diese Aktion löscht alle deine Konfigurationen, Verbindungen und gespeicherten Einstellungen.",
         "restoreConfig": "Konfiguration wiederherstellen"
+      },
+      "purgeCache": {
+        "title": "Repository-Cache leeren",
+        "description": "Löschen Sie lokal geklonte Repositories, um Speicherplatz freizugeben. Hat keine Auswirkungen auf Remote-Repositories.",
+        "purgeAll": "Gesamten Cache leeren",
+        "purgeAllConfirm": "Sind Sie sicher, dass Sie ALLE geklonten Repositories löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "purgeRepoConfirmTitle": "Repository bereinigen",
+        "purgeRepoConfirmMessage": "Sind Sie sicher, dass Sie das Repository \"{{name}}\" bereinigen möchten? Dies löscht die lokale Kopie, beeinträchtigt aber nicht das Remote-Repository.",
+        "clonedRepos": "Geklonte Repositories",
+        "delete": "Löschen"
       }
     },
     "git": {

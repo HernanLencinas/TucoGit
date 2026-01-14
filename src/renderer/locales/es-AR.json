@@ -166,6 +166,16 @@
         "warning": "Advertencia",
         "warningMessage": "Esta acción eliminará todas tus configuraciones, conexiones y preferencias guardadas.",
         "restoreConfig": "Restaurar Configuración"
+      },
+      "purgeCache": {
+        "title": "Purgar Cache de Repositorios",
+        "description": "Elimina los repositorios clonados localmente para liberar espacio. No afecta a los repositorios remotos.",
+        "purgeAll": "Purgar Todo el Cache",
+        "purgeAllConfirm": "¿Estás seguro de que deseas eliminar TODOS los repositorios clonados? Esta acción no se puede deshacer.",
+        "purgeRepoConfirmTitle": "Purgar repositorio",
+        "purgeRepoConfirmMessage": "¿Estás seguro de que deseas purgar el repositorio \"{{name}}\"? Esto eliminará la copia local pero no afectará el repositorio remoto.",
+        "clonedRepos": "Repositorios Clonados",
+        "delete": "Purgar"
       }
     },
     "git": {

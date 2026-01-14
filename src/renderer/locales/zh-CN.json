@@ -166,6 +166,16 @@
         "warning": "警告",
         "warningMessage": "此操作将删除您的所有配置、连接和保存的偏好设置。",
         "restoreConfig": "恢复配置"
+      },
+      "purgeCache": {
+        "title": "清除仓库缓存",
+        "description": "删除本地克隆的仓库以释放空间。不影响远程仓库。",
+        "purgeAll": "清除所有缓存",
+        "purgeAllConfirm": "您确定要删除所有克隆的仓库吗？此操作无法撤销。",
+        "purgeRepoConfirmTitle": "清除仓库",
+        "purgeRepoConfirmMessage": "您确定要清除仓库“{{name}}”吗？这将删除本地副本，但不会影响远程仓库。",
+        "clonedRepos": "已克隆的仓库",
+        "delete": "清除"
       }
     },
     "git": {
