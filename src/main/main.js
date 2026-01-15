@@ -296,6 +296,13 @@ ipcMain.handle('get-documents-path', async () => {
   return path.join(os.homedir(), 'Documents');
 });
 
+// Handler para abrir URL externa
+ipcMain.handle('open-external', async (event, url) => {
+  const { shell } = require('electron');
+  await shell.openExternal(url);
+  return { success: true };
+});
+
 // Handler para seleccionar carpeta
 ipcMain.handle('select-folder', async () => {
   const result = await dialog.showOpenDialog({

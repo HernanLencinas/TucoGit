@@ -3574,6 +3574,9 @@ function App() {
             <RepositoryDetails
               repository={repo}
               configPath={rutaConfiguracion}
+              editorIDESeleccionado={editorIDESeleccionado}
+              ideIcon={editorIDESeleccionado ? getIconoIDE(editorIDESeleccionado) : undefined}
+              onOpenInIDE={abrirEnIDE}
               onMinimize={() => {
                 setActiveRepository(null);
                 setViewMode("list");

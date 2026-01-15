@@ -9,6 +9,7 @@ interface Window {
       electron: string;
     };
     getDocumentsPath: () => Promise<string>;
+    openExternal: (url: string) => Promise<{ success: boolean; error?: string }>;
     selectFolder: () => Promise<string | null>;
     initializeConfig: (configPath: string) => Promise<{
       success: boolean;
