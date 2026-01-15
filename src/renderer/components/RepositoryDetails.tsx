@@ -98,6 +98,12 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
     const resizeStartY = React.useRef<number>(0);
     const resizeStartHeight = React.useRef<number>(40);
     const isResizingRef = React.useRef<boolean>(false);
+    // Estado para redimensionar el panel lateral (Git Status Panel)
+    const [gitPanelWidth, setGitPanelWidth] = useState(320); // Ancho inicial en px (w-80 = 320px)
+    const [isResizingHorizontal, setIsResizingHorizontal] = useState(false);
+    const resizeStartX = React.useRef<number>(0);
+    const resizeStartWidth = React.useRef<number>(320);
+    const isResizingHorizontalRef = React.useRef<boolean>(false);
 
     // Debounce search term
     useEffect(() => {
@@ -1175,8 +1181,38 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
         return () => {
             document.removeEventListener('mousemove', handleResizeMove);
             document.removeEventListener('mouseup', handleResizeEnd);
+            document.removeEventListener('mousemove', handleHorizontalResizeMove);
+            document.removeEventListener('mouseup', handleHorizontalResizeEnd);
         };
     }, [handleResizeMove, handleResizeEnd]);
+
+    // Handlers para redimensionar el panel lateral (Git Status Panel) horizontalmente
+    const handleHorizontalResizeMove = React.useCallback((e: MouseEvent) => {
+        if (!isResizingHorizontalRef.current) return;
+
+        const deltaX = e.clientX - resizeStartX.current;
+        const newWidth = Math.max(250, Math.min(600, resizeStartWidth.current + deltaX));
+
+        setGitPanelWidth(newWidth);
+    }, []);
+
+    const handleHorizontalResizeEnd = React.useCallback(() => {
+        isResizingHorizontalRef.current = false;
+        setIsResizingHorizontal(false);
+        document.removeEventListener('mousemove', handleHorizontalResizeMove);
+        document.removeEventListener('mouseup', handleHorizontalResizeEnd);
+    }, [handleHorizontalResizeMove]);
+
+    const handleHorizontalResizeStart = (e: React.MouseEvent) => {
+        e.preventDefault();
+        isResizingHorizontalRef.current = true;
+        setIsResizingHorizontal(true);
+        resizeStartX.current = e.clientX;
+        resizeStartWidth.current = gitPanelWidth;
+        document.addEventListener('mousemove', handleHorizontalResizeMove);
+        document.addEventListener('mouseup', handleHorizontalResizeEnd);
+    };
+
 
     return (
         <div className="h-full flex flex-col bg-white dark:bg-[#011627] text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
@@ -1261,12 +1297,31 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             {/* Main Content */}
             <div className={`flex-1 flex overflow-hidden border-t border-slate-200 dark:border-slate-700 ${window.electronAPI?.platform === 'darwin' ? 'mt-4' : ''}`}>
                 {/* Left Sidebar */}
-                <div className="w-80 border-r border-slate-200 dark:border-slate-700/50 flex flex-col bg-slate-50 dark:bg-[#0b253a]/50">
+                <div
+                    className="border-r border-slate-200 dark:border-slate-700/50 flex flex-col bg-slate-50 dark:bg-[#0b253a]/50 flex-shrink-0"
+                    style={{ width: `${gitPanelWidth}px` }}
+                >
                     <GitStatusPanel
                         repoPath={`${configPath}/repositories/${repository.idConexion || 'unknown'}/${repository.organizacion ? `${repository.organizacion}/` : ""}${repository.nombreGit || repository.nombre}`}
                         onRefreshGraph={() => loadCommits(true)}
                         connectionId={repository.idConexion}
                     />
+                </div>
+
+                {/* Resize Handle */}
+                <div
+                    className={`cursor-col-resize hover:bg-cyan-500/30 dark:hover:bg-cyan-400/30 transition-all flex-shrink-0 relative group ${isResizingHorizontal ? 'bg-cyan-500/30 dark:bg-cyan-400/30' : 'bg-slate-200 dark:bg-slate-700/50'}`}
+                    onMouseDown={handleHorizontalResizeStart}
+                    style={{ userSelect: 'none', width: '2px' }}
+                >
+                    {/* Grip Dots Indicator */}
+                    <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center gap-1 pointer-events-none">
+                        <div className={`w-0.5 h-0.5 rounded-full transition-colors ${isResizingHorizontal ? 'bg-cyan-600 dark:bg-cyan-300' : 'bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-600 dark:group-hover:bg-cyan-300'}`} />
+                        <div className={`w-0.5 h-0.5 rounded-full transition-colors ${isResizingHorizontal ? 'bg-cyan-600 dark:bg-cyan-300' : 'bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-600 dark:group-hover:bg-cyan-300'}`} />
+                        <div className={`w-0.5 h-0.5 rounded-full transition-colors ${isResizingHorizontal ? 'bg-cyan-600 dark:bg-cyan-300' : 'bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-600 dark:group-hover:bg-cyan-300'}`} />
+                        <div className={`w-0.5 h-0.5 rounded-full transition-colors ${isResizingHorizontal ? 'bg-cyan-600 dark:bg-cyan-300' : 'bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-600 dark:group-hover:bg-cyan-300'}`} />
+                        <div className={`w-0.5 h-0.5 rounded-full transition-colors ${isResizingHorizontal ? 'bg-cyan-600 dark:bg-cyan-300' : 'bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-600 dark:group-hover:bg-cyan-300'}`} />
+                    </div>
                 </div>
 
                 {/* Center - Graph & Details */}
