@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { createAppMenu } = require('./menu');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
@@ -263,7 +264,15 @@ function createWindow() {
   });
 }
 
+// Función helper para enviar mensajes a la ventana principal
+function sendToMainWindow(channel, data) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send(channel, data);
+  }
+}
+
 app.whenReady().then(() => {
+  createAppMenu(sendToMainWindow);
   createWindow();
 
   app.on('activate', () => {

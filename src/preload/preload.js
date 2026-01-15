@@ -289,6 +289,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
     const subscription = (event, repoPath) => callback(repoPath);
     ipcRenderer.on('git-status-changed', subscription);
     return () => ipcRenderer.removeListener('git-status-changed', subscription);
+  },
+
+  // Escuchar eventos de navegación desde el menú principal
+  onNavigateTo: (callback) => {
+    const subscription = (event, data) => callback(data);
+    ipcRenderer.on('navigate-to', subscription);
+    return () => ipcRenderer.removeListener('navigate-to', subscription);
   }
 });
 
