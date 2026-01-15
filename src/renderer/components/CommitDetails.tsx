@@ -1043,7 +1043,7 @@ export const CommitDetails: React.FC<CommitDetailsProps> = ({ commit, repoPath, 
     };
 
     return (
-        <div className="h-full flex flex-col bg-white dark:bg-[#011627] border-t border-slate-200 dark:border-slate-700 shadow-xl">
+        <div className="h-full flex flex-col bg-white dark:bg-[#011627] shadow-xl">
             {/* Header */}
             <div className="flex items-start justify-between px-4 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#0b253a]">
                 <div className="flex items-start gap-3 flex-1 min-w-0">

@@ -1298,7 +1298,7 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
             <div className={`flex-1 flex overflow-hidden border-t border-slate-200 dark:border-slate-700 ${window.electronAPI?.platform === 'darwin' ? 'mt-4' : ''}`}>
                 {/* Left Sidebar */}
                 <div
-                    className="border-r border-slate-200 dark:border-slate-700/50 flex flex-col bg-slate-50 dark:bg-[#0b253a]/50 flex-shrink-0"
+                    className="flex flex-col bg-slate-50 dark:bg-[#0b253a]/50 flex-shrink-0"
                     style={{ width: `${gitPanelWidth}px` }}
                 >
                     <GitStatusPanel
@@ -2076,17 +2076,23 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                     {/* Details Panel */}
                     {selectedCommit && (
                         <div
-                            className="flex-shrink-0 border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.3)] z-20 flex flex-col"
+                            className="flex-shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.3)] z-20 flex flex-col"
                             style={{ height: `${commitPanelHeight}%` }}
                         >
                             {/* Resize Handle */}
                             <div
                                 onMouseDown={handleResizeStart}
-                                className={`h-0.5 cursor-ns-resize hover:h-1 transition-all bg-slate-200 dark:bg-slate-700 hover:bg-cyan-500 dark:hover:bg-cyan-500 flex items-center justify-center group ${isResizing ? 'bg-cyan-500 dark:bg-cyan-500' : ''
-                                    }`}
-                                style={{ userSelect: 'none' }}
+                                className={`cursor-ns-resize hover:bg-cyan-500/30 dark:hover:bg-cyan-400/30 transition-all flex items-center justify-center group relative ${isResizing ? 'bg-cyan-500/30 dark:bg-cyan-400/30' : 'bg-slate-200 dark:bg-slate-700'}`}
+                                style={{ userSelect: 'none', height: '2px' }}
                             >
-                                <div className="w-12 h-px bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-400 dark:group-hover:bg-cyan-400 rounded-full"></div>
+                                {/* Grip Dots Indicator */}
+                                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex flex-row items-center justify-center gap-1 pointer-events-none">
+                                    <div className={`w-0.5 h-0.5 rounded-full transition-colors ${isResizing ? 'bg-cyan-600 dark:bg-cyan-300' : 'bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-600 dark:group-hover:bg-cyan-300'}`} />
+                                    <div className={`w-0.5 h-0.5 rounded-full transition-colors ${isResizing ? 'bg-cyan-600 dark:bg-cyan-300' : 'bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-600 dark:group-hover:bg-cyan-300'}`} />
+                                    <div className={`w-0.5 h-0.5 rounded-full transition-colors ${isResizing ? 'bg-cyan-600 dark:bg-cyan-300' : 'bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-600 dark:group-hover:bg-cyan-300'}`} />
+                                    <div className={`w-0.5 h-0.5 rounded-full transition-colors ${isResizing ? 'bg-cyan-600 dark:bg-cyan-300' : 'bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-600 dark:group-hover:bg-cyan-300'}`} />
+                                    <div className={`w-0.5 h-0.5 rounded-full transition-colors ${isResizing ? 'bg-cyan-600 dark:bg-cyan-300' : 'bg-slate-400 dark:bg-slate-500 group-hover:bg-cyan-600 dark:group-hover:bg-cyan-300'}`} />
+                                </div>
                             </div>
                             <div className="flex-1 min-h-0">
                                 <CommitDetails

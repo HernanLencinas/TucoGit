@@ -533,7 +533,7 @@ export const GitStatusPanel: React.FC<GitStatusPanelProps> = ({ repoPath, onRefr
     };
 
     return (
-        <div className="flex flex-col h-full bg-white dark:bg-[#011627] border-r border-slate-200 dark:border-slate-700/50">
+        <div className="flex flex-col h-full bg-white dark:bg-[#011627]">
             {/* Unstaged Changes Section */}
             <div className="flex flex-col flex-1 min-h-0 border-b border-slate-200 dark:border-slate-700/50">
                 <div className="h-9 px-4 flex items-center justify-between bg-slate-50/80 dark:bg-[#0b253a]/30 border-b border-slate-200 dark:border-slate-700/50 sticky top-0 z-10">
