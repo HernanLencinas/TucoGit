@@ -17,7 +17,7 @@ function createAppMenu(sendToMainWindow) {
           }
         },
         { type: 'separator' },
-        { role: 'hide' },
+        { label: 'Hide', role: 'hide' },
         { role: 'hideOthers' },
         { role: 'unhide' },
         { type: 'separator' },
