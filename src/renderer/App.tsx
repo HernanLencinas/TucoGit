@@ -307,6 +307,21 @@ function App() {
     }
   }, []);
 
+  // Escuchar eventos de navegación desde el menú principal
+  useEffect(() => {
+    if (window.electronAPI?.onNavigateTo) {
+      const unsubscribe = window.electronAPI.onNavigateTo((data: { tab: string, section?: string }) => {
+        if (data.tab === 'configuracion') {
+          setActiveTab('configuracion');
+          if (data.section) {
+            setConfigTabActiva(data.section as ConfigTabType);
+          }
+        }
+      });
+      return () => unsubscribe();
+    }
+  }, []);
+
   const clonarRepositorio = async (item: FolderItem, saltarConfirmacion: boolean = false, suppressToasts: boolean = false): Promise<{ success: boolean; error?: string }> => {
     if (!item.urlClon) {
       if (!suppressToasts) showToast("No se encontró la URL de clonación para este repositorio", 'error');
