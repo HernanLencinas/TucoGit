@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GitBranch, RotateCw, Search, Download, Upload, ChevronDown, Plus, Trash2, Archive, Tag, Undo2, GitMerge, AlertCircle, RefreshCw, Lock, Info } from 'lucide-react';
+import { GitBranch, RotateCw, Search, Download, Upload, ChevronDown, Plus, Trash2, Archive, Tag, Undo2, GitMerge, AlertCircle, RefreshCw, Lock, Info, Code, ExternalLink } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -14,10 +14,13 @@ import { useI18n } from "@/renderer/hooks/useI18n";
 interface RepositoryDetailsProps {
     repository: FolderItem;
     configPath: string;
+    editorIDESeleccionado?: string | null;
+    ideIcon?: React.ReactNode;
+    onOpenInIDE?: (item: FolderItem) => void;
     onMinimize?: () => void;
 }
 
-export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository, configPath, onMinimize }) => {
+export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository, configPath, editorIDESeleccionado, ideIcon, onOpenInIDE, onMinimize }) => {
     const { t } = useI18n();
     const { toast } = useToast();
     const [commits, setCommits] = useState<any[]>([]);
@@ -1720,6 +1723,29 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                     </div>
                                 )}
                             </div>
+
+                            {/* Botón Open in IDE (si está configurado) */}
+                            {editorIDESeleccionado && onOpenInIDE && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => onOpenInIDE(repository)}
+                                    title={t('repositories.actions.openIn', { ide: editorIDESeleccionado })}
+                                    className="h-7 px-2.5 text-[10px] font-semibold text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 flex items-center gap-1.5 shadow-sm"
+                                >
+                                    {ideIcon ? (
+                                        <div className="h-3.5 w-3.5 flex items-center justify-center [&>svg]:h-3.5 [&>svg]:w-3.5">
+                                            {ideIcon}
+                                        </div>
+                                    ) : (
+                                        <Code className="h-3.5 w-3.5" />
+                                    )}
+                                    <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                                        {editorIDESeleccionado}
+                                    </span>
+                                </Button>
+                            )}
+
                             {/* Botón de Acciones con menú desplegable */}
                             <div className="relative flex-shrink-0" ref={cherryPickMenuRef}>
                                 <Button
@@ -1751,6 +1777,28 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                                 </Button>
                                 {cherryPickMenuOpen && (
                                     <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-lg z-50">
+                                        <button
+                                            onClick={() => {
+                                                setCherryPickMenuOpen(false);
+                                                if (repository.urlClon) {
+                                                    // Convertir URL SSH a HTTPS si es necesario para que abra en el navegador
+                                                    let url = repository.urlClon;
+                                                    if (url.startsWith('git@')) {
+                                                        url = url.replace(':', '/').replace('git@', 'https://');
+                                                    }
+                                                    // Eliminar .git al final si existe (opcional, pero más limpio)
+                                                    if (url.endsWith('.git')) {
+                                                        url = url.slice(0, -4);
+                                                    }
+                                                    window.electronAPI?.openExternal(url);
+                                                }
+                                            }}
+                                            className="w-full text-left px-3 py-2 text-xs rounded-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 text-slate-600 dark:text-slate-400"
+                                        >
+                                            <ExternalLink className="h-3.5 w-3.5" />
+                                            <span>Ir a repositorio</span>
+                                        </button>
+                                        <div className="h-px bg-slate-200 dark:bg-slate-700 my-1 mx-2" />
                                         <button
                                             onClick={() => {
                                                 setCherryPickMenuOpen(false);

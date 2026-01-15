@@ -25,6 +25,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     chrome: process.versions.chrome,
     electron: process.versions.electron
   },
+  // Abrir URL externa
+  openExternal: (url) => {
+    return ipcRenderer.invoke('open-external', url);
+  },
+
   // Obtener la ruta de documentos del usuario
   getDocumentsPath: () => {
     return ipcRenderer.invoke('get-documents-path');
