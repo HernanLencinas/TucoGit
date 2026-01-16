@@ -705,6 +705,9 @@
           "maxLength": "La description ne peut pas dépasser 100 caractères"
         }
       },
+      "color": {
+        "label": "Couleur de fond"
+      },
       "buttons": {
         "cancel": "Annuler",
         "saving": "Enregistrement...",

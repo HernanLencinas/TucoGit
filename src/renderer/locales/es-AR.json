@@ -711,6 +711,9 @@
           "maxLength": "La descripción no puede exceder 100 caracteres"
         }
       },
+      "color": {
+        "label": "Color de fondo"
+      },
       "buttons": {
         "cancel": "Cancelar",
         "saving": "Guardando...",

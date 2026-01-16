@@ -148,6 +148,8 @@ function App() {
   const [cargandoRepositorios, setCargandoRepositorios] = useState(false);
   const [nombreRepositorio, setNombreRepositorio] = useState("");
   const [descripcionRepositorio, setDescripcionRepositorio] = useState("");
+  const [colorRepositorio, setColorRepositorio] = useState("");
+  const [mostrarColorPickerRepositorio, setMostrarColorPickerRepositorio] = useState(false);
   const [mostrarMenuConexion, setMostrarMenuConexion] = useState(false);
   const [mostrarMenuRepositorio, setMostrarMenuRepositorio] = useState(false);
   const [busquedaRepositorio, setBusquedaRepositorio] = useState("");
@@ -2012,6 +2014,7 @@ function App() {
     setRepositoriosDisponibles([]);
     setNombreRepositorio("");
     setDescripcionRepositorio("");
+    setColorRepositorio("");
     setBusquedaRepositorio("");
   };
 
@@ -2310,6 +2313,7 @@ function App() {
                 ...item,
                 nombre: nombreRepositorio.trim(),
                 descripcion: descripcionRepositorio.trim() || undefined,
+                backgroundColor: colorRepositorio || undefined,
               };
             }
             if (item.hijos) {
@@ -2340,6 +2344,7 @@ function App() {
             setRepositoriosDisponibles([]);
             setNombreRepositorio("");
             setDescripcionRepositorio("");
+            setColorRepositorio("");
             setEditandoRepositorio(false);
             setRepositorioAEditar(null);
             setBusquedaRepositorio("");
@@ -2384,6 +2389,7 @@ function App() {
         nombre: nombreRepositorio.trim() || repoSeleccionado.name,
         tipo: "archivo",
         descripcion: descripcionRepositorio.trim() || undefined,
+        backgroundColor: colorRepositorio || undefined,
         privado: repoInfo?.private || false,
         proveedor: conexionSeleccionada?.tipo || "GitHub",
         ahead: 0,
@@ -2696,6 +2702,7 @@ function App() {
     setRepositorioAEditar(repositorio);
     setNombreRepositorio(repositorio.nombre);
     setDescripcionRepositorio(repositorio.descripcion || "");
+    setColorRepositorio(repositorio.backgroundColor || "");
 
     // Buscar la conexión que coincida con el proveedor del repositorio
     const conexionEncontrada = conexionesGuardadas.find(c => c.tipo === repositorio.proveedor);
@@ -3319,9 +3326,9 @@ function App() {
                     key={item.id}
                     className={`relative ${item.tipo === "coleccion"
                       ? "hover:shadow-md transition-all duration-300"
-                      : "bg-secondary/40 hover:bg-secondary/60 border-border/80"
+                      : (!item.backgroundColor ? "bg-secondary/40 hover:bg-secondary/60 border-border/80" : "")
                       } ${!item.backgroundColor && item.tipo === "coleccion" ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20" : ""} hover:shadow-lg transition-all duration-300 hover:border-primary/50 group backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px] w-full`}
-                    style={item.tipo === "coleccion" && item.backgroundColor ? {
+                    style={item.backgroundColor ? {
                       backgroundColor: `${item.backgroundColor}25`, // 15 = ~8% opacity
                       borderColor: `${item.backgroundColor}60`, // 40 = 25% opacity
                     } : undefined}
@@ -6785,8 +6792,8 @@ function App() {
                           value={descripcionRepositorio}
                           onChange={(e) => setDescripcionRepositorio(e.target.value)}
                           placeholder={t('repositories.newRepositoryWizard.step2.description.placeholder')}
-                          rows={4}
-                          maxLength={100}
+                          rows={2}
+                          maxLength={150}
                           className={cn(
                             "w-full px-4 py-3 pb-8 text-sm rounded-xl border transition-all duration-200",
                             "bg-slate-50 dark:bg-slate-800/50",
@@ -6797,12 +6804,83 @@ function App() {
                         />
                         <span className={cn(
                           "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
-                          descripcionRepositorio.length > 85
+                          descripcionRepositorio.length > 130
                             ? "text-amber-600 dark:text-amber-500"
                             : "text-slate-500 dark:text-slate-400"
                         )}>
-                          {descripcionRepositorio.length}/100
+                          {descripcionRepositorio.length}/150
                         </span>
+                      </div>
+                    </div>
+
+                    {/* Color de la tarjeta */}
+                    <div className="space-y-3">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <span>{t('repositories.editCollectionModal.color.label')}</span>
+                        <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                          {t('repositories.newRepositoryWizard.step2.description.optional')}
+                        </span>
+                      </label>
+                      <div className="relative">
+                        <button
+                          type="button"
+                          onClick={() => setMostrarColorPickerRepositorio(!mostrarColorPickerRepositorio)}
+                          className={cn(
+                            "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 flex items-center justify-between",
+                            "bg-slate-50 dark:bg-slate-800/50",
+                            "focus:outline-none focus:ring-2 focus:ring-offset-2 border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                          )}
+                        >
+                          <div className="flex items-center gap-2">
+                            {colorRepositorio ? (
+                              <div
+                                className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-700"
+                                style={{ backgroundColor: colorRepositorio }}
+                              />
+                            ) : (
+                              <div className="w-5 h-5 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                            )}
+                            <span>
+                              {t(COLLECTION_COLORS.find(c => c.value === colorRepositorio)?.name || 'repositories.colors.default')}
+                            </span>
+                          </div>
+                          <ChevronDown className="w-4 h-4 text-slate-500" />
+                        </button>
+
+                        {mostrarColorPickerRepositorio && (
+                          <div className="absolute bottom-full left-0 right-0 mb-2 p-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl z-50 max-h-60 overflow-y-auto">
+                            <div className="grid grid-cols-1 gap-1">
+                              {COLLECTION_COLORS.map((color) => (
+                                <button
+                                  key={color.name}
+                                  onClick={() => {
+                                    setColorRepositorio(color.value);
+                                    setMostrarColorPickerRepositorio(false);
+                                  }}
+                                  className={cn(
+                                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors w-full text-left",
+                                    colorRepositorio === color.value
+                                      ? "bg-primary/10 text-primary"
+                                      : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                                  )}
+                                >
+                                  {color.value ? (
+                                    <div
+                                      className="w-4 h-4 rounded-full border border-slate-200 dark:border-slate-700"
+                                      style={{ backgroundColor: color.value }}
+                                    />
+                                  ) : (
+                                    <div className="w-4 h-4 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                                  )}
+                                  {t(color.name)}
+                                  {colorRepositorio === color.value && (
+                                    <Check className="w-4 h-4 ml-auto" />
+                                  )}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

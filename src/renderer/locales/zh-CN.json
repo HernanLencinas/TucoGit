@@ -702,6 +702,9 @@
           "maxLength": "描述不能超过 100 个字符"
         }
       },
+      "color": {
+        "label": "背景颜色"
+      },
       "buttons": {
         "cancel": "取消",
         "saving": "保存中...",

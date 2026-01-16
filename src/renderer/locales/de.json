@@ -675,6 +675,9 @@
           "maxLength": "Beschreibung darf nicht mehr als 100 Zeichen haben"
         }
       },
+      "color": {
+        "label": "Hintergrundfarbe"
+      },
       "buttons": {
         "cancel": "Abbrechen",
         "creating": "Erstelle...",
@@ -703,6 +706,9 @@
         "errors": {
           "maxLength": "Beschreibung darf nicht mehr als 100 Zeichen haben"
         }
+      },
+      "color": {
+        "label": "Hintergrundfarbe"
       },
       "buttons": {
         "cancel": "Abbrechen",
