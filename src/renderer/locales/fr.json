@@ -706,7 +706,7 @@
         }
       },
       "color": {
-        "label": "Couleur de fond"
+        "label": "Couleur"
       },
       "buttons": {
         "cancel": "Annuler",

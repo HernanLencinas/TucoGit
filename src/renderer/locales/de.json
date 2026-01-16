@@ -708,7 +708,7 @@
         }
       },
       "color": {
-        "label": "Hintergrundfarbe"
+        "label": "Farbe"
       },
       "buttons": {
         "cancel": "Abbrechen",

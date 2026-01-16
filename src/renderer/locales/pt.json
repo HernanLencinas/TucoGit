@@ -707,7 +707,7 @@
         }
       },
       "color": {
-        "label": "Cor de fundo"
+        "label": "Cor"
       },
       "buttons": {
         "cancel": "Cancelar",

@@ -703,7 +703,7 @@
         }
       },
       "color": {
-        "label": "背景颜色"
+        "label": "颜色"
       },
       "buttons": {
         "cancel": "取消",

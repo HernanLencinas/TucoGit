@@ -712,7 +712,7 @@
         }
       },
       "color": {
-        "label": "Color de fondo"
+        "label": "Color"
       },
       "buttons": {
         "cancel": "Cancelar",

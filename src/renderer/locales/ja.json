@@ -702,7 +702,7 @@
         }
       },
       "color": {
-        "label": "背景色"
+        "label": "色"
       },
       "buttons": {
         "cancel": "キャンセル",

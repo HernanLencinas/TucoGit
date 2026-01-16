@@ -7117,6 +7117,7 @@ function App() {
                 setMostrarModalNuevaCarpeta(false);
                 setNombreNuevaCarpeta("");
                 setDescripcionNuevaCarpeta("");
+                setColorNuevaCarpeta("");
                 setErrorNombre(null);
                 setErrorDescripcion(null);
               }
@@ -7543,7 +7544,7 @@ function App() {
 
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Color de fondo</span>
+                  <span>{t('repositories.editCollectionModal.color.label')}</span>
                 </label>
                 <div className="relative">
                   <button
@@ -7644,8 +7645,8 @@ function App() {
                 </Button>
               </div>
             </CardContent>
-          </Card >
-        </div >
+          </Card>
+        </div>
       )
       }
 
