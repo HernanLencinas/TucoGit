@@ -79,6 +79,8 @@ function App() {
   const [mostrarModalNuevaCarpeta, setMostrarModalNuevaCarpeta] = useState(false);
   const [nombreNuevaCarpeta, setNombreNuevaCarpeta] = useState("");
   const [descripcionNuevaCarpeta, setDescripcionNuevaCarpeta] = useState("");
+  const [colorNuevaCarpeta, setColorNuevaCarpeta] = useState("");
+  const [mostrarColorPickerNuevaCarpeta, setMostrarColorPickerNuevaCarpeta] = useState(false);
   const [creandoColeccion, setCreandoColeccion] = useState(false);
   const [errorNombre, setErrorNombre] = useState<string | null>(null);
   const [errorDescripcion, setErrorDescripcion] = useState<string | null>(null);
@@ -1930,8 +1932,8 @@ function App() {
     }
 
     const descripcionTrimmed = descripcionNuevaCarpeta.trim();
-    if (descripcionTrimmed.length > 100) {
-      setErrorDescripcion("La descripción no puede exceder 100 caracteres");
+    if (descripcionTrimmed.length > 150) {
+      setErrorDescripcion("La descripción no puede exceder 150 caracteres");
       return;
     }
 
@@ -1951,6 +1953,7 @@ function App() {
         nombre: nombreTrimmed,
         tipo: "coleccion",
         descripcion: descripcionTrimmed || undefined,
+        backgroundColor: colorNuevaCarpeta || undefined,
         hijos: [],
       };
 
@@ -1985,6 +1988,7 @@ function App() {
 
       setNombreNuevaCarpeta("");
       setDescripcionNuevaCarpeta("");
+      setColorNuevaCarpeta("");
       setMostrarModalNuevaCarpeta(false);
       setErrorNombre(null);
       setErrorDescripcion(null);
@@ -2496,7 +2500,7 @@ function App() {
     }
 
     const descripcionTrimmed = descripcionEditarColeccion.trim();
-    if (descripcionTrimmed.length > 100) {
+    if (descripcionTrimmed.length > 150) {
       setErrorDescripcionEditar(t('repositories.editCollectionModal.descriptionField.errors.maxLength'));
       return;
     }
@@ -7208,13 +7212,13 @@ function App() {
                     value={descripcionNuevaCarpeta}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (value.length <= 100) {
+                      if (value.length <= 150) {
                         setDescripcionNuevaCarpeta(value);
                         setErrorDescripcion(null);
                       }
                     }}
                     onBlur={() => {
-                      if (descripcionNuevaCarpeta.trim().length > 100) {
+                      if (descripcionNuevaCarpeta.trim().length > 150) {
                         setErrorDescripcion(t('repositories.newCollectionModal.descriptionField.errors.maxLength'));
                       } else {
                         setErrorDescripcion(null);
@@ -7231,16 +7235,16 @@ function App() {
                       creandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
                     placeholder={t('repositories.newCollectionModal.descriptionField.placeholder')}
-                    maxLength={100}
+                    maxLength={150}
                     disabled={creandoColeccion}
                   />
                   <span className={cn(
                     "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
-                    descripcionNuevaCarpeta.length > 85
+                    descripcionNuevaCarpeta.length > 130
                       ? "text-amber-600 dark:text-amber-500"
                       : "text-slate-500 dark:text-slate-400"
                   )}>
-                    {descripcionNuevaCarpeta.length}/100
+                    {descripcionNuevaCarpeta.length}/150
                   </span>
                   {errorDescripcion && (
                     <div className="flex items-center gap-1.5 mt-2 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
@@ -7251,6 +7255,72 @@ function App() {
                 </div>
               </div>
 
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <span>{t('repositories.editCollectionModal.color.label')}</span>
+                </label>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setMostrarColorPickerNuevaCarpeta(!mostrarColorPickerNuevaCarpeta)}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 flex items-center justify-between",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2 border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                    )}
+                  >
+                    <div className="flex items-center gap-2">
+                      {colorNuevaCarpeta ? (
+                        <div
+                          className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-700"
+                          style={{ backgroundColor: colorNuevaCarpeta }}
+                        />
+                      ) : (
+                        <div className="w-5 h-5 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                      )}
+                      <span>
+                        {t(COLLECTION_COLORS.find(c => c.value === colorNuevaCarpeta)?.name || 'repositories.colors.default')}
+                      </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-slate-500" />
+                  </button>
+
+                  {mostrarColorPickerNuevaCarpeta && (
+                    <div className="absolute top-full left-0 right-0 mt-2 p-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl z-50 max-h-60 overflow-y-auto">
+                      <div className="grid grid-cols-1 gap-1">
+                        {COLLECTION_COLORS.map((color) => (
+                          <button
+                            key={color.name}
+                            onClick={() => {
+                              setColorNuevaCarpeta(color.value);
+                              setMostrarColorPickerNuevaCarpeta(false);
+                            }}
+                            className={cn(
+                              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors w-full text-left",
+                              colorNuevaCarpeta === color.value
+                                ? "bg-primary/10 text-primary"
+                                : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                            )}
+                          >
+                            {color.value ? (
+                              <div
+                                className="w-4 h-4 rounded-full border border-slate-200 dark:border-slate-700"
+                                style={{ backgroundColor: color.value }}
+                              />
+                            ) : (
+                              <div className="w-4 h-4 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                            )}
+                            {t(color.name)}
+                            {colorNuevaCarpeta === color.value && (
+                              <Check className="w-4 h-4 ml-auto" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
               <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                 <Button
                   variant="outline"
@@ -7261,6 +7331,7 @@ function App() {
                       setMostrarModalNuevaCarpeta(false);
                       setNombreNuevaCarpeta("");
                       setDescripcionNuevaCarpeta("");
+                      setColorNuevaCarpeta("");
                       setErrorNombre(null);
                       setErrorDescripcion(null);
                     }
@@ -7427,13 +7498,13 @@ function App() {
                     value={descripcionEditarColeccion}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (value.length <= 100) {
+                      if (value.length <= 150) {
                         setDescripcionEditarColeccion(value);
                         setErrorDescripcionEditar(null);
                       }
                     }}
                     onBlur={() => {
-                      if (descripcionEditarColeccion.trim().length > 100) {
+                      if (descripcionEditarColeccion.trim().length > 150) {
                         setErrorDescripcionEditar(t('repositories.editCollectionModal.descriptionField.errors.maxLength'));
                       } else {
                         setErrorDescripcionEditar(null);
@@ -7450,16 +7521,16 @@ function App() {
                       editandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
                     placeholder={t('repositories.editCollectionModal.descriptionField.placeholder')}
-                    maxLength={100}
+                    maxLength={150}
                     disabled={editandoColeccion}
                   />
                   <span className={cn(
                     "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
-                    descripcionEditarColeccion.length > 85
+                    descripcionEditarColeccion.length > 130
                       ? "text-amber-600 dark:text-amber-500"
                       : "text-slate-500 dark:text-slate-400"
                   )}>
-                    {descripcionEditarColeccion.length}/100
+                    {descripcionEditarColeccion.length}/150
                   </span>
                   {errorDescripcionEditar && (
                     <div className="flex items-center gap-1.5 mt-2 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
