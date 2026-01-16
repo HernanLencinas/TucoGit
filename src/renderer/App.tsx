@@ -161,7 +161,20 @@ function App() {
   const [wizardCargado, setWizardCargado] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [mostrarMenuNotificaciones, setMostrarMenuNotificaciones] = useState(false);
+  const menuNotificacionesRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuNotificacionesRef.current && !menuNotificacionesRef.current.contains(event.target as Node)) {
+        setMostrarMenuNotificaciones(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Estado para la vista de detalles de repositorio
   const [activeRepository, setActiveRepository] = useState<FolderItem | null>(null);
@@ -5831,12 +5844,12 @@ function App() {
           </div>
 
           <div className="absolute right-0">
-            <div className="relative">
+            <div className="relative" ref={menuNotificacionesRef}>
               {mostrarMenuNotificaciones && (
                 <div className="absolute bottom-full right-0 mb-2 w-64 bg-popover border border-border rounded-md shadow-md p-4 z-50 animate-in fade-in zoom-in-95 duration-200">
                   <div className="flex flex-col items-center justify-center py-4 text-muted-foreground">
                     <Bell className="h-8 w-8 mb-2 opacity-20" />
-                    <p className="text-sm">No hay notificaciones</p>
+                    <p className="text-sm">{t('common.notifications.empty')}</p>
                   </div>
                 </div>
               )}
