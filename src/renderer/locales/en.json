@@ -29,6 +29,9 @@
       "switchToLight": "Switch to light mode",
       "switchToDark": "Switch to dark mode"
     },
+    "notifications": {
+      "empty": "No notifications"
+    },
     "loadingScreen": {
       "messages": [
         "Loading Tuco...",
