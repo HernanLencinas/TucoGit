@@ -328,6 +328,12 @@
         "title": "Repositórios",
         "description": "Explore seus projetos locais"
       },
+      "notifications": {
+        "empty": "Não há notificações",
+        "updateAvailable": "Nova versão disponível",
+        "versionAvailable": "Versão {{version}} disponível",
+        "download": "Baixar"
+      },
       "connections": {
         "title": "Conexões",
         "description": "Gerencie seus serviços Git"

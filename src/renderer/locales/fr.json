@@ -327,6 +327,12 @@
         "title": "Dépôts",
         "description": "Explorez vos projets locaux"
       },
+      "notifications": {
+        "empty": "Pas de notifications",
+        "updateAvailable": "Nouvelle version disponible",
+        "versionAvailable": "Version {{version}} disponible",
+        "download": "Télécharger"
+      },
       "connections": {
         "title": "Connexions",
         "description": "Gérez vos services Git"

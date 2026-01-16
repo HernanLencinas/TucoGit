@@ -30,7 +30,10 @@
       "switchToDark": "Cambiar a modo oscuro"
     },
     "notifications": {
-      "empty": "No hay notificaciones"
+      "empty": "No hay notificaciones",
+      "updateAvailable": "Nueva versión disponible",
+      "versionAvailable": "Versión {{version}} disponible",
+      "download": "Descargar"
     },
     "loadingScreen": {
       "messages": [

@@ -30,7 +30,10 @@
       "switchToDark": "Switch to dark mode"
     },
     "notifications": {
-      "empty": "No notifications"
+      "empty": "No notifications",
+      "updateAvailable": "New version available",
+      "versionAvailable": "Version {{version}} available",
+      "download": "Download"
     },
     "loadingScreen": {
       "messages": [

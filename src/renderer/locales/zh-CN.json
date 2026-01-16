@@ -609,10 +609,15 @@
       "private": "私有"
     },
     "empty": {
-      "title": "未定义仓库",
       "description": "要开始，请单击「新建集合」按钮添加您的第一个集合。",
       "newCollection": "新建集合",
       "newRepository": "新建仓库"
+    },
+    "notifications": {
+      "empty": "暂无通知",
+      "updateAvailable": "新版本可用",
+      "versionAvailable": "版本 {{version}} 可用",
+      "download": "下载"
     },
     "collection": {
       "element": "元素",

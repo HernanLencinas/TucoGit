@@ -235,6 +235,11 @@ function createWindow() {
     });
   }
 
+  // Abrir la consola de desarrollador solo si se pasa el flag explícitamente
+  if (process.argv.includes('--open-devtools')) {
+    mainWindow.webContents.openDevTools();
+  }
+
   // Guardar tamaño y posición cuando la ventana se redimensione o mueva
   let saveBoundsTimeout;
   const debounceSaveBounds = () => {

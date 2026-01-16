@@ -117,6 +117,35 @@ interface Window {
       success: boolean;
       error?: string;
     }>;
+    getGitStatus: (repoPath: string) => Promise<{ success: boolean; status?: any; error?: string }>;
+    gitStage: (repoPath: string, file: string) => Promise<{ success: boolean; error?: string }>;
+    gitUnstage: (repoPath: string, file: string) => Promise<{ success: boolean; error?: string }>;
+    gitCommit: (repoPath: string, message: string, authorName: string, authorEmail: string) => Promise<{ success: boolean; error?: string }>;
+    gitFetch: (repoPath: string) => Promise<{ success: boolean; error?: string }>;
+    gitPull: (repoPath: string) => Promise<{ success: boolean; error?: string }>;
+    gitPush: (repoPath: string) => Promise<{ success: boolean; error?: string }>;
+    getGitBranches: (repoPath: string) => Promise<{ success: boolean; branches?: any[]; current?: string; error?: string }>;
+    gitCreateBranch: (repoPath: string, branchName: string, fromBranch?: string) => Promise<{ success: boolean; error?: string }>;
+    gitCheckout: (repoPath: string, branchName: string) => Promise<{ success: boolean; error?: string }>;
+    canCherryPickCommit: (repoPath: string, commitHash: string) => Promise<boolean>;
+    gitRevert: (repoPath: string, commitHash: string) => Promise<{ success: boolean; error?: string }>;
+    gitCherryPick: (repoPath: string, commitHash: string, commitChanges?: boolean, appendOrigin?: boolean) => Promise<{ success: boolean; error?: string }>;
+    getPendingOperation: (repoPath: string) => Promise<string | null>;
+    abortPendingOperation: (repoPath: string, operation: string) => Promise<{ success: boolean; error?: string }>;
+    continuePendingOperation: (repoPath: string, operation: string) => Promise<{ success: boolean; error?: string }>;
+    gitCreateTag: (repoPath: string, tagName: string, message: string, commitHash: string, pushToAllRemotes?: boolean) => Promise<{ success: boolean; error?: string }>;
+    gitStash: (repoPath: string, includeUntracked?: boolean, message?: string) => Promise<{ success: boolean; error?: string }>;
+    getGitStashList: (repoPath: string) => Promise<{ success: boolean; stashes?: any[]; error?: string }>;
+    gitStashPop: (repoPath: string, stashRef: string) => Promise<{ success: boolean; error?: string }>;
+    gitStashDrop: (repoPath: string, stashRef: string) => Promise<{ success: boolean; error?: string }>;
+    gitStashClear: (repoPath: string) => Promise<{ success: boolean; error?: string }>;
+    gitClean: (repoPath: string, force?: boolean) => Promise<{ success: boolean; error?: string }>;
+    gitResetHard: (repoPath: string) => Promise<{ success: boolean; error?: string }>;
+    startRepoWatcher: (repoPath: string) => Promise<void>;
+    stopRepoWatcher: (repoPath: string) => Promise<void>;
+    onGitStatusChanged: (callback: (repoPath: string) => void) => () => void;
+    onNavigateTo: (callback: (data: { tab: string; section?: string }) => void) => () => void;
+    decryptToken: (encryptedToken: string) => Promise<{ success: boolean; token?: string; error?: string }>;
   };
 }
 
