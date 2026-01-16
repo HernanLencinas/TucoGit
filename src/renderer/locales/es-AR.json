@@ -168,7 +168,13 @@
         "description": "Elimina toda la configuración y restablece los valores predeterminados. Esta acción no se puede deshacer.",
         "warning": "Advertencia",
         "warningMessage": "Esta acción eliminará todas tus configuraciones, conexiones y preferencias guardadas.",
-        "restoreConfig": "Restaurar Configuración"
+        "restoreConfig": "Restaurar Configuración",
+        "modal": {
+          "title": "Restablecer Configuración",
+          "description": "Esta acción no se puede deshacer",
+          "warningMessage": "¿Estás seguro de que deseas restablecer toda la configuración? Esta acción eliminará todos tus repositorios, conexiones y preferencias. Esta acción es permanente y no se puede deshacer.",
+          "confirm": "Restaurar Configuración"
+        }
       },
       "purgeCache": {
         "title": "Purgar Cache de Repositorios",
@@ -189,7 +195,27 @@
         "description": "Gestiona múltiples identidades de usuario para usar en diferentes repositorios",
         "newIdentity": "Nueva Identidad",
         "noIdentities": "No hay identidades configuradas",
-        "addIdentity": "Agrega una identidad para comenzar"
+        "addIdentity": "Agrega una identidad para comenzar",
+        "modal": {
+          "title": "Nueva Identidad",
+          "editTitle": "Editar Identidad",
+          "description": "Agrega una nueva identidad de usuario para Git",
+          "editDescription": "Modifica la información de la identidad",
+          "fullName": {
+            "label": "Nombre Completo",
+            "required": "(requerido)",
+            "placeholder": "Tu nombre completo"
+          },
+          "email": {
+            "label": "Correo Electrónico",
+            "required": "(requerido)",
+            "placeholder": "tu.email@ejemplo.com",
+            "error": "Por favor ingresa un correo electrónico válido"
+          },
+          "add": "Agregar",
+          "deleteTitle": "Eliminar Identidad",
+          "deleteDescription": "¿Estás seguro de que deseas eliminar esta identidad? Esta acción no se puede deshacer."
+        }
       },
       "commitBehavior": {
         "title": "Comportamiento del Botón de Commit",
@@ -613,6 +639,27 @@
       "pendingPush": "Pendientes de subida (Push)",
       "pendingPull": "Pendientes de bajada (Pull)"
     },
+    "colors": {
+      "default": "Predeterminado",
+      "red": "Rojo",
+      "orange": "Naranja",
+      "amber": "Ámbar",
+      "yellow": "Amarillo",
+      "lime": "Lima",
+      "green": "Verde",
+      "emerald": "Esmeralda",
+      "teal": "Turquesa",
+      "cyan": "Cian",
+      "sky": "Cielo",
+      "blue": "Azul",
+      "indigo": "Índigo",
+      "violet": "Violeta",
+      "purple": "Púrpura",
+      "fuchsia": "Fucsia",
+      "pink": "Rosa",
+      "rose": "Rosa Fuerte",
+      "slate": "Pizarra"
+    },
     "newCollectionModal": {
       "title": "Nueva Colección",
       "description": "Organiza tus repositorios en una nueva colección personalizada",
@@ -663,6 +710,9 @@
         "errors": {
           "maxLength": "La descripción no puede exceder 100 caracteres"
         }
+      },
+      "color": {
+        "label": "Color"
       },
       "buttons": {
         "cancel": "Cancelar",
@@ -828,15 +878,6 @@
       "newBranch": "Nuevo Branch",
       "newTag": "Nuevo Tag",
       "actions": "Acciones"
-    },
-    "search": {
-      "placeholder": "Buscar commits (mensaje, autor, hash)...",
-      "clear": "Limpiar",
-      "commits": "commits",
-      "allCollections": "Todas las colecciones",
-      "placeholderCollections": "Buscar colecciones y repositorios...",
-      "clearSearch": "Limpiar búsqueda",
-      "noResults": "No se encontraron resultados para \"{{query}}\""
     },
     "newBranchModal": {
       "title": "Nuevo Branch",

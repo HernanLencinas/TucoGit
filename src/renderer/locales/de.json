@@ -161,7 +161,13 @@
         "description": "Löscht alle Konfigurationen und stellt Standardwerte wieder her. Diese Aktion kann nicht rückgängig gemacht werden.",
         "warning": "Warnung",
         "warningMessage": "Diese Aktion löscht alle deine Konfigurationen, Verbindungen und gespeicherten Einstellungen.",
-        "restoreConfig": "Konfiguration wiederherstellen"
+        "restoreConfig": "Konfiguration wiederherstellen",
+        "modal": {
+          "title": "Konfiguration zurücksetzen",
+          "description": "Diese Aktion kann nicht rückgängig gemacht werden",
+          "warningMessage": "Sind Sie sicher, dass Sie die gesamte Konfiguration zurücksetzen möchten? Diese Aktion löscht alle Ihre Repositories, Verbindungen und Einstellungen. Diese Aktion ist endgültig und kann nicht rückgängig gemacht werden.",
+          "confirm": "Konfiguration wiederherstellen"
+        }
       },
       "purgeCache": {
         "title": "Repository-Cache leeren",
@@ -182,7 +188,27 @@
         "description": "Verwalte mehrere Benutzeridentitäten für die Verwendung in verschiedenen Repositories",
         "newIdentity": "Neue Identität",
         "noIdentities": "Keine Identitäten konfiguriert",
-        "addIdentity": "Füge eine Identität hinzu, um zu beginnen"
+        "addIdentity": "Füge eine Identität hinzu, um zu beginnen",
+        "modal": {
+          "title": "Neue Identität",
+          "editTitle": "Identität bearbeiten",
+          "description": "Neue Benutzeridentität für Git hinzufügen",
+          "editDescription": "Identitätsinformationen ändern",
+          "fullName": {
+            "label": "Vollständiger Name",
+            "required": "(erforderlich)",
+            "placeholder": "Dein vollständiger Name"
+          },
+          "email": {
+            "label": "E-Mail",
+            "required": "(erforderlich)",
+            "placeholder": "deine.email@beispiel.com",
+            "error": "Bitte gib eine gültige E-Mail-Adresse ein"
+          },
+          "add": "Hinzufügen",
+          "deleteTitle": "Identität löschen",
+          "deleteDescription": "Sind Sie sicher, dass Sie diese Identität löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+        }
       },
       "commitBehavior": {
         "title": "Commit-Button-Verhalten",
@@ -606,6 +632,27 @@
       "pendingPush": "Ausstehender Upload (Push)",
       "pendingPull": "Ausstehender Download (Pull)"
     },
+    "colors": {
+      "default": "Standard",
+      "red": "Rot",
+      "orange": "Orange",
+      "amber": "Bernstein",
+      "yellow": "Gelb",
+      "lime": "Limette",
+      "green": "Grün",
+      "emerald": "Smaragd",
+      "teal": "Blaugrün",
+      "cyan": "Cyan",
+      "sky": "Himmelblau",
+      "blue": "Blau",
+      "indigo": "Indigo",
+      "violet": "Violett",
+      "purple": "Lila",
+      "fuchsia": "Fuchsin",
+      "pink": "Rosa",
+      "rose": "Altrosa",
+      "slate": "Schiefer"
+    },
     "newCollectionModal": {
       "title": "Neue Sammlung",
       "description": "Organisiere deine Repositories in einer neuen benutzerdefinierten Sammlung",
@@ -627,6 +674,9 @@
         "errors": {
           "maxLength": "Beschreibung darf nicht mehr als 100 Zeichen haben"
         }
+      },
+      "color": {
+        "label": "Hintergrundfarbe"
       },
       "buttons": {
         "cancel": "Abbrechen",
@@ -656,6 +706,9 @@
         "errors": {
           "maxLength": "Beschreibung darf nicht mehr als 100 Zeichen haben"
         }
+      },
+      "color": {
+        "label": "Farbe"
       },
       "buttons": {
         "cancel": "Abbrechen",
@@ -821,11 +874,6 @@
       "newBranch": "Neuer Branch",
       "newTag": "Neuer Tag",
       "actions": "Aktionen"
-    },
-    "search": {
-      "placeholder": "Suche Commits (Nachricht, Autor, Hash)...",
-      "clear": "Löschen",
-      "commits": "Commits"
     },
     "newBranchModal": {
       "title": "Neuer Branch",

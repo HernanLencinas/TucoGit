@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
-import { Home, Bell, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock, MoreVertical, Globe } from "lucide-react";
+import { Home, Bell, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock, MoreVertical, Globe, ChevronDown } from "lucide-react";
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
 import type { Connection, FolderItem, TabType, ConfigTabType } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
@@ -26,6 +26,28 @@ const IDENTIDAD_DEFAULT: GitIdentity = {
   nombre: "TucoGit",
   email: "git@tuco.com"
 };
+
+const COLLECTION_COLORS = [
+  { name: 'repositories.colors.default', value: '' },
+  { name: 'repositories.colors.red', value: '#ef4444' },
+  { name: 'repositories.colors.orange', value: '#f97316' },
+  { name: 'repositories.colors.amber', value: '#f59e0b' },
+  { name: 'repositories.colors.yellow', value: '#eab308' },
+  { name: 'repositories.colors.lime', value: '#84cc16' },
+  { name: 'repositories.colors.green', value: '#22c55e' },
+  { name: 'repositories.colors.emerald', value: '#10b981' },
+  { name: 'repositories.colors.teal', value: '#14b8a6' },
+  { name: 'repositories.colors.cyan', value: '#06b6d4' },
+  { name: 'repositories.colors.sky', value: '#0ea5e9' },
+  { name: 'repositories.colors.blue', value: '#3b82f6' },
+  { name: 'repositories.colors.indigo', value: '#6366f1' },
+  { name: 'repositories.colors.violet', value: '#8b5cf6' },
+  { name: 'repositories.colors.purple', value: '#a855f7' },
+  { name: 'repositories.colors.fuchsia', value: '#d946ef' },
+  { name: 'repositories.colors.pink', value: '#ec4899' },
+  { name: 'repositories.colors.rose', value: '#f43f5e' },
+  { name: 'repositories.colors.slate', value: '#64748b' },
+];
 
 function App() {
   const { t, changeLanguage, initializeLanguage, currentLanguage } = useI18n();
@@ -57,6 +79,8 @@ function App() {
   const [mostrarModalNuevaCarpeta, setMostrarModalNuevaCarpeta] = useState(false);
   const [nombreNuevaCarpeta, setNombreNuevaCarpeta] = useState("");
   const [descripcionNuevaCarpeta, setDescripcionNuevaCarpeta] = useState("");
+  const [colorNuevaCarpeta, setColorNuevaCarpeta] = useState("");
+  const [mostrarColorPickerNuevaCarpeta, setMostrarColorPickerNuevaCarpeta] = useState(false);
   const [creandoColeccion, setCreandoColeccion] = useState(false);
   const [errorNombre, setErrorNombre] = useState<string | null>(null);
   const [errorDescripcion, setErrorDescripcion] = useState<string | null>(null);
@@ -70,6 +94,8 @@ function App() {
   const [coleccionAEditar, setColeccionAEditar] = useState<FolderItem | null>(null);
   const [nombreEditarColeccion, setNombreEditarColeccion] = useState("");
   const [descripcionEditarColeccion, setDescripcionEditarColeccion] = useState("");
+  const [colorEditarColeccion, setColorEditarColeccion] = useState("");
+  const [mostrarColorPicker, setMostrarColorPicker] = useState(false);
   const [editandoColeccion, setEditandoColeccion] = useState(false);
   const [errorNombreEditar, setErrorNombreEditar] = useState<string | null>(null);
   const [errorDescripcionEditar, setErrorDescripcionEditar] = useState<string | null>(null);
@@ -124,6 +150,8 @@ function App() {
   const [cargandoRepositorios, setCargandoRepositorios] = useState(false);
   const [nombreRepositorio, setNombreRepositorio] = useState("");
   const [descripcionRepositorio, setDescripcionRepositorio] = useState("");
+  const [colorRepositorio, setColorRepositorio] = useState("");
+  const [mostrarColorPickerRepositorio, setMostrarColorPickerRepositorio] = useState(false);
   const [mostrarMenuConexion, setMostrarMenuConexion] = useState(false);
   const [mostrarMenuRepositorio, setMostrarMenuRepositorio] = useState(false);
   const [busquedaRepositorio, setBusquedaRepositorio] = useState("");
@@ -1904,8 +1932,8 @@ function App() {
     }
 
     const descripcionTrimmed = descripcionNuevaCarpeta.trim();
-    if (descripcionTrimmed.length > 100) {
-      setErrorDescripcion("La descripción no puede exceder 100 caracteres");
+    if (descripcionTrimmed.length > 150) {
+      setErrorDescripcion("La descripción no puede exceder 150 caracteres");
       return;
     }
 
@@ -1925,6 +1953,7 @@ function App() {
         nombre: nombreTrimmed,
         tipo: "coleccion",
         descripcion: descripcionTrimmed || undefined,
+        backgroundColor: colorNuevaCarpeta || undefined,
         hijos: [],
       };
 
@@ -1959,6 +1988,7 @@ function App() {
 
       setNombreNuevaCarpeta("");
       setDescripcionNuevaCarpeta("");
+      setColorNuevaCarpeta("");
       setMostrarModalNuevaCarpeta(false);
       setErrorNombre(null);
       setErrorDescripcion(null);
@@ -1988,6 +2018,7 @@ function App() {
     setRepositoriosDisponibles([]);
     setNombreRepositorio("");
     setDescripcionRepositorio("");
+    setColorRepositorio("");
     setBusquedaRepositorio("");
   };
 
@@ -2286,6 +2317,7 @@ function App() {
                 ...item,
                 nombre: nombreRepositorio.trim(),
                 descripcion: descripcionRepositorio.trim() || undefined,
+                backgroundColor: colorRepositorio || undefined,
               };
             }
             if (item.hijos) {
@@ -2316,6 +2348,7 @@ function App() {
             setRepositoriosDisponibles([]);
             setNombreRepositorio("");
             setDescripcionRepositorio("");
+            setColorRepositorio("");
             setEditandoRepositorio(false);
             setRepositorioAEditar(null);
             setBusquedaRepositorio("");
@@ -2360,6 +2393,7 @@ function App() {
         nombre: nombreRepositorio.trim() || repoSeleccionado.name,
         tipo: "archivo",
         descripcion: descripcionRepositorio.trim() || undefined,
+        backgroundColor: colorRepositorio || undefined,
         privado: repoInfo?.private || false,
         proveedor: conexionSeleccionada?.tipo || "GitHub",
         ahead: 0,
@@ -2441,6 +2475,7 @@ function App() {
     setColeccionAEditar(coleccion);
     setNombreEditarColeccion(coleccion.nombre);
     setDescripcionEditarColeccion(coleccion.descripcion || "");
+    setColorEditarColeccion(coleccion.backgroundColor || "");
     setMostrarModalEditarColeccion(true);
   };
 
@@ -2465,7 +2500,7 @@ function App() {
     }
 
     const descripcionTrimmed = descripcionEditarColeccion.trim();
-    if (descripcionTrimmed.length > 100) {
+    if (descripcionTrimmed.length > 150) {
       setErrorDescripcionEditar(t('repositories.editCollectionModal.descriptionField.errors.maxLength'));
       return;
     }
@@ -2508,6 +2543,7 @@ function App() {
               ...item,
               nombre: nombreTrimmed,
               descripcion: descripcionTrimmed || undefined,
+              backgroundColor: colorEditarColeccion || undefined,
             };
           }
           if (item.hijos) {
@@ -2670,6 +2706,7 @@ function App() {
     setRepositorioAEditar(repositorio);
     setNombreRepositorio(repositorio.nombre);
     setDescripcionRepositorio(repositorio.descripcion || "");
+    setColorRepositorio(repositorio.backgroundColor || "");
 
     // Buscar la conexión que coincida con el proveedor del repositorio
     const conexionEncontrada = conexionesGuardadas.find(c => c.tipo === repositorio.proveedor);
@@ -3287,14 +3324,23 @@ function App() {
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 pb-2 px-2 items-start">
+              <div className="flex flex-wrap gap-3 pb-2 px-2 items-start">
                 {itemsFiltrados.map((item) => (
                   <Card
                     key={item.id}
-                    className={`relative ${item.tipo === "coleccion"
-                      ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20"
-                      : "bg-secondary/40 hover:bg-secondary/60 border-border/80"
-                      } hover:shadow-lg transition-all duration-300 hover:border-primary/50 group backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px] w-full`}
+                    className={`relative ${
+                      // Base styles and conditional width logic
+                      item.tipo === "coleccion"
+                        ? "lg:w-[calc(33.333%_-_8px)] xl:w-[calc(25%_-_9px)] 2xl:w-[calc(20%_-_9.6px)]"
+                        : "lg:w-[calc(50%_-_6px)] xl:w-[calc(33.333%_-_8px)] 2xl:w-[calc(25%_-_9px)]"
+                      } w-full sm:w-[calc(50%_-_6px)] md:w-[calc(50%_-_6px)] ${item.tipo === "coleccion"
+                        ? "hover:shadow-md transition-all duration-300"
+                        : (!item.backgroundColor ? "bg-secondary/40 hover:bg-secondary/60 border-border/80" : "")
+                      } ${!item.backgroundColor && item.tipo === "coleccion" ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20" : ""} hover:shadow-lg transition-all duration-300 hover:border-primary/50 group backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px]`}
+                    style={item.backgroundColor ? {
+                      backgroundColor: `${item.backgroundColor}25`, // 15 = ~8% opacity
+                      borderColor: `${item.backgroundColor}60`, // 40 = 25% opacity
+                    } : undefined}
                   >
                     <div
                       className="flex-1 flex flex-col min-h-0 cursor-pointer"
@@ -5350,35 +5396,7 @@ function App() {
                 </CardContent>
               </Card>
 
-              {/* Información del Sistema */}
-              {window.electronAPI?.versions && (
-                <Card className="border-2">
-                  <CardHeader className="pb-3">
-                    <div>
-                      <CardTitle className="text-base">{t('settings.updates.systemInfo.title')}</CardTitle>
-                      <CardDescription className="text-xs mt-1">
-                        {t('settings.updates.systemInfo.description')}
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.platform')}</div>
-                        <div className="text-sm font-semibold font-mono">{window.electronAPI.platform || 'N/A'}</div>
-                      </div>
-                      <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.electron')}</div>
-                        <div className="text-sm font-semibold font-mono">v{window.electronAPI.versions.electron || 'N/A'}</div>
-                      </div>
-                      <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.chrome')}</div>
-                        <div className="text-sm font-semibold font-mono">v{window.electronAPI.versions.chrome || 'N/A'}</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+
 
               {/* Nota sobre Actualizaciones */}
               <Card className="border-2 border-primary/20 bg-primary/5">
@@ -6783,8 +6801,8 @@ function App() {
                           value={descripcionRepositorio}
                           onChange={(e) => setDescripcionRepositorio(e.target.value)}
                           placeholder={t('repositories.newRepositoryWizard.step2.description.placeholder')}
-                          rows={4}
-                          maxLength={100}
+                          rows={2}
+                          maxLength={150}
                           className={cn(
                             "w-full px-4 py-3 pb-8 text-sm rounded-xl border transition-all duration-200",
                             "bg-slate-50 dark:bg-slate-800/50",
@@ -6795,12 +6813,78 @@ function App() {
                         />
                         <span className={cn(
                           "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
-                          descripcionRepositorio.length > 85
+                          descripcionRepositorio.length > 130
                             ? "text-amber-600 dark:text-amber-500"
                             : "text-slate-500 dark:text-slate-400"
                         )}>
-                          {descripcionRepositorio.length}/100
+                          {descripcionRepositorio.length}/150
                         </span>
+                      </div>
+                    </div>
+
+                    {/* Color de la tarjeta */}
+                    <div className="space-y-3">
+
+                      <div className="relative">
+                        <button
+                          type="button"
+                          onClick={() => setMostrarColorPickerRepositorio(!mostrarColorPickerRepositorio)}
+                          className={cn(
+                            "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 flex items-center justify-between",
+                            "bg-slate-50 dark:bg-slate-800/50",
+                            "focus:outline-none focus:ring-2 focus:ring-offset-2 border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                          )}
+                        >
+                          <div className="flex items-center gap-2">
+                            {colorRepositorio ? (
+                              <div
+                                className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-700"
+                                style={{ backgroundColor: colorRepositorio }}
+                              />
+                            ) : (
+                              <div className="w-5 h-5 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                            )}
+                            <span>
+                              {t(COLLECTION_COLORS.find(c => c.value === colorRepositorio)?.name || 'repositories.colors.default')}
+                            </span>
+                          </div>
+                          <ChevronDown className="w-4 h-4 text-slate-500" />
+                        </button>
+
+                        {mostrarColorPickerRepositorio && (
+                          <div className="absolute bottom-full left-0 right-0 mb-2 p-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl z-50 max-h-60 overflow-y-auto">
+                            <div className="grid grid-cols-1 gap-1">
+                              {COLLECTION_COLORS.map((color) => (
+                                <button
+                                  key={color.name}
+                                  onClick={() => {
+                                    setColorRepositorio(color.value);
+                                    setMostrarColorPickerRepositorio(false);
+                                  }}
+                                  className={cn(
+                                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors w-full text-left",
+                                    colorRepositorio === color.value
+                                      ? "bg-primary/10 text-primary"
+                                      : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                                  )}
+                                >
+                                  {color.value ? (
+                                    <div
+                                      className="w-4 h-4 rounded-full border border-slate-200 dark:border-slate-700"
+                                      style={{ backgroundColor: color.value }}
+                                    />
+                                  ) : (
+                                    <div className="w-4 h-4 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                                  )}
+                                  {t(color.name)}
+                                  {colorRepositorio === color.value && (
+                                    <Check className="w-4 h-4 ml-auto" />
+                                  )}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -6940,9 +7024,7 @@ function App() {
         mostrarModalRestablecerConfig && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-            onClick={() => {
-              setMostrarModalRestablecerConfig(false);
-            }}
+
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setMostrarModalRestablecerConfig(false);
@@ -6963,10 +7045,10 @@ function App() {
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                 <div className="flex-1">
                   <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                    Restablecer Configuración
+                    {t('settings.data.reset.modal.title')}
                   </CardTitle>
                   <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                    Esta acción no se puede deshacer
+                    {t('settings.data.reset.modal.description')}
                   </CardDescription>
                 </div>
               </CardHeader>
@@ -6975,7 +7057,7 @@ function App() {
                   <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
                     <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
                     <span>
-                      ¿Estás seguro de que deseas restablecer toda la configuración? Esta acción eliminará <span className="font-semibold">todos tus repositorios, conexiones y preferencias</span>. Esta acción es permanente y no se puede deshacer.
+                      {t('settings.data.reset.modal.warningMessage')}
                     </span>
                   </p>
                 </div>
@@ -6988,7 +7070,7 @@ function App() {
                       setMostrarModalRestablecerConfig(false);
                     }}
                   >
-                    Cancelar
+                    {t('common.cancel')}
                   </Button>
                   <Button
                     size="default"
@@ -6996,7 +7078,7 @@ function App() {
                     className="min-w-[180px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/25"
                     onClick={confirmarRestablecerConfig}
                   >
-                    Restaurar Configuración
+                    {t('settings.data.reset.modal.confirm')}
                   </Button>
                 </div>
               </CardContent>
@@ -7009,15 +7091,7 @@ function App() {
       {mostrarModalNuevaCarpeta && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-          onClick={() => {
-            if (!creandoColeccion) {
-              setMostrarModalNuevaCarpeta(false);
-              setNombreNuevaCarpeta("");
-              setDescripcionNuevaCarpeta("");
-              setErrorNombre(null);
-              setErrorDescripcion(null);
-            }
-          }}
+
           onKeyDown={(e) => {
             if (e.key === 'Escape' && !creandoColeccion) {
               setMostrarModalNuevaCarpeta(false);
@@ -7038,6 +7112,7 @@ function App() {
                 setMostrarModalNuevaCarpeta(false);
                 setNombreNuevaCarpeta("");
                 setDescripcionNuevaCarpeta("");
+                setColorNuevaCarpeta("");
                 setErrorNombre(null);
                 setErrorDescripcion(null);
               }
@@ -7133,13 +7208,13 @@ function App() {
                     value={descripcionNuevaCarpeta}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (value.length <= 100) {
+                      if (value.length <= 150) {
                         setDescripcionNuevaCarpeta(value);
                         setErrorDescripcion(null);
                       }
                     }}
                     onBlur={() => {
-                      if (descripcionNuevaCarpeta.trim().length > 100) {
+                      if (descripcionNuevaCarpeta.trim().length > 150) {
                         setErrorDescripcion(t('repositories.newCollectionModal.descriptionField.errors.maxLength'));
                       } else {
                         setErrorDescripcion(null);
@@ -7156,16 +7231,16 @@ function App() {
                       creandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
                     placeholder={t('repositories.newCollectionModal.descriptionField.placeholder')}
-                    maxLength={100}
+                    maxLength={150}
                     disabled={creandoColeccion}
                   />
                   <span className={cn(
                     "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
-                    descripcionNuevaCarpeta.length > 85
+                    descripcionNuevaCarpeta.length > 130
                       ? "text-amber-600 dark:text-amber-500"
                       : "text-slate-500 dark:text-slate-400"
                   )}>
-                    {descripcionNuevaCarpeta.length}/100
+                    {descripcionNuevaCarpeta.length}/150
                   </span>
                   {errorDescripcion && (
                     <div className="flex items-center gap-1.5 mt-2 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
@@ -7176,6 +7251,70 @@ function App() {
                 </div>
               </div>
 
+              <div className="space-y-3">
+
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setMostrarColorPickerNuevaCarpeta(!mostrarColorPickerNuevaCarpeta)}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 flex items-center justify-between",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2 border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                    )}
+                  >
+                    <div className="flex items-center gap-2">
+                      {colorNuevaCarpeta ? (
+                        <div
+                          className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-700"
+                          style={{ backgroundColor: colorNuevaCarpeta }}
+                        />
+                      ) : (
+                        <div className="w-5 h-5 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                      )}
+                      <span>
+                        {t(COLLECTION_COLORS.find(c => c.value === colorNuevaCarpeta)?.name || 'repositories.colors.default')}
+                      </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-slate-500" />
+                  </button>
+
+                  {mostrarColorPickerNuevaCarpeta && (
+                    <div className="absolute top-full left-0 right-0 mt-2 p-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl z-50 max-h-60 overflow-y-auto">
+                      <div className="grid grid-cols-1 gap-1">
+                        {COLLECTION_COLORS.map((color) => (
+                          <button
+                            key={color.name}
+                            onClick={() => {
+                              setColorNuevaCarpeta(color.value);
+                              setMostrarColorPickerNuevaCarpeta(false);
+                            }}
+                            className={cn(
+                              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors w-full text-left",
+                              colorNuevaCarpeta === color.value
+                                ? "bg-primary/10 text-primary"
+                                : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                            )}
+                          >
+                            {color.value ? (
+                              <div
+                                className="w-4 h-4 rounded-full border border-slate-200 dark:border-slate-700"
+                                style={{ backgroundColor: color.value }}
+                              />
+                            ) : (
+                              <div className="w-4 h-4 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                            )}
+                            {t(color.name)}
+                            {colorNuevaCarpeta === color.value && (
+                              <Check className="w-4 h-4 ml-auto" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
               <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                 <Button
                   variant="outline"
@@ -7186,6 +7325,7 @@ function App() {
                       setMostrarModalNuevaCarpeta(false);
                       setNombreNuevaCarpeta("");
                       setDescripcionNuevaCarpeta("");
+                      setColorNuevaCarpeta("");
                       setErrorNombre(null);
                       setErrorDescripcion(null);
                     }
@@ -7219,16 +7359,7 @@ function App() {
       {mostrarModalEditarColeccion && coleccionAEditar && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-          onClick={() => {
-            if (!editandoColeccion) {
-              setMostrarModalEditarColeccion(false);
-              setColeccionAEditar(null);
-              setNombreEditarColeccion("");
-              setDescripcionEditarColeccion("");
-              setErrorNombreEditar(null);
-              setErrorDescripcionEditar(null);
-            }
-          }}
+
           onKeyDown={(e) => {
             if (e.key === 'Escape' && !editandoColeccion) {
               setMostrarModalEditarColeccion(false);
@@ -7361,13 +7492,13 @@ function App() {
                     value={descripcionEditarColeccion}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (value.length <= 100) {
+                      if (value.length <= 150) {
                         setDescripcionEditarColeccion(value);
                         setErrorDescripcionEditar(null);
                       }
                     }}
                     onBlur={() => {
-                      if (descripcionEditarColeccion.trim().length > 100) {
+                      if (descripcionEditarColeccion.trim().length > 150) {
                         setErrorDescripcionEditar(t('repositories.editCollectionModal.descriptionField.errors.maxLength'));
                       } else {
                         setErrorDescripcionEditar(null);
@@ -7384,21 +7515,86 @@ function App() {
                       editandoColeccion && "opacity-60 cursor-not-allowed"
                     )}
                     placeholder={t('repositories.editCollectionModal.descriptionField.placeholder')}
-                    maxLength={100}
+                    maxLength={150}
                     disabled={editandoColeccion}
                   />
                   <span className={cn(
                     "absolute bottom-4 right-3 text-xs font-medium transition-colors pointer-events-none",
-                    descripcionEditarColeccion.length > 85
+                    descripcionEditarColeccion.length > 130
                       ? "text-amber-600 dark:text-amber-500"
                       : "text-slate-500 dark:text-slate-400"
                   )}>
-                    {descripcionEditarColeccion.length}/100
+                    {descripcionEditarColeccion.length}/150
                   </span>
                   {errorDescripcionEditar && (
                     <div className="flex items-center gap-1.5 mt-2 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
                       <AlertCircle className="w-4 h-4" />
                       <span>{errorDescripcionEditar}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setMostrarColorPicker(!mostrarColorPicker)}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 flex items-center justify-between",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2 border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                    )}
+                  >
+                    <div className="flex items-center gap-2">
+                      {colorEditarColeccion ? (
+                        <div
+                          className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-700"
+                          style={{ backgroundColor: colorEditarColeccion }}
+                        />
+                      ) : (
+                        <div className="w-5 h-5 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                      )}
+                      <span>
+                        {t(COLLECTION_COLORS.find(c => c.value === colorEditarColeccion)?.name || 'repositories.colors.default')}
+                      </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-slate-500" />
+                  </button>
+
+                  {mostrarColorPicker && (
+                    <div className="absolute top-full left-0 right-0 mt-2 p-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl z-50 max-h-60 overflow-y-auto">
+                      <div className="grid grid-cols-1 gap-1">
+                        {COLLECTION_COLORS.map((color) => (
+                          <button
+                            key={color.name}
+                            onClick={() => {
+                              setColorEditarColeccion(color.value);
+                              setMostrarColorPicker(false);
+                            }}
+                            className={cn(
+                              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors w-full text-left",
+                              colorEditarColeccion === color.value
+                                ? "bg-primary/10 text-primary"
+                                : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                            )}
+                          >
+                            {color.value ? (
+                              <div
+                                className="w-4 h-4 rounded-full border border-slate-200 dark:border-slate-700"
+                                style={{ backgroundColor: color.value }}
+                              />
+                            ) : (
+                              <div className="w-4 h-4 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                            )}
+                            {t(color.name)}
+                            {colorEditarColeccion === color.value && (
+                              <Check className="w-4 h-4 ml-auto" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -7442,18 +7638,15 @@ function App() {
             </CardContent>
           </Card>
         </div>
-      )}
+      )
+      }
 
       {/* Modal Confirmar Re-clonación */}
       {
         mostrarModalConfirmarReclon && repoAClonar && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4 animate-in fade-in duration-200"
-            onClick={() => {
-              setMostrarModalConfirmarReclon(false);
-              setRepoAClonar(null);
-              setRutaDestinoAClonar("");
-            }}
+
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setMostrarModalConfirmarReclon(false);
@@ -7638,7 +7831,7 @@ function App() {
         mostrarModalPurgarTodo && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-            onClick={() => setMostrarModalPurgarTodo(false)}
+
             onKeyDown={(e) => {
               if (e.key === 'Escape') setMostrarModalPurgarTodo(false);
             }}
@@ -7774,10 +7967,7 @@ function App() {
         mostrarModalEliminarColeccion && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-            onClick={() => {
-              setMostrarModalEliminarColeccion(false);
-              setColeccionAEliminar(null);
-            }}
+
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setMostrarModalEliminarColeccion(false);
@@ -7877,10 +8067,7 @@ function App() {
           return (
             <div
               className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-              onClick={() => {
-                setMostrarModalEliminarConexion(false);
-                setConexionAEliminar(null);
-              }}
+
               onKeyDown={(e) => {
                 if (e.key === 'Escape') {
                   setMostrarModalEliminarConexion(false);
@@ -7982,10 +8169,7 @@ function App() {
         mostrarModalEliminarRepositorio && repositorioAEliminar && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-            onClick={() => {
-              setMostrarModalEliminarRepositorio(false);
-              setRepositorioAEliminar(null);
-            }}
+
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setMostrarModalEliminarRepositorio(false);
@@ -8079,382 +8263,386 @@ function App() {
       }
 
       {/* Modal para nueva identidad */}
-      {mostrarModalNuevaIdentidad && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-          onClick={() => {
-            setMostrarModalNuevaIdentidad(false);
-            setNombreNuevaIdentidad("");
-            setEmailNuevaIdentidad("");
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setMostrarModalNuevaIdentidad(false);
-              setNombreNuevaIdentidad("");
-              setEmailNuevaIdentidad("");
-            }
-          }}
-          tabIndex={-1}
-        >
-          <Card
-            className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
-            onClick={(e) => e.stopPropagation()}
+      {
+        mostrarModalNuevaIdentidad && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
-                e.stopPropagation();
                 setMostrarModalNuevaIdentidad(false);
                 setNombreNuevaIdentidad("");
                 setEmailNuevaIdentidad("");
               }
             }}
+            tabIndex={-1}
           >
-            <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-              <div className="flex-1">
-                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                  Nueva Identidad
-                </CardTitle>
-                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                  Agrega una nueva identidad de usuario para Git
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Nombre Completo</span>
-                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  value={nombreNuevaIdentidad}
-                  onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
-                  placeholder="Tu nombre completo"
-                  className={cn(
-                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
-                    "bg-slate-50 dark:bg-slate-800/50",
-                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
-                    "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+            <Card
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarModalNuevaIdentidad(false);
+                  setNombreNuevaIdentidad("");
+                  setEmailNuevaIdentidad("");
+                }
+              }}
+            >
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    {t('settings.git.identities.modal.title')}
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    {t('settings.git.identities.modal.description')}
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 space-y-6">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <span>{t('settings.git.identities.modal.fullName.label')}</span>
+                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                      {t('settings.git.identities.modal.fullName.required')}
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    value={nombreNuevaIdentidad}
+                    onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
+                    placeholder={t('settings.git.identities.modal.fullName.placeholder')}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                    )}
+                    autoFocus
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <span>{t('settings.git.identities.modal.email.label')}</span>
+                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                      {t('settings.git.identities.modal.email.required')}
+                    </span>
+                  </label>
+                  <input
+                    type="email"
+                    value={emailNuevaIdentidad}
+                    onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
+                    placeholder={t('settings.git.identities.modal.email.placeholder')}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      !emailNuevaIdentidad.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())
+                        ? "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                        : "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
+                    )}
+                  />
+                  {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
+                    <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>{t('settings.git.identities.modal.email.error')}</span>
+                    </div>
                   )}
-                  autoFocus
-                />
-              </div>
-              <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Correo Electrónico</span>
-                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
-                  </span>
-                </label>
-                <input
-                  type="email"
-                  value={emailNuevaIdentidad}
-                  onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
-                  placeholder="tu.email@ejemplo.com"
-                  className={cn(
-                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
-                    "bg-slate-50 dark:bg-slate-800/50",
-                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
-                    !emailNuevaIdentidad.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())
-                      ? "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
-                      : "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
-                  )}
-                />
-                {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
-                  <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>Por favor ingresa un correo electrónico válido</span>
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
-                <Button
-                  variant="outline"
-                  size="default"
-                  className="min-w-[100px]"
-                  onClick={() => {
-                    setMostrarModalNuevaIdentidad(false);
-                    setNombreNuevaIdentidad("");
-                    setEmailNuevaIdentidad("");
-                  }}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  size="default"
-                  className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())}
-                  onClick={async () => {
-                    if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
-                      showToast('Por favor completa todos los campos', 'error');
-                      return;
-                    }
-
-                    const nuevaIdentidad: GitIdentity = {
-                      id: Date.now().toString(),
-                      nombre: nombreNuevaIdentidad.trim(),
-                      email: emailNuevaIdentidad.trim()
-                    };
-
-                    // Asegurar que la identidad por defecto siempre esté primero
-                    const otrasIdentidades = gitIdentities.filter(id => id.id !== IDENTIDAD_DEFAULT_ID);
-                    const identidadDefault = gitIdentities.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
-                    const nuevasIdentidades = [identidadDefault, ...otrasIdentidades, nuevaIdentidad];
-                    setGitIdentities(nuevasIdentidades);
-
-                    if (window.electronAPI?.writeConfig) {
-                      try {
-                        await window.electronAPI.writeConfig({ gitIdentities: nuevasIdentidades });
-                      } catch (error) {
-                        showToast('Error al guardar identidad', 'error');
+                </div>
+                <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
+                  <Button
+                    variant="outline"
+                    size="default"
+                    className="min-w-[100px]"
+                    onClick={() => {
+                      setMostrarModalNuevaIdentidad(false);
+                      setNombreNuevaIdentidad("");
+                      setEmailNuevaIdentidad("");
+                    }}
+                  >
+                    {t('common.cancel')}
+                  </Button>
+                  <Button
+                    size="default"
+                    className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())}
+                    onClick={async () => {
+                      if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
+                        showToast('Por favor completa todos los campos', 'error');
+                        return;
                       }
-                    }
 
-                    setMostrarModalNuevaIdentidad(false);
-                    setNombreNuevaIdentidad("");
-                    setEmailNuevaIdentidad("");
-                  }}
-                >
-                  Agregar
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                      const nuevaIdentidad: GitIdentity = {
+                        id: Date.now().toString(),
+                        nombre: nombreNuevaIdentidad.trim(),
+                        email: emailNuevaIdentidad.trim()
+                      };
+
+                      // Asegurar que la identidad por defecto siempre esté primero
+                      const otrasIdentidades = gitIdentities.filter(id => id.id !== IDENTIDAD_DEFAULT_ID);
+                      const identidadDefault = gitIdentities.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
+                      const nuevasIdentidades = [identidadDefault, ...otrasIdentidades, nuevaIdentidad];
+                      setGitIdentities(nuevasIdentidades);
+
+                      if (window.electronAPI?.writeConfig) {
+                        try {
+                          await window.electronAPI.writeConfig({ gitIdentities: nuevasIdentidades });
+                        } catch (error) {
+                          showToast('Error al guardar identidad', 'error');
+                        }
+                      }
+
+                      setMostrarModalNuevaIdentidad(false);
+                      setNombreNuevaIdentidad("");
+                      setEmailNuevaIdentidad("");
+                    }}
+                  >
+                    {t('settings.git.identities.modal.add')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )
+      }
 
       {/* Modal para editar identidad */}
-      {mostrarModalEditarIdentidad && identidadAEditar && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-          onClick={() => {
-            setMostrarModalEditarIdentidad(false);
-            setIdentidadAEditar(null);
-            setNombreNuevaIdentidad("");
-            setEmailNuevaIdentidad("");
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
+      {
+        mostrarModalEditarIdentidad && identidadAEditar && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+            onClick={() => {
               setMostrarModalEditarIdentidad(false);
               setIdentidadAEditar(null);
               setNombreNuevaIdentidad("");
               setEmailNuevaIdentidad("");
-            }
-          }}
-          tabIndex={-1}
-        >
-          <Card
-            className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
-            onClick={(e) => e.stopPropagation()}
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
-                e.stopPropagation();
                 setMostrarModalEditarIdentidad(false);
                 setIdentidadAEditar(null);
                 setNombreNuevaIdentidad("");
                 setEmailNuevaIdentidad("");
               }
             }}
+            tabIndex={-1}
           >
-            <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-              <div className="flex-1">
-                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                  Editar Identidad
-                </CardTitle>
-                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                  Modifica la información de la identidad
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Nombre Completo</span>
-                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  value={nombreNuevaIdentidad}
-                  onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
-                  placeholder="Tu nombre completo"
-                  className={cn(
-                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
-                    "bg-slate-50 dark:bg-slate-800/50",
-                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
-                    "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+            <Card
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarModalEditarIdentidad(false);
+                  setIdentidadAEditar(null);
+                  setNombreNuevaIdentidad("");
+                  setEmailNuevaIdentidad("");
+                }
+              }}
+            >
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    {t('settings.git.identities.modal.editTitle')}
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    {t('settings.git.identities.modal.editDescription')}
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 space-y-6">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <span>{t('settings.git.identities.modal.fullName.label')}</span>
+                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                      {t('settings.git.identities.modal.fullName.required')}
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    value={nombreNuevaIdentidad}
+                    onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
+                    placeholder={t('settings.git.identities.modal.fullName.placeholder')}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                    )}
+                    autoFocus
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <span>{t('settings.git.identities.modal.email.label')}</span>
+                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                      {t('settings.git.identities.modal.email.required')}
+                    </span>
+                  </label>
+                  <input
+                    type="email"
+                    value={emailNuevaIdentidad}
+                    onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
+                    placeholder={t('settings.git.identities.modal.email.placeholder')}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      !emailNuevaIdentidad.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())
+                        ? "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                        : "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
+                    )}
+                  />
+                  {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
+                    <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>{t('settings.git.identities.modal.email.error')}</span>
+                    </div>
                   )}
-                  autoFocus
-                />
-              </div>
-              <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Correo Electrónico</span>
-                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
-                  </span>
-                </label>
-                <input
-                  type="email"
-                  value={emailNuevaIdentidad}
-                  onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
-                  placeholder="tu.email@ejemplo.com"
-                  className={cn(
-                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
-                    "bg-slate-50 dark:bg-slate-800/50",
-                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
-                    !emailNuevaIdentidad.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())
-                      ? "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
-                      : "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
-                  )}
-                />
-                {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
-                  <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>Por favor ingresa un correo electrónico válido</span>
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
-                <Button
-                  variant="outline"
-                  size="default"
-                  className="min-w-[100px]"
-                  onClick={() => {
-                    setMostrarModalEditarIdentidad(false);
-                    setIdentidadAEditar(null);
-                    setNombreNuevaIdentidad("");
-                    setEmailNuevaIdentidad("");
-                  }}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  size="default"
-                  className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())}
-                  onClick={async () => {
-                    if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
-                      showToast('Por favor completa todos los campos', 'error');
-                      return;
-                    }
-
-                    const identidadesActualizadas = gitIdentities.map(identidad =>
-                      identidad.id === identidadAEditar.id
-                        ? { ...identidad, nombre: nombreNuevaIdentidad.trim(), email: emailNuevaIdentidad.trim() }
-                        : identidad
-                    );
-
-                    // Asegurar que la identidad por defecto siempre esté primero
-                    const identidadDefault = identidadesActualizadas.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
-                    const otrasIdentidades = identidadesActualizadas.filter(id => id.id !== IDENTIDAD_DEFAULT_ID);
-                    const identidadesOrdenadas = [identidadDefault, ...otrasIdentidades];
-                    setGitIdentities(identidadesOrdenadas);
-
-                    if (window.electronAPI?.writeConfig) {
-                      try {
-                        await window.electronAPI.writeConfig({ gitIdentities: identidadesOrdenadas });
-                      } catch (error) {
-                        showToast('Error al actualizar identidad', 'error');
+                </div>
+                <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
+                  <Button
+                    variant="outline"
+                    size="default"
+                    className="min-w-[100px]"
+                    onClick={() => {
+                      setMostrarModalEditarIdentidad(false);
+                      setIdentidadAEditar(null);
+                      setNombreNuevaIdentidad("");
+                      setEmailNuevaIdentidad("");
+                    }}
+                  >
+                    {t('common.cancel')}
+                  </Button>
+                  <Button
+                    size="default"
+                    className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())}
+                    onClick={async () => {
+                      if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
+                        showToast('Por favor completa todos los campos', 'error');
+                        return;
                       }
-                    }
 
-                    setMostrarModalEditarIdentidad(false);
-                    setIdentidadAEditar(null);
-                    setNombreNuevaIdentidad("");
-                    setEmailNuevaIdentidad("");
-                  }}
-                >
-                  Guardar
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                      const identidadesActualizadas = gitIdentities.map(identidad =>
+                        identidad.id === identidadAEditar.id
+                          ? { ...identidad, nombre: nombreNuevaIdentidad.trim(), email: emailNuevaIdentidad.trim() }
+                          : identidad
+                      );
+
+                      // Asegurar que la identidad por defecto siempre esté primero
+                      const identidadDefault = identidadesActualizadas.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
+                      const otrasIdentidades = identidadesActualizadas.filter(id => id.id !== IDENTIDAD_DEFAULT_ID);
+                      const identidadesOrdenadas = [identidadDefault, ...otrasIdentidades];
+                      setGitIdentities(identidadesOrdenadas);
+
+                      if (window.electronAPI?.writeConfig) {
+                        try {
+                          await window.electronAPI.writeConfig({ gitIdentities: identidadesOrdenadas });
+                        } catch (error) {
+                          showToast('Error al actualizar identidad', 'error');
+                        }
+                      }
+
+                      setMostrarModalEditarIdentidad(false);
+                      setIdentidadAEditar(null);
+                      setNombreNuevaIdentidad("");
+                      setEmailNuevaIdentidad("");
+                    }}
+                  >
+                    {t('common.save')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )
+      }
 
       {/* Modal para eliminar identidad */}
-      {mostrarModalEliminarIdentidad && identidadAEliminar && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={() => {
-            setMostrarModalEliminarIdentidad(false);
-            setIdentidadAEliminar(null);
-          }}
-        >
-          <Card
-            className="w-full max-w-md bg-background border-2"
-            onClick={(e) => e.stopPropagation()}
+      {
+        mostrarModalEliminarIdentidad && identidadAEliminar && (
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            onClick={() => {
+              setMostrarModalEliminarIdentidad(false);
+              setIdentidadAEliminar(null);
+            }}
           >
-            <CardHeader>
-              <CardTitle className="text-lg">Eliminar Identidad</CardTitle>
-              <CardDescription>
-                ¿Estás seguro de que deseas eliminar esta identidad? Esta acción no se puede deshacer.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-4 rounded-lg bg-muted/50 border">
-                <div className="space-y-1">
-                  <div className="text-sm font-semibold">{identidadAEliminar.nombre}</div>
-                  <div className="text-xs text-muted-foreground">{identidadAEliminar.email}</div>
+            <Card
+              className="w-full max-w-md bg-background border-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <CardHeader>
+                <CardTitle className="text-lg">{t('settings.git.identities.modal.deleteTitle')}</CardTitle>
+                <CardDescription>
+                  {t('settings.git.identities.modal.deleteDescription')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="p-4 rounded-lg bg-muted/50 border">
+                  <div className="space-y-1">
+                    <div className="text-sm font-semibold">{identidadAEliminar.nombre}</div>
+                    <div className="text-xs text-muted-foreground">{identidadAEliminar.email}</div>
+                  </div>
                 </div>
-              </div>
-              <div className="flex gap-2 pt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => {
-                    setMostrarModalEliminarIdentidad(false);
-                    setIdentidadAEliminar(null);
-                  }}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  className="flex-1 bg-red-600 hover:bg-red-700"
-                  onClick={async () => {
-                    // Filtrar la identidad a eliminar, pero asegurar que la identidad por defecto siempre esté
-                    const identidadesActualizadas = gitIdentities.filter(
-                      identidad => identidad.id !== identidadAEliminar.id && identidad.id !== IDENTIDAD_DEFAULT_ID
-                    );
+                <div className="flex gap-2 pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      setMostrarModalEliminarIdentidad(false);
+                      setIdentidadAEliminar(null);
+                    }}
+                  >
+                    {t('common.cancel')}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="flex-1 bg-red-600 hover:bg-red-700"
+                    onClick={async () => {
+                      // Filtrar la identidad a eliminar, pero asegurar que la identidad por defecto siempre esté
+                      const identidadesActualizadas = gitIdentities.filter(
+                        identidad => identidad.id !== identidadAEliminar.id && identidad.id !== IDENTIDAD_DEFAULT_ID
+                      );
 
-                    // Asegurar que la identidad por defecto siempre esté primero
-                    const identidadDefault = gitIdentities.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
-                    const identidadesOrdenadas = [identidadDefault, ...identidadesActualizadas];
-                    setGitIdentities(identidadesOrdenadas);
+                      // Asegurar que la identidad por defecto siempre esté primero
+                      const identidadDefault = gitIdentities.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
+                      const identidadesOrdenadas = [identidadDefault, ...identidadesActualizadas];
+                      setGitIdentities(identidadesOrdenadas);
 
-                    if (window.electronAPI?.writeConfig) {
-                      try {
-                        await window.electronAPI.writeConfig({ gitIdentities: identidadesOrdenadas });
-                      } catch (error) {
-                        showToast('Error al eliminar identidad', 'error');
+                      if (window.electronAPI?.writeConfig) {
+                        try {
+                          await window.electronAPI.writeConfig({ gitIdentities: identidadesOrdenadas });
+                        } catch (error) {
+                          showToast('Error al eliminar identidad', 'error');
+                        }
                       }
-                    }
 
-                    setMostrarModalEliminarIdentidad(false);
-                    setIdentidadAEliminar(null);
-                  }}
-                >
-                  Eliminar
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                      setMostrarModalEliminarIdentidad(false);
+                      setIdentidadAEliminar(null);
+                    }}
+                  >
+                    {t('common.delete')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )
+      }
 
       {/* Toast Container */}
       <Toaster />
 
       {/* Wizard de Bienvenida */}
-      {mostrarWizardBienvenida && wizardCargado && (
-        <WelcomeWizard onComplete={completarWizardBienvenida} />
-      )}
+      {
+        mostrarWizardBienvenida && wizardCargado && (
+          <WelcomeWizard onComplete={completarWizardBienvenida} />
+        )
+      }
     </div >
   );
 }

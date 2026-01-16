@@ -55,6 +55,7 @@ export type FolderItem = {
   idConexion?: number;
   organizacion?: string;
   nombreGit?: string;
+  backgroundColor?: string;
 };
 
 /**

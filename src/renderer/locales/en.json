@@ -168,7 +168,13 @@
         "description": "Deletes all configuration and restores default values. This action cannot be undone.",
         "warning": "Warning",
         "warningMessage": "This action will delete all your configurations, connections and saved preferences.",
-        "restoreConfig": "Restore Configuration"
+        "restoreConfig": "Restore Configuration",
+        "modal": {
+          "title": "Reset Configuration",
+          "description": "This action cannot be undone",
+          "warningMessage": "Are you sure you want to reset all configuration? This action will remove all your repositories, connections, and preferences. This action is permanent and cannot be undone.",
+          "confirm": "Restore Configuration"
+        }
       },
       "purgeCache": {
         "title": "Purge Repository Cache",
@@ -189,7 +195,27 @@
         "description": "Manage multiple user identities to use in different repositories",
         "newIdentity": "New Identity",
         "noIdentities": "No identities configured",
-        "addIdentity": "Add an identity to get started"
+        "addIdentity": "Add an identity to get started",
+        "modal": {
+          "title": "New Identity",
+          "editTitle": "Edit Identity",
+          "description": "Add a new user identity for Git",
+          "editDescription": "Modify identity information",
+          "fullName": {
+            "label": "Full Name",
+            "required": "(required)",
+            "placeholder": "Your full name"
+          },
+          "email": {
+            "label": "Email",
+            "required": "(required)",
+            "placeholder": "your.email@example.com",
+            "error": "Please enter a valid email address"
+          },
+          "add": "Add",
+          "deleteTitle": "Delete Identity",
+          "deleteDescription": "Are you sure you want to delete this identity? This action cannot be undone."
+        }
       },
       "commitBehavior": {
         "title": "Commit Button Behavior",
@@ -613,6 +639,27 @@
       "pendingPush": "Pending upload (Push)",
       "pendingPull": "Pending download (Pull)"
     },
+    "colors": {
+      "default": "Default",
+      "red": "Red",
+      "orange": "Orange",
+      "amber": "Amber",
+      "yellow": "Yellow",
+      "lime": "Lime",
+      "green": "Green",
+      "emerald": "Emerald",
+      "teal": "Teal",
+      "cyan": "Cyan",
+      "sky": "Sky",
+      "blue": "Blue",
+      "indigo": "Indigo",
+      "violet": "Violet",
+      "purple": "Purple",
+      "fuchsia": "Fuchsia",
+      "pink": "Pink",
+      "rose": "Rose",
+      "slate": "Slate"
+    },
     "newCollectionModal": {
       "title": "New Collection",
       "description": "Organize your repositories in a new custom collection",
@@ -663,6 +710,9 @@
         "errors": {
           "maxLength": "Description cannot exceed 100 characters"
         }
+      },
+      "color": {
+        "label": "Color"
       },
       "buttons": {
         "cancel": "Cancel",
@@ -828,11 +878,6 @@
       "newBranch": "New Branch",
       "newTag": "New Tag",
       "actions": "Actions"
-    },
-    "search": {
-      "placeholder": "Search commits (message, author, hash)...",
-      "clear": "Clear",
-      "commits": "commits"
     },
     "newBranchModal": {
       "title": "New Branch",
