@@ -7219,16 +7219,7 @@ function App() {
       {mostrarModalEditarColeccion && coleccionAEditar && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-          onClick={() => {
-            if (!editandoColeccion) {
-              setMostrarModalEditarColeccion(false);
-              setColeccionAEditar(null);
-              setNombreEditarColeccion("");
-              setDescripcionEditarColeccion("");
-              setErrorNombreEditar(null);
-              setErrorDescripcionEditar(null);
-            }
-          }}
+
           onKeyDown={(e) => {
             if (e.key === 'Escape' && !editandoColeccion) {
               setMostrarModalEditarColeccion(false);
@@ -7449,11 +7440,7 @@ function App() {
         mostrarModalConfirmarReclon && repoAClonar && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4 animate-in fade-in duration-200"
-            onClick={() => {
-              setMostrarModalConfirmarReclon(false);
-              setRepoAClonar(null);
-              setRutaDestinoAClonar("");
-            }}
+
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setMostrarModalConfirmarReclon(false);
@@ -7774,10 +7761,7 @@ function App() {
         mostrarModalEliminarColeccion && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-            onClick={() => {
-              setMostrarModalEliminarColeccion(false);
-              setColeccionAEliminar(null);
-            }}
+
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setMostrarModalEliminarColeccion(false);
@@ -7877,10 +7861,7 @@ function App() {
           return (
             <div
               className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-              onClick={() => {
-                setMostrarModalEliminarConexion(false);
-                setConexionAEliminar(null);
-              }}
+
               onKeyDown={(e) => {
                 if (e.key === 'Escape') {
                   setMostrarModalEliminarConexion(false);
@@ -7982,10 +7963,7 @@ function App() {
         mostrarModalEliminarRepositorio && repositorioAEliminar && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-            onClick={() => {
-              setMostrarModalEliminarRepositorio(false);
-              setRepositorioAEliminar(null);
-            }}
+
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setMostrarModalEliminarRepositorio(false);
