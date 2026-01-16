@@ -192,7 +192,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [mostrarMenuNotificaciones, setMostrarMenuNotificaciones] = useState(false);
   const menuNotificacionesRef = useRef<HTMLDivElement>(null);
-  const { isUpdateAvailable, latestRelease, platform } = useAutoUpdate();
+  const { isUpdateAvailable, latestRelease, platform, isChecking, checkVersion } = useAutoUpdate();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -5343,74 +5343,69 @@ function App() {
               {/* Información de Versión */}
               <Card className="border-2">
                 <CardHeader className="pb-3">
-                  <div>
-                    <CardTitle className="text-base">{t('settings.updates.currentVersion.title')}</CardTitle>
-                    <CardDescription className="text-xs mt-1">
-                      {t('settings.updates.currentVersion.description')}
-                    </CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-base">{t('settings.updates.currentVersion.title')}</CardTitle>
+                      <CardDescription className="text-xs mt-1">
+                        {t('settings.updates.currentVersion.description')}
+                      </CardDescription>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 gap-2"
+                      onClick={() => checkVersion()}
+                      disabled={isChecking}
+                    >
+                      <RefreshCw className={`h-3.5 w-3.5 ${isChecking ? 'animate-spin' : ''}`} />
+                      {t('settings.updates.currentVersion.checkUpdates')}
+                    </Button>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 rounded-lg bg-primary/5 border border-primary/10">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-primary/20">
-                          <Star className="h-5 w-5 text-primary" />
+                    {isUpdateAvailable ? (
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                        <div className="flex items-center gap-2">
+                          <Bell className="h-4 w-4 text-blue-500" />
+                          <p className="text-xs text-blue-700 dark:text-blue-300 font-medium">
+                            {t('common.notifications.versionAvailable', { version: latestRelease?.tag_name })}
+                          </p>
                         </div>
-                        <div>
-                          <div className="text-sm font-semibold text-foreground">TucoGit</div>
-                          <div className="text-xs text-muted-foreground">{t('settings.updates.currentVersion.appVersion')}</div>
+                        <Button
+                          variant="link"
+                          size="sm"
+                          className="h-auto p-0 text-blue-600 dark:text-blue-400 text-xs font-bold"
+                          onClick={() => {
+                            if (latestRelease?.html_url) {
+                              window.open(latestRelease.html_url, '_blank');
+                            }
+                          }}
+                        >
+                          {t('common.notifications.download')}
+                          <ExternalLink className="ml-1 h-3 w-3" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between p-4 rounded-lg bg-green-500/5 border border-green-500/10">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/10">
+                            <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">
+                              {t('settings.updates.currentVersion.latestVersion')}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              v{appVersion}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                        <span className="text-sm font-bold text-primary">v{appVersion}</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
-                      <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
-                      <p className="text-xs text-muted-foreground">
-                        {t('settings.updates.currentVersion.latestVersion')}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Última Actualización */}
-              <Card className="border-2">
-                <CardHeader className="pb-3">
-                  <div>
-                    <CardTitle className="text-base">{t('settings.updates.lastUpdate.title')}</CardTitle>
-                    <CardDescription className="text-xs mt-1">
-                      {t('settings.updates.lastUpdate.description')}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50 border">
-                      <div className="p-2 rounded-lg bg-blue-500/10">
-                        <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-sm font-semibold text-foreground mb-1">{t('settings.updates.lastUpdate.configModified')}</div>
-                        <div className="text-xs font-mono text-muted-foreground">
-                          {ultimaActualizacion || t('common.noAvailable')}
-                        </div>
-                      </div>
-                    </div>
-                    {ultimaActualizacion && (
-                      <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
-                        <Info className="h-4 w-4 text-primary flex-shrink-0" />
-                        <p className="text-xs text-muted-foreground">
-                          {t('settings.updates.lastUpdate.autoUpdateInfo')}
-                        </p>
                       </div>
                     )}
                   </div>
                 </CardContent>
               </Card>
-
 
 
               {/* Nota sobre Actualizaciones */}

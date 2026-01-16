@@ -268,7 +268,9 @@
         "title": "Versión Actual",
         "description": "Información sobre la versión instalada de la aplicación",
         "appVersion": "Versión de la aplicación",
-        "latestVersion": "Estás usando la última versión disponible"
+        "latestVersion": "Estás usando la última versión disponible",
+        "checkUpdates": "Buscar actualizaciones",
+        "stableChannel": "Compilación estable"
       },
       "lastUpdate": {
         "title": "Última Actualización",
@@ -285,7 +287,7 @@
       },
       "aboutUpdates": {
         "title": "Sobre las Actualizaciones",
-        "description": "Las actualizaciones de la aplicación se gestionan automáticamente. Cuando haya una nueva versión disponible, recibirás una notificación."
+        "description": "TucoGit te avisará cuando haya una nueva versión disponible. Podrás descargar el instalador más reciente directamente desde GitHub e instalarlo para actualizar."
       }
     },
     "about": {
