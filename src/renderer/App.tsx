@@ -6824,12 +6824,7 @@ function App() {
 
                     {/* Color de la tarjeta */}
                     <div className="space-y-3">
-                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <span>{t('repositories.editCollectionModal.color.label')}</span>
-                        <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                          {t('repositories.newRepositoryWizard.step2.description.optional')}
-                        </span>
-                      </label>
+
                       <div className="relative">
                         <button
                           type="button"
