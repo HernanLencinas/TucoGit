@@ -7009,15 +7009,7 @@ function App() {
       {mostrarModalNuevaCarpeta && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-          onClick={() => {
-            if (!creandoColeccion) {
-              setMostrarModalNuevaCarpeta(false);
-              setNombreNuevaCarpeta("");
-              setDescripcionNuevaCarpeta("");
-              setErrorNombre(null);
-              setErrorDescripcion(null);
-            }
-          }}
+
           onKeyDown={(e) => {
             if (e.key === 'Escape' && !creandoColeccion) {
               setMostrarModalNuevaCarpeta(false);
