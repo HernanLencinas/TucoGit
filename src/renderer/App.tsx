@@ -3322,8 +3322,8 @@ function App() {
                       : "bg-secondary/40 hover:bg-secondary/60 border-border/80"
                       } ${!item.backgroundColor && item.tipo === "coleccion" ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20" : ""} hover:shadow-lg transition-all duration-300 hover:border-primary/50 group backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px] w-full`}
                     style={item.tipo === "coleccion" && item.backgroundColor ? {
-                      backgroundColor: `${item.backgroundColor}15`, // 15 = ~8% opacity
-                      borderColor: `${item.backgroundColor}40`, // 40 = 25% opacity
+                      backgroundColor: `${item.backgroundColor}25`, // 15 = ~8% opacity
+                      borderColor: `${item.backgroundColor}60`, // 40 = 25% opacity
                     } : undefined}
                   >
                     <div
