@@ -8,6 +8,7 @@ interface Window {
       chrome: string;
       electron: string;
     };
+    getAppVersion: () => Promise<string>;
     getDocumentsPath: () => Promise<string>;
     openExternal: (url: string) => Promise<{ success: boolean; error?: string }>;
     selectFolder: () => Promise<string | null>;

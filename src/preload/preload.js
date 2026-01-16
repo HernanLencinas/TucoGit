@@ -25,6 +25,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     chrome: process.versions.chrome,
     electron: process.versions.electron
   },
+  // Obtener versión de la aplicación
+  getAppVersion: () => {
+    return ipcRenderer.invoke('get-app-version');
+  },
   // Abrir URL externa
   openExternal: (url) => {
     return ipcRenderer.invoke('open-external', url);
