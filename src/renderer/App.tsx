@@ -230,6 +230,26 @@ function App() {
     }
   }, [estructuraCarpetas, rutaConfiguracion]);
 
+  const [appVersion, setAppVersion] = useState<string>("0.0.0");
+
+  // Fetch app version on mount
+  useEffect(() => {
+    const fetchVersion = async () => {
+      if (window.electronAPI?.getAppVersion) {
+        try {
+          const version = await window.electronAPI.getAppVersion();
+          console.log("App version fetched:", version);
+          setAppVersion(version);
+        } catch (error) {
+          console.error("Failed to fetch app version:", error);
+        }
+      } else {
+        console.warn("electronAPI.getAppVersion is not available");
+      }
+    };
+    fetchVersion();
+  }, []);
+
   // Función para restablecer la configuración
   const confirmarRestablecerConfig = async () => {
     try {
@@ -5260,7 +5280,7 @@ function App() {
                         </div>
                       </div>
                       <div className="px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                        <span className="text-sm font-bold text-primary">v0.1.100</span>
+                        <span className="text-sm font-bold text-primary">v{appVersion}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
@@ -5383,7 +5403,7 @@ function App() {
                           </h2>
                           <div className="flex items-center justify-center gap-2 mt-2">
                             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-                              <span className="text-xs font-semibold text-primary">v0.1.100</span>
+                              <span className="text-xs font-semibold text-primary">v{appVersion}</span>
                             </div>
                             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
                               <span className="text-xs font-medium text-blue-600 dark:text-blue-400">{t('settings.about.footer.beta')}</span>

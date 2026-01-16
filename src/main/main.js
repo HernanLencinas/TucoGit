@@ -597,6 +597,11 @@ ipcMain.handle('write-config', async (event, updates) => {
   }
 });
 
+// Handler para obtener la versión de la aplicación
+ipcMain.handle('get-app-version', () => {
+  return app.getVersion();
+});
+
 // Handler para importar configuración completa (reemplaza todo el archivo)
 ipcMain.handle('import-config', async (event, configData) => {
   try {
