@@ -7257,9 +7257,7 @@ function App() {
               </div>
 
               <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>{t('repositories.editCollectionModal.color.label')}</span>
-                </label>
+
                 <div className="relative">
                   <button
                     type="button"
@@ -7543,9 +7541,7 @@ function App() {
               </div>
 
               <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>{t('repositories.editCollectionModal.color.label')}</span>
-                </label>
+
                 <div className="relative">
                   <button
                     type="button"
