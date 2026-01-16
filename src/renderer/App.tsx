@@ -3320,14 +3320,19 @@ function App() {
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 pb-2 px-2 items-start">
+              <div className="flex flex-wrap gap-3 pb-2 px-2 items-start">
                 {itemsFiltrados.map((item) => (
                   <Card
                     key={item.id}
-                    className={`relative ${item.tipo === "coleccion"
-                      ? "hover:shadow-md transition-all duration-300"
-                      : (!item.backgroundColor ? "bg-secondary/40 hover:bg-secondary/60 border-border/80" : "")
-                      } ${!item.backgroundColor && item.tipo === "coleccion" ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20" : ""} hover:shadow-lg transition-all duration-300 hover:border-primary/50 group backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px] w-full`}
+                    className={`relative ${
+                      // Base styles and conditional width logic
+                      item.tipo === "coleccion"
+                        ? "lg:w-[calc(33.333%_-_8px)] xl:w-[calc(25%_-_9px)] 2xl:w-[calc(20%_-_9.6px)]"
+                        : "lg:w-[calc(50%_-_6px)] xl:w-[calc(33.333%_-_8px)] 2xl:w-[calc(25%_-_9px)]"
+                      } w-full sm:w-[calc(50%_-_6px)] md:w-[calc(50%_-_6px)] ${item.tipo === "coleccion"
+                        ? "hover:shadow-md transition-all duration-300"
+                        : (!item.backgroundColor ? "bg-secondary/40 hover:bg-secondary/60 border-border/80" : "")
+                      } ${!item.backgroundColor && item.tipo === "coleccion" ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20" : ""} hover:shadow-lg transition-all duration-300 hover:border-primary/50 group backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px]`}
                     style={item.backgroundColor ? {
                       backgroundColor: `${item.backgroundColor}25`, // 15 = ~8% opacity
                       borderColor: `${item.backgroundColor}60`, // 40 = 25% opacity
