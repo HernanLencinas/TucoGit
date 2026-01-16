@@ -3601,6 +3601,14 @@ function App() {
                 setActiveRepository(null);
                 setViewMode("list");
               }}
+              onClose={() => {
+                setRepositoriesMinimizados(prev => prev.filter(r => r.id !== repo.id));
+                // Si estamos viendo este repositorio, volver a la lista
+                if (activeRepository?.id === repo.id) {
+                  setActiveRepository(null);
+                  setViewMode("list");
+                }
+              }}
             />
           </div>
         ))}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GitBranch, RotateCw, Search, Download, Upload, ChevronDown, Plus, Trash2, Archive, Tag, Undo2, GitMerge, AlertCircle, RefreshCw, Lock, Info, Code, ExternalLink } from 'lucide-react';
+import { GitBranch, RotateCw, Search, Download, Upload, ChevronDown, Plus, Trash2, Archive, Tag, Undo2, GitMerge, AlertCircle, RefreshCw, Lock, Info, Code, ExternalLink, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -18,9 +18,10 @@ interface RepositoryDetailsProps {
     ideIcon?: React.ReactNode;
     onOpenInIDE?: (item: FolderItem) => void;
     onMinimize?: () => void;
+    onClose?: () => void;
 }
 
-export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository, configPath, editorIDESeleccionado, ideIcon, onOpenInIDE, onMinimize }) => {
+export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository, configPath, editorIDESeleccionado, ideIcon, onOpenInIDE, onMinimize, onClose }) => {
     const { t } = useI18n();
     const { toast } = useToast();
     const [commits, setCommits] = useState<any[]>([]);
@@ -1238,23 +1239,36 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         )}
                     </div>
 
-                    {/* Botón de minimizar dentro del área roja */}
-                    {onMinimize && (
+                    {/* Botones de acción dentro del área roja */}
+                    {(onMinimize || onClose) && (
                         <div
-                            className="flex items-center gap-2 pointer-events-auto pt-2"
+                            className="flex items-center gap-1 pointer-events-auto pt-2"
                             style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
                         >
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={onMinimize}
-                                className="text-white hover:text-white/80 hover:bg-white/20 h-6 w-6 p-0"
-                                title={t('repositories.tooltips.minimize')}
-                            >
-                                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
-                                </svg>
-                            </Button>
+                            {onMinimize && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={onMinimize}
+                                    className="text-white hover:text-white/80 hover:bg-white/20 h-6 w-6 p-0"
+                                    title={t('repositories.tooltips.minimize')}
+                                >
+                                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+                                    </svg>
+                                </Button>
+                            )}
+                            {onClose && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={onClose}
+                                    className="text-white hover:text-white/80 hover:bg-white/20 h-6 w-6 p-0"
+                                    title={t('common.close')}
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            )}
                         </div>
                     )}
                 </div>
@@ -1276,19 +1290,32 @@ export const RepositoryDetails: React.FC<RepositoryDetailsProps> = ({ repository
                         </div>
                     </div>
 
-                    {onMinimize && (
-                        <div className="flex items-center gap-2">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={onMinimize}
-                                className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800"
-                                title={t('repositories.tooltips.minimize')}
-                            >
-                                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
-                                </svg>
-                            </Button>
+                    {(onMinimize || onClose) && (
+                        <div className="flex items-center gap-1">
+                            {onMinimize && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={onMinimize}
+                                    className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 h-8 w-8 p-0"
+                                    title={t('repositories.tooltips.minimize')}
+                                >
+                                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+                                    </svg>
+                                </Button>
+                            )}
+                            {onClose && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={onClose}
+                                    className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 h-8 w-8 p-0"
+                                    title={t('common.close')}
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            )}
                         </div>
                     )}
                 </div>
