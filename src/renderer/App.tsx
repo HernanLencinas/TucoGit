@@ -5350,35 +5350,7 @@ function App() {
                 </CardContent>
               </Card>
 
-              {/* Información del Sistema */}
-              {window.electronAPI?.versions && (
-                <Card className="border-2">
-                  <CardHeader className="pb-3">
-                    <div>
-                      <CardTitle className="text-base">{t('settings.updates.systemInfo.title')}</CardTitle>
-                      <CardDescription className="text-xs mt-1">
-                        {t('settings.updates.systemInfo.description')}
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.platform')}</div>
-                        <div className="text-sm font-semibold font-mono">{window.electronAPI.platform || 'N/A'}</div>
-                      </div>
-                      <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.electron')}</div>
-                        <div className="text-sm font-semibold font-mono">v{window.electronAPI.versions.electron || 'N/A'}</div>
-                      </div>
-                      <div className="p-3 rounded-lg bg-muted/50 border">
-                        <div className="text-xs text-muted-foreground mb-1">{t('settings.updates.systemInfo.chrome')}</div>
-                        <div className="text-sm font-semibold font-mono">v{window.electronAPI.versions.chrome || 'N/A'}</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+
 
               {/* Nota sobre Actualizaciones */}
               <Card className="border-2 border-primary/20 bg-primary/5">
