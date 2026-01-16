@@ -164,7 +164,13 @@
         "description": "すべての設定を削除し、デフォルト値を復元します。この操作は元に戻せません。",
         "warning": "警告",
         "warningMessage": "この操作により、すべての設定、接続、保存された設定が削除されます。",
-        "restoreConfig": "設定を復元"
+        "restoreConfig": "設定を復元",
+        "modal": {
+          "title": "設定をリセット",
+          "description": "この操作は取り消せません",
+          "warningMessage": "本当にすべての設定をリセットしてもよろしいですか？この操作により、すべてのリポジトリ、接続、および設定が削除されます。この操作は永続的であり、元に戻すことはできません。",
+          "confirm": "設定を復元"
+        }
       },
       "purgeCache": {
         "title": "リポジトリキャッシュをパージ",
@@ -185,7 +191,27 @@
         "description": "異なるリポジトリで使用する複数のユーザーアイデンティティを管理",
         "newIdentity": "新しいアイデンティティ",
         "noIdentities": "アイデンティティが設定されていません",
-        "addIdentity": "アイデンティティを追加して開始"
+        "addIdentity": "アイデンティティを追加して開始",
+        "modal": {
+          "title": "新しいアイデンティティ",
+          "editTitle": "アイデンティティを編集",
+          "description": "Gitの新しいユーザーアイデンティティを追加",
+          "editDescription": "アイデンティティ情報を変更",
+          "fullName": {
+            "label": "フルネーム",
+            "required": "（必須）",
+            "placeholder": "あなたのフルネーム"
+          },
+          "email": {
+            "label": "メール",
+            "required": "（必須）",
+            "placeholder": "your.email@example.com",
+            "error": "有効なメールアドレスを入力してください"
+          },
+          "add": "追加",
+          "deleteTitle": "アイデンティティを削除",
+          "deleteDescription": "このアイデンティティを削除してもよろしいですか？この操作は元に戻せません。"
+        }
       },
       "commitBehavior": {
         "title": "コミットボタンの動作",
@@ -818,11 +844,6 @@
       "newBranch": "新しいブランチ",
       "newTag": "新しいタグ",
       "actions": "アクション"
-    },
-    "search": {
-      "placeholder": "コミットを検索（メッセージ、作成者、ハッシュ）...",
-      "clear": "クリア",
-      "commits": "コミット"
     },
     "newBranchModal": {
       "title": "新しいブランチ",

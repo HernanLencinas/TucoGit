@@ -165,7 +165,13 @@
         "description": "删除所有配置并恢复默认值。此操作无法撤销。",
         "warning": "警告",
         "warningMessage": "此操作将删除您的所有配置、连接和保存的偏好设置。",
-        "restoreConfig": "恢复配置"
+        "restoreConfig": "恢复配置",
+        "modal": {
+          "title": "重置配置",
+          "description": "此操作无法撤消",
+          "warningMessage": "您确定要重置所有配置吗？此操作将删除所有仓库、连接和偏好设置。此操作是永久性的，无法撤消。",
+          "confirm": "恢复配置"
+        }
       },
       "purgeCache": {
         "title": "清除仓库缓存",
@@ -186,7 +192,27 @@
         "description": "管理多个用户身份以在不同仓库中使用",
         "newIdentity": "新身份",
         "noIdentities": "未配置身份",
-        "addIdentity": "添加身份以开始"
+        "addIdentity": "添加身份以开始",
+        "modal": {
+          "title": "新身份",
+          "editTitle": "编辑身份",
+          "description": "添加新的 Git 用户身份",
+          "editDescription": "修改身份信息",
+          "fullName": {
+            "label": "全名",
+            "required": "（必填）",
+            "placeholder": "您的全名"
+          },
+          "email": {
+            "label": "电子邮件",
+            "required": "（必填）",
+            "placeholder": "your.email@example.com",
+            "error": "请输入有效的电子邮件地址"
+          },
+          "add": "添加",
+          "deleteTitle": "删除身份",
+          "deleteDescription": "您确定要删除此身份吗？此操作无法撤消。"
+        }
       },
       "commitBehavior": {
         "title": "提交按钮行为",
@@ -819,11 +845,6 @@
       "newBranch": "新建分支",
       "newTag": "新建标签",
       "actions": "操作"
-    },
-    "search": {
-      "placeholder": "搜索提交（消息、作者、哈希）...",
-      "clear": "清除",
-      "commits": "提交"
     },
     "newBranchModal": {
       "title": "新建分支",

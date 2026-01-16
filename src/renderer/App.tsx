@@ -6940,9 +6940,7 @@ function App() {
         mostrarModalRestablecerConfig && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-            onClick={() => {
-              setMostrarModalRestablecerConfig(false);
-            }}
+
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
                 setMostrarModalRestablecerConfig(false);
@@ -6963,10 +6961,10 @@ function App() {
               <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
                 <div className="flex-1">
                   <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                    Restablecer Configuración
+                    {t('settings.data.reset.modal.title')}
                   </CardTitle>
                   <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                    Esta acción no se puede deshacer
+                    {t('settings.data.reset.modal.description')}
                   </CardDescription>
                 </div>
               </CardHeader>
@@ -6975,7 +6973,7 @@ function App() {
                   <p className="text-sm text-amber-800 dark:text-amber-300 font-medium flex items-start gap-2.5">
                     <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
                     <span>
-                      ¿Estás seguro de que deseas restablecer toda la configuración? Esta acción eliminará <span className="font-semibold">todos tus repositorios, conexiones y preferencias</span>. Esta acción es permanente y no se puede deshacer.
+                      {t('settings.data.reset.modal.warningMessage')}
                     </span>
                   </p>
                 </div>
@@ -6988,7 +6986,7 @@ function App() {
                       setMostrarModalRestablecerConfig(false);
                     }}
                   >
-                    Cancelar
+                    {t('common.cancel')}
                   </Button>
                   <Button
                     size="default"
@@ -6996,7 +6994,7 @@ function App() {
                     className="min-w-[180px] bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/25"
                     onClick={confirmarRestablecerConfig}
                   >
-                    Restaurar Configuración
+                    {t('settings.data.reset.modal.confirm')}
                   </Button>
                 </div>
               </CardContent>
@@ -7617,7 +7615,7 @@ function App() {
         mostrarModalPurgarTodo && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-            onClick={() => setMostrarModalPurgarTodo(false)}
+
             onKeyDown={(e) => {
               if (e.key === 'Escape') setMostrarModalPurgarTodo(false);
             }}
@@ -8052,11 +8050,7 @@ function App() {
       {mostrarModalNuevaIdentidad && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-          onClick={() => {
-            setMostrarModalNuevaIdentidad(false);
-            setNombreNuevaIdentidad("");
-            setEmailNuevaIdentidad("");
-          }}
+
           onKeyDown={(e) => {
             if (e.key === 'Escape') {
               setMostrarModalNuevaIdentidad(false);
@@ -8081,26 +8075,26 @@ function App() {
             <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
               <div className="flex-1">
                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                  Nueva Identidad
+                  {t('settings.git.identities.modal.title')}
                 </CardTitle>
                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                  Agrega una nueva identidad de usuario para Git
+                  {t('settings.git.identities.modal.description')}
                 </CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Nombre Completo</span>
+                  <span>{t('settings.git.identities.modal.fullName.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
+                    {t('settings.git.identities.modal.fullName.required')}
                   </span>
                 </label>
                 <input
                   type="text"
                   value={nombreNuevaIdentidad}
                   onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
-                  placeholder="Tu nombre completo"
+                  placeholder={t('settings.git.identities.modal.fullName.placeholder')}
                   className={cn(
                     "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
                     "bg-slate-50 dark:bg-slate-800/50",
@@ -8112,16 +8106,16 @@ function App() {
               </div>
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Correo Electrónico</span>
+                  <span>{t('settings.git.identities.modal.email.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
+                    {t('settings.git.identities.modal.email.required')}
                   </span>
                 </label>
                 <input
                   type="email"
                   value={emailNuevaIdentidad}
                   onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
-                  placeholder="tu.email@ejemplo.com"
+                  placeholder={t('settings.git.identities.modal.email.placeholder')}
                   className={cn(
                     "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
                     "bg-slate-50 dark:bg-slate-800/50",
@@ -8134,7 +8128,7 @@ function App() {
                 {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
                   <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
                     <AlertCircle className="w-4 h-4" />
-                    <span>Por favor ingresa un correo electrónico válido</span>
+                    <span>{t('settings.git.identities.modal.email.error')}</span>
                   </div>
                 )}
               </div>
@@ -8149,7 +8143,7 @@ function App() {
                     setEmailNuevaIdentidad("");
                   }}
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </Button>
                 <Button
                   size="default"
@@ -8186,7 +8180,7 @@ function App() {
                     setEmailNuevaIdentidad("");
                   }}
                 >
-                  Agregar
+                  {t('settings.git.identities.modal.add')}
                 </Button>
               </div>
             </CardContent>
@@ -8230,26 +8224,26 @@ function App() {
             <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
               <div className="flex-1">
                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                  Editar Identidad
+                  {t('settings.git.identities.modal.editTitle')}
                 </CardTitle>
                 <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                  Modifica la información de la identidad
+                  {t('settings.git.identities.modal.editDescription')}
                 </CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Nombre Completo</span>
+                  <span>{t('settings.git.identities.modal.fullName.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
+                    {t('settings.git.identities.modal.fullName.required')}
                   </span>
                 </label>
                 <input
                   type="text"
                   value={nombreNuevaIdentidad}
                   onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
-                  placeholder="Tu nombre completo"
+                  placeholder={t('settings.git.identities.modal.fullName.placeholder')}
                   className={cn(
                     "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
                     "bg-slate-50 dark:bg-slate-800/50",
@@ -8261,16 +8255,16 @@ function App() {
               </div>
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>Correo Electrónico</span>
+                  <span>{t('settings.git.identities.modal.email.label')}</span>
                   <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    (requerido)
+                    {t('settings.git.identities.modal.email.required')}
                   </span>
                 </label>
                 <input
                   type="email"
                   value={emailNuevaIdentidad}
                   onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
-                  placeholder="tu.email@ejemplo.com"
+                  placeholder={t('settings.git.identities.modal.email.placeholder')}
                   className={cn(
                     "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
                     "bg-slate-50 dark:bg-slate-800/50",
@@ -8283,7 +8277,7 @@ function App() {
                 {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
                   <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
                     <AlertCircle className="w-4 h-4" />
-                    <span>Por favor ingresa un correo electrónico válido</span>
+                    <span>{t('settings.git.identities.modal.email.error')}</span>
                   </div>
                 )}
               </div>
@@ -8299,7 +8293,7 @@ function App() {
                     setEmailNuevaIdentidad("");
                   }}
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </Button>
                 <Button
                   size="default"
@@ -8337,7 +8331,7 @@ function App() {
                     setEmailNuevaIdentidad("");
                   }}
                 >
-                  Guardar
+                  {t('common.save')}
                 </Button>
               </div>
             </CardContent>
@@ -8359,9 +8353,9 @@ function App() {
             onClick={(e) => e.stopPropagation()}
           >
             <CardHeader>
-              <CardTitle className="text-lg">Eliminar Identidad</CardTitle>
+              <CardTitle className="text-lg">{t('settings.git.identities.modal.deleteTitle')}</CardTitle>
               <CardDescription>
-                ¿Estás seguro de que deseas eliminar esta identidad? Esta acción no se puede deshacer.
+                {t('settings.git.identities.modal.deleteDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -8381,7 +8375,7 @@ function App() {
                     setIdentidadAEliminar(null);
                   }}
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </Button>
                 <Button
                   size="sm"
@@ -8410,7 +8404,7 @@ function App() {
                     setIdentidadAEliminar(null);
                   }}
                 >
-                  Eliminar
+                  {t('common.delete')}
                 </Button>
               </div>
             </CardContent>

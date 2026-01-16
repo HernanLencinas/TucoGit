@@ -163,7 +163,13 @@
         "description": "Exclui toda a configuração e restaura os valores padrão. Esta ação não pode ser desfeita.",
         "warning": "Aviso",
         "warningMessage": "Esta ação excluirá todas as suas configurações, conexões e preferências salvas.",
-        "restoreConfig": "Restaurar Configuração"
+        "restoreConfig": "Restaurar Configuração",
+        "modal": {
+          "title": "Redefinir Configuração",
+          "description": "Esta ação não pode ser desfeita",
+          "warningMessage": "Tem certeza de que deseja redefinir todas as configurações? Esta ação removerá todos os seus repositórios, conexões e preferências. Esta ação é permanente e não pode ser desfeita.",
+          "confirm": "Restaurar Configuração"
+        }
       },
       "purgeCache": {
         "title": "Limpar Cache do Repositório",
@@ -184,7 +190,27 @@
         "description": "Gerencie múltiplas identidades de usuário para usar em diferentes repositórios",
         "newIdentity": "Nova Identidade",
         "noIdentities": "Nenhuma identidade configurada",
-        "addIdentity": "Adicione uma identidade para começar"
+        "addIdentity": "Adicione uma identidade para começar",
+        "modal": {
+          "title": "Nova Identidade",
+          "editTitle": "Editar Identidade",
+          "description": "Adicionar uma nova identidade de usuário para Git",
+          "editDescription": "Modificar informações de identidade",
+          "fullName": {
+            "label": "Nome Completo",
+            "required": "(obrigatório)",
+            "placeholder": "Seu nome completo"
+          },
+          "email": {
+            "label": "E-mail",
+            "required": "(obrigatório)",
+            "placeholder": "seu.email@exemplo.com",
+            "error": "Por favor, insira um endereço de e-mail válido"
+          },
+          "add": "Adicionar",
+          "deleteTitle": "Excluir Identidade",
+          "deleteDescription": "Tem certeza de que deseja excluir esta identidade? Esta ação não pode ser desfeita."
+        }
       },
       "commitBehavior": {
         "title": "Comportamento do Botão Commit",
@@ -823,11 +849,6 @@
       "newBranch": "Nova Branch",
       "newTag": "Nova Tag",
       "actions": "Ações"
-    },
-    "search": {
-      "placeholder": "Pesquisar commits (mensagem, autor, hash)...",
-      "clear": "Limpar",
-      "commits": "commits"
     },
     "newBranchModal": {
       "title": "Nova Branch",

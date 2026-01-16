@@ -162,7 +162,13 @@
         "description": "Supprime toute la configuration et restaure les valeurs par défaut. Cette action ne peut pas être annulée.",
         "warning": "Avertissement",
         "warningMessage": "Cette action supprimera toutes vos configurations, connexions et préférences enregistrées.",
-        "restoreConfig": "Restaurer la configuration"
+        "restoreConfig": "Restaurer la configuration",
+        "modal": {
+          "title": "Réinitialiser la configuration",
+          "description": "Cette action ne peut pas être annulée",
+          "warningMessage": "Êtes-vous sûr de vouloir réinitialiser toute la configuration ? Cette action supprimera tous vos dépôts, connexions et préférences. Cette action est permanente et ne peut pas être annulée.",
+          "confirm": "Restaurer la configuration"
+        }
       },
       "purgeCache": {
         "title": "Purger le cache du dépôt",
@@ -183,7 +189,27 @@
         "description": "Gérez plusieurs identités utilisateur à utiliser dans différents dépôts",
         "newIdentity": "Nouvelle identité",
         "noIdentities": "Aucune identité configurée",
-        "addIdentity": "Ajoutez une identité pour commencer"
+        "addIdentity": "Ajoutez une identité pour commencer",
+        "modal": {
+          "title": "Nouvelle identité",
+          "editTitle": "Modifier l'identité",
+          "description": "Ajouter une nouvelle identité utilisateur pour Git",
+          "editDescription": "Modifier les informations d'identité",
+          "fullName": {
+            "label": "Nom complet",
+            "required": "(requis)",
+            "placeholder": "Votre nom complet"
+          },
+          "email": {
+            "label": "E-mail",
+            "required": "(requis)",
+            "placeholder": "votre.email@exemple.com",
+            "error": "Veuillez entrer une adresse e-mail valide"
+          },
+          "add": "Ajouter",
+          "deleteTitle": "Supprimer l'identité",
+          "deleteDescription": "Êtes-vous sûr de vouloir supprimer cette identité ? Cette action ne peut pas être annulée."
+        }
       },
       "commitBehavior": {
         "title": "Comportement du bouton Commit",
@@ -822,11 +848,6 @@
       "newBranch": "Nouvelle branche",
       "newTag": "Nouveau tag",
       "actions": "Actions"
-    },
-    "search": {
-      "placeholder": "Rechercher des commits (message, auteur, hash)...",
-      "clear": "Effacer",
-      "commits": "commits"
     },
     "newBranchModal": {
       "title": "Nouvelle branche",
