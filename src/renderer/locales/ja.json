@@ -579,52 +579,52 @@
     }
   },
   "repositories": {
-    "title": "Repositories",
-    "myRepositories": "My repositories",
+    "title": "リポジトリ",
+    "myRepositories": "マイリポジトリ",
     "search": {
-      "placeholder": "Search collections and repositories...",
-      "clear": "Clear",
-      "clearSearch": "Clear search",
-      "noResults": "No results found for \"{{query}}\"",
-      "allCollections": "All collections"
+      "placeholder": "コレクションとリポジトリを検索...",
+      "clear": "クリア",
+      "clearSearch": "検索をクリア",
+      "noResults": "\"{{query}}\" の検索結果が見つかりません",
+      "allCollections": "すべてのコレクション"
     },
     "sort": {
-      "title": "Sort",
-      "ascending": "Ascending",
-      "descending": "Descending",
-      "none": "No sort"
+      "title": "並び替え",
+      "ascending": "昇順",
+      "descending": "降順",
+      "none": "並び替えなし"
     },
     "actions": {
-      "refresh": "Refresh",
-      "moreActions": "More actions",
-      "cloneAll": "Clone all",
-      "newCollection": "New Collection",
-      "newRepository": "New Repository",
-      "edit": "Edit",
-      "delete": "Delete",
-      "clone": "Clone",
-      "reclone": "Re-clone",
-      "openIn": "Open in {{ide}}",
-      "private": "Private"
+      "refresh": "更新",
+      "moreActions": "その他のアクション",
+      "cloneAll": "すべてクローン",
+      "newCollection": "新しいコレクション",
+      "newRepository": "新しいリポジトリ",
+      "edit": "編集",
+      "delete": "削除",
+      "clone": "クローン",
+      "reclone": "再クローン",
+      "openIn": "{{ide}}で開く",
+      "private": "プライベート"
     },
     "empty": {
-      "title": "No repositories defined",
-      "description": "To get started, click the \"New collection\" button to add your first collection.",
-      "newCollection": "New collection",
-      "newRepository": "New repository"
+      "title": "リポジトリが定義されていません",
+      "description": "開始するには、「新しいコレクション」ボタンをクリックして最初のコレクションを追加してください。",
+      "newCollection": "新しいコレクション",
+      "newRepository": "新しいリポジトリ"
     },
     "collection": {
-      "element": "element",
-      "elements": "elements",
-      "collection": "collection",
-      "collections": "collections",
-      "repository": "repository",
-      "repositories": "repositories"
+      "element": "要素",
+      "elements": "要素",
+      "collection": "コレクション",
+      "collections": "コレクション",
+      "repository": "リポジトリ",
+      "repositories": "リポジトリ"
     },
     "repository": {
-      "notCloned": "Not cloned locally",
-      "gettingGitInfo": "Getting Git information...",
-      "currentBranch": "Current branch",
+      "notCloned": "ローカルにクローンされていません",
+      "gettingGitInfo": "Git情報を取得中...",
+      "currentBranch": "現在のブランチ",
       "uncommittedChanges": "コミットされていないローカル変更",
       "pendingPush": "アップロード待ち（Push）",
       "pendingPull": "ダウンロード待ち（Pull）"
