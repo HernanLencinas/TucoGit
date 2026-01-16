@@ -634,6 +634,27 @@
       "pendingPush": "Pendente de envio (Push)",
       "pendingPull": "Pendente de download (Pull)"
     },
+    "colors": {
+      "default": "Padrão",
+      "red": "Vermelho",
+      "orange": "Laranja",
+      "amber": "Âmbar",
+      "yellow": "Amarelo",
+      "lime": "Lima",
+      "green": "Verde",
+      "emerald": "Esmeralda",
+      "teal": "Cerceta",
+      "cyan": "Ciano",
+      "sky": "Céu",
+      "blue": "Azul",
+      "indigo": "Índigo",
+      "violet": "Violeta",
+      "purple": "Roxo",
+      "fuchsia": "Fúcsia",
+      "pink": "Rosa",
+      "rose": "Rosa Escuro",
+      "slate": "Ardósia"
+    },
     "newCollectionModal": {
       "title": "Nova Coleção",
       "description": "Organize seus repositórios em uma nova coleção personalizada",

@@ -630,6 +630,27 @@
       "pendingPush": "待上传（推送）",
       "pendingPull": "待下载（拉取）"
     },
+    "colors": {
+      "default": "默认",
+      "red": "红色",
+      "orange": "橙色",
+      "amber": "琥珀色",
+      "yellow": "黄色",
+      "lime": "青柠色",
+      "green": "绿色",
+      "emerald": "祖母绿",
+      "teal": "青色",
+      "cyan": "青色",
+      "sky": "天蓝",
+      "blue": "蓝色",
+      "indigo": "靛蓝",
+      "violet": "紫罗兰",
+      "purple": "紫色",
+      "fuchsia": "紫红色",
+      "pink": "粉色",
+      "rose": "玫瑰红",
+      "slate": "板岩色"
+    },
     "newCollectionModal": {
       "title": "新建集合",
       "description": "将您的仓库组织到新的自定义集合中",

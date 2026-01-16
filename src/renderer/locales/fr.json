@@ -633,6 +633,27 @@
       "pendingPush": "En attente d'envoi (Push)",
       "pendingPull": "En attente de téléchargement (Pull)"
     },
+    "colors": {
+      "default": "Défaut",
+      "red": "Rouge",
+      "orange": "Orange",
+      "amber": "Ambre",
+      "yellow": "Jaune",
+      "lime": "Citron vert",
+      "green": "Vert",
+      "emerald": "Émeraude",
+      "teal": "Sarcelle",
+      "cyan": "Cyan",
+      "sky": "Ciel",
+      "blue": "Bleu",
+      "indigo": "Indigo",
+      "violet": "Violet",
+      "purple": "Pourpre",
+      "fuchsia": "Fuchsia",
+      "pink": "Rose",
+      "rose": "Rose vif",
+      "slate": "Ardoise"
+    },
     "newCollectionModal": {
       "title": "Nouvelle collection",
       "description": "Organisez vos dépôts dans une nouvelle collection personnalisée",

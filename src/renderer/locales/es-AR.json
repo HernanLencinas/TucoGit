@@ -639,6 +639,27 @@
       "pendingPush": "Pendientes de subida (Push)",
       "pendingPull": "Pendientes de bajada (Pull)"
     },
+    "colors": {
+      "default": "Predeterminado",
+      "red": "Rojo",
+      "orange": "Naranja",
+      "amber": "Ámbar",
+      "yellow": "Amarillo",
+      "lime": "Lima",
+      "green": "Verde",
+      "emerald": "Esmeralda",
+      "teal": "Turquesa",
+      "cyan": "Cian",
+      "sky": "Cielo",
+      "blue": "Azul",
+      "indigo": "Índigo",
+      "violet": "Violeta",
+      "purple": "Púrpura",
+      "fuchsia": "Fucsia",
+      "pink": "Rosa",
+      "rose": "Rosa Fuerte",
+      "slate": "Pizarra"
+    },
     "newCollectionModal": {
       "title": "Nueva Colección",
       "description": "Organiza tus repositorios en una nueva colección personalizada",

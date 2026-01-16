@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/lib/use-toast";
 import { cn } from "@/lib/utils";
-import { Home, Bell, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock, MoreVertical, Globe } from "lucide-react";
+import { Home, Bell, FolderGit2, Settings, Sun, Moon, Calendar, Server, Database, Cloud, Link2, CheckCircle2, AlertCircle, Folder, FolderOpen, File, Plus, ChevronRight, Search, X, ArrowUpDown, ArrowUp, ArrowDown, ExternalLink, Sliders, Info, FolderUp, Clock, Trash2, Pencil, Star, GitBranch, Download, Upload, Palette, Check, Eye, EyeOff, Plug, RefreshCw, Users, User, XCircle, CircleDot, Mail, Shield, Code, FileText, Heart, Sparkles, Lock, MoreVertical, Globe, ChevronDown } from "lucide-react";
 import { themes, applyTheme, type ThemeName, type ThemeMode } from "@/renderer/utils/themes";
 import type { Connection, FolderItem, TabType, ConfigTabType } from "@/renderer/types";
 import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
@@ -26,6 +26,28 @@ const IDENTIDAD_DEFAULT: GitIdentity = {
   nombre: "TucoGit",
   email: "git@tuco.com"
 };
+
+const COLLECTION_COLORS = [
+  { name: 'repositories.colors.default', value: '' },
+  { name: 'repositories.colors.red', value: '#ef4444' },
+  { name: 'repositories.colors.orange', value: '#f97316' },
+  { name: 'repositories.colors.amber', value: '#f59e0b' },
+  { name: 'repositories.colors.yellow', value: '#eab308' },
+  { name: 'repositories.colors.lime', value: '#84cc16' },
+  { name: 'repositories.colors.green', value: '#22c55e' },
+  { name: 'repositories.colors.emerald', value: '#10b981' },
+  { name: 'repositories.colors.teal', value: '#14b8a6' },
+  { name: 'repositories.colors.cyan', value: '#06b6d4' },
+  { name: 'repositories.colors.sky', value: '#0ea5e9' },
+  { name: 'repositories.colors.blue', value: '#3b82f6' },
+  { name: 'repositories.colors.indigo', value: '#6366f1' },
+  { name: 'repositories.colors.violet', value: '#8b5cf6' },
+  { name: 'repositories.colors.purple', value: '#a855f7' },
+  { name: 'repositories.colors.fuchsia', value: '#d946ef' },
+  { name: 'repositories.colors.pink', value: '#ec4899' },
+  { name: 'repositories.colors.rose', value: '#f43f5e' },
+  { name: 'repositories.colors.slate', value: '#64748b' },
+];
 
 function App() {
   const { t, changeLanguage, initializeLanguage, currentLanguage } = useI18n();
@@ -70,6 +92,8 @@ function App() {
   const [coleccionAEditar, setColeccionAEditar] = useState<FolderItem | null>(null);
   const [nombreEditarColeccion, setNombreEditarColeccion] = useState("");
   const [descripcionEditarColeccion, setDescripcionEditarColeccion] = useState("");
+  const [colorEditarColeccion, setColorEditarColeccion] = useState("");
+  const [mostrarColorPicker, setMostrarColorPicker] = useState(false);
   const [editandoColeccion, setEditandoColeccion] = useState(false);
   const [errorNombreEditar, setErrorNombreEditar] = useState<string | null>(null);
   const [errorDescripcionEditar, setErrorDescripcionEditar] = useState<string | null>(null);
@@ -2441,6 +2465,7 @@ function App() {
     setColeccionAEditar(coleccion);
     setNombreEditarColeccion(coleccion.nombre);
     setDescripcionEditarColeccion(coleccion.descripcion || "");
+    setColorEditarColeccion(coleccion.backgroundColor || "");
     setMostrarModalEditarColeccion(true);
   };
 
@@ -2508,6 +2533,7 @@ function App() {
               ...item,
               nombre: nombreTrimmed,
               descripcion: descripcionTrimmed || undefined,
+              backgroundColor: colorEditarColeccion || undefined,
             };
           }
           if (item.hijos) {
@@ -3292,9 +3318,13 @@ function App() {
                   <Card
                     key={item.id}
                     className={`relative ${item.tipo === "coleccion"
-                      ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20"
+                      ? "hover:shadow-md transition-all duration-300"
                       : "bg-secondary/40 hover:bg-secondary/60 border-border/80"
-                      } hover:shadow-lg transition-all duration-300 hover:border-primary/50 group backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px] w-full`}
+                      } ${!item.backgroundColor && item.tipo === "coleccion" ? "bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20" : ""} hover:shadow-lg transition-all duration-300 hover:border-primary/50 group backdrop-blur-sm flex flex-col overflow-hidden h-[180px] hover:h-[228px] w-full`}
+                    style={item.tipo === "coleccion" && item.backgroundColor ? {
+                      backgroundColor: `${item.backgroundColor}15`, // 15 = ~8% opacity
+                      borderColor: `${item.backgroundColor}40`, // 40 = 25% opacity
+                    } : undefined}
                   >
                     <div
                       className="flex-1 flex flex-col min-h-0 cursor-pointer"
@@ -7357,6 +7387,73 @@ function App() {
                 </div>
               </div>
 
+              <div className="space-y-3">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <span>Color de fondo</span>
+                </label>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setMostrarColorPicker(!mostrarColorPicker)}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200 flex items-center justify-between",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2 border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                    )}
+                  >
+                    <div className="flex items-center gap-2">
+                      {colorEditarColeccion ? (
+                        <div
+                          className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-700"
+                          style={{ backgroundColor: colorEditarColeccion }}
+                        />
+                      ) : (
+                        <div className="w-5 h-5 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                      )}
+                      <span>
+                        {t(COLLECTION_COLORS.find(c => c.value === colorEditarColeccion)?.name || 'repositories.colors.default')}
+                      </span>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-slate-500" />
+                  </button>
+
+                  {mostrarColorPicker && (
+                    <div className="absolute top-full left-0 right-0 mt-2 p-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl z-50 max-h-60 overflow-y-auto">
+                      <div className="grid grid-cols-1 gap-1">
+                        {COLLECTION_COLORS.map((color) => (
+                          <button
+                            key={color.name}
+                            onClick={() => {
+                              setColorEditarColeccion(color.value);
+                              setMostrarColorPicker(false);
+                            }}
+                            className={cn(
+                              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors w-full text-left",
+                              colorEditarColeccion === color.value
+                                ? "bg-primary/10 text-primary"
+                                : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                            )}
+                          >
+                            {color.value ? (
+                              <div
+                                className="w-4 h-4 rounded-full border border-slate-200 dark:border-slate-700"
+                                style={{ backgroundColor: color.value }}
+                              />
+                            ) : (
+                              <div className="w-4 h-4 rounded-full border border-dashed border-slate-400 bg-transparent" />
+                            )}
+                            {t(color.name)}
+                            {colorEditarColeccion === color.value && (
+                              <Check className="w-4 h-4 ml-auto" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
                 <Button
                   variant="outline"
@@ -7393,9 +7490,10 @@ function App() {
                 </Button>
               </div>
             </CardContent>
-          </Card>
-        </div>
-      )}
+          </Card >
+        </div >
+      )
+      }
 
       {/* Modal Confirmar Re-clonación */}
       {
@@ -8019,378 +8117,386 @@ function App() {
       }
 
       {/* Modal para nueva identidad */}
-      {mostrarModalNuevaIdentidad && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+      {
+        mostrarModalNuevaIdentidad && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
 
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setMostrarModalNuevaIdentidad(false);
-              setNombreNuevaIdentidad("");
-              setEmailNuevaIdentidad("");
-            }
-          }}
-          tabIndex={-1}
-        >
-          <Card
-            className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
-            onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
-                e.stopPropagation();
                 setMostrarModalNuevaIdentidad(false);
                 setNombreNuevaIdentidad("");
                 setEmailNuevaIdentidad("");
               }
             }}
+            tabIndex={-1}
           >
-            <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-              <div className="flex-1">
-                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                  {t('settings.git.identities.modal.title')}
-                </CardTitle>
-                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                  {t('settings.git.identities.modal.description')}
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>{t('settings.git.identities.modal.fullName.label')}</span>
-                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    {t('settings.git.identities.modal.fullName.required')}
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  value={nombreNuevaIdentidad}
-                  onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
-                  placeholder={t('settings.git.identities.modal.fullName.placeholder')}
-                  className={cn(
-                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
-                    "bg-slate-50 dark:bg-slate-800/50",
-                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
-                    "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+            <Card
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarModalNuevaIdentidad(false);
+                  setNombreNuevaIdentidad("");
+                  setEmailNuevaIdentidad("");
+                }
+              }}
+            >
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    {t('settings.git.identities.modal.title')}
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    {t('settings.git.identities.modal.description')}
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 space-y-6">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <span>{t('settings.git.identities.modal.fullName.label')}</span>
+                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                      {t('settings.git.identities.modal.fullName.required')}
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    value={nombreNuevaIdentidad}
+                    onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
+                    placeholder={t('settings.git.identities.modal.fullName.placeholder')}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                    )}
+                    autoFocus
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <span>{t('settings.git.identities.modal.email.label')}</span>
+                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                      {t('settings.git.identities.modal.email.required')}
+                    </span>
+                  </label>
+                  <input
+                    type="email"
+                    value={emailNuevaIdentidad}
+                    onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
+                    placeholder={t('settings.git.identities.modal.email.placeholder')}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      !emailNuevaIdentidad.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())
+                        ? "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                        : "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
+                    )}
+                  />
+                  {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
+                    <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>{t('settings.git.identities.modal.email.error')}</span>
+                    </div>
                   )}
-                  autoFocus
-                />
-              </div>
-              <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>{t('settings.git.identities.modal.email.label')}</span>
-                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    {t('settings.git.identities.modal.email.required')}
-                  </span>
-                </label>
-                <input
-                  type="email"
-                  value={emailNuevaIdentidad}
-                  onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
-                  placeholder={t('settings.git.identities.modal.email.placeholder')}
-                  className={cn(
-                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
-                    "bg-slate-50 dark:bg-slate-800/50",
-                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
-                    !emailNuevaIdentidad.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())
-                      ? "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
-                      : "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
-                  )}
-                />
-                {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
-                  <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>{t('settings.git.identities.modal.email.error')}</span>
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
-                <Button
-                  variant="outline"
-                  size="default"
-                  className="min-w-[100px]"
-                  onClick={() => {
-                    setMostrarModalNuevaIdentidad(false);
-                    setNombreNuevaIdentidad("");
-                    setEmailNuevaIdentidad("");
-                  }}
-                >
-                  {t('common.cancel')}
-                </Button>
-                <Button
-                  size="default"
-                  className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())}
-                  onClick={async () => {
-                    if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
-                      showToast('Por favor completa todos los campos', 'error');
-                      return;
-                    }
-
-                    const nuevaIdentidad: GitIdentity = {
-                      id: Date.now().toString(),
-                      nombre: nombreNuevaIdentidad.trim(),
-                      email: emailNuevaIdentidad.trim()
-                    };
-
-                    // Asegurar que la identidad por defecto siempre esté primero
-                    const otrasIdentidades = gitIdentities.filter(id => id.id !== IDENTIDAD_DEFAULT_ID);
-                    const identidadDefault = gitIdentities.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
-                    const nuevasIdentidades = [identidadDefault, ...otrasIdentidades, nuevaIdentidad];
-                    setGitIdentities(nuevasIdentidades);
-
-                    if (window.electronAPI?.writeConfig) {
-                      try {
-                        await window.electronAPI.writeConfig({ gitIdentities: nuevasIdentidades });
-                      } catch (error) {
-                        showToast('Error al guardar identidad', 'error');
+                </div>
+                <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
+                  <Button
+                    variant="outline"
+                    size="default"
+                    className="min-w-[100px]"
+                    onClick={() => {
+                      setMostrarModalNuevaIdentidad(false);
+                      setNombreNuevaIdentidad("");
+                      setEmailNuevaIdentidad("");
+                    }}
+                  >
+                    {t('common.cancel')}
+                  </Button>
+                  <Button
+                    size="default"
+                    className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())}
+                    onClick={async () => {
+                      if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
+                        showToast('Por favor completa todos los campos', 'error');
+                        return;
                       }
-                    }
 
-                    setMostrarModalNuevaIdentidad(false);
-                    setNombreNuevaIdentidad("");
-                    setEmailNuevaIdentidad("");
-                  }}
-                >
-                  {t('settings.git.identities.modal.add')}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                      const nuevaIdentidad: GitIdentity = {
+                        id: Date.now().toString(),
+                        nombre: nombreNuevaIdentidad.trim(),
+                        email: emailNuevaIdentidad.trim()
+                      };
+
+                      // Asegurar que la identidad por defecto siempre esté primero
+                      const otrasIdentidades = gitIdentities.filter(id => id.id !== IDENTIDAD_DEFAULT_ID);
+                      const identidadDefault = gitIdentities.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
+                      const nuevasIdentidades = [identidadDefault, ...otrasIdentidades, nuevaIdentidad];
+                      setGitIdentities(nuevasIdentidades);
+
+                      if (window.electronAPI?.writeConfig) {
+                        try {
+                          await window.electronAPI.writeConfig({ gitIdentities: nuevasIdentidades });
+                        } catch (error) {
+                          showToast('Error al guardar identidad', 'error');
+                        }
+                      }
+
+                      setMostrarModalNuevaIdentidad(false);
+                      setNombreNuevaIdentidad("");
+                      setEmailNuevaIdentidad("");
+                    }}
+                  >
+                    {t('settings.git.identities.modal.add')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )
+      }
 
       {/* Modal para editar identidad */}
-      {mostrarModalEditarIdentidad && identidadAEditar && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
-          onClick={() => {
-            setMostrarModalEditarIdentidad(false);
-            setIdentidadAEditar(null);
-            setNombreNuevaIdentidad("");
-            setEmailNuevaIdentidad("");
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
+      {
+        mostrarModalEditarIdentidad && identidadAEditar && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
+            onClick={() => {
               setMostrarModalEditarIdentidad(false);
               setIdentidadAEditar(null);
               setNombreNuevaIdentidad("");
               setEmailNuevaIdentidad("");
-            }
-          }}
-          tabIndex={-1}
-        >
-          <Card
-            className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
-            onClick={(e) => e.stopPropagation()}
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Escape') {
-                e.stopPropagation();
                 setMostrarModalEditarIdentidad(false);
                 setIdentidadAEditar(null);
                 setNombreNuevaIdentidad("");
                 setEmailNuevaIdentidad("");
               }
             }}
+            tabIndex={-1}
           >
-            <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
-              <div className="flex-1">
-                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
-                  {t('settings.git.identities.modal.editTitle')}
-                </CardTitle>
-                <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
-                  {t('settings.git.identities.modal.editDescription')}
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>{t('settings.git.identities.modal.fullName.label')}</span>
-                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    {t('settings.git.identities.modal.fullName.required')}
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  value={nombreNuevaIdentidad}
-                  onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
-                  placeholder={t('settings.git.identities.modal.fullName.placeholder')}
-                  className={cn(
-                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
-                    "bg-slate-50 dark:bg-slate-800/50",
-                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
-                    "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+            <Card
+              className="w-full max-w-2xl mx-4 bg-background border border-slate-200/80 dark:border-slate-700/80 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-2 duration-300"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  e.stopPropagation();
+                  setMostrarModalEditarIdentidad(false);
+                  setIdentidadAEditar(null);
+                  setNombreNuevaIdentidad("");
+                  setEmailNuevaIdentidad("");
+                }
+              }}
+            >
+              <CardHeader className="pb-5 border-b border-slate-200/60 dark:border-slate-700/60 bg-gradient-to-r from-slate-50/50 to-transparent dark:from-slate-800/30">
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">
+                    {t('settings.git.identities.modal.editTitle')}
+                  </CardTitle>
+                  <CardDescription className="text-sm mt-1.5 text-slate-600 dark:text-slate-400">
+                    {t('settings.git.identities.modal.editDescription')}
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 space-y-6">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <span>{t('settings.git.identities.modal.fullName.label')}</span>
+                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                      {t('settings.git.identities.modal.fullName.required')}
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    value={nombreNuevaIdentidad}
+                    onChange={(e) => setNombreNuevaIdentidad(e.target.value)}
+                    placeholder={t('settings.git.identities.modal.fullName.placeholder')}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                    )}
+                    autoFocus
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <span>{t('settings.git.identities.modal.email.label')}</span>
+                    <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
+                      {t('settings.git.identities.modal.email.required')}
+                    </span>
+                  </label>
+                  <input
+                    type="email"
+                    value={emailNuevaIdentidad}
+                    onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
+                    placeholder={t('settings.git.identities.modal.email.placeholder')}
+                    className={cn(
+                      "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
+                      "bg-slate-50 dark:bg-slate-800/50",
+                      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+                      !emailNuevaIdentidad.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())
+                        ? "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
+                        : "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
+                    )}
+                  />
+                  {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
+                    <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>{t('settings.git.identities.modal.email.error')}</span>
+                    </div>
                   )}
-                  autoFocus
-                />
-              </div>
-              <div className="space-y-3">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                  <span>{t('settings.git.identities.modal.email.label')}</span>
-                  <span className="text-xs font-normal text-slate-500 dark:text-slate-400">
-                    {t('settings.git.identities.modal.email.required')}
-                  </span>
-                </label>
-                <input
-                  type="email"
-                  value={emailNuevaIdentidad}
-                  onChange={(e) => setEmailNuevaIdentidad(e.target.value)}
-                  placeholder={t('settings.git.identities.modal.email.placeholder')}
-                  className={cn(
-                    "w-full px-4 py-3 text-sm rounded-xl border transition-all duration-200",
-                    "bg-slate-50 dark:bg-slate-800/50",
-                    "focus:outline-none focus:ring-2 focus:ring-offset-2",
-                    !emailNuevaIdentidad.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())
-                      ? "border-slate-200 dark:border-slate-700 focus:ring-primary focus:border-primary"
-                      : "border-red-300 dark:border-red-700/50 focus:ring-red-500 focus:border-red-500"
-                  )}
-                />
-                {emailNuevaIdentidad.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim()) && (
-                  <div className="flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 animate-in slide-in-from-top-1">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>{t('settings.git.identities.modal.email.error')}</span>
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
-                <Button
-                  variant="outline"
-                  size="default"
-                  className="min-w-[100px]"
-                  onClick={() => {
-                    setMostrarModalEditarIdentidad(false);
-                    setIdentidadAEditar(null);
-                    setNombreNuevaIdentidad("");
-                    setEmailNuevaIdentidad("");
-                  }}
-                >
-                  {t('common.cancel')}
-                </Button>
-                <Button
-                  size="default"
-                  className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())}
-                  onClick={async () => {
-                    if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
-                      showToast('Por favor completa todos los campos', 'error');
-                      return;
-                    }
-
-                    const identidadesActualizadas = gitIdentities.map(identidad =>
-                      identidad.id === identidadAEditar.id
-                        ? { ...identidad, nombre: nombreNuevaIdentidad.trim(), email: emailNuevaIdentidad.trim() }
-                        : identidad
-                    );
-
-                    // Asegurar que la identidad por defecto siempre esté primero
-                    const identidadDefault = identidadesActualizadas.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
-                    const otrasIdentidades = identidadesActualizadas.filter(id => id.id !== IDENTIDAD_DEFAULT_ID);
-                    const identidadesOrdenadas = [identidadDefault, ...otrasIdentidades];
-                    setGitIdentities(identidadesOrdenadas);
-
-                    if (window.electronAPI?.writeConfig) {
-                      try {
-                        await window.electronAPI.writeConfig({ gitIdentities: identidadesOrdenadas });
-                      } catch (error) {
-                        showToast('Error al actualizar identidad', 'error');
+                </div>
+                <div className="flex gap-3 pt-2 justify-end border-t border-slate-200/60 dark:border-slate-700/60">
+                  <Button
+                    variant="outline"
+                    size="default"
+                    className="min-w-[100px]"
+                    onClick={() => {
+                      setMostrarModalEditarIdentidad(false);
+                      setIdentidadAEditar(null);
+                      setNombreNuevaIdentidad("");
+                      setEmailNuevaIdentidad("");
+                    }}
+                  >
+                    {t('common.cancel')}
+                  </Button>
+                  <Button
+                    size="default"
+                    className="min-w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNuevaIdentidad.trim())}
+                    onClick={async () => {
+                      if (!nombreNuevaIdentidad.trim() || !emailNuevaIdentidad.trim()) {
+                        showToast('Por favor completa todos los campos', 'error');
+                        return;
                       }
-                    }
 
-                    setMostrarModalEditarIdentidad(false);
-                    setIdentidadAEditar(null);
-                    setNombreNuevaIdentidad("");
-                    setEmailNuevaIdentidad("");
-                  }}
-                >
-                  {t('common.save')}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                      const identidadesActualizadas = gitIdentities.map(identidad =>
+                        identidad.id === identidadAEditar.id
+                          ? { ...identidad, nombre: nombreNuevaIdentidad.trim(), email: emailNuevaIdentidad.trim() }
+                          : identidad
+                      );
+
+                      // Asegurar que la identidad por defecto siempre esté primero
+                      const identidadDefault = identidadesActualizadas.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
+                      const otrasIdentidades = identidadesActualizadas.filter(id => id.id !== IDENTIDAD_DEFAULT_ID);
+                      const identidadesOrdenadas = [identidadDefault, ...otrasIdentidades];
+                      setGitIdentities(identidadesOrdenadas);
+
+                      if (window.electronAPI?.writeConfig) {
+                        try {
+                          await window.electronAPI.writeConfig({ gitIdentities: identidadesOrdenadas });
+                        } catch (error) {
+                          showToast('Error al actualizar identidad', 'error');
+                        }
+                      }
+
+                      setMostrarModalEditarIdentidad(false);
+                      setIdentidadAEditar(null);
+                      setNombreNuevaIdentidad("");
+                      setEmailNuevaIdentidad("");
+                    }}
+                  >
+                    {t('common.save')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )
+      }
 
       {/* Modal para eliminar identidad */}
-      {mostrarModalEliminarIdentidad && identidadAEliminar && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={() => {
-            setMostrarModalEliminarIdentidad(false);
-            setIdentidadAEliminar(null);
-          }}
-        >
-          <Card
-            className="w-full max-w-md bg-background border-2"
-            onClick={(e) => e.stopPropagation()}
+      {
+        mostrarModalEliminarIdentidad && identidadAEliminar && (
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            onClick={() => {
+              setMostrarModalEliminarIdentidad(false);
+              setIdentidadAEliminar(null);
+            }}
           >
-            <CardHeader>
-              <CardTitle className="text-lg">{t('settings.git.identities.modal.deleteTitle')}</CardTitle>
-              <CardDescription>
-                {t('settings.git.identities.modal.deleteDescription')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-4 rounded-lg bg-muted/50 border">
-                <div className="space-y-1">
-                  <div className="text-sm font-semibold">{identidadAEliminar.nombre}</div>
-                  <div className="text-xs text-muted-foreground">{identidadAEliminar.email}</div>
+            <Card
+              className="w-full max-w-md bg-background border-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <CardHeader>
+                <CardTitle className="text-lg">{t('settings.git.identities.modal.deleteTitle')}</CardTitle>
+                <CardDescription>
+                  {t('settings.git.identities.modal.deleteDescription')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="p-4 rounded-lg bg-muted/50 border">
+                  <div className="space-y-1">
+                    <div className="text-sm font-semibold">{identidadAEliminar.nombre}</div>
+                    <div className="text-xs text-muted-foreground">{identidadAEliminar.email}</div>
+                  </div>
                 </div>
-              </div>
-              <div className="flex gap-2 pt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => {
-                    setMostrarModalEliminarIdentidad(false);
-                    setIdentidadAEliminar(null);
-                  }}
-                >
-                  {t('common.cancel')}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  className="flex-1 bg-red-600 hover:bg-red-700"
-                  onClick={async () => {
-                    // Filtrar la identidad a eliminar, pero asegurar que la identidad por defecto siempre esté
-                    const identidadesActualizadas = gitIdentities.filter(
-                      identidad => identidad.id !== identidadAEliminar.id && identidad.id !== IDENTIDAD_DEFAULT_ID
-                    );
+                <div className="flex gap-2 pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      setMostrarModalEliminarIdentidad(false);
+                      setIdentidadAEliminar(null);
+                    }}
+                  >
+                    {t('common.cancel')}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="flex-1 bg-red-600 hover:bg-red-700"
+                    onClick={async () => {
+                      // Filtrar la identidad a eliminar, pero asegurar que la identidad por defecto siempre esté
+                      const identidadesActualizadas = gitIdentities.filter(
+                        identidad => identidad.id !== identidadAEliminar.id && identidad.id !== IDENTIDAD_DEFAULT_ID
+                      );
 
-                    // Asegurar que la identidad por defecto siempre esté primero
-                    const identidadDefault = gitIdentities.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
-                    const identidadesOrdenadas = [identidadDefault, ...identidadesActualizadas];
-                    setGitIdentities(identidadesOrdenadas);
+                      // Asegurar que la identidad por defecto siempre esté primero
+                      const identidadDefault = gitIdentities.find(id => id.id === IDENTIDAD_DEFAULT_ID) || IDENTIDAD_DEFAULT;
+                      const identidadesOrdenadas = [identidadDefault, ...identidadesActualizadas];
+                      setGitIdentities(identidadesOrdenadas);
 
-                    if (window.electronAPI?.writeConfig) {
-                      try {
-                        await window.electronAPI.writeConfig({ gitIdentities: identidadesOrdenadas });
-                      } catch (error) {
-                        showToast('Error al eliminar identidad', 'error');
+                      if (window.electronAPI?.writeConfig) {
+                        try {
+                          await window.electronAPI.writeConfig({ gitIdentities: identidadesOrdenadas });
+                        } catch (error) {
+                          showToast('Error al eliminar identidad', 'error');
+                        }
                       }
-                    }
 
-                    setMostrarModalEliminarIdentidad(false);
-                    setIdentidadAEliminar(null);
-                  }}
-                >
-                  {t('common.delete')}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                      setMostrarModalEliminarIdentidad(false);
+                      setIdentidadAEliminar(null);
+                    }}
+                  >
+                    {t('common.delete')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )
+      }
 
       {/* Toast Container */}
       <Toaster />
 
       {/* Wizard de Bienvenida */}
-      {mostrarWizardBienvenida && wizardCargado && (
-        <WelcomeWizard onComplete={completarWizardBienvenida} />
-      )}
+      {
+        mostrarWizardBienvenida && wizardCargado && (
+          <WelcomeWizard onComplete={completarWizardBienvenida} />
+        )
+      }
     </div >
   );
 }

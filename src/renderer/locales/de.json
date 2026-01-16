@@ -632,6 +632,27 @@
       "pendingPush": "Ausstehender Upload (Push)",
       "pendingPull": "Ausstehender Download (Pull)"
     },
+    "colors": {
+      "default": "Standard",
+      "red": "Rot",
+      "orange": "Orange",
+      "amber": "Bernstein",
+      "yellow": "Gelb",
+      "lime": "Limette",
+      "green": "Grün",
+      "emerald": "Smaragd",
+      "teal": "Blaugrün",
+      "cyan": "Cyan",
+      "sky": "Himmelblau",
+      "blue": "Blau",
+      "indigo": "Indigo",
+      "violet": "Violett",
+      "purple": "Lila",
+      "fuchsia": "Fuchsin",
+      "pink": "Rosa",
+      "rose": "Altrosa",
+      "slate": "Schiefer"
+    },
     "newCollectionModal": {
       "title": "Neue Sammlung",
       "description": "Organisiere deine Repositories in einer neuen benutzerdefinierten Sammlung",

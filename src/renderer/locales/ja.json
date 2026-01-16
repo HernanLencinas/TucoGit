@@ -629,6 +629,27 @@
       "pendingPush": "アップロード待ち（Push）",
       "pendingPull": "ダウンロード待ち（Pull）"
     },
+    "colors": {
+      "default": "デフォルト",
+      "red": "赤",
+      "orange": "オレンジ",
+      "amber": "琥珀色",
+      "yellow": "黄色",
+      "lime": "ライム",
+      "green": "緑",
+      "emerald": "エメラルド",
+      "teal": "ティール",
+      "cyan": "シアン",
+      "sky": "スカイブルー",
+      "blue": "青",
+      "indigo": "インディゴ",
+      "violet": "バイオレット",
+      "purple": "紫",
+      "fuchsia": "フクシア",
+      "pink": "ピンク",
+      "rose": "ローズ",
+      "slate": "スレート"
+    },
     "newCollectionModal": {
       "title": "新しいコレクション",
       "description": "リポジトリを新しいカスタムコレクションに整理",
