@@ -29,6 +29,12 @@
       "switchToLight": "ライトモードに切り替え",
       "switchToDark": "ダークモードに切り替え"
     },
+    "notifications": {
+      "empty": "通知なし",
+      "updateAvailable": "新しいバージョンが利用可能です",
+      "versionAvailable": "バージョン {{version}} が利用可能です",
+      "download": "ダウンロード"
+    },
     "loadingScreen": {
       "messages": [
         "Tucoを読み込み中...",
@@ -261,7 +267,10 @@
         "title": "現在のバージョン",
         "description": "インストールされているアプリケーションのバージョン情報",
         "appVersion": "アプリケーションバージョン",
-        "latestVersion": "最新の利用可能なバージョンを使用しています"
+        "latestVersion": "最新の利用可能なバージョンを使用しています",
+        "checkUpdates": "更新を確認",
+        "stableChannel": "安定版",
+        "newVersionDesc": "新機能とパフォーマンスの向上が含まれています。"
       },
       "lastUpdate": {
         "title": "最終更新",
@@ -278,7 +287,7 @@
       },
       "aboutUpdates": {
         "title": "更新について",
-        "description": "アプリケーションの更新は自動的に管理されます。新しいバージョンが利用可能になると、通知を受け取ります。"
+        "description": "新しいバージョンが利用可能になると、TucoGitが通知します。GitHubから最新のインストーラーを直接ダウンロードして更新できます。"
       }
     },
     "about": {

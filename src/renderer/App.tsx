@@ -5365,25 +5365,34 @@ function App() {
                 <CardContent>
                   <div className="space-y-4">
                     {isUpdateAvailable ? (
-                      <div className="flex items-center justify-between p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                        <div className="flex items-center gap-2">
-                          <Bell className="h-4 w-4 text-blue-500" />
-                          <p className="text-xs text-blue-700 dark:text-blue-300 font-medium">
-                            {t('common.notifications.versionAvailable', { version: latestRelease?.tag_name })}
-                          </p>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-500/20 gap-4">
+                        <div className="flex items-start gap-3">
+                          <div className="p-2.5 rounded-full bg-blue-500/20 text-blue-600 dark:text-blue-400 mt-1">
+                            <Sparkles className="h-5 w-5" />
+                          </div>
+                          <div className="space-y-1">
+                            <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                              {t('common.notifications.updateAvailable')}
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500 text-white shadow-sm">
+                                {latestRelease?.tag_name}
+                              </span>
+                            </h4>
+                            <p className="text-xs text-muted-foreground leading-relaxed max-w-md">
+                              {t('settings.updates.currentVersion.newVersionDesc')}
+                            </p>
+                          </div>
                         </div>
                         <Button
-                          variant="link"
                           size="sm"
-                          className="h-auto p-0 text-blue-600 dark:text-blue-400 text-xs font-bold"
+                          className="h-8 gap-2 shadow-sm font-semibold"
                           onClick={() => {
                             if (latestRelease?.html_url) {
                               window.open(latestRelease.html_url, '_blank');
                             }
                           }}
                         >
+                          <Download className="h-3.5 w-3.5" />
                           {t('common.notifications.download')}
-                          <ExternalLink className="ml-1 h-3 w-3" />
                         </Button>
                       </div>
                     ) : (

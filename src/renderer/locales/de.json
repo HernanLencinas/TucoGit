@@ -29,6 +29,12 @@
       "switchToLight": "Zum hellen Modus wechseln",
       "switchToDark": "Zum dunklen Modus wechseln"
     },
+    "notifications": {
+      "empty": "Keine Benachrichtigungen",
+      "updateAvailable": "Neue Version verfügbar",
+      "versionAvailable": "Version {{version}} verfügbar",
+      "download": "Herunterladen"
+    },
     "loadingScreen": {
       "messages": [
         "Lade Tuco...",
@@ -258,7 +264,10 @@
         "title": "Aktuelle Version",
         "description": "Informationen zur installierten Anwendungsversion",
         "appVersion": "Anwendungsversion",
-        "latestVersion": "Du verwendest die neueste verfügbare Version"
+        "latestVersion": "Du verwendest die neueste verfügbare Version",
+        "checkUpdates": "Nach Updates suchen",
+        "stableChannel": "Stabile Version",
+        "newVersionDesc": "Enthält neue Funktionen und Leistungsverbesserungen."
       },
       "lastUpdate": {
         "title": "Letzte Aktualisierung",
@@ -275,7 +284,7 @@
       },
       "aboutUpdates": {
         "title": "Über Aktualisierungen",
-        "description": "Anwendungsaktualisierungen werden automatisch verwaltet. Wenn eine neue Version verfügbar ist, erhältst du eine Benachrichtigung."
+        "description": "TucoGit benachrichtigt Sie, wenn eine neue Version verfügbar ist. Sie können den neuesten Installer direkt von GitHub herunterladen, um das Update durchzuführen."
       }
     },
     "about": {

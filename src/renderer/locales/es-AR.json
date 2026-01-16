@@ -270,7 +270,8 @@
         "appVersion": "Versión de la aplicación",
         "latestVersion": "Estás usando la última versión disponible",
         "checkUpdates": "Buscar actualizaciones",
-        "stableChannel": "Compilación estable"
+        "stableChannel": "Compilación estable",
+        "newVersionDesc": "Incluye nuevas características y mejoras de rendimiento."
       },
       "lastUpdate": {
         "title": "Última Actualización",
