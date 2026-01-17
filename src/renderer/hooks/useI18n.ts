@@ -22,7 +22,7 @@ export const useI18n = () => {
    * @param {string} language - Código del idioma ('en', 'es-AR', 'de', 'fr', 'pt', 'ja' o 'zh-CN')
    * @returns {Promise<void>}
    */
-  const changeLanguage = async (language: 'en' | 'es-AR' | 'de' | 'fr' | 'pt' | 'ja' | 'zh-CN' | 'ru') => {
+  const changeLanguage = async (language: 'en' | 'es-AR' | 'de' | 'fr' | 'pt' | 'ja' | 'zh-CN' | 'ru' | 'it') => {
     try {
       await i18nInstance.changeLanguage(language);
 
@@ -40,7 +40,7 @@ export const useI18n = () => {
    * 
    * @param {string} savedLanguage - Idioma guardado en la configuración
    */
-  const initializeLanguage = (savedLanguage: 'en' | 'es-AR' | 'de' | 'fr' | 'pt' | 'ja' | 'zh-CN' | 'ru') => {
+  const initializeLanguage = (savedLanguage: 'en' | 'es-AR' | 'de' | 'fr' | 'pt' | 'ja' | 'zh-CN' | 'ru' | 'it') => {
     if (savedLanguage && savedLanguage !== i18nInstance.language) {
       i18nInstance.changeLanguage(savedLanguage);
     }
@@ -49,7 +49,7 @@ export const useI18n = () => {
   return {
     t,
     changeLanguage,
-    currentLanguage: i18nInstance.language as 'en' | 'es-AR' | 'de' | 'fr' | 'pt' | 'ja' | 'zh-CN' | 'ru',
+    currentLanguage: i18nInstance.language as 'en' | 'es-AR' | 'de' | 'fr' | 'pt' | 'ja' | 'zh-CN' | 'ru' | 'it',
     i18n: i18nInstance,
     initializeLanguage,
   };

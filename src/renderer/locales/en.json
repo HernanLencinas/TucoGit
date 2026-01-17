@@ -132,6 +132,7 @@
         "japanese": "Japanese",
         "chinese": "Chinese (Simplified)",
         "russian": "Russian",
+        "italian": "Italian",
         "selected": "Selected",
         "changed": "Language changed to {{language}}",
         "error": "Error saving configuration"

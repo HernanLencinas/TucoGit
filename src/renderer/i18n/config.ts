@@ -9,6 +9,8 @@ import jaTranslations from '../locales/ja.json';
 import zhCNTranslations from '../locales/zh-CN.json';
 import ruTranslations from '../locales/ru.json';
 
+import itTranslations from '../locales/it.json';
+
 // Recursos de traducción
 const resources = {
   en: {
@@ -34,6 +36,9 @@ const resources = {
   },
   ru: {
     translation: ruTranslations,
+  },
+  it: {
+    translation: itTranslations,
   },
 };
 

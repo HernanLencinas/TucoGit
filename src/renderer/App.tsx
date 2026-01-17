@@ -168,7 +168,7 @@ function App() {
   const [setGitUserEmail] = useState<string>("");
   const [commitButtonBehavior, setCommitButtonBehavior] = useState<"commit" | "commit-push" | "commit-sync">("commit");
   const [mostrarMenuCommitBehavior, setMostrarMenuCommitBehavior] = useState(false);
-  const [uiLanguage, setUiLanguage] = useState<"en" | "es-AR" | "de" | "fr" | "pt" | "ja" | "zh-CN" | "ru">("es-AR");
+  const [uiLanguage, setUiLanguage] = useState<"en" | "es-AR" | "de" | "fr" | "pt" | "ja" | "zh-CN" | "ru" | "it">("es-AR");
   const [mostrarMenuIdioma, setMostrarMenuIdioma] = useState(false);
   const [mostrarModalRestablecerConfig, setMostrarModalRestablecerConfig] = useState(false);
   const [mostrarModalConfirmarReclon, setMostrarModalConfirmarReclon] = useState(false);
@@ -4390,10 +4390,10 @@ function App() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="font-semibold text-foreground truncate">
-                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : uiLanguage === "fr" ? t('settings.general.uiLanguage.french') : uiLanguage === "pt" ? t('settings.general.uiLanguage.portuguese') : uiLanguage === "ja" ? t('settings.general.uiLanguage.japanese') : uiLanguage === "ru" ? t('settings.general.uiLanguage.russian') : t('settings.general.uiLanguage.chinese')}
+                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : uiLanguage === "fr" ? t('settings.general.uiLanguage.french') : uiLanguage === "pt" ? t('settings.general.uiLanguage.portuguese') : uiLanguage === "ja" ? t('settings.general.uiLanguage.japanese') : uiLanguage === "ru" ? t('settings.general.uiLanguage.russian') : uiLanguage === "it" ? t('settings.general.uiLanguage.italian') : t('settings.general.uiLanguage.chinese')}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : uiLanguage === "fr" ? t('settings.general.uiLanguage.french') : uiLanguage === "pt" ? t('settings.general.uiLanguage.portuguese') : uiLanguage === "ja" ? t('settings.general.uiLanguage.japanese') : uiLanguage === "ru" ? t('settings.general.uiLanguage.russian') : t('settings.general.uiLanguage.chinese')}
+                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : uiLanguage === "fr" ? t('settings.general.uiLanguage.french') : uiLanguage === "pt" ? t('settings.general.uiLanguage.portuguese') : uiLanguage === "ja" ? t('settings.general.uiLanguage.japanese') : uiLanguage === "ru" ? t('settings.general.uiLanguage.russian') : uiLanguage === "it" ? t('settings.general.uiLanguage.italian') : t('settings.general.uiLanguage.chinese')}
                             </div>
                           </div>
                         </div>
@@ -4407,7 +4407,7 @@ function App() {
                           />
                           <div className="absolute z-20 w-full mt-2 rounded-lg border-2 bg-popover shadow-lg max-h-72 overflow-auto">
                             <div className="p-1">
-                              {(["en", "es-AR", "de", "fr", "pt", "ja", "zh-CN", "ru"] as const).map((idioma) => (
+                              {(["en", "es-AR", "de", "fr", "pt", "ja", "zh-CN", "ru", "it"] as const).map((idioma) => (
                                 <button
                                   key={idioma}
                                   onClick={async () => {
@@ -4423,7 +4423,7 @@ function App() {
                                   </div>
                                   <div className="flex-1 min-w-0">
                                     <div className="font-semibold">
-                                      {idioma === "en" ? t('settings.general.uiLanguage.english') : idioma === "es-AR" ? t('settings.general.uiLanguage.spanish') : idioma === "de" ? t('settings.general.uiLanguage.german') : idioma === "fr" ? t('settings.general.uiLanguage.french') : idioma === "pt" ? t('settings.general.uiLanguage.portuguese') : idioma === "ja" ? t('settings.general.uiLanguage.japanese') : idioma === "ru" ? t('settings.general.uiLanguage.russian') : t('settings.general.uiLanguage.chinese')}
+                                      {idioma === "en" ? t('settings.general.uiLanguage.english') : idioma === "es-AR" ? t('settings.general.uiLanguage.spanish') : idioma === "de" ? t('settings.general.uiLanguage.german') : idioma === "fr" ? t('settings.general.uiLanguage.french') : idioma === "pt" ? t('settings.general.uiLanguage.portuguese') : idioma === "ja" ? t('settings.general.uiLanguage.japanese') : idioma === "ru" ? t('settings.general.uiLanguage.russian') : idioma === "it" ? t('settings.general.uiLanguage.italian') : t('settings.general.uiLanguage.chinese')}
                                     </div>
                                     {uiLanguage === idioma && (
                                       <div className="text-xs text-primary mt-0.5 flex items-center gap-1">

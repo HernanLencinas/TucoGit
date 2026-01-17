@@ -129,6 +129,7 @@
         "german": "Allemand",
         "french": "Français",
         "russian": "Russe",
+        "italian": "Italien",
         "selected": "Sélectionné",
         "changed": "Langue changée en {{language}}",
         "error": "Erreur lors de l'enregistrement de la configuration"
