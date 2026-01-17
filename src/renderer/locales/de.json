@@ -127,6 +127,7 @@
         "english": "Englisch (Vereinigte Staaten)",
         "spanish": "Spanisch (Argentinien)",
         "german": "Deutsch",
+        "russian": "Russisch",
         "selected": "Ausgewählt",
         "changed": "Sprache geändert zu {{language}}",
         "error": "Fehler beim Speichern der Konfiguration"

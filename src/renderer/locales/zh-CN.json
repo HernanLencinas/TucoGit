@@ -131,6 +131,7 @@
         "portuguese": "葡萄牙语",
         "japanese": "日语",
         "chinese": "中文（简体）",
+        "russian": "俄语",
         "selected": "已选择",
         "changed": "语言已更改为 {{language}}",
         "error": "保存配置时出错"

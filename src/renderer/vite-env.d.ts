@@ -26,6 +26,7 @@ interface Window {
       gitUserName?: string;
       gitUserEmail?: string;
       wizardCompleted?: boolean;
+      uiLanguage?: "en" | "es-AR" | "de" | "fr" | "pt" | "ja" | "zh-CN" | "ru";
       repositorios?: any[];
       error?: string;
     }>;
@@ -34,7 +35,7 @@ interface Window {
       config?: any;
       error?: string;
     }>;
-    writeConfig: (updates: { tema?: string; temaNombre?: string; zoomLevel?: number; editorIDE?: string | null; repositorios?: any[]; conexiones?: any[]; gitSslVerify?: boolean; gitUserName?: string; gitUserEmail?: string; wizardCompleted?: boolean }) => Promise<{
+    writeConfig: (updates: { tema?: string; temaNombre?: string; zoomLevel?: number; editorIDE?: string | null; repositorios?: any[]; conexiones?: any[]; gitSslVerify?: boolean; gitUserName?: string; gitUserEmail?: string; wizardCompleted?: boolean; uiLanguage?: "en" | "es-AR" | "de" | "fr" | "pt" | "ja" | "zh-CN" | "ru" }) => Promise<{
       success: boolean;
       error?: string;
     }>;

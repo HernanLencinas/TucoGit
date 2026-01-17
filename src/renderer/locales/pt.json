@@ -129,6 +129,7 @@
         "german": "Alemão",
         "french": "Francês",
         "portuguese": "Português",
+        "russian": "Russo",
         "selected": "Selecionado",
         "changed": "Idioma alterado para {{language}}",
         "error": "Erro ao salvar configuração"
