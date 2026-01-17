@@ -1,6 +1,6 @@
 {
   "name": "tucogit",
-  "version": "0.1.350",
+  "version": "0.1.400",
   "description": "TucoGit",
   "main": "src/main/main.js",
   "scripts": {
