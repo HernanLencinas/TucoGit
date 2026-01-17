@@ -29,6 +29,12 @@
       "switchToLight": "Alternar para modo claro",
       "switchToDark": "Alternar para modo escuro"
     },
+    "notifications": {
+      "empty": "Sem notificações",
+      "updateAvailable": "Nova versão disponível",
+      "versionAvailable": "Versão {{version}} disponível",
+      "download": "Baixar"
+    },
     "loadingScreen": {
       "messages": [
         "Carregando Tuco...",
@@ -123,6 +129,9 @@
         "german": "Alemão",
         "french": "Francês",
         "portuguese": "Português",
+        "russian": "Russo",
+        "italian": "Italiano",
+        "korean": "Coreano",
         "selected": "Selecionado",
         "changed": "Idioma alterado para {{language}}",
         "error": "Erro ao salvar configuração"
@@ -260,7 +269,10 @@
         "title": "Versão Atual",
         "description": "Informações sobre a versão do aplicativo instalada",
         "appVersion": "Versão do aplicativo",
-        "latestVersion": "Você está usando a versão mais recente disponível"
+        "latestVersion": "Você está usando a versão mais recente disponível",
+        "checkUpdates": "Verificar atualizações",
+        "stableChannel": "Versão estável",
+        "newVersionDesc": "Inclui novos recursos e melhorias de desempenho."
       },
       "lastUpdate": {
         "title": "Última Atualização",
@@ -277,7 +289,7 @@
       },
       "aboutUpdates": {
         "title": "Sobre Atualizações",
-        "description": "As atualizações do aplicativo são gerenciadas automaticamente. Quando uma nova versão estiver disponível, você receberá uma notificação."
+        "description": "O TucoGit avisará quando uma nova versão estiver disponível. Você pode baixar o instalador mais recente diretamente do GitHub para atualizar."
       }
     },
     "about": {
@@ -327,6 +339,12 @@
       "repositories": {
         "title": "Repositórios",
         "description": "Explore seus projetos locais"
+      },
+      "notifications": {
+        "empty": "Não há notificações",
+        "updateAvailable": "Nova versão disponível",
+        "versionAvailable": "Versão {{version}} disponível",
+        "download": "Baixar"
       },
       "connections": {
         "title": "Conexões",

@@ -29,6 +29,12 @@
       "switchToLight": "切换到浅色模式",
       "switchToDark": "切换到深色模式"
     },
+    "notifications": {
+      "empty": "无通知",
+      "updateAvailable": "有新版本可用",
+      "versionAvailable": "版本 {{version}} 可用",
+      "download": "下载"
+    },
     "loadingScreen": {
       "messages": [
         "正在加载 Tuco...",
@@ -125,6 +131,9 @@
         "portuguese": "葡萄牙语",
         "japanese": "日语",
         "chinese": "中文（简体）",
+        "russian": "俄语",
+        "italian": "意大利语",
+        "korean": "韩语",
         "selected": "已选择",
         "changed": "语言已更改为 {{language}}",
         "error": "保存配置时出错"
@@ -262,7 +271,10 @@
         "title": "当前版本",
         "description": "关于已安装应用程序版本的信息",
         "appVersion": "应用程序版本",
-        "latestVersion": "您正在使用最新可用版本"
+        "latestVersion": "您正在使用最新可用版本",
+        "checkUpdates": "检查更新",
+        "stableChannel": "稳定版",
+        "newVersionDesc": "包含新功能和性能改进。"
       },
       "lastUpdate": {
         "title": "最后更新",
@@ -279,7 +291,7 @@
       },
       "aboutUpdates": {
         "title": "关于更新",
-        "description": "应用程序更新会自动管理。当有新版本可用时，您将收到通知。"
+        "description": "如果有新版本可用，TucoGit 会通知您。您可以直接从 GitHub 下载最新的安装程序进行更新。"
       }
     },
     "about": {
@@ -609,10 +621,15 @@
       "private": "私有"
     },
     "empty": {
-      "title": "未定义仓库",
       "description": "要开始，请单击「新建集合」按钮添加您的第一个集合。",
       "newCollection": "新建集合",
       "newRepository": "新建仓库"
+    },
+    "notifications": {
+      "empty": "暂无通知",
+      "updateAvailable": "新版本可用",
+      "versionAvailable": "版本 {{version}} 可用",
+      "download": "下载"
     },
     "collection": {
       "element": "元素",

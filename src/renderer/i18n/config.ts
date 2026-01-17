@@ -7,6 +7,10 @@ import frTranslations from '../locales/fr.json';
 import ptTranslations from '../locales/pt.json';
 import jaTranslations from '../locales/ja.json';
 import zhCNTranslations from '../locales/zh-CN.json';
+import ruTranslations from '../locales/ru.json';
+
+import itTranslations from '../locales/it.json';
+import koTranslations from '../locales/ko.json';
 
 // Recursos de traducción
 const resources = {
@@ -30,6 +34,15 @@ const resources = {
   },
   'zh-CN': {
     translation: zhCNTranslations,
+  },
+  ru: {
+    translation: ruTranslations,
+  },
+  it: {
+    translation: itTranslations,
+  },
+  ko: {
+    translation: koTranslations,
   },
 };
 

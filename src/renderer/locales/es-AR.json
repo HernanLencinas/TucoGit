@@ -30,7 +30,10 @@
       "switchToDark": "Cambiar a modo oscuro"
     },
     "notifications": {
-      "empty": "No hay notificaciones"
+      "empty": "No hay notificaciones",
+      "updateAvailable": "Nueva versión disponible",
+      "versionAvailable": "Versión {{version}} disponible",
+      "download": "Descargar"
     },
     "loadingScreen": {
       "messages": [
@@ -128,6 +131,9 @@
         "portuguese": "Português",
         "japanese": "日本語",
         "chinese": "中文（简体）",
+        "russian": "Русский",
+        "italian": "Italiano",
+        "korean": "Coreano",
         "selected": "Seleccionado",
         "changed": "Idioma cambiado a {{language}}",
         "error": "Error al guardar la configuración"
@@ -265,7 +271,10 @@
         "title": "Versión Actual",
         "description": "Información sobre la versión instalada de la aplicación",
         "appVersion": "Versión de la aplicación",
-        "latestVersion": "Estás usando la última versión disponible"
+        "latestVersion": "Estás usando la última versión disponible",
+        "checkUpdates": "Buscar actualizaciones",
+        "stableChannel": "Compilación estable",
+        "newVersionDesc": "Incluye nuevas características y mejoras de rendimiento."
       },
       "lastUpdate": {
         "title": "Última Actualización",
@@ -282,7 +291,7 @@
       },
       "aboutUpdates": {
         "title": "Sobre las Actualizaciones",
-        "description": "Las actualizaciones de la aplicación se gestionan automáticamente. Cuando haya una nueva versión disponible, recibirás una notificación."
+        "description": "TucoGit te avisará cuando haya una nueva versión disponible. Podrás descargar el instalador más reciente directamente desde GitHub e instalarlo para actualizar."
       }
     },
     "about": {

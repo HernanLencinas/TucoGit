@@ -1,6 +1,6 @@
 {
   "name": "tucogit",
-  "version": "0.1.310",
+  "version": "0.1.400",
   "description": "TucoGit",
   "main": "src/main/main.js",
   "scripts": {
@@ -13,6 +13,7 @@
     "build:mac": "npm run build:renderer && electron-builder --mac",
     "build:all": "npm run build:renderer && electron-builder --linux --win --mac",
     "start": "concurrently -k \"npm run dev\" \"wait-on http://localhost:5173 && electron .\"",
+    "start:debug": "concurrently -k \"npm run dev\" \"wait-on http://localhost:5173 && electron . --open-devtools\"",
     "preview": "vite preview"
   },
   "keywords": [

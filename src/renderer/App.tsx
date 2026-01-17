@@ -12,6 +12,8 @@ import { RepositoryDetails } from "@/renderer/components/RepositoryDetails";
 import { WelcomeWizard } from "@/renderer/components/WelcomeWizard";
 import { LoadingScreen } from "@/renderer/components/LoadingScreen";
 import { useI18n } from "@/renderer/hooks/useI18n";
+import { useAutoUpdate } from "@/renderer/hooks/useAutoUpdate";
+import { getAssetForPlatform } from "@/renderer/utils/updateUtils";
 import tucoLogo from "@/renderer/assets/logo-tuco.jpg";
 
 // Constantes para identidades de Git
@@ -166,7 +168,7 @@ function App() {
   const [setGitUserEmail] = useState<string>("");
   const [commitButtonBehavior, setCommitButtonBehavior] = useState<"commit" | "commit-push" | "commit-sync">("commit");
   const [mostrarMenuCommitBehavior, setMostrarMenuCommitBehavior] = useState(false);
-  const [uiLanguage, setUiLanguage] = useState<"en" | "es-AR" | "de" | "fr" | "pt" | "ja" | "zh-CN">("es-AR");
+  const [uiLanguage, setUiLanguage] = useState<"en" | "es-AR" | "de" | "fr" | "pt" | "ja" | "zh-CN" | "ru" | "it" | "ko">("es-AR");
   const [mostrarMenuIdioma, setMostrarMenuIdioma] = useState(false);
   const [mostrarModalRestablecerConfig, setMostrarModalRestablecerConfig] = useState(false);
   const [mostrarModalConfirmarReclon, setMostrarModalConfirmarReclon] = useState(false);
@@ -190,6 +192,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [mostrarMenuNotificaciones, setMostrarMenuNotificaciones] = useState(false);
   const menuNotificacionesRef = useRef<HTMLDivElement>(null);
+  const { isUpdateAvailable, latestRelease, platform, isChecking, checkVersion } = useAutoUpdate();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -204,6 +207,12 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (isUpdateAvailable) {
+      setMostrarMenuNotificaciones(true);
+    }
+  }, [isUpdateAvailable]);
+
   // Estado para la vista de detalles de repositorio
   const [activeRepository, setActiveRepository] = useState<FolderItem | null>(null);
   const [viewMode, setViewMode] = useState<"list" | "details">("list");
@@ -212,7 +221,7 @@ function App() {
   // Toast hook de shadcn/ui
   const { toast } = useToast();
 
-  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+  const showToast = (message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info') => {
     if (type === 'success') {
       toast({
         title: "Éxito",
@@ -224,6 +233,12 @@ function App() {
         title: "Error",
         description: message,
         variant: "destructive",
+      });
+    } else if (type === 'warning') {
+      toast({
+        title: "Advertencia",
+        description: message,
+        variant: "warning",
       });
     } else {
       toast({
@@ -4375,10 +4390,10 @@ function App() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="font-semibold text-foreground truncate">
-                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : uiLanguage === "fr" ? t('settings.general.uiLanguage.french') : uiLanguage === "pt" ? t('settings.general.uiLanguage.portuguese') : uiLanguage === "ja" ? t('settings.general.uiLanguage.japanese') : t('settings.general.uiLanguage.chinese')}
+                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : uiLanguage === "fr" ? t('settings.general.uiLanguage.french') : uiLanguage === "pt" ? t('settings.general.uiLanguage.portuguese') : uiLanguage === "ja" ? t('settings.general.uiLanguage.japanese') : uiLanguage === "ru" ? t('settings.general.uiLanguage.russian') : uiLanguage === "it" ? t('settings.general.uiLanguage.italian') : uiLanguage === "ko" ? t('settings.general.uiLanguage.korean') : t('settings.general.uiLanguage.chinese')}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : uiLanguage === "fr" ? t('settings.general.uiLanguage.french') : uiLanguage === "pt" ? t('settings.general.uiLanguage.portuguese') : uiLanguage === "ja" ? t('settings.general.uiLanguage.japanese') : t('settings.general.uiLanguage.chinese')}
+                              {uiLanguage === "en" ? t('settings.general.uiLanguage.english') : uiLanguage === "es-AR" ? t('settings.general.uiLanguage.spanish') : uiLanguage === "de" ? t('settings.general.uiLanguage.german') : uiLanguage === "fr" ? t('settings.general.uiLanguage.french') : uiLanguage === "pt" ? t('settings.general.uiLanguage.portuguese') : uiLanguage === "ja" ? t('settings.general.uiLanguage.japanese') : uiLanguage === "ru" ? t('settings.general.uiLanguage.russian') : uiLanguage === "it" ? t('settings.general.uiLanguage.italian') : uiLanguage === "ko" ? t('settings.general.uiLanguage.korean') : t('settings.general.uiLanguage.chinese')}
                             </div>
                           </div>
                         </div>
@@ -4392,7 +4407,7 @@ function App() {
                           />
                           <div className="absolute z-20 w-full mt-2 rounded-lg border-2 bg-popover shadow-lg max-h-72 overflow-auto">
                             <div className="p-1">
-                              {(["en", "es-AR", "de", "fr", "pt", "ja", "zh-CN"] as const).map((idioma) => (
+                              {(["en", "es-AR", "de", "fr", "pt", "ja", "zh-CN", "ru", "it", "ko"] as const).map((idioma) => (
                                 <button
                                   key={idioma}
                                   onClick={async () => {
@@ -4408,7 +4423,7 @@ function App() {
                                   </div>
                                   <div className="flex-1 min-w-0">
                                     <div className="font-semibold">
-                                      {idioma === "en" ? t('settings.general.uiLanguage.english') : idioma === "es-AR" ? t('settings.general.uiLanguage.spanish') : idioma === "de" ? t('settings.general.uiLanguage.german') : idioma === "fr" ? t('settings.general.uiLanguage.french') : idioma === "pt" ? t('settings.general.uiLanguage.portuguese') : idioma === "ja" ? t('settings.general.uiLanguage.japanese') : t('settings.general.uiLanguage.chinese')}
+                                      {idioma === "en" ? t('settings.general.uiLanguage.english') : idioma === "es-AR" ? t('settings.general.uiLanguage.spanish') : idioma === "de" ? t('settings.general.uiLanguage.german') : idioma === "fr" ? t('settings.general.uiLanguage.french') : idioma === "pt" ? t('settings.general.uiLanguage.portuguese') : idioma === "ja" ? t('settings.general.uiLanguage.japanese') : idioma === "ru" ? t('settings.general.uiLanguage.russian') : idioma === "it" ? t('settings.general.uiLanguage.italian') : idioma === "ko" ? t('settings.general.uiLanguage.korean') : t('settings.general.uiLanguage.chinese')}
                                     </div>
                                     {uiLanguage === idioma && (
                                       <div className="text-xs text-primary mt-0.5 flex items-center gap-1">
@@ -5328,74 +5343,78 @@ function App() {
               {/* Información de Versión */}
               <Card className="border-2">
                 <CardHeader className="pb-3">
-                  <div>
-                    <CardTitle className="text-base">{t('settings.updates.currentVersion.title')}</CardTitle>
-                    <CardDescription className="text-xs mt-1">
-                      {t('settings.updates.currentVersion.description')}
-                    </CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-base">{t('settings.updates.currentVersion.title')}</CardTitle>
+                      <CardDescription className="text-xs mt-1">
+                        {t('settings.updates.currentVersion.description')}
+                      </CardDescription>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 gap-2"
+                      onClick={() => checkVersion()}
+                      disabled={isChecking}
+                    >
+                      <RefreshCw className={`h-3.5 w-3.5 ${isChecking ? 'animate-spin' : ''}`} />
+                      {t('settings.updates.currentVersion.checkUpdates')}
+                    </Button>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 rounded-lg bg-primary/5 border border-primary/10">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-primary/20">
-                          <Star className="h-5 w-5 text-primary" />
+                    {isUpdateAvailable ? (
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-500/20 gap-4">
+                        <div className="flex items-start gap-3">
+                          <div className="p-2.5 rounded-full bg-blue-500/20 text-blue-600 dark:text-blue-400 mt-1">
+                            <Sparkles className="h-5 w-5" />
+                          </div>
+                          <div className="space-y-1">
+                            <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                              {t('common.notifications.updateAvailable')}
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500 text-white shadow-sm">
+                                {latestRelease?.tag_name}
+                              </span>
+                            </h4>
+                            <p className="text-xs text-muted-foreground leading-relaxed max-w-md">
+                              {t('settings.updates.currentVersion.newVersionDesc')}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <div className="text-sm font-semibold text-foreground">TucoGit</div>
-                          <div className="text-xs text-muted-foreground">{t('settings.updates.currentVersion.appVersion')}</div>
+                        <Button
+                          size="sm"
+                          className="h-8 gap-2 shadow-sm font-semibold"
+                          onClick={() => {
+                            if (latestRelease?.html_url) {
+                              window.open(latestRelease.html_url, '_blank');
+                            }
+                          }}
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          {t('common.notifications.download')}
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between p-4 rounded-lg bg-green-500/5 border border-green-500/10">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/10">
+                            <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">
+                              {t('settings.updates.currentVersion.latestVersion')}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              v{appVersion}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                        <span className="text-sm font-bold text-primary">v{appVersion}</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
-                      <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
-                      <p className="text-xs text-muted-foreground">
-                        {t('settings.updates.currentVersion.latestVersion')}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Última Actualización */}
-              <Card className="border-2">
-                <CardHeader className="pb-3">
-                  <div>
-                    <CardTitle className="text-base">{t('settings.updates.lastUpdate.title')}</CardTitle>
-                    <CardDescription className="text-xs mt-1">
-                      {t('settings.updates.lastUpdate.description')}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50 border">
-                      <div className="p-2 rounded-lg bg-blue-500/10">
-                        <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-sm font-semibold text-foreground mb-1">{t('settings.updates.lastUpdate.configModified')}</div>
-                        <div className="text-xs font-mono text-muted-foreground">
-                          {ultimaActualizacion || t('common.noAvailable')}
-                        </div>
-                      </div>
-                    </div>
-                    {ultimaActualizacion && (
-                      <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
-                        <Info className="h-4 w-4 text-primary flex-shrink-0" />
-                        <p className="text-xs text-muted-foreground">
-                          {t('settings.updates.lastUpdate.autoUpdateInfo')}
-                        </p>
                       </div>
                     )}
                   </div>
                 </CardContent>
               </Card>
-
 
 
               {/* Nota sobre Actualizaciones */}
@@ -5864,20 +5883,57 @@ function App() {
           <div className="absolute right-0">
             <div className="relative" ref={menuNotificacionesRef}>
               {mostrarMenuNotificaciones && (
-                <div className="absolute bottom-full right-0 mb-2 w-64 bg-popover border border-border rounded-md shadow-md p-4 z-50 animate-in fade-in zoom-in-95 duration-200">
-                  <div className="flex flex-col items-center justify-center py-4 text-muted-foreground">
-                    <Bell className="h-8 w-8 mb-2 opacity-20" />
-                    <p className="text-sm">{t('common.notifications.empty')}</p>
-                  </div>
+                <div className="absolute bottom-full -right-4 mb-6 w-80 bg-popover border border-border rounded-md shadow-lg p-4 z-50 animate-in fade-in zoom-in-95 duration-200">
+                  {isUpdateAvailable && latestRelease ? (
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <div className="mt-1 bg-primary/10 p-2 rounded-full">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-semibold">{t('common.notifications.updateAvailable')}</h4>
+                          <p className="text-xs text-muted-foreground">
+                            {t('common.notifications.versionAvailable', { version: latestRelease.tag_name })}
+                          </p>
+                        </div>
+                      </div>
+                      {getAssetForPlatform(latestRelease.assets, platform) && (
+                        <Button
+                          className="w-full h-8 text-xs gap-2"
+                          size="sm"
+                          onClick={() => {
+                            const asset = getAssetForPlatform(latestRelease.assets, platform);
+                            if (asset && window.electronAPI?.openExternal) {
+                              window.electronAPI.openExternal(asset.browser_download_url);
+                            }
+                          }}
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          {t('common.notifications.download')}
+                        </Button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-4 text-muted-foreground">
+                      <Bell className="h-8 w-8 mb-2 opacity-20" />
+                      <p className="text-sm">{t('common.notifications.empty')}</p>
+                    </div>
+                  )}
                 </div>
               )}
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="h-8 w-8 relative" // Añadido relative para el indicador
                 onClick={() => setMostrarMenuNotificaciones(!mostrarMenuNotificaciones)}
               >
                 <Bell className="h-3.5 w-3.5" />
+                {isUpdateAvailable && (
+                  <span className="absolute top-1.5 right-1.5 flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                  </span>
+                )}
               </Button>
             </div>
           </div>
