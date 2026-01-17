@@ -133,6 +133,7 @@
         "chinese": "中文（简体）",
         "russian": "Русский",
         "italian": "Italiano",
+        "korean": "Coreano",
         "selected": "Seleccionado",
         "changed": "Idioma cambiado a {{language}}",
         "error": "Error al guardar la configuración"

@@ -1,0 +1,1226 @@
+{
+    "common": {
+        "save": "저장",
+        "cancel": "취소",
+        "delete": "삭제",
+        "edit": "편집",
+        "close": "닫기",
+        "confirm": "확인",
+        "search": "검색",
+        "loading": "로딩 중...",
+        "error": "오류",
+        "success": "성공",
+        "warning": "경고",
+        "info": "정보",
+        "selected": "선택됨",
+        "noAvailable": "사용 불가",
+        "loadingText": "로딩 중...",
+        "default": "기본",
+        "actions": "작업",
+        "fullName": "성명",
+        "email": "이메일",
+        "tabs": {
+            "home": "홈",
+            "repositories": "저장소",
+            "connections": "연결",
+            "settings": "설정"
+        },
+        "theme": {
+            "switchToLight": "라이트 모드로 전환",
+            "switchToDark": "다크 모드로 전환"
+        },
+        "notifications": {
+            "empty": "알림 없음",
+            "updateAvailable": "새 버전 사용 가능",
+            "versionAvailable": "버전 {{version}} 사용 가능",
+            "download": "다운로드"
+        },
+        "loadingScreen": {
+            "messages": [
+                "Tuco 로딩 중...",
+                "환경 준비 중...",
+                "저장소 초기화 중...",
+                "연결 구성 중...",
+                "설정 로드 중...",
+                "모든 준비를 하는 중...",
+                "잠시만 기다려 주세요...",
+                "저장소 정리 중...",
+                "데이터 로드 중...",
+                "인터페이스 준비 중...",
+                "컴포넌트 초기화 중...",
+                "거의 완료됨...",
+                "Git 구성 중...",
+                "환경 설정 로드 중...",
+                "경험 준비 중...",
+                "잃어버린 커밋 검색 중...",
+                "Git 유니버스와 동기화 중...",
+                "코드 마법 로드 중...",
+                "작업 공간 준비 중...",
+                "거의 준비됨, 가지 마세요...",
+                "저장소 라이브러리 정리 중...",
+                "Git 초능력 로드 중...",
+                "무대 설정 중...",
+                "마무리 작업 중...",
+                "최고의 경험 로드 중...",
+                "빛날 준비를 하는 중...",
+                "거의 다 왔어요, 조금만 더...",
+                "다음 큰 아이디어 로드 중...",
+                "완벽한 환경 준비 중...",
+                "마지막 마법 터치...",
+                "저장소 깨우는 중...",
+                "Git의 힘 로드 중...",
+                "코드 무기고 준비 중...",
+                "별들과 동기화 중...",
+                "커밋 지혜 로드 중...",
+                "서사적 여정 준비 중...",
+                "개발자 에너지 로드 중...",
+                "창조적 혼돈 정리 중...",
+                "코드 혁명 준비 중...",
+                "무한한 영감 로드 중...",
+                "Git 주파수 조정 중...",
+                "영광의 순간 준비 중...",
+                "혁신 엔진 로드 중...",
+                "코드 초능력 잠금 해제 중...",
+                "성공을 위한 무대 설정 중...",
+                "비밀 공식 로드 중...",
+                "뉴런을 Git과 동기화 중...",
+                "디지털 변환 준비 중...",
+                "완벽한 코드 엘릭서 로드 중...",
+                "닌자 개발자 모드 활성화 중...",
+                "Git 타임머신 준비 중...",
+                "무한 도서관 로드 중...",
+                "코드 매트릭스에 조정 중...",
+                "다음 레벨로의 상승 준비 중...",
+                "개발의 본질 로드 중...",
+                "잠자는 저장소 깨우는 중..."
+            ]
+        }
+    },
+    "settings": {
+        "title": "설정",
+        "tabs": {
+            "general": "일반",
+            "data": "데이터",
+            "git": "Git",
+            "appearance": "모양",
+            "updates": "업데이트",
+            "about": "정보"
+        },
+        "general": {
+            "title": "일반 설정",
+            "description": "일반 애플리케이션 옵션 사용자 지정",
+            "preferredIDE": {
+                "title": "선호하는 IDE 에디터",
+                "description": "카드에서 저장소를 열 때 사용할 에디터 선택",
+                "selected": "선택됨",
+                "noEditorSelected": "에디터 선택 안 됨",
+                "selectEditor": "IDE 에디터 선택...",
+                "info": "열기 버튼을 클릭하면 저장소가 자동으로 {{ide}}로 열립니다.",
+                "noEditorsAvailable": "사용 가능한 에디터 없음",
+                "installEditor": "여기서 보려면 IDE 에디터를 설치하세요",
+                "editorChanged": "IDE 에디터가 {{ide}}로 변경됨",
+                "errorSaving": "구성 저장 오류"
+            },
+            "uiLanguage": {
+                "title": "인터페이스 언어",
+                "description": "사용자 인터페이스에 표시될 언어 선택",
+                "english": "영어 (미국)",
+                "spanish": "스페인어 (아르헨티나)",
+                "german": "독일어",
+                "french": "프랑스어",
+                "portuguese": "포르투갈어",
+                "japanese": "일본어",
+                "chinese": "중국어 (간체)",
+                "russian": "러시아어",
+                "italian": "이탈리아어",
+                "korean": "한국어",
+                "selected": "선택됨",
+                "changed": "언어가 {{language}}로 변경됨",
+                "error": "구성 저장 오류"
+            }
+        },
+        "data": {
+            "title": "데이터 관리",
+            "description": "구성 파일 위치 및 백업 관리",
+            "configLocation": {
+                "title": "구성 위치",
+                "description": "구성 파일이 저장될 폴더 선택",
+                "selectFolder": "폴더 선택"
+            },
+            "fileInfo": {
+                "title": "파일 정보",
+                "description": "구성 파일 및 마지막 수정에 대한 세부 정보",
+                "configFile": "구성 파일",
+                "lastUpdate": "마지막 업데이트"
+            },
+            "management": {
+                "title": "구성 관리",
+                "description": "설정을 백업하거나 복원하기 위해 구성 파일 가져오기 또는 내보내기",
+                "import": "가져오기",
+                "export": "내보내기",
+                "exportSuccess": "구성 내보내기 성공",
+                "exportError": "내보내기 오류: {{error}}",
+                "noConfigToExport": "내보낼 구성 없음",
+                "functionalityNotAvailable": "기능 사용 불가",
+                "importSuccess": "구성 가져오기 성공. 데이터 다시 로드 중...",
+                "dataReloaded": "데이터 다시 로드 성공",
+                "importError": "가져오기 오류: {{error}}",
+                "importNotAvailable": "가져오기 기능 사용 불가",
+                "invalidJson": "선택한 파일은 유효한 JSON이 아닙니다",
+                "importConfigError": "구성 가져오기 오류: {{error}}"
+            },
+            "reset": {
+                "title": "구성 재설정",
+                "description": "모든 구성을 삭제하고 기본값을 복원합니다. 이 작업은 되돌릴 수 없습니다.",
+                "warning": "경고",
+                "warningMessage": "이 작업은 모든 구성, 연결 및 저장된 기본 설정을 삭제합니다.",
+                "restoreConfig": "구성 복원",
+                "modal": {
+                    "title": "구성 재설정",
+                    "description": "이 작업은 되돌릴 수 없습니다",
+                    "warningMessage": "모든 구성을 재설정하시겠습니까? 이 작업은 모든 저장소, 연결 및 기본 설정을 제거합니다. 이 작업은 영구적이며 되돌릴 수 없습니다.",
+                    "confirm": "구성 복원"
+                }
+            },
+            "purgeCache": {
+                "title": "저장소 캐시 정리",
+                "description": "로컬에 복제된 저장소를 삭제하여 공간을 확보합니다. 원격 저장소에는 영향을 미치지 않습니다.",
+                "purgeAll": "모든 캐시 정리",
+                "purgeAllConfirm": "정말로 모든 복제된 저장소를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+                "purgeRepoConfirmTitle": "저장소 정리",
+                "purgeRepoConfirmMessage": "\"{{name}}\" 저장소를 정리하시겠습니까? 로컬 사본은 삭제되지만 원격 저장소에는 영향을 미치지 않습니다.",
+                "clonedRepos": "복제된 저장소",
+                "delete": "정리"
+            }
+        },
+        "git": {
+            "title": "Git 구성",
+            "description": "Git에 대한 신원 및 보안 기본 설정 구성",
+            "identities": {
+                "title": "신원",
+                "description": "다른 저장소에서 사용할 여러 사용자 신원 관리",
+                "newIdentity": "새 신원",
+                "noIdentities": "구성된 신원 없음",
+                "addIdentity": "시작하려면 신원 추가",
+                "modal": {
+                    "title": "새 신원",
+                    "editTitle": "신원 편집",
+                    "description": "Git에 대한 새 사용자 신원 추가",
+                    "editDescription": "신원 정보 수정",
+                    "fullName": {
+                        "label": "성명",
+                        "required": "(필수)",
+                        "placeholder": "귀하의 성명"
+                    },
+                    "email": {
+                        "label": "이메일",
+                        "required": "(필수)",
+                        "placeholder": "your.email@example.com",
+                        "error": "유효한 이메일 주소를 입력하세요"
+                    },
+                    "add": "추가",
+                    "deleteTitle": "신원 삭제",
+                    "deleteDescription": "이 신원을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+                }
+            },
+            "commitBehavior": {
+                "title": "커밋 버튼 동작",
+                "description": "Git 상태 패널에서 커밋 버튼이 수행할 작업 선택",
+                "buttonAction": "버튼 동작",
+                "commit": "커밋",
+                "commitPush": "커밋 + 푸시",
+                "commitSync": "커밋 + 동기화",
+                "commitDescription": "스테이지의 파일만 커밋합니다. 원격 저장소와 동기화하지 않습니다.",
+                "commitPushDescription": "커밋 후 변경 사항을 원격 저장소로 보냅니다. 원격에서 변경 사항을 다운로드하지 않습니다.",
+                "commitSyncDescription": "커밋, 원격에서 변경 사항 다운로드(fetch + pull) 후 로컬 변경 사항 전송(push). 원격 저장소와 완전히 동기화합니다."
+            },
+            "security": {
+                "title": "보안 및 네트워크",
+                "description": "연결 설정 및 SSL 인증서 확인",
+                "sslVerify": "SSL 인증서 확인",
+                "activated": "활성화됨",
+                "deactivated": "비활성화됨",
+                "sslDescription": "자체 서명된 인증서나 회사 프록시에 문제가 있는 경우 비활성화하세요. http.sslVerify=false와 동일합니다",
+                "sslWarning": "SSL 확인이 비활성화되었습니다. 이는 보안 위험일 수 있습니다.",
+                "sslActivated": "SSL 확인 활성화됨",
+                "sslDeactivated": "SSL 확인 비활성화됨",
+                "sslError": "SSL 구성 저장 오류"
+            }
+        },
+        "appearance": {
+            "title": "모양",
+            "description": "애플리케이션 컴포넌트의 테마 및 크기 사용자 지정",
+            "themes": {
+                "title": "테마",
+                "description": "모양을 사용자 지정할 테마 스타일 선택",
+                "dark": "다크",
+                "light": "라이트"
+            },
+            "componentSize": {
+                "title": "컴포넌트 크기",
+                "description": "가독성과 편안함을 개선하기 위해 인터페이스 줌 조정",
+                "zoomLevel": "줌 레벨",
+                "zoomDescription": "모든 컴포넌트의 텍스트, 아이콘 및 간격 크기에 영향을 미칩니다",
+                "zoomInfo": "줌은 즉시 적용됩니다. 최상의 경험을 위해 100% 권장."
+            }
+        },
+        "updates": {
+            "title": "업데이트",
+            "description": "현재 버전 및 마지막 구성 수정 정보",
+            "currentVersion": {
+                "title": "현재 버전",
+                "description": "설치된 애플리케이션 버전 정보",
+                "appVersion": "애플리케이션 버전",
+                "latestVersion": "최신 버전을 사용 중입니다",
+                "checkUpdates": "업데이트 확인",
+                "stableChannel": "안정적인 빌드",
+                "newVersionDesc": "새로운 기능 및 성능 개선 사항 포함."
+            },
+            "lastUpdate": {
+                "title": "마지막 업데이트",
+                "description": "마지막 구성 수정 날짜 및 시간",
+                "configModified": "구성 수정됨",
+                "autoUpdateInfo": "이 날짜는 애플리케이션 구성을 수정할 때 자동으로 업데이트됩니다."
+            },
+            "systemInfo": {
+                "title": "시스템 정보",
+                "description": "애플리케이션에서 사용하는 기술 버전",
+                "platform": "플랫폼",
+                "electron": "Electron",
+                "chrome": "Chrome"
+            },
+            "aboutUpdates": {
+                "title": "업데이트 정보",
+                "description": "TucoGit은 새 버전이 나오면 알림을 보냅니다. 최신 설치 프로그램을 GitHub에서 직접 다운로드하여 업데이트할 수 있습니다."
+            }
+        },
+        "about": {
+            "title": "정보",
+            "appDescription": "저장소 관리를 단순화하고 일상 업무의 복잡성을 줄이기 위해 설계된 Git 클라이언트로, 최신 워크플로우 및 가장 일반적인 버전 제어 작업에 맞춰져 있습니다.",
+            "developer": {
+                "title": "개발자",
+                "description": "연락처 정보 및 개발자 프로필",
+                "fullStack": "풀스택 개발자",
+                "bio": "TucoGit의 창작자이자 유지 관리자입니다. 개발자의 일상 업무를 단순화하는 도구를 만드는 데 열정을 가지고 있습니다."
+            },
+            "support": {
+                "title": "지원 및 커뮤니티",
+                "description": "문제를 보고하고, 아이디어를 공유하고, 커뮤니티에 참여하세요",
+                "reportIssue": "문제 보고",
+                "reportIssueDescription": "GitHub에서 이슈를 열어 버그를 보고하거나 기능을 요청하세요",
+                "discussions": "토론",
+                "discussionsDescription": "토론에 참여하고, 아이디어를 공유하고, 커뮤니티에서 도움을 받으세요"
+            },
+            "contact": {
+                "email": "이메일",
+                "github": "GitHub"
+            },
+            "footer": {
+                "madeWith": "제작:",
+                "openSource": "오픈 소스",
+                "openSourceBadge": "오픈 소스",
+                "beta": "베타"
+            }
+        }
+    },
+    "home": {
+        "title": "홈",
+        "welcome": {
+            "title": "환영합니다",
+            "subtitle": "당신의 Git 관제 센터",
+            "description": "모든 Git 저장소를 한 곳에서 정리하고 관리하세요. 좋아하는 서비스를 연결하고 워크플로우를 효율적이고 체계적으로 유지하세요.",
+            "connections": "연결",
+            "repositories": "저장소"
+        },
+        "quickNavigation": {
+            "title": "빠른 탐색",
+            "home": {
+                "title": "홈",
+                "description": "개요 및 통계"
+            },
+            "repositories": {
+                "title": "저장소",
+                "description": "로컬 프로젝트 탐색"
+            },
+            "connections": {
+                "title": "연결",
+                "description": "Git 서비스 관리"
+            },
+            "settings": {
+                "title": "설정",
+                "description": "애플리케이션 기본 설정"
+            },
+            "configureConnection": {
+                "title": "연결 구성",
+                "description": "새 Git 서비스 계정 연결"
+            },
+            "configureGit": "Git 통합 구성"
+        },
+        "favorites": {
+            "title": "즐겨찾기",
+            "description": "저장소 빠른 액세스",
+            "noFavorites": "즐겨찾기 없음",
+            "noFavoritesDescription": "즐겨찾기로 표시한 저장소가 여기에 나타납니다",
+            "removeFromFavorites": "즐겨찾기에서 제거",
+            "openIn": "{{ide}}에서 열기"
+        }
+    },
+    "wizard": {
+        "welcome": {
+            "title": "Tuco에 오신 것을 환영합니다",
+            "description": "Git 저장소 관리를 위한 완벽한 솔루션",
+            "mainTitle": "모든 Git 프로젝트를 한 곳에서 관리",
+            "mainDescription": "Tuco는 Git 저장소 관리를 단순화하기 위해 설계된 전문 도구입니다. 여러 서비스를 연결하고, 프로젝트를 구성하고, 개발 워크플로우를 최적화하세요.",
+            "features": {
+                "versionControl": "버전 제어",
+                "organization": "조직",
+                "productivity": "생산성"
+            }
+        },
+        "gitIdentity": {
+            "title": "Git 신원 구성",
+            "description": "커밋에 대한 사용자 정보 설정",
+            "fullName": "성명",
+            "fullNamePlaceholder": "예: 홍길동",
+            "fullNameDescription": "이 이름은 모든 Git 커밋에서 저자로 표시됩니다",
+            "email": "이메일",
+            "emailPlaceholder": "예: hong.gildong@example.com",
+            "emailDescription": "GitHub, GitLab 또는 기타 서비스 계정과 연결된 동일한 이메일을 사용하세요",
+            "emailRequired": "이메일은 필수입니다",
+            "emailInvalid": "유효한 이메일 주소를 입력하세요",
+            "info": "이 정보는 기본 Git 신원으로 구성되며 모든 커밋에 서명하는 데 사용됩니다. 나중에 설정에서 변경할 수 있습니다."
+        },
+        "repositoryManagement": {
+            "title": "저장소 관리",
+            "description": "모든 Git 프로젝트를 효율적으로 정리하고 관리",
+            "customCollections": {
+                "title": "사용자 지정 컬렉션",
+                "description": "모든 것을 정리하고 찾기 쉽게 유지하기 위해 저장소를 테마별 컬렉션으로 그룹화"
+            },
+            "directClone": {
+                "title": "직접 복제",
+                "description": "터미널을 사용할 필요 없이 인터페이스에서 직접 원격 서비스의 저장소 복제"
+            },
+            "realTimeStatus": {
+                "title": "실시간 상태",
+                "description": "저장소, 브랜치, 커밋 및 보류 중인 변경 사항의 상태를 즉시 확인"
+            },
+            "allInOne": "한 곳에서 모두: 통일되고 전문적인 인터페이스에서 모든 Git 프로젝트 액세스"
+        },
+        "gitIntegration": {
+            "title": "Git 서비스 통합",
+            "description": "계정을 연결하고 저장소를 자동으로 동기화",
+            "multipleProviders": {
+                "title": "여러 제공업체",
+                "description": "GitHub, GitLab, Bitbucket, Gitea, Codeberg 및 기타 호환 Git 서비스와 연결"
+            },
+            "autoSync": {
+                "title": "자동 동기화",
+                "description": "저장소를 자동으로 최신 상태로 유지하고 최신 정보에 쉽게 액세스"
+            },
+            "multipleAccounts": {
+                "title": "다중 계정 관리",
+                "description": "완전한 보안으로 한 곳에서 여러 계정 및 조직 관리"
+            },
+            "centralizedAccess": "중앙 집중식 액세스: 애플리케이션을 떠나지 않고 모든 원격 저장소 사용 가능"
+        },
+        "customization": {
+            "title": "고급 사용자 지정",
+            "description": "작업 스타일 및 기본 설정에 맞게 애플리케이션 조정",
+            "themes": {
+                "title": "테마 및 모양",
+                "description": "여러 테마 중에서 선택하고 시각적 기본 설정에 따라 애플리케이션 모양 사용자 지정"
+            },
+            "ideIntegration": {
+                "title": "IDE 통합",
+                "description": "선호하는 코드 에디터(VS Code, Cursor, IntelliJ 등)를 구성하여 저장소를 직접 열기"
+            },
+            "readyToStart": "시작할 준비됨",
+            "readyDescription": "요구 사항에 따라 애플리케이션을 구성하고 저장소를 전문적으로 관리 시작"
+        },
+        "navigation": {
+            "previous": "이전",
+            "next": "다음",
+            "start": "시작",
+            "step": "{{total}}단계 중 {{current}}단계"
+        }
+    },
+    "connections": {
+        "title": "연결",
+        "search": {
+            "placeholder": "연결 검색...",
+            "clear": "지우기",
+            "clearSearch": "검색 지우기",
+            "noResults": "\"{{query}}\"에 대한 결과 없음"
+        },
+        "sort": {
+            "title": "정렬",
+            "ascending": "오름차순",
+            "descending": "내림차순",
+            "none": "정렬 없음"
+        },
+        "actions": {
+            "refresh": "새로 고침",
+            "newConnection": "새 연결",
+            "edit": "편집",
+            "delete": "삭제"
+        },
+        "empty": {
+            "title": "정의된 연결 없음",
+            "description": "시작하려면 '새 연결' 버튼을 눌러 Git 제공업체와의 첫 번째 연결을 만드세요."
+        },
+        "status": {
+            "checking": "확인 중...",
+            "connected": "연결됨",
+            "expired": "토큰 만료됨",
+            "disconnected": "연결 끊김",
+            "noConnection": "연결 없음",
+            "expiredMessage": "정보를 보려면 토큰 업데이트",
+            "disconnectedMessage": "서버에 연결할 수 없음",
+            "waiting": "연결 대기 중..."
+        },
+        "stats": {
+            "remoteRepos": "원격 저장소",
+            "configuredLocally": "로컬 구성됨",
+            "clonedLocally": "로컬 복제됨",
+            "organizations": "조직:",
+            "noOrganizations": "어떤 조직에도 속해 있지 않습니다"
+        },
+        "date": {
+            "notAvailable": "날짜 사용 불가",
+            "justNow": "방금 생성됨",
+            "minutesAgo_one": "{{count}}분 전 생성됨",
+            "minutesAgo_other": "{{count}}분 전 생성됨",
+            "hoursAgo_one": "{{count}}시간 전 생성됨",
+            "hoursAgo_other": "{{count}}시간 전 생성됨",
+            "daysAgo_one": "{{count}}일 전 생성됨",
+            "daysAgo_other": "{{count}}일 전 생성됨",
+            "weeksAgo_one": "{{count}}주 전 생성됨",
+            "weeksAgo_other": "{{count}}주 전 생성됨",
+            "monthsAgo_one": "{{count}}개월 전 생성됨",
+            "monthsAgo_other": "{{count}}개월 전 생성됨",
+            "yearsAgo_one": "{{count}}년 전 생성됨",
+            "yearsAgo_other": "{{count}}년 전 생성됨"
+        }
+    },
+    "connectionWizard": {
+        "title": {
+            "new": "새 연결",
+            "edit": "연결 편집"
+        },
+        "description": {
+            "new": "몇 단계로 Git 제공업체와 새 연결 구성",
+            "edit": "Git 연결 데이터 수정"
+        },
+        "steps": {
+            "provider": "제공업체",
+            "authentication": "인증",
+            "confirmation": "확인"
+        },
+        "step1": {
+            "title": "Git 제공업체",
+            "required": "*",
+            "description": "연결할 Git 제공업체 선택",
+            "providers": {
+                "github": {
+                    "name": "GitHub",
+                    "description": "오픈 소스 프로젝트에 가장 인기 있음"
+                },
+                "gitlab": {
+                    "name": "GitLab",
+                    "description": "통합 CI/CD에 탁월"
+                },
+                "gitea": {
+                    "name": "Gitea",
+                    "description": "자체 호스팅 Git 플랫폼"
+                },
+                "codeberg": {
+                    "name": "Codeberg",
+                    "description": "무료 및 오픈 소스 대안"
+                },
+                "gogs": {
+                    "name": "Gogs",
+                    "description": "자체 호스팅 Git 플랫폼"
+                }
+            }
+        },
+        "step2": {
+            "connectionName": {
+                "label": "연결 이름",
+                "required": "(필수)",
+                "description": "이 연결을 식별할 설명적 이름 입력",
+                "placeholder": "예: 내 GitHub 계정"
+            },
+            "identity": {
+                "label": "연관된 신원",
+                "description": "이 연결에 사용할 Git 신원 선택",
+                "select": "신원 선택",
+                "default": "기본"
+            },
+            "token": {
+                "label": "액세스 토큰",
+                "required": "(필수)",
+                "description": "개인 액세스 토큰",
+                "placeholder": "액세스 토큰 입력",
+                "validating": "토큰 유효성 검사 및 서버 연결 중...",
+                "valid": "토큰 유효함. 다음 단계로 계속할 수 있습니다.",
+                "error": "토큰 유효성 검사 오류",
+                "errorServerUrl": "서버 URL을 입력하세요",
+                "errorValidation": "토큰 유효성 검사 오류",
+                "errorCannotValidate": "오류: 토큰을 검증할 수 없음",
+                "errorUnexpected": "토큰 검증 중 예상치 못한 오류: {{message}}",
+                "errorInvalidOrInsufficient": "유효하지 않은 토큰 또는 불충분한 권한"
+            },
+            "serverUrl": {
+                "label": "서버 URL",
+                "optional": "(선택 사항)",
+                "description": "Git 서버의 기본 URL (사용자 지정 서버만 해당)"
+            }
+        },
+        "step3": {
+            "title": "연결 데이터 확인",
+            "description": "저장하기 전에 정보 검토",
+            "fields": {
+                "provider": "제공업체:",
+                "name": "이름:",
+                "url": "URL:",
+                "authType": "인증 유형:",
+                "token": "토큰:",
+                "authTypeValue": "토큰"
+            }
+        },
+        "actions": {
+            "cancel": "취소",
+            "previous": "이전",
+            "next": "다음",
+            "validating": "유효성 검사 중...",
+            "save": "저장"
+        }
+    },
+    "repositories": {
+        "title": "저장소",
+        "myRepositories": "내 저장소",
+        "search": {
+            "placeholder": "컬렉션 및 저장소 검색...",
+            "clear": "지우기",
+            "clearSearch": "검색 지우기",
+            "noResults": "\"{{query}}\"에 대한 결과 없음",
+            "allCollections": "모든 컬렉션"
+        },
+        "sort": {
+            "title": "정렬",
+            "ascending": "오름차순",
+            "descending": "내림차순",
+            "none": "정렬 없음"
+        },
+        "actions": {
+            "refresh": "새로 고침",
+            "moreActions": "추가 작업",
+            "cloneAll": "모두 복제",
+            "newCollection": "새 컬렉션",
+            "newRepository": "새 저장소",
+            "edit": "편집",
+            "delete": "삭제",
+            "clone": "복제",
+            "reclone": "다시 복제",
+            "openIn": "{{ide}}에서 열기",
+            "private": "비공개"
+        },
+        "empty": {
+            "title": "정의된 저장소 없음",
+            "description": "시작하려면 \"새 컬렉션\" 버튼을 클릭하여 첫 번째 컬렉션을 추가하세요.",
+            "newCollection": "새 컬렉션",
+            "newRepository": "새 저장소"
+        },
+        "collection": {
+            "element": "요소",
+            "elements": "요소",
+            "collection": "컬렉션",
+            "collections": "컬렉션",
+            "repository": "저장소",
+            "repositories": "저장소"
+        },
+        "repository": {
+            "notCloned": "로컬에 복제되지 않음",
+            "gettingGitInfo": "Git 정보 가져오는 중...",
+            "currentBranch": "현재 브랜치",
+            "uncommittedChanges": "커밋되지 않은 로컬 변경 사항",
+            "pendingPush": "보류 중인 업로드 (Push)",
+            "pendingPull": "보류 중인 다운로드 (Pull)"
+        },
+        "colors": {
+            "default": "기본",
+            "red": "빨강",
+            "orange": "주황",
+            "amber": "호박색",
+            "yellow": "노랑",
+            "lime": "라임",
+            "green": "초록",
+            "emerald": "에메랄드",
+            "teal": "청록",
+            "cyan": "청록색",
+            "sky": "하늘색",
+            "blue": "파랑",
+            "indigo": "인디고",
+            "violet": "바이올렛",
+            "purple": "보라",
+            "fuchsia": "자홍",
+            "pink": "분홍",
+            "rose": "장미",
+            "slate": "슬레이트"
+        },
+        "newCollectionModal": {
+            "title": "새 컬렉션",
+            "description": "새 사용자 지정 컬렉션에 저장소 정리",
+            "name": {
+                "label": "컬렉션 이름",
+                "required": "(필수)",
+                "placeholder": "예: 프론트엔드 프로젝트, 백엔드 API 등",
+                "errors": {
+                    "required": "이름은 필수입니다",
+                    "maxLength": "이름은 32자를 초과할 수 없습니다",
+                    "duplicate": "해당 이름의 컬렉션이 이미 존재합니다",
+                    "createError": "컬렉션 생성 오류. 다시 시도하세요."
+                }
+            },
+            "descriptionField": {
+                "label": "설명",
+                "optional": "(선택 사항)",
+                "placeholder": "이 컬렉션을 쉽게 식별할 수 있도록 설명 추가...",
+                "errors": {
+                    "maxLength": "설명은 100자를 초과할 수 없습니다"
+                }
+            },
+            "buttons": {
+                "cancel": "취소",
+                "creating": "생성 중...",
+                "create": "생성"
+            }
+        },
+        "editCollectionModal": {
+            "title": "컬렉션 편집",
+            "description": "컬렉션 데이터 수정",
+            "name": {
+                "label": "컬렉션 이름",
+                "required": "(필수)",
+                "placeholder": "컬렉션 이름",
+                "errors": {
+                    "required": "이름은 필수입니다",
+                    "maxLength": "이름은 32자를 초과할 수 없습니다",
+                    "duplicate": "해당 이름의 컬렉션이 이미 존재합니다",
+                    "duplicateLocation": "이 위치에 해당 이름의 컬렉션이 이미 존재합니다",
+                    "saveError": "컬렉션 저장 오류. 다시 시도하세요."
+                }
+            },
+            "descriptionField": {
+                "label": "설명",
+                "optional": "(선택 사항)",
+                "placeholder": "선택적 컬렉션 설명",
+                "errors": {
+                    "maxLength": "설명은 100자를 초과할 수 없습니다"
+                }
+            },
+            "color": {
+                "label": "색상"
+            },
+            "buttons": {
+                "cancel": "취소",
+                "saving": "저장 중...",
+                "save": "저장"
+            }
+        },
+        "deleteCollectionModal": {
+            "title": "컬렉션 삭제",
+            "description": "이 작업은 되돌릴 수 없습니다",
+            "warning": "이 컬렉션을 삭제하시겠습니까? 안의 모든 저장소도 삭제됩니다. 이 작업은 영구적이며 되돌릴 수 없습니다.",
+            "buttons": {
+                "cancel": "취소",
+                "delete": "삭제"
+            }
+        },
+        "deleteRepositoryModal": {
+            "title": "저장소 삭제",
+            "description": "이 작업은 되돌릴 수 없습니다",
+            "warning": "\"{{name}}\" 저장소를 삭제하시겠습니까? 이 작업은 영구적이며 되돌릴 수 없습니다.",
+            "buttons": {
+                "cancel": "취소",
+                "delete": "삭제"
+            }
+        },
+        "cloneRepositoryModal": {
+            "title": "저장소가 이미 존재함",
+            "description": "대상 폴더가 이미 존재하며 비어 있지 않습니다",
+            "warning": "경고: 해당 폴더의 저장되지 않은 모든 로컬 변경 사항이 손실됩니다. 기존 폴더를 삭제하고 저장소를 다시 복제하시겠습니까?",
+            "buttons": {
+                "cancel": "취소",
+                "clone": "복제"
+            }
+        },
+        "newRepositoryWizard": {
+            "title": {
+                "new": "새 저장소",
+                "edit": "저장소 편집"
+            },
+            "description": {
+                "new": "몇 단계로 컬렉션에 새 저장소 추가",
+                "edit": "저장소 데이터 수정"
+            },
+            "steps": {
+                "connection": "연결",
+                "details": "세부 정보",
+                "confirmation": "확인"
+            },
+            "step1": {
+                "connection": {
+                    "label": "연결 선택",
+                    "required": "(필수)",
+                    "description": "저장소가 위치한 Git 연결 선택",
+                    "placeholder": "연결 선택...",
+                    "noConnections": "연결 없음"
+                },
+                "repository": {
+                    "label": "저장소 선택",
+                    "required": "(필수)",
+                    "description": "추가할 저장소 선택",
+                    "placeholder": "저장소 선택...",
+                    "selectConnectionFirst": "먼저 연결을 선택하세요",
+                    "loading": "저장소 로드 중...",
+                    "searchPlaceholder": "저장소 검색...",
+                    "noResults": "저장소 없음",
+                    "noRepositories": "저장소 없음"
+                }
+            },
+            "step2": {
+                "name": {
+                    "label": "저장소 이름",
+                    "required": "(필수)",
+                    "description": "이 저장소를 식별할 설명적 이름 입력",
+                    "placeholder": "예: 내 프로젝트"
+                },
+                "description": {
+                    "label": "설명",
+                    "optional": "(선택 사항)",
+                    "description": "이 저장소에 대한 설명 추가",
+                    "placeholder": "저장소 설명..."
+                }
+            },
+            "step3": {
+                "title": {
+                    "new": "저장소 데이터 확인",
+                    "edit": "저장소 변경 사항 확인"
+                },
+                "description": {
+                    "new": "저장하기 전에 정보 검토",
+                    "edit": "저장하기 전에 변경 사항 검토"
+                },
+                "fields": {
+                    "connection": "연결:",
+                    "provider": "제공업체:",
+                    "url": "URL:",
+                    "repository": "저장소:",
+                    "name": "이름:",
+                    "description": "설명:"
+                }
+            },
+            "buttons": {
+                "cancel": "취소",
+                "previous": "이전",
+                "next": "다음",
+                "save": "저장"
+            },
+            "errors": {
+                "selectConnection": "연결을 선택하세요",
+                "selectRepository": "저장소를 선택하세요",
+                "enterName": "저장소 이름을 입력하세요",
+                "duplicateName": "이 위치에 해당 이름의 저장소가 이미 존재합니다",
+                "repositoryNotFound": "저장소를 찾을 수 없음",
+                "loadError": "저장소 로드 오류: {{message}}",
+                "saveError": "저장소 저장 오류: {{message}}",
+                "saveChangesError": "변경 사항 저장 오류. 저장소가 뷰에서 제거되었지만 파일에 저장되지 않았을 수 있습니다."
+            }
+        },
+        "preparing": "준비 중...",
+        "gitStatusPanel": {
+            "unstagedChanges": {
+                "title": "스테이징되지 않은 변경 사항",
+                "stageAll": "모두 스테이지",
+                "noChanges": "보류 중인 변경 사항 없음",
+                "allFilesSynced": "모든 파일이 동기화됨",
+                "stageFile": "파일 스테이지",
+                "stageFolder": "폴더 스테이지"
+            },
+            "stagedChanges": {
+                "title": "스테이징된 변경 사항",
+                "unstageAll": "모두 언스테이지",
+                "noChanges": "스테이징된 변경 사항 없음",
+                "stageFilesToCommit": "커밋을 준비하려면 파일 스테이지",
+                "unstageFile": "파일 언스테이지",
+                "unstageFolder": "폴더 언스테이지"
+            },
+            "commitMessage": {
+                "title": "커밋 메시지",
+                "placeholder": "커밋 메시지 입력...",
+                "placeholderNoStaged": "커밋하려면 파일을 스테이지하세요",
+                "button": {
+                    "commit": "커밋",
+                    "commitToBranch": "'{{branch}}'에 커밋",
+                    "commitPush": "커밋 + 푸시",
+                    "commitPushToBranch": "'{{branch}}'에 커밋 + 푸시",
+                    "commitSync": "커밋 + 동기화",
+                    "commitSyncToBranch": "'{{branch}}'에 커밋 + 동기화",
+                    "committing": "커밋 중",
+                    "committingToBranch": "'{{branch}}'에 커밋 중...",
+                    "committingPushing": "커밋 및 푸시 중",
+                    "committingPushingToBranch": "'{{branch}}'에 커밋 및 푸시 중...",
+                    "committingSyncing": "커밋 및 동기화 중",
+                    "committingSyncingToBranch": "'{{branch}}'에 커밋 및 동기화 중..."
+                },
+                "errors": {
+                    "pullFailedConflicts": "커밋은 성공적으로 완료되었지만 충돌로 인해 가져오기(pull)에 실패했습니다: {{message}}. 수동으로 충돌을 해결하세요.",
+                    "pushFailedNeedPull": "커밋은 성공적으로 완료되었지만 푸시(push)에 실패했습니다: {{message}}. 먼저 가져오기(pull)를 해야 할 수도 있습니다.",
+                    "pushFailed": "커밋은 성공적으로 완료되었지만 푸시(push)에 실패했습니다: {{message}}",
+                    "additionalOperationFailed": "커밋은 성공적으로 완료되었지만 추가 작업에 실패했습니다: {{message}}"
+                }
+            }
+        },
+        "menuItems": {
+            "newBranch": "새 브랜치",
+            "newTag": "새 태그",
+            "actions": "작업"
+        },
+        "newBranchModal": {
+            "title": "새 브랜치",
+            "description": "기존 브랜치에서 새 브랜치 생성",
+            "fields": {
+                "branchName": {
+                    "label": "새 브랜치 이름",
+                    "required": "(필수)",
+                    "hint": "이름은 Git 규칙을 따라야 합니다(공백 없음, 하이픈 또는 밑줄 사용)",
+                    "placeholder": "branch-name"
+                },
+                "createFrom": {
+                    "label": "다음에서 생성",
+                    "hint": "새 브랜치가 생성될 브랜치를 선택하세요. 새 브랜치는 선택한 브랜치의 모든 커밋을 포함합니다.",
+                    "placeholder": "브랜치 선택",
+                    "current": "(현재)",
+                    "remotes": "원격",
+                    "noBranches": "브랜치 없음"
+                }
+            },
+            "info": {
+                "willCreateFrom": "새 브랜치 {{branchName}}이(가) {{fromBranch}}에서 생성됩니다",
+                "currentBranch": " (현재 브랜치)"
+            },
+            "buttons": {
+                "cancel": "취소",
+                "create": "생성",
+                "creating": "생성 중..."
+            },
+            "errors": {
+                "createError": "브랜치 생성 오류"
+            }
+        },
+        "newTagModal": {
+            "title": "새 태그",
+            "description": "선택한 커밋에 새 태그 생성",
+            "fields": {
+                "tagName": {
+                    "label": "태그 이름",
+                    "required": "(필수)",
+                    "hint": "v1.0.0, v2.1.3 등과 같은 의미론적 규칙을 사용하세요. 태그는 프로젝트 기록의 중요한 지점을 표시하는 데 도움이 됩니다.",
+                    "placeholder": "v1.0.0"
+                },
+                "message": {
+                    "label": "메시지",
+                    "optional": "(선택 사항)",
+                    "hint": "태그에 대한 자세한 설명을 입력하세요. 릴리스, 중요한 변경 사항 또는 프로젝트 마일스톤을 문서화하는 데 유용합니다.",
+                    "placeholder": "태그 설명..."
+                },
+                "pushToRemotes": {
+                    "label": "모든 원격 저장소에 푸시",
+                    "hint": "활성화하면 태그가 저장소의 모든 구성된 원격 저장소로 자동 전송됩니다."
+                }
+            },
+            "info": {
+                "willCreateAt": "태그 {{tagName}}이(가) 커밋 {{commitHash}}에 생성됩니다"
+            },
+            "buttons": {
+                "cancel": "취소",
+                "create": "생성",
+                "creating": "생성 중..."
+            },
+            "success": {
+                "title": "태그 생성 성공",
+                "description": "태그 \"{{tagName}}\"이(가) 생성되었습니다",
+                "descriptionWithPush": "태그 \"{{tagName}}\"이(가) 생성되어 모든 원격 저장소로 전송되었습니다"
+            },
+            "errors": {
+                "createError": "태그 생성 오류",
+                "unknownError": "알 수 없는 오류"
+            }
+        },
+        "stashModal": {
+            "title": "스태시(Stash) 생성",
+            "description": "변경 사항을 Git 스태시에 임시 저장",
+            "fields": {
+                "message": {
+                    "label": "메시지",
+                    "optional": "(선택 사항)",
+                    "hint": "이 스태시를 식별할 설명적 메시지를 제공하세요. 메시지를 지정하지 않으면 기본 메시지가 사용됩니다.",
+                    "placeholder": "스태시 메시지"
+                },
+                "includeUntracked": {
+                    "label": "추적되지 않는 파일 포함",
+                    "hint": "저장소에 아직 없는 새 파일도 저장합니다. 스테이징 영역에 추가되지 않은 파일의 변경 사항을 저장하려 할 때 유용합니다."
+                }
+            },
+            "buttons": {
+                "cancel": "취소",
+                "create": "생성",
+                "saving": "저장 중..."
+            },
+            "success": {
+                "title": "스태시 완료",
+                "description": "변경 사항이 스태시에 저장되었습니다",
+                "descriptionWithUntracked": "변경 사항 및 추적되지 않는 파일이 스태시에 저장되었습니다"
+            },
+            "errors": {
+                "title": "스태시 생성 오류",
+                "description": "작업을 완료할 수 없습니다",
+                "unknownError": "예상치 못한 오류가 발생했습니다"
+            }
+        },
+        "stashListModal": {
+            "title": "스태시(Stashes)",
+            "description": "저장된 변경 사항을 복원하려면 적용(pop)할 스태시를 선택하세요",
+            "loading": "스태시 로드 중...",
+            "empty": {
+                "title": "사용 가능한 스태시 없음",
+                "description": "스태시를 사용하면 커밋하지 않고 변경 사항을 임시로 저장할 수 있습니다. 스태시 메뉴에서 하나를 만드세요."
+            },
+            "table": {
+                "reference": "참조",
+                "message": "메시지",
+                "date": "날짜",
+                "actions": "작업"
+            },
+            "buttons": {
+                "close": "닫기",
+                "clearAll": "모두 지우기",
+                "apply": "적용",
+                "applying": "적용 중...",
+                "deleteStash": "스태시 삭제"
+            },
+            "deleteConfirm": {
+                "title": "삭제 확인",
+                "description": "이 스태시를 삭제하시겠습니까?",
+                "warning": "이 작업은 되돌릴 수 없습니다. 스태시는 영구적으로 삭제됩니다.",
+                "cancel": "취소",
+                "delete": "삭제",
+                "deleting": "삭제 중..."
+            },
+            "clearAllConfirm": {
+                "title": "모두 지우기 확인",
+                "description": "모든 스태시를 삭제하시겠습니까?",
+                "warning": "{{count}}개의 {{stash}}가 삭제됩니다.",
+                "stash": "스태시",
+                "stashes": "스태시",
+                "permanentWarning": "이 작업은 되돌릴 수 없습니다. 모든 스태시가 영구적으로 삭제됩니다.",
+                "cancel": "취소",
+                "deleteAll": "모두 삭제",
+                "deleting": "삭제 중..."
+            },
+            "toasts": {
+                "selectStash": {
+                    "title": "스태시 선택",
+                    "description": "적용할 스태시를 선택하세요"
+                },
+                "applied": {
+                    "title": "스태시 적용됨",
+                    "description": "스태시가 성공적으로 적용 및 삭제되었습니다"
+                },
+                "applyError": {
+                    "title": "스태시 적용 오류",
+                    "description": "스태시를 적용할 수 없습니다",
+                    "unknownError": "예상치 못한 오류가 발생했습니다"
+                },
+                "deleted": {
+                    "title": "스태시 삭제됨",
+                    "description": "스태시가 성공적으로 삭제되었습니다"
+                },
+                "deleteError": {
+                    "title": "스태시 삭제 오류",
+                    "description": "스태시를 삭제할 수 없습니다",
+                    "unknownError": "예상치 못한 오류가 발생했습니다"
+                },
+                "cleared": {
+                    "title": "스태시 삭제됨",
+                    "description": "모든 스태시가 성공적으로 삭제되었습니다"
+                },
+                "clearError": {
+                    "title": "스태시 지우기 오류",
+                    "description": "스태시를 삭제할 수 없습니다",
+                    "unknownError": "예상치 못한 오류가 발생했습니다"
+                }
+            }
+        },
+        "revertModal": {
+            "title": "커밋 되돌리기(Revert)",
+            "description": "이 커밋의 변경 사항을 취소하는 새 커밋 생성",
+            "fields": {
+                "commitToRevert": "되돌릴 커밋"
+            },
+            "warning": "선택한 커밋의 변경 사항을 되돌리는 새 커밋이 생성됩니다. 원본 커밋은 기록에 남아 있으며 삭제되지 않습니다.",
+            "buttons": {
+                "cancel": "취소",
+                "revert": "되돌리기",
+                "reverting": "되돌리는 중..."
+            },
+            "toasts": {
+                "success": {
+                    "title": "되돌리기 완료",
+                    "description": "커밋이 성공적으로 되돌려졌습니다"
+                },
+                "error": {
+                    "title": "커밋 되돌리기 오류",
+                    "description": "작업을 완료할 수 없습니다",
+                    "unknownError": "예상치 못한 오류가 발생했습니다"
+                }
+            }
+        },
+        "cherryPickModal": {
+            "title": "체리 픽(Cherry Pick)",
+            "description": "개별 커밋의 변경 사항을 현재 브랜치에 적용",
+            "fields": {
+                "commitToApply": "적용할 커밋",
+                "commitChanges": {
+                    "label": "변경 사항 커밋",
+                    "hint": "체리 픽한 변경 사항으로 커밋을 자동으로 생성합니다. 비활성화하면 변경 사항이 스테이징에 유지되지만 커밋은 수행되지 않아 커밋 전에 검토하고 수정할 수 있습니다."
+                },
+                "appendOrigin": {
+                    "label": "커밋 메시지에 출처 추가",
+                    "hint": "커밋 메시지 끝에 원본 커밋에 대한 참조를 추가합니다(예: \"(cherry picked from commit abc1234)\"). 변경 사항이 Git 기록의 어디에서 왔는지 추적하는 데 도움이 됩니다. \"변경 사항 커밋\"이 활성화된 경우에만 사용할 수 있습니다."
+                }
+            },
+            "buttons": {
+                "cancel": "취소",
+                "apply": "적용",
+                "applying": "적용 중..."
+            },
+            "toasts": {
+                "success": {
+                    "title": "체리 픽 완료",
+                    "description": "커밋이 성공적으로 적용 및 커밋되었습니다",
+                    "descriptionNoCommit": "커밋이 적용되었습니다 (커밋 없음)"
+                },
+                "conflicts": {
+                    "title": "충돌이 있는 체리 픽",
+                    "description": "해결해야 할 충돌이 있습니다. 알림 표시줄을 사용하여 해결하거나 작업을 중단하세요."
+                },
+                "error": {
+                    "title": "체리 픽 수행 오류",
+                    "description": "작업을 완료할 수 없습니다",
+                    "unknownError": "예상치 못한 오류가 발생했습니다"
+                }
+            }
+        },
+        "commitDetails": {
+            "tabs": {
+                "detail": "커밋 상세",
+                "modified": "수정된 파일",
+                "tree": "커밋 트리"
+            },
+            "detail": {
+                "sections": {
+                    "description": "설명",
+                    "author": "작성자",
+                    "date": "날짜",
+                    "committer": "커미터",
+                    "commitDate": "커밋 날짜",
+                    "commitHash": "커밋 해시",
+                    "parentCommit": "상위 커밋",
+                    "parentCommits": "상위 커밋들",
+                    "statistics": "통계"
+                },
+                "stats": {
+                    "files": "파일",
+                    "insertions": "삽입",
+                    "deletions": "삭제"
+                },
+                "copy": {
+                    "copyHash": "전체 해시 복사",
+                    "copyParentHash": "상위 해시 복사"
+                },
+                "timeAgo": {
+                    "years": "{{count}}년 전",
+                    "yearsPlural": "{{count}}년 전",
+                    "months": "{{count}}개월 전",
+                    "monthsPlural": "{{count}}개월 전",
+                    "weeks": "{{count}}주 전",
+                    "weeksPlural": "{{count}}주 전",
+                    "days": "{{count}}일 전",
+                    "daysPlural": "{{count}}일 전",
+                    "hours": "{{count}}시간 전",
+                    "hoursPlural": "{{count}}시간 전",
+                    "minutes": "{{count}}분 전",
+                    "minutesPlural": "{{count}}분 전",
+                    "seconds": "몇 초 전"
+                }
+            },
+            "modified": {
+                "loading": "로딩 중...",
+                "detail": "상세",
+                "selectFile": "변경 사항을 보려면 파일을 선택하세요"
+            },
+            "tree": {
+                "loading": "트리 로드 중...",
+                "noFiles": "파일 없음",
+                "content": "내용",
+                "noFileSelected": "선택된 파일 없음",
+                "selectFileMessage": "내용을 보려면 트리에서 파일을 클릭하세요",
+                "errors": {
+                    "loadTree": "트리 로드 오류",
+                    "loadFile": "파일 로드 오류"
+                }
+            }
+        },
+        "branchesDropdown": {
+            "sections": {
+                "selectedCommit": "선택된 커밋",
+                "local": "로컬 브랜치",
+                "remote": "원격 브랜치"
+            },
+            "actions": {
+                "checkoutHash": "해시 체크아웃... {{hash}}",
+                "defaultBranch": "브랜치"
+            },
+            "empty": "사용 가능한 브랜치 없음",
+            "toasts": {
+                "checkoutSuccess": {
+                    "title": "체크아웃 완료",
+                    "description": "커밋 {{hash}}로 전환됨"
+                },
+                "checkoutError": {
+                    "title": "체크아웃 오류",
+                    "description": "예상치 못한 오류가 발생했습니다"
+                },
+                "resolveConflictError": {
+                    "title": "충돌 해결 오류",
+                    "description": "예상치 못한 오류가 발생했습니다"
+                }
+            },
+            "commitMessage": "{{branch}}로 전환하기 전에 파일을 저장하세요"
+        },
+        "tooltips": {
+            "private": "비공개",
+            "minimize": "최소화",
+            "new": "새로 만들기",
+            "stash": "스태시",
+            "moreStashOptions": "추가 스태시 옵션",
+            "refresh": "새로 고침",
+            "close": "닫기",
+            "middleClickToClose": "가운데 클릭으로 닫기",
+            "uncommittedChanges": "커밋되지 않은 변경 사항"
+        }
+    }
+}

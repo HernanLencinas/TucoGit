@@ -129,6 +129,7 @@
         "german": "Deutsch",
         "russian": "Russisch",
         "italian": "Italienisch",
+        "korean": "Koreanisch",
         "selected": "Ausgewählt",
         "changed": "Sprache geändert zu {{language}}",
         "error": "Fehler beim Speichern der Konfiguration"

@@ -132,6 +132,7 @@
         "japanese": "日本語",
         "russian": "ロシア語",
         "italian": "イタリア語",
+        "korean": "韓国語",
         "selected": "選択済み",
         "changed": "言語を{{language}}に変更しました",
         "error": "設定の保存中にエラーが発生しました"

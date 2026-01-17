@@ -133,6 +133,7 @@
                 "chinese": "Cinese (Semplificato)",
                 "russian": "Russo",
                 "italian": "Italiano",
+                "korean": "Coreano",
                 "selected": "Selezionato",
                 "changed": "Lingua cambiata in {{language}}",
                 "error": "Errore nel salvataggio della configurazione"

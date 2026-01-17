@@ -130,6 +130,7 @@
         "french": "Français",
         "russian": "Russe",
         "italian": "Italien",
+        "korean": "Coréen",
         "selected": "Sélectionné",
         "changed": "Langue changée en {{language}}",
         "error": "Erreur lors de l'enregistrement de la configuration"
